@@ -9,7 +9,7 @@ from playwright.sync_api import (
 )
 from apps.scrappers.aviator.bet_control import BetControl, Control
 from apps.scrappers.game_base import AbstractGameBase
-from apps.utils import sleep_now
+from apps.utils.datetime import sleep_now
 # from ws.gui_events import send_event_to_gui
 
 
