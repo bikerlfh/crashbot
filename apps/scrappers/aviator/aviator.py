@@ -1,13 +1,21 @@
 import abc
 from typing import List, Union
-from playwright.sync_api import Playwright, sync_playwright, Browser, BrowserContext, Page, Locator,
-from bet_control import BetControl
-from game.utils import sleep_now
+from playwright.sync_api import (
+    sync_playwright,
+    Browser,
+    BrowserContext,
+    Page,
+    Locator
+)
+from apps.scrappers.aviator.bet_control import BetControl, Control
+from apps.scrappers.game_base import AbstractGameBase
+from apps.utils import sleep_now
 # from ws.gui_events import send_event_to_gui
 
 
-class AviatorPage:
+class Aviator(AbstractGameBase, abc.ABC):
     def __init__(self, url: str):
+        self.playwright: Union[sync_playwright, None] = None
         self._browser: Union[Browser, None] = None
         self._context: Union[BrowserContext, None] = None
         self._page: Union[Page, None] = None
@@ -30,17 +38,13 @@ class AviatorPage:
         self._page.mouse.move(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2, steps=50)
         self._page.mouse.click(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2, delay=50)
 
-    @abc.abstractmethod
-    def _login(self):
-        """Implement the login"""
-        ...
-
     def _get_app_game(self) -> Locator:
         if not self._page:
             """send_event_to_gui.exception({
                 "location": "AviatorPage",
                 "message": "_getAppGame :: page is null"
             })"""
+            print("_getAppGame :: page is null")
             raise Exception("_getAppGame :: page is null")
 
         _app_game = None
@@ -52,31 +56,35 @@ class AviatorPage:
                 return _app_game
             except Exception as e:
                 if isinstance(e, TimeoutError):
+                    print("page :: error timeout")
                     #send_event_to_gui.log.debug("page :: error timeout")
                     continue
                 """send_event_to_gui.exception({
                     "location": "AviatorPage",
                     "message": f"_getAppGame :: {e}"
                 })"""
+                print(f"_getAppGame :: {e}")
                 raise e
 
-    async def open(self):
-        with sync_playwright() as playwright:
-            self._browser = playwright.chromium.launch(headless=False)
-            self._context = self._browser.new_context()
-            self._page = self._context.new_page()
-            self._page.goto(self.url, timeout=50000)
-            self._login()
-            self._app_game = self._get_app_game()
-            self._history_game = self._app_game.locator(".result-history")
-            #send_event_to_gui.log.debug("Result history found")
-            #await self.read_balance()
-            # await self.read_multipliers()
-            # await self.read_game_limits()
-            self._controls = BetControl(self._app_game)
-            await self._controls.init()
-            #send_event_to_gui.log.success("Aviator loaded")
-
+    def open(self):
+        self.playwright = sync_playwright().start()
+        self._browser = self.playwright.chromium.launch(headless=False)
+        self._context = self._browser.new_context()
+        self._page = self._context.new_page()
+        self._page.goto(self.url, timeout=50000)
+        self._login()
+        self._app_game = self._get_app_game()
+        self._history_game = self._app_game.locator(".result-history")
+        #send_event_to_gui.log.debug("Result history found")
+        self.read_balance()
+        self.read_multipliers()
+        # await self.read_game_limits()
+        self._controls = BetControl(self._app_game)
+        self._controls.init()
+        print("Aviator loaded")
+        print("balance :: ", self.balance)
+        print("multipliers :: ", self.multipliers)
+        #send_event_to_gui.log.success("Aviator loaded")
 
     def close(self):
         if not self._page:
@@ -140,7 +148,7 @@ class AviatorPage:
         return self.balance
 
     def _format_multiplier(self, multiplier: str) -> float:
-        return float(multiplier.replace( r'/\s / g', '').replace("x", ""))
+        return float(multiplier.replace(r'/\s / g', '').replace("x", ""))
 
     def read_multipliers(self):
         if not self._page or not self._history_game:
@@ -157,7 +165,7 @@ class AviatorPage:
                 self.multipliers.append(self._format_multiplier(multiplier))
         self._page.wait_for_timeout(2000)
 
-    async def bet(self, amount: float, multiplier: float, control: Control):
+    def bet(self, amount: float, multiplier: float, control: Control):
         if self._controls is None:
             # send_event_to_gui.exception({
             #     "location": "AviatorPage",
@@ -166,7 +174,7 @@ class AviatorPage:
             raise Exception("AviatorPage :: no _controls")
         self._controls.bet(amount, multiplier, control)
 
-    async def wait_next_game(self):
+    def wait_next_game(self):
         if self._history_game is None:
            #send_event_to_gui.exception({
            #    "location": "AviatorPage",
@@ -184,4 +192,4 @@ class AviatorPage:
                 # send_event_to_gui.log.success(f"New Multiplier: {last_multiplier}")
                 self.multipliers = self.multipliers[1:]
                 return
-            await sleep_now(200)
+            sleep_now(200)
