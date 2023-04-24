@@ -6,6 +6,7 @@ from typing import Any, Callable, Dict, List, Optional, Union
 
 # Libraries
 import requests
+
 # from utils.core.sensible import obfuscate_sensible_data
 
 # Current Folder
@@ -27,12 +28,7 @@ class RESTClient:
     VERIFY = True
     auth = {}
 
-    def __init__(
-        self,
-        *,
-        api_url: str,
-        headers: Optional[Dict[str, Any]] = None
-    ):
+    def __init__(self, *, api_url: str, headers: Optional[Dict[str, Any]] = None):
         self.api_url = api_url
         if headers:
             self.headers = headers
@@ -42,15 +38,15 @@ class RESTClient:
         *,
         service: str,
         kwargs: Optional[Dict[str, Any]] = None,
-        sensible_keys: Optional[List[str]] = ()
+        sensible_keys: Optional[List[str]] = (),
     ) -> Response:
-        func_params = {'service': service}
-        logger.info(f'delete_request :: start :: {func_params}')
+        func_params = {"service": service}
+        logger.info(f"delete_request :: start :: {func_params}")
         return self._send_request(
             method=requests.delete,
             service=service,
             kwargs=kwargs,
-            sensible_keys=sensible_keys
+            sensible_keys=sensible_keys,
         )
 
     def get(
@@ -58,15 +54,15 @@ class RESTClient:
         *,
         service: str,
         kwargs: Optional[Dict[str, Any]] = None,
-        sensible_keys: Optional[List[str]] = ()
+        sensible_keys: Optional[List[str]] = (),
     ) -> Response:
-        func_params = {'service': service}
-        logger.info(f'get_request :: start :: {func_params}')
+        func_params = {"service": service}
+        logger.info(f"get_request :: start :: {func_params}")
         return self._send_request(
             method=requests.get,
             service=service,
             kwargs=kwargs,
-            sensible_keys=sensible_keys
+            sensible_keys=sensible_keys,
         )
 
     def put(
@@ -75,16 +71,16 @@ class RESTClient:
         service: str,
         data: Optional[Union[List, Dict[str, Any]]] = None,
         kwargs: Optional[Dict[str, Any]] = None,
-        sensible_keys: Optional[List[str]] = ()
+        sensible_keys: Optional[List[str]] = (),
     ) -> Response:
-        func_params = {'service': service}
-        logger.info(f'put_request :: start :: {func_params}')
+        func_params = {"service": service}
+        logger.info(f"put_request :: start :: {func_params}")
         return self._send_request(
             method=requests.put,
             service=service,
             data=data,
             kwargs=kwargs,
-            sensible_keys=sensible_keys
+            sensible_keys=sensible_keys,
         )
 
     def post(
@@ -93,16 +89,16 @@ class RESTClient:
         service: str,
         data: Union[List, Dict[str, Any]],
         kwargs: Optional[Dict[str, Any]] = None,
-        sensible_keys: Optional[List[str]] = ()
+        sensible_keys: Optional[List[str]] = (),
     ) -> Response:
-        func_params = {'service': service}
-        logger.info(f'post_request :: start :: {func_params}')
+        func_params = {"service": service}
+        logger.info(f"post_request :: start :: {func_params}")
         return self._send_request(
             method=requests.post,
             service=service,
             data=data,
             kwargs=kwargs,
-            sensible_keys=sensible_keys
+            sensible_keys=sensible_keys,
         )
 
     def patch(
@@ -111,16 +107,16 @@ class RESTClient:
         service: str,
         data: Union[List, Dict[str, Any]],
         kwargs: Optional[Dict[str, Any]] = None,
-        sensible_keys: Optional[List[str]] = ()
+        sensible_keys: Optional[List[str]] = (),
     ) -> Response:
-        func_params = {'service': service}
-        logger.info(f'patch_request :: start :: {func_params}')
+        func_params = {"service": service}
+        logger.info(f"patch_request :: start :: {func_params}")
         return self._send_request(
             method=requests.patch,
             service=service,
             data=data,
             kwargs=kwargs,
-            sensible_keys=sensible_keys
+            sensible_keys=sensible_keys,
         )
 
     def _send_request(
@@ -130,21 +126,21 @@ class RESTClient:
         service: str,
         data: Optional[Union[List, Dict[str, Any]]] = None,
         kwargs: Optional[Dict[str, Any]] = dict,
-        sensible_keys: Optional[List[str]] = ()
+        sensible_keys: Optional[List[str]] = (),
     ) -> Response:
         data = data or {}
-        service_name = f'{self.api_url}/{service}'
+        service_name = f"{self.api_url}/{service}"
         try:
-            func_params = {'method': method, 'service': service}
-            logger.info(f'_send_request :: start :: {func_params}')
+            func_params = {"method": method, "service": service}
+            logger.info(f"_send_request :: start :: {func_params}")
             data = data or {}
             url = service_name
             args = {
-                'url': url,
-                'headers': self.headers,
-                'timeout': self.TIMEOUT,
-                'verify': self.VERIFY,
-                'auth': self.auth
+                "url": url,
+                "headers": self.headers,
+                "timeout": self.TIMEOUT,
+                "verify": self.VERIFY,
+                "auth": self.auth,
             }
 
             if data:
@@ -153,7 +149,7 @@ class RESTClient:
             if kwargs:
                 args.update(**kwargs)
             response = method(**args)
-            msg = f'response :: status {response.status_code}'
+            msg = f"response :: status {response.status_code}"
             logger.info(msg)
             response = Response(response)
         except Exception as exc:

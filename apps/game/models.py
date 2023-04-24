@@ -18,7 +18,9 @@ class Multiplier:
 
 
 class Bet:
-    def __init__(self, amount: float, multiplier: float, prediction: Optional[float] = None):
+    def __init__(
+        self, amount: float, multiplier: float, prediction: Optional[float] = None
+    ):
         # generate external_id with random string of 32 chars
         self.external_id = self.__generate_external_id()
         self.amount = amount
@@ -28,7 +30,7 @@ class Bet:
         self.profit = 0
 
     def __generate_external_id(self):
-        return ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+        return "".join(random.choices(string.ascii_uppercase + string.digits, k=16))
 
     def evaluate(self, multiplier_result: float):
         self.multiplierResult = multiplier_result
@@ -56,10 +58,12 @@ class PredictionData:
         print(f"Prediction Round: {self.prediction_round}")
         print(f"Probability: {self.probability}")
         print(f"Category Percentage: {self.category_percentage}")
-        print(f"Category Percentage Value In Live: {self.category_percentage_value_in_live}")
+        print(
+            f"Category Percentage Value In Live: {self.category_percentage_value_in_live}"
+        )
         print(f"Average Prediction Of Model: {self.average_prediction_of_model}")
         print(f"In Category Percentage: {self.in_category_percentage}")
-        print(f"In Category Percentage Value In Live: {self.in_category_percentage_value_in_live}")
+        print(
+            f"In Category Percentage Value In Live: {self.in_category_percentage_value_in_live}"
+        )
         print(f"In Average Prediction Of Model: {self.in_average_prediction_of_model}")
-
-

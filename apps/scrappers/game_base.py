@@ -20,7 +20,6 @@ class AbstractControlBase(abc.ABC):
 
 
 class AbstractGameBase(abc.ABC):
-
     @abc.abstractmethod
     def _click(self, element: any):
         ...

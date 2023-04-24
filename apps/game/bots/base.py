@@ -1,5 +1,9 @@
 from typing import List, Optional
-from apps.game.utils import generate_random_multiplier, adaptive_kelly_formula, format_number_to_multiple
+from apps.game.utils import (
+    generate_random_multiplier,
+    adaptive_kelly_formula,
+    format_number_to_multiple,
+)
 from apps.api.models import BotStrategy
 from apps.game.models import Bet, PredictionData, BotType
 from apps.api import services as api_services
@@ -41,7 +45,7 @@ class BotBase:
         bot_type: BotType,
         minimum_bet: float = 0,
         maximum_bet: float = 0,
-        amount_multiple: Optional[float] = None
+        amount_multiple: Optional[float] = None,
     ):
         self.BOT_TYPE = bot_type
         self.minimum_bet = minimum_bet
@@ -58,8 +62,12 @@ class BotBase:
 
         bot = bot_data[0]
         self.MIN_CATEGORY_PERCENTAGE_TO_BET = bot.min_category_percentage_to_bet
-        self.MIN_CATEGORY_PERCENTAGE_VALUE_IN_LIVE_TO_BET = bot.min_category_percentage_value_in_live_to_bet
-        self.MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET = bot.min_average_prediction_model_in_live_to_bet
+        self.MIN_CATEGORY_PERCENTAGE_VALUE_IN_LIVE_TO_BET = (
+            bot.min_category_percentage_value_in_live_to_bet
+        )
+        self.MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET = (
+            bot.min_average_prediction_model_in_live_to_bet
+        )
         self.RISK_FACTOR = bot.risk_factor
         self.MIN_MULTIPLIER_TO_BET = bot.min_multiplier_to_bet
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = bot.min_multiplier_to_recover_losses
@@ -96,7 +104,11 @@ class BotBase:
 
     def get_strategy(self, number_of_bets: int) -> Optional[BotStrategy]:
         profit = self.get_profit_percent()
-        strategies = [s for s in self.STRATEGIES if number_of_bets >= s.number_of_bets and profit >= s.profit_percentage]
+        strategies = [
+            s
+            for s in self.STRATEGIES
+            if number_of_bets >= s.number_of_bets and profit >= s.profit_percentage
+        ]
         return strategies[-1] if len(strategies) > 0 else None
 
     def add_loss(self, amount: float):
@@ -128,8 +140,12 @@ class BotBase:
             self._max_amount_to_bet = 0
         self._min_amount_to_bet = round(self._max_amount_to_bet / 3, 0)
         if self.amount_multiple:
-            self._max_amount_to_bet = format_number_to_multiple(self._max_amount_to_bet, self.amount_multiple)
-            self._min_amount_to_bet = format_number_to_multiple(self._min_amount_to_bet, self.amount_multiple)
+            self._max_amount_to_bet = format_number_to_multiple(
+                self._max_amount_to_bet, self.amount_multiple
+            )
+            self._min_amount_to_bet = format_number_to_multiple(
+                self._min_amount_to_bet, self.amount_multiple
+            )
         # sendEventToGUI.log.success(f"Min bet amount: {self._minAmountToBet}")
         # sendEventToGUI.log.success(f"Max bet amount: {self._maxAmountToBet}")
 
@@ -172,11 +188,21 @@ class BotBase:
 
     def get_prediction_data(self, prediction: PredictionCore) -> PredictionData:
         category_percentage = prediction.get_category_percentage()
-        category_percentage_value_in_live = prediction.get_category_percentage_value_in_live()
+        category_percentage_value_in_live = (
+            prediction.get_category_percentage_value_in_live()
+        )
         average_predictions_of_model = prediction.average_predictions_of_model
-        in_category_percentage_value_in_live = category_percentage_value_in_live >= self.MIN_CATEGORY_PERCENTAGE_VALUE_IN_LIVE_TO_BET
-        in_category_percentage = category_percentage >= self.MIN_CATEGORY_PERCENTAGE_TO_BET
-        in_average_predictions_of_model = average_predictions_of_model >= self.MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET
+        in_category_percentage_value_in_live = (
+            category_percentage_value_in_live
+            >= self.MIN_CATEGORY_PERCENTAGE_VALUE_IN_LIVE_TO_BET
+        )
+        in_category_percentage = (
+            category_percentage >= self.MIN_CATEGORY_PERCENTAGE_TO_BET
+        )
+        in_average_predictions_of_model = (
+            average_predictions_of_model
+            >= self.MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET
+        )
         prediction_data = PredictionData(
             prediction.get_prediction_round_value(),
             prediction.get_predition_value(),
@@ -186,7 +212,7 @@ class BotBase:
             average_predictions_of_model,
             in_category_percentage,
             in_category_percentage_value_in_live,
-            in_average_predictions_of_model
+            in_average_predictions_of_model,
         )
         return prediction_data
 
@@ -201,10 +227,7 @@ class BotBase:
         return abs(amount_lost) / (multiplier - 1)
 
     def get_bet_recovery_amount(
-        self,
-        multiplier: float,
-        probability: float,
-        strategy: BotStrategy
+        self, multiplier: float, probability: float, strategy: BotStrategy
     ) -> float:
         """
         * adjust the bet recovery amount
@@ -215,19 +238,22 @@ class BotBase:
         min_bet = self.balance * strategy.min_amount_percentage_to_bet
         amount_to_recover_losses = self.calculate_recovery_amount(profit, multiplier)
         # calculate the amount to bet to recover last amount loss
-        last_amount_loss = self.calculate_recovery_amount(self.get_min_lost_amount(), multiplier)
+        last_amount_loss = self.calculate_recovery_amount(
+            self.get_min_lost_amount(), multiplier
+        )
         # calculates the maximum amount allowed to recover in a single bet
-        max_recovery_amount = self.maximum_bet * 0.5  # 50% of maximum bet (this can be a parameter of the bot)
+        max_recovery_amount = (
+            self.maximum_bet * 0.5
+        )  # 50% of maximum bet (this can be a parameter of the bot)
         amount = min(amount_to_recover_losses, max_recovery_amount, self.balance)
         amount = last_amount_loss if amount >= max_recovery_amount else amount
-        kelly_amount = adaptive_kelly_formula(multiplier, probability, self.RISK_FACTOR, amount)
+        kelly_amount = adaptive_kelly_formula(
+            multiplier, probability, self.RISK_FACTOR, amount
+        )
         return max(amount, kelly_amount, min_bet)
 
     def generate_recovery_bets(
-        self,
-        multiplier: float,
-        probability: float,
-        strategy: BotStrategy
+        self, multiplier: float, probability: float, strategy: BotStrategy
     ) -> List[Bet]:
         bets: List[Bet] = []
         profit = self.get_profit()
@@ -253,7 +279,7 @@ class BotBase:
         multiplier: float,
         probability: float,
         strategy: BotStrategy,
-        used_amount: Optional[float] = None
+        used_amount: Optional[float] = None,
     ) -> float:
         used_amount = used_amount or 0
         profit = self.get_profit()
@@ -268,15 +294,15 @@ class BotBase:
             amount = min_bet + profit * strategy.profit_percentage_to_bet
         else:
             amount = used_amount / 3
-        amount = adaptive_kelly_formula(multiplier, probability, self.RISK_FACTOR, amount)
+        amount = adaptive_kelly_formula(
+            multiplier, probability, self.RISK_FACTOR, amount
+        )
         if amount > 0:
             amount = self.validate_bet_amount(amount)
         return amount
 
     def generate_bets(
-        self,
-        prediction_data: PredictionData,
-        strategy: BotStrategy
+        self, prediction_data: PredictionData, strategy: BotStrategy
     ) -> List[Bet]:
         self.bets = []
         profit = self.get_profit()
@@ -285,17 +311,23 @@ class BotBase:
         prediction_value = prediction_data.prediction_value
         if profit < 0:
             multiplier = prediction_round if prediction_round == 1 else 2
-            self.bets = self.generate_recovery_bets(multiplier, category_percentage, strategy)
+            self.bets = self.generate_recovery_bets(
+                multiplier, category_percentage, strategy
+            )
             return self.bets
         if prediction_round == 1:
-            amount = self.calculate_amount_bet(prediction_value, category_percentage, strategy)
+            amount = self.calculate_amount_bet(
+                prediction_value, category_percentage, strategy
+            )
             self.bets.append(Bet(amount, prediction_value))
         else:
             # to categories 2 and 3
             amount = self.calculate_amount_bet(1.95, category_percentage, strategy)
             self.bets.append(Bet(amount, 1.95))
             multiplier = generate_random_multiplier(2, 3)
-            amount_2 = self.calculate_amount_bet(multiplier, category_percentage, strategy, amount)
+            amount_2 = self.calculate_amount_bet(
+                multiplier, category_percentage, strategy, amount
+            )
             self.bets.append(Bet(amount_2, multiplier))
         self.bets = [bet for bet in self.bets if bet.amount > 0]
         return self.bets

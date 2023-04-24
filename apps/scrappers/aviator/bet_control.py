@@ -45,30 +45,46 @@ class BetControl(AbstractControlBase):
         self._bet_control_1 = bet_controls.first
         self._bet_control_2 = bet_controls.last
 
-        input_app_spinner_1 = self._bet_control_1.locator(".bet-block>app-spinner").first
-        input_app_spinner_2 = self._bet_control_2.locator(".bet-block>app-spinner").first
+        input_app_spinner_1 = self._bet_control_1.locator(
+            ".bet-block>app-spinner"
+        ).first
+        input_app_spinner_2 = self._bet_control_2.locator(
+            ".bet-block>app-spinner"
+        ).first
 
         self._amount_input_1 = input_app_spinner_1.locator("input").first
         self._amount_input_2 = input_app_spinner_2.locator("input").first
 
-        buttons_switcher_1 = self._bet_control_1.locator("app-navigation-switcher>div>button").all()
-        buttons_switcher_2 = self._bet_control_2.locator("app-navigation-switcher>div>button").all()
+        buttons_switcher_1 = self._bet_control_1.locator(
+            "app-navigation-switcher>div>button"
+        ).all()
+        buttons_switcher_2 = self._bet_control_2.locator(
+            "app-navigation-switcher>div>button"
+        ).all()
 
         self._bet_switcher_button_1 = buttons_switcher_1[0]
         self._auto_switcher_button_1 = buttons_switcher_1[1]
         self._bet_switcher_button_2 = buttons_switcher_2[0]
         self._auto_switcher_button_2 = buttons_switcher_2[1]
 
-        self._auto_cash_out_switcher_1 = self._bet_control_1.locator("app-ui-switcher").last
-        self._auto_cash_out_switcher_2 = self._bet_control_2.locator("app-ui-switcher").last
+        self._auto_cash_out_switcher_1 = self._bet_control_1.locator(
+            "app-ui-switcher"
+        ).last
+        self._auto_cash_out_switcher_2 = self._bet_control_2.locator(
+            "app-ui-switcher"
+        ).last
 
         self._auto_switcher_button_1.click(delay=self._random_delay())
         self._auto_switcher_button_2.click(delay=self._random_delay())
         self._auto_cash_out_switcher_1.click(delay=self._random_delay())
         self._auto_cash_out_switcher_2.click(delay=self._random_delay())
 
-        cash_out_spinner_1 = self._bet_control_1.locator(".cashout-spinner-wrapper").first
-        cash_out_spinner_2 = self._bet_control_2.locator(".cashout-spinner-wrapper").first
+        cash_out_spinner_1 = self._bet_control_1.locator(
+            ".cashout-spinner-wrapper"
+        ).first
+        cash_out_spinner_2 = self._bet_control_2.locator(
+            ".cashout-spinner-wrapper"
+        ).first
 
         self._auto_cash_out_multiplier_1 = cash_out_spinner_1.locator("input").first
         self._auto_cash_out_multiplier_2 = cash_out_spinner_2.locator("input").first

@@ -28,14 +28,14 @@ HomeBets: list[HomeBet] = [
         id=2,
         min_bet=100,
         max_bet=50000,
-        url= "https://betplay.com.co/slots",
+        url="https://betplay.com.co/slots",
         aviator_page=AviatorBetPlay,
     ),
     HomeBet(
         id=3,
         min_bet=500,
         max_bet=500000,
-        url= "https://www.spribe.co/games/aviator",
+        url="https://www.spribe.co/games/aviator",
         aviator_page=AviatorOneWin,
-    )
+    ),
 ]

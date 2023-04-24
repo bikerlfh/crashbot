@@ -14,9 +14,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         self.__fill_cmb_fields()
         self.main_window = main_window
         self.btn_start.clicked.connect(self.button_start_clicked_event)
-        self.cmb_home_bet.currentIndexChanged.connect(
-            self.__set_max_amount_to_bet
-        )
+        self.cmb_home_bet.currentIndexChanged.connect(self.__set_max_amount_to_bet)
         self.__set_max_amount_to_bet(0)
 
     def __fill_cmb_fields(self):
@@ -51,9 +49,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             QtWidgets.QMessageBox.warning(self, "Error", "Select a home bet")
             return
         if not max_amount_to_bet:
-            QtWidgets.QMessageBox.warning(
-                self, "Error", "Set a max amount to bet"
-            )
+            QtWidgets.QMessageBox.warning(self, "Error", "Set a max amount to bet")
             return
 
         home_bet = HomeBets[home_bet_index]

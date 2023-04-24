@@ -15,9 +15,7 @@ class MainDesigner(object):
         MainWindow.resize(727, 594)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.stackedWidget = QtWidgets.QStackedWidget(
-            parent=self.centralwidget
-        )
+        self.stackedWidget = QtWidgets.QStackedWidget(parent=self.centralwidget)
         self.stackedWidget.setGeometry(QtCore.QRect(0, 0, 731, 551))
         self.stackedWidget.setAutoFillBackground(False)
         self.stackedWidget.setObjectName("stackedWidget")
@@ -77,12 +75,8 @@ class MainDesigner(object):
         self.menu_file.setTitle(_translate("MainWindow", "File"))
         self.menuView.setTitle(_translate("MainWindow", "View"))
         self.menu_logs.setTitle(_translate("MainWindow", "Logs"))
-        self.menu_configuration.setTitle(
-            _translate("MainWindow", "Configuration")
-        )
+        self.menu_configuration.setTitle(_translate("MainWindow", "Configuration"))
         self.action_exit.setText(_translate("MainWindow", "Exit"))
         self.actionInfo.setText(_translate("MainWindow", "Info"))
         self.actionDebug.setText(_translate("MainWindow", "Debug"))
-        self.action_crendentials.setText(
-            _translate("MainWindow", "Crendentials")
-        )
+        self.action_crendentials.setText(_translate("MainWindow", "Crendentials"))

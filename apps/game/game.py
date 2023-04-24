@@ -3,12 +3,14 @@ from apps.game.models import Multiplier, Bet, BotType
 from apps.api import services as api_services
 from apps.constants import HomeBet
 from apps.game.prediction_core import PredictionModel, PredictionCore
+
 # from ws.client import WebSocketClient
 from apps.scrappers.aviator.aviator import Aviator
 from apps.scrappers.aviator.bet_control import Control
 from apps.api.models import BetData
 from apps.utils.datetime import sleep_now
 from apps.game.bots import Bot, BotStatic
+
 # from ws.gui_events import sendEventToGUI
 from apps import globals
 
@@ -36,7 +38,7 @@ class Game:
         *,
         home_bet: HomeBet,
         bot_type: BotType,
-        use_bot_static: Optional[bool] = False
+        use_bot_static: Optional[bool] = False,
     ):
         # TODO: add correct customerId
         self.home_bet: home_bet = home_bet
@@ -46,7 +48,9 @@ class Game:
         if not use_bot_static:
             self.bot: Bot = Bot(bot_type, self.minimum_bet, self.maximum_bet)
         else:
-            self.bot: BotStatic = BotStatic(bot_type, self.minimum_bet, self.maximum_bet)
+            self.bot: BotStatic = BotStatic(
+                bot_type, self.minimum_bet, self.maximum_bet
+            )
         self.maximum_win_for_one_bet: float = self.maximum_bet * 100
         self._prediction_model: PredictionModel = PredictionModel.get_instance()
         # globals.home_betId = self.home_bet.id
@@ -96,7 +100,9 @@ class Game:
         # sendEventToGUI.balance(self.balance)
         # sendEventToGUI.log.debug("loading the player.....")
         self.multipliers_to_save = self.aviator_page.multipliers
-        self.multipliers = list(map(lambda item: Multiplier(item), self.multipliers_to_save))
+        self.multipliers = list(
+            map(lambda item: Multiplier(item), self.multipliers_to_save)
+        )
         self.request_save_multipliers()
         self.bot.initialize(self.initial_balance)
         self.initialized = True
@@ -122,8 +128,7 @@ class Game:
         # sendEventToGUI.log.debug("saving multipliers.....")
         try:
             api_services.add_multipliers(
-                home_bet_id=self.home_bet.id,
-                multipliers=self.multipliers_to_save
+                home_bet_id=self.home_bet.id, multipliers=self.multipliers_to_save
             )
             self.multipliers_to_save = []
             # sendEventToGUI.log.debug(f"multipliers saved: {response.data.multipliers}")
@@ -152,7 +157,7 @@ class Game:
             api_services.create_bets(
                 home_bet_id=self.home_bet.id,
                 balance=round(self.balance, 2),
-                bets=bets_to_save
+                bets=bets_to_save,
             )
             # sendEventToGUI.log.debug(f"bets saved: [{response.data.bet_ids}]")
         except Exception as error:
@@ -166,8 +171,7 @@ class Game:
         multipliers = [item.multiplier for item in self.multipliers]
         try:
             predictions = api_services.request_prediction(
-                home_bet_id=self.home_bet.id,
-                multipliers=multipliers
+                home_bet_id=self.home_bet.id, multipliers=multipliers
             )
         except Exception as e:
             # sendEventToGUI.log.debug(f"Error in request_get_prediction: {e}")

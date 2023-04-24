@@ -30,9 +30,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         # add new item to the top
         self.list_log.insertItem(0, item)
         if current_row:
-            current_row = (
-                current_row + 1 if current_row < self.MAX_LOGS_ITEMS else 1
-            )
+            current_row = current_row + 1 if current_row < self.MAX_LOGS_ITEMS else 1
             self.list_log.setCurrentRow(current_row)
         if self.list_log.count() >= self.MAX_LOGS_ITEMS:
             self.list_log.takeItem(self.MAX_LOGS_ITEMS - 1)

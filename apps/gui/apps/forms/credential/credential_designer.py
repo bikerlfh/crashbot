@@ -18,23 +18,17 @@ class CredentialDesigner(object):
         self.btn_dialog = QtWidgets.QDialogButtonBox(parent=Credentials)
         self.btn_dialog.setGeometry(QtCore.QRect(270, 340, 171, 32))
         self.btn_dialog.setOrientation(QtCore.Qt.Orientation.Horizontal)
-        self.btn_dialog.setStandardButtons(
-            QtWidgets.QDialogButtonBox.StandardButton.Ok
-        )
+        self.btn_dialog.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Ok)
         self.btn_dialog.setObjectName("btn_dialog")
         self.tab_credentials = QtWidgets.QTabWidget(parent=Credentials)
         self.tab_credentials.setGeometry(QtCore.QRect(10, 10, 431, 321))
-        self.tab_credentials.setTabPosition(
-            QtWidgets.QTabWidget.TabPosition.North
-        )
+        self.tab_credentials.setTabPosition(QtWidgets.QTabWidget.TabPosition.North)
         self.tab_credentials.setTabShape(QtWidgets.QTabWidget.TabShape.Rounded)
         self.tab_credentials.setObjectName("tab_credentials")
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
         self.lst_credentials_home_bet = QtWidgets.QListWidget(parent=self.tab)
-        self.lst_credentials_home_bet.setGeometry(
-            QtCore.QRect(120, 20, 291, 231)
-        )
+        self.lst_credentials_home_bet.setGeometry(QtCore.QRect(120, 20, 291, 231))
         self.lst_credentials_home_bet.setObjectName("lst_credentials_home_bet")
         item = QtWidgets.QListWidgetItem()
         self.lst_credentials_home_bet.addItem(item)
@@ -63,18 +57,14 @@ class CredentialDesigner(object):
         self.txt_username.setGeometry(QtCore.QRect(20, 120, 391, 30))
         self.txt_username.setMinimumSize(QtCore.QSize(0, 30))
         self.txt_username.setMaximumSize(QtCore.QSize(16777215, 30))
-        self.txt_username.setInputMethodHints(
-            QtCore.Qt.InputMethodHint.ImhDigitsOnly
-        )
+        self.txt_username.setInputMethodHints(QtCore.Qt.InputMethodHint.ImhDigitsOnly)
         self.txt_username.setMaxLength(-1)
         self.txt_username.setObjectName("txt_username")
         self.cmb_home_bet = QtWidgets.QComboBox(parent=self.page_crendential)
         self.cmb_home_bet.setGeometry(QtCore.QRect(20, 50, 391, 30))
         self.cmb_home_bet.setMinimumSize(QtCore.QSize(0, 30))
         self.cmb_home_bet.setMaximumSize(QtCore.QSize(16777215, 30))
-        self.cmb_home_bet.setLayoutDirection(
-            QtCore.Qt.LayoutDirection.LeftToRight
-        )
+        self.cmb_home_bet.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
         self.cmb_home_bet.setAutoFillBackground(False)
         self.cmb_home_bet.setObjectName("cmb_home_bet")
         self.cmb_home_bet.addItem("")
@@ -85,9 +75,7 @@ class CredentialDesigner(object):
         self.btn_save.setGeometry(QtCore.QRect(20, 220, 391, 41))
         self.btn_save.setMinimumSize(QtCore.QSize(0, 30))
         self.btn_save.setMaximumSize(QtCore.QSize(16777215, 300))
-        self.btn_save.setCursor(
-            QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor)
-        )
+        self.btn_save.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
         self.btn_save.setObjectName("btn_save")
         self.label = QtWidgets.QLabel(parent=self.page_crendential)
         self.label.setGeometry(QtCore.QRect(20, 20, 341, 22))
@@ -115,9 +103,7 @@ class CredentialDesigner(object):
         self.btn_dialog.accepted.connect(Credentials.accept)  # type: ignore
         self.btn_dialog.rejected.connect(Credentials.reject)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Credentials)
-        Credentials.setTabOrder(
-            self.tab_credentials, self.lst_credentials_home_bet
-        )
+        Credentials.setTabOrder(self.tab_credentials, self.lst_credentials_home_bet)
         Credentials.setTabOrder(self.lst_credentials_home_bet, self.btn_remove)
         Credentials.setTabOrder(self.btn_remove, self.btn_remove_all)
         Credentials.setTabOrder(self.btn_remove_all, self.cmb_home_bet)

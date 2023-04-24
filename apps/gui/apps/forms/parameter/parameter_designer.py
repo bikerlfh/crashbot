@@ -29,9 +29,7 @@ class ParameterDesigner(object):
         self.cmb_home_bet.setGeometry(QtCore.QRect(20, 50, 351, 30))
         self.cmb_home_bet.setMinimumSize(QtCore.QSize(0, 30))
         self.cmb_home_bet.setMaximumSize(QtCore.QSize(16777215, 30))
-        self.cmb_home_bet.setLayoutDirection(
-            QtCore.Qt.LayoutDirection.LeftToRight
-        )
+        self.cmb_home_bet.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
         self.cmb_home_bet.setObjectName("cmb_home_bet")
         self.cmb_home_bet.addItem("")
         self.cmb_home_bet.addItem("")

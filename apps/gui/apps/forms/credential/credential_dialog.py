@@ -47,14 +47,10 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
             QtWidgets.QMessageBox.warning(self, "Error", "Select a home bet")
             return
         if not username or not password:
-            QtWidgets.QMessageBox.warning(
-                self, "Error", "Enter username and password"
-            )
+            QtWidgets.QMessageBox.warning(self, "Error", "Enter username and password")
             return
 
-        credential = dict(
-            home_bet=home_bet, username=username, password=password
-        )
+        credential = dict(home_bet=home_bet, username=username, password=password)
         utils.save_credentials(credential=credential)
         self.txt_username.setText("")
         self.txt_password.setText("")

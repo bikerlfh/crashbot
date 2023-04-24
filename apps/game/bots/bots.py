@@ -4,19 +4,21 @@ from apps.game.models import Bet, PredictionData, BotType
 from apps.game.prediction_core import PredictionCore
 from apps.game.bots.base import BotBase
 from apps.game.utils import adaptive_kelly_formula
+
 # from ws.gui_events import send_event_to_gui
 
 
 class Bot(BotBase):
     """
-    The Bot class is a class used to determine the optimal fraction of one's capital to bet on a given bet. 
+    The Bot class is a class used to determine the optimal fraction of one's capital to bet on a given bet.
     """
+
     def __init__(
         self,
         bot_type: BotType,
         minimum_bet: float = 0,
         maximum_bet: float = 0,
-        amount_multiple: float = None
+        amount_multiple: float = None,
     ):
         super().__init__(bot_type, minimum_bet, maximum_bet, amount_multiple)
 
@@ -36,12 +38,13 @@ class BotStatic(BotBase):
     In control 2, the bot will bet the min amount of money that the customer selects.
     The min amount of bet should be less than the max amount of bet / 3 example: max bet = 300, min bet = 300/3 = 100.
     """
+
     def __init__(
         self,
         bot_type: BotType,
         minimum_bet: float = 0,
         maximum_bet: float = 0,
-        amount_multiple: float = None
+        amount_multiple: float = None,
     ):
         """
         @param bot_type: BotType bot type
@@ -77,7 +80,9 @@ class BotStatic(BotBase):
             self.remove_loss(total_amount)
         self.bets = []
 
-    def get_bet_recovery_amount(self, multiplier: float, probability: float, strategy: BotStrategy) -> float:
+    def get_bet_recovery_amount(
+        self, multiplier: float, probability: float, strategy: BotStrategy
+    ) -> float:
         """
         Adjust the bet recovery amount.
         :param multiplier: The multiplier.
@@ -92,12 +97,16 @@ class BotStatic(BotBase):
         if amount_to_recover_losses < self.minimum_bet:
             # send_event_to_gui.log.debug(
             #    f"get_bet_recovery_amount :: amount_to_recover_losses <= self.minimum_bet ({amount_to_recover_losses} <= {self.minimum_bet})"
-            #)
+            # )
             return self.minimum_bet
         # calculate the amount to bet to recover last amount loss
-        last_amount_loss = self.calculate_recovery_amount(self.get_min_lost_amount(), multiplier)
+        last_amount_loss = self.calculate_recovery_amount(
+            self.get_min_lost_amount(), multiplier
+        )
         # calculates the maximum amount allowed to recover in a single bet
-        max_recovery_amount = self.maximum_bet * 0.5  # 50% of maximum bet (this can be a parameter of the bot)
+        max_recovery_amount = (
+            self.maximum_bet * 0.5
+        )  # 50% of maximum bet (this can be a parameter of the bot)
         amount = min(amount_to_recover_losses, max_recovery_amount, self.balance)
         amount = last_amount_loss if amount >= max_recovery_amount else amount
         amount = max(amount, self.minimum_bet)
@@ -107,13 +116,15 @@ class BotStatic(BotBase):
             amount = min(round(amount * 0.3, 2), last_amount_loss)
             # send_event_to_gui.log.debug(
             #    f"get_bet_recovery_amount :: possible_loss >= self.stop_loss ({possible_loss} >= {self.stop_loss}) :: new amount={amount}"
-            #)
+            # )
         # kelly_amount = adaptive_kelly_formula(multiplier, probability, self.RISK_FACTOR, amount)
         amount = max(amount, self.minimum_bet)
         # send_event_to_gui.log.debug(f"BotStatic :: get_bet_recovery_amount {amount}")
         return amount
 
-    def generate_recovery_bets(self, multiplier: float, probability: float, strategy: BotStrategy) -> list[Bet]:
+    def generate_recovery_bets(
+        self, multiplier: float, probability: float, strategy: BotStrategy
+    ) -> list[Bet]:
         """
         Generate recovery bets.
         :param multiplier: The multiplier.
@@ -133,7 +144,9 @@ class BotStatic(BotBase):
         bets.append(Bet(amount, multiplier))
         return list(filter(lambda b: b.amount > 0, bets))
 
-    def generate_bets(self, prediction_data: PredictionData, strategy: BotStrategy) -> list[Bet]:
+    def generate_bets(
+        self, prediction_data: PredictionData, strategy: BotStrategy
+    ) -> list[Bet]:
         """
         Generate bets.
         :param prediction_data: The prediction data.
@@ -147,9 +160,7 @@ class BotStatic(BotBase):
             # send_event_to_gui.log.debug("generate_bets :: profit < 0")
             # always the multiplier to recover losses is 1.95
             self.bets = self.generate_recovery_bets(
-                self.MIN_MULTIPLIER_TO_RECOVER_LOSSES,
-                category_percentage,
-                strategy
+                self.MIN_MULTIPLIER_TO_RECOVER_LOSSES, category_percentage, strategy
             )
             return self.bets
         # to category 2
@@ -157,11 +168,15 @@ class BotStatic(BotBase):
         profit_percentage = self.get_profit_percent()
         if profit_percentage > 0.10:
             # send_event_to_gui.log.debug("generate_bets :: profit_percentage > 0.10")
-            max_bet_kelly_amount = adaptive_kelly_formula(1.95, category_percentage, self.RISK_FACTOR,
-                                                          self._max_amount_to_bet)
-            min_bet_kelly_amount = adaptive_kelly_formula(2, category_percentage, self.RISK_FACTOR,
-                                                          self._min_amount_to_bet)
-            self.bets.append(Bet(max(max_bet_kelly_amount, self._max_amount_to_bet), 1.95))
+            max_bet_kelly_amount = adaptive_kelly_formula(
+                1.95, category_percentage, self.RISK_FACTOR, self._max_amount_to_bet
+            )
+            min_bet_kelly_amount = adaptive_kelly_formula(
+                2, category_percentage, self.RISK_FACTOR, self._min_amount_to_bet
+            )
+            self.bets.append(
+                Bet(max(max_bet_kelly_amount, self._max_amount_to_bet), 1.95)
+            )
             self.bets.append(Bet(max(min_bet_kelly_amount, self._min_amount_to_bet), 2))
         else:
             self.bets.append(Bet(self._max_amount_to_bet, 1.95))

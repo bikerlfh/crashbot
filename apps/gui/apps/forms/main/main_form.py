@@ -48,12 +48,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.action_crendentials.triggered.connect(self.show_credential)
 
     def __change_screen(
-        self,
-        *,
-        screen: QWidget,
-        width: int,
-        height: int,
-        title: Optional[str] = None
+        self, *, screen: QWidget, width: int, height: int, title: Optional[str] = None
     ) -> None:
         if title:
             self.setWindowTitle(title)

@@ -10,8 +10,8 @@ class AviatorBetPlay(Aviator):
         if not self._page:
             raise Exception("_login :: page is null")
 
-        username = globals().get('username')
-        password = globals().get('password')
+        username = globals().get("username")
+        password = globals().get("password")
 
         if username and password:
             username_input = self._page.locator("input#userName")
@@ -36,11 +36,15 @@ class AviatorBetPlay(Aviator):
         if not self._page:
             raise Exception("_getAppGame :: page is null")
 
-        self._page.wait_for_url("**/slots/launchGame?gameCode=SPB_aviator**", timeout=50000)
+        self._page.wait_for_url(
+            "**/slots/launchGame?gameCode=SPB_aviator**", timeout=50000
+        )
 
         while True:
             try:
-                self._frame = self._page.frame_locator("#gameFrame").frame_locator("#spribe-game")
+                self._frame = self._page.frame_locator("#gameFrame").frame_locator(
+                    "#spribe-game"
+                )
                 self._app_game = self._frame.locator("app-game").first
                 self._app_game.locator(".result-history").wait_for(timeout=5000)
                 return self._app_game
@@ -79,8 +83,9 @@ class AviatorBetPlay(Aviator):
         limits = self._frame.locator("app-game-limits ul>li>span").all()
         self.minimum_bet = float((limits[0].text_content()).split(" ")[0] or "0")
         self.maximum_bet = float((limits[1].text_content()).split(" ")[0] or "0")
-        self.maximum_win_for_one_bet = float((limits[2].text_content()).split(" ")[0] or "0")
+        self.maximum_win_for_one_bet = float(
+            (limits[2].text_content()).split(" ")[0] or "0"
+        )
 
         button_close = self._frame.locator("ngb-modal-window")
         button_close.click()
-

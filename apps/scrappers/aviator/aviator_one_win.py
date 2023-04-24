@@ -41,7 +41,9 @@ class AviatorOneWin(Aviator):
 
         while True:
             try:
-                self._frame = self._page.locator(".CasinoGamePromoted_game_vXIG_").frame_locator("[src^=https]")
+                self._frame = self._page.locator(
+                    ".CasinoGamePromoted_game_vXIG_"
+                ).frame_locator("[src^=https]")
                 self._app_game = self._frame.locator("app-game").first
                 self._app_game.locator(".result-history").wait_for(timeout=5000)
                 return self._app_game
@@ -76,7 +78,9 @@ class AviatorOneWin(Aviator):
         limits = self._frame.locator("app-game-limits ul>li>span").all()
         self.minimum_bet = float((limits[0].text_content() or "0").split(" ")[0])
         self.maximum_bet = float((limits[1].text_content() or "0").split(" ")[0])
-        self.maximum_win_for_one_bet = float((limits[2].text_content() or "0").split(" ")[0])
+        self.maximum_win_for_one_bet = float(
+            (limits[2].text_content() or "0").split(" ")[0]
+        )
 
         button_close = self._frame.locator("ngb-modal-window")
         button_close.click()

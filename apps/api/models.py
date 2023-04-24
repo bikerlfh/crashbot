@@ -53,11 +53,12 @@ class Bot:
         self.min_multiplier_to_recover_losses = min_multiplier_to_recover_losses
         self.min_probability_to_bet = min_probability_to_bet
         self.min_category_percentage_to_bet = min_category_percentage_to_bet
-        self.min_category_percentage_value_in_live_to_bet = min_category_percentage_value_in_live_to_bet
-        self.min_average_prediction_model_in_live_to_bet = min_average_prediction_model_in_live_to_bet
+        self.min_category_percentage_value_in_live_to_bet = (
+            min_category_percentage_value_in_live_to_bet
+        )
+        self.min_average_prediction_model_in_live_to_bet = (
+            min_average_prediction_model_in_live_to_bet
+        )
         self.stop_loss_percentage = stop_loss_percentage
         self.take_profit_percentage = take_profit_percentage
         self.strategies = [BotStrategy(**strategy) for strategy in strategies]
-
-
-
