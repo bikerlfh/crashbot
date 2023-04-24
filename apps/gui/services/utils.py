@@ -1,17 +1,17 @@
-from datetime import datetime
 from typing import Optional
 
 from PyQt6.QtWidgets import QListWidgetItem
 
-from apps.services.constants import (
+from apps.constants import HomeBet
+from apps.gui.services.constants import (
     ALLOWED_LOG_CODES_TO_SHOW,
     CREDENTIALS_FILE_PATH,
     LOG_CODES,
     MAX_AMOUNT_BALANCE_PERCENTAGE,
     MAX_AMOUNT_HOME_BET_PERCENTAGE,
 )
-from apps.utils import csv
-from apps.utils.encrypt import Encrypt
+from apps.gui.utils import csv
+from apps.gui.utils.encrypt import Encrypt
 
 
 def make_list_item(
@@ -65,7 +65,7 @@ def get_range_amount_to_bet(
 
 def validate_max_amount_to_bet(
     *,
-    home_bet: dict[str, any],
+    home_bet: HomeBet,
     max_amount_to_bet: float,
     balance: Optional[float] = None,
 ) -> bool:
@@ -76,8 +76,8 @@ def validate_max_amount_to_bet(
     :param balance: balance
     :return: bool
     """
-    min_bet = home_bet.get("min_bet")
-    max_bet = home_bet.get("max_bet")
+    min_bet = home_bet.min_bet
+    max_bet = home_bet.max_bet
     min_bet, max_bet = get_range_amount_to_bet(
         min_bet=min_bet,
         max_bet=max_bet,

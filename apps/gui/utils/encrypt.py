@@ -2,7 +2,7 @@ import os
 
 from cryptography.fernet import Fernet
 
-from apps.services.constants import DATA_FILE_PATH
+from apps.gui.services.constants import DATA_FILE_PATH
 from apps.utils.patterns.singleton import Singleton
 
 

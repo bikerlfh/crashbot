@@ -1,9 +1,9 @@
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import QMetaObject, Qt
 
-from apps.forms.parameter.parameter_designer import ParameterDesigner
-from apps.services import utils
-from apps.services.constants import BotTypes, HomeBets
+from apps.gui.forms.parameter.parameter_designer import ParameterDesigner
+from apps.gui.services import utils
+from apps.constants import HomeBets, BotType
 
 
 class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
@@ -19,21 +19,22 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
 
     def __fill_cmb_fields(self):
         count_cmb_bot = self.cmb_home_bet.count()
-        for key, val in HomeBets.items():
-            if key >= count_cmb_bot:
+        for i in range(len(HomeBets)):
+            if i >= count_cmb_bot:
                 self.cmb_home_bet.addItem("")
-            self.cmb_home_bet.setItemText(key, val["name"])
+            self.cmb_home_bet.setItemText(i, HomeBets[i].name)
         count_cmb_bot = self.cmb_bot_type.count()
-        for i in range(len(BotTypes)):
+        bot_type = BotType.to_list()
+        for i, value in enumerate(bot_type):
             if i >= count_cmb_bot:
                 self.cmb_bot_type.addItem("")
-            self.cmb_bot_type.setItemText(i, BotTypes[i].title())
+            self.cmb_bot_type.setItemText(i, value.title())
 
     def __set_max_amount_to_bet(self, index: int):
         home_bet = HomeBets[index]
         min_, max_ = utils.get_range_amount_to_bet(
-            min_bet=home_bet["min_bet"],
-            max_bet=home_bet["max_bet"],
+            min_bet=home_bet.min_bet,
+            max_bet=home_bet.max_bet,
         )
         self.txt_max_bet_amount.setText(str(min_))
 
@@ -53,7 +54,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             return
 
         home_bet = HomeBets[home_bet_index]
-        home_bet_id = home_bet["id"]
+        home_bet_id = home_bet.id
         max_amount_to_bet = float(max_amount_to_bet)
         amount_is_valid = utils.validate_max_amount_to_bet(
             home_bet=home_bet,
@@ -61,8 +62,8 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         )
         if not amount_is_valid:
             min_, max_ = utils.get_range_amount_to_bet(
-                min_bet=home_bet["min_bet"],
-                max_bet=home_bet["max_bet"],
+                min_bet=home_bet.min_bet,
+                max_bet=home_bet.max_bet,
             )
             QtWidgets.QMessageBox.warning(
                 self,
@@ -85,19 +86,24 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
                 home_bet_index = self.cmb_home_bet.currentIndex()
                 home_bet = HomeBets[home_bet_index]
                 credential = utils.get_credentials_by_home_bet(
-                    home_bet=home_bet["name"]
+                    home_bet=home_bet.name
                 )
                 data["username"] = credential.get("username")
                 data["password"] = credential.get("password")
-            self.main_window.socket.start_bot(
-                bot_type=data.get("bot_type"),
-                home_bet_id=data.get("home_bet_id"),
-                max_amount_to_bet=data.get("max_amount_to_bet"),
-                auto_play=data.get("auto_play", False),
-                username=data.get("username"),
-                password=data.get("password"),
-            )
+            # self.main_window.socket.start_bot(
+            #     bot_type=data.get("bot_type"),
+            #     home_bet_id=data.get("home_bet_id"),
+            #     max_amount_to_bet=data.get("max_amount_to_bet"),
+            #     auto_play=data.get("auto_play", False),
+            #     username=data.get("username"),
+            #     password=data.get("password"),
+            # )
             self.btn_start.setDisabled(True)
+            QMetaObject.invokeMethod(
+                self.main_window,
+                "show_console_screen",
+                Qt.ConnectionType.QueuedConnection,
+            )
 
     def on_start_bot(self, data: dict[str, any]):
         """

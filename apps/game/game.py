@@ -1,15 +1,15 @@
 from typing import Optional
-from apps.game.models import Multiplier, Bet, BotType
+from apps.game.models import Multiplier, Bet
+from apps.constants import BotType
 from apps.api import services as api_services
 from apps.constants import HomeBet
 from apps.game.prediction_core import PredictionModel, PredictionCore
 
 # from ws.client import WebSocketClient
-from apps.scrappers.aviator.aviator import Aviator
-from apps.scrappers.aviator.bet_control import Control
+from apps.scrappers.game_base import AbstractGameBase, Control
 from apps.api.models import BetData
 from apps.utils.datetime import sleep_now
-from apps.game.bots import Bot, BotStatic
+from apps.game.bots.bots import Bot, BotStatic
 
 # from ws.gui_events import sendEventToGUI
 from apps import globals
@@ -17,7 +17,7 @@ from apps import globals
 
 class Game:
     MAX_MULTIPLIERS_TO_SAVE: int = 10
-    aviator_page: Aviator
+    game_page: AbstractGameBase
     minimum_bet: float = 0
     maximum_bet: float = 0
     maximum_win_for_one_bet: float = 0
@@ -38,11 +38,11 @@ class Game:
         *,
         home_bet: HomeBet,
         bot_type: BotType,
-        use_bot_static: Optional[bool] = False,
+        use_bot_static: Optional[bool] = True,
     ):
         # TODO: add correct customerId
         self.home_bet: home_bet = home_bet
-        self.aviator_page: Aviator = self.home_bet.get_aviator_page()
+        self.game_page = self.home_bet.get_game_page()
         self.minimum_bet: float = home_bet.min_bet
         self.maximum_bet: float = home_bet.max_bet
         if not use_bot_static:
@@ -93,13 +93,13 @@ class Game:
         # self._ws_client = WebSocketClient.getInstance()
         # self._ws_client.setOnMessage(self.ws_on_message.bind(self))
         # sendEventToGUI.log.info("opening home bet.....")
-        self.aviator_page.open()
+        self.game_page.open()
         # sendEventToGUI.log.debug("reading the player's balance.....")
-        self.initial_balance = self.aviator_page.balance
+        self.initial_balance = self.game_page.balance
         self.balance = self.initial_balance
         # sendEventToGUI.balance(self.balance)
         # sendEventToGUI.log.debug("loading the player.....")
-        self.multipliers_to_save = self.aviator_page.multipliers
+        self.multipliers_to_save = self.game_page.multipliers
         self.multipliers = list(
             map(lambda item: Multiplier(item), self.multipliers_to_save)
         )
@@ -109,7 +109,7 @@ class Game:
         # sendEventToGUI.log.success("Game initialized")
 
     def close(self):
-        self.aviator_page.close()
+        self.game_page.close()
         # TODO: clean all variables
         self.initialized = False
 
@@ -117,7 +117,7 @@ class Game:
         """
         Read the balance from the Aviator
         """
-        return self.aviator_page.read_balance() or 0
+        return self.game_page.read_balance() or 0
 
     def request_save_multipliers(self):
         """
@@ -183,10 +183,10 @@ class Game:
         """
         Wait for the next game to start
         """
-        self.aviator_page.wait_next_game()
+        self.game_page.wait_next_game()
         self.balance = self.read_balance_to_aviator()
         self.bot.update_balance(self.balance)
-        self.add_multiplier(self.aviator_page.multipliers[-1])
+        self.add_multiplier(self.game_page.multipliers[-1])
         self.bets = []
 
     def send_bets_to_aviator(self, bets: list[Bet]):
@@ -198,7 +198,7 @@ class Game:
         for index, bet in enumerate(bets):
             control = Control.Control1 if index == 0 else Control.Control2
             # sendEventToGUI.log.info(f"Sending bet to aviator {bet.amount} * {bet.multiplier} control: {control}")
-            self.aviator_page.bet(bet.amount, bet.multiplier, control)
+            self.game_page.bet(bet.amount, bet.multiplier, control)
             sleep_now(1000)
 
     def play(self):

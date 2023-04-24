@@ -1,6 +1,7 @@
 from apps import globals
 from apps.api.models import BotStrategy
-from apps.game.models import Bet, PredictionData, BotType
+from apps.game.models import Bet, PredictionData
+from apps.constants import BotType
 from apps.game.prediction_core import PredictionCore
 from apps.game.bots.base import BotBase
 from apps.game.utils import adaptive_kelly_formula
@@ -115,7 +116,10 @@ class BotStatic(BotBase):
         if possible_loss >= self.stop_loss:
             amount = min(round(amount * 0.3, 2), last_amount_loss)
             # send_event_to_gui.log.debug(
-            #    f"get_bet_recovery_amount :: possible_loss >= self.stop_loss ({possible_loss} >= {self.stop_loss}) :: new amount={amount}"
+            #    f"get_bet_recovery_amount ::
+            #    possible_loss >= self.stop_loss
+            #    ({possible_loss} >= {self.stop_loss}) ::
+            #    new amount={amount}"
             # )
         # kelly_amount = adaptive_kelly_formula(multiplier, probability, self.RISK_FACTOR, amount)
         amount = max(amount, self.minimum_bet)

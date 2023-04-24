@@ -3,7 +3,7 @@ from typing import Callable, Optional
 import socketio
 from PyQt6 import QtCore
 
-from apps.services.constants import URL_SOCKET, Event
+from apps.gui.services.constants import URL_SOCKET, Event
 
 
 class SocketIOClient(QtCore.QThread):

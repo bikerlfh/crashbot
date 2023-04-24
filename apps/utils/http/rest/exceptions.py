@@ -1,12 +1,6 @@
 # Standard Library
 from typing import Any, Dict, List, Optional, Union
 
-# Libraries
-from app.utils.fastapi.formatters import ErrorFormatter
-
-# Fast api
-from starlette import status
-
 
 class APIException(Exception):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR

@@ -18,8 +18,12 @@ from apps.api.exceptions import (
 from apps.api.models import BetData
 from apps.utils.patterns.singleton import Singleton
 from apps.utils.http.rest.client import RESTClient
+from apps.utils.local_storage import LocalStorage
+from apps.globals import LocalStorageKeys
 
 logger = logging.getLogger(__name__)
+
+local_storage = LocalStorage()
 
 
 class BotAPIConnector(metaclass=Singleton):
@@ -28,6 +32,7 @@ class BotAPIConnector(metaclass=Singleton):
         headers = {
             "Content-Type": "application/json",
             "Cache-Control": "no-cache",
+            "Authorization": f"Bearer {local_storage.get(LocalStorageKeys.TOKEN.value)}"
         }
         self.client = RESTClient(api_url=API_URL, headers=headers)
         self.services = BotAPIServices(client=self.client)
@@ -38,9 +43,9 @@ class BotAPIConnector(metaclass=Singleton):
 
 
 class BotAPIServices:
-    LOGIN = "/api/token/"
-    TOKEN_REFRESH = "/api/token/refresh/"
-    TOKEN_VERIFY = "/api/token/verify/"
+    LOGIN = "api/token/"
+    TOKEN_REFRESH = "api/token/refresh/"
+    TOKEN_VERIFY = "api/token/verify/"
     HOME_BET = "home-bet/"
     HOME_BET_DETAIL = "home-bet/"
     ADD_MULTIPLIERS = "home-bet/multiplier/"
@@ -208,10 +213,10 @@ class BotAPIServices:
         self.validate_response(response=response)
         return response.body
 
-    def get_bots(self) -> Dict[str, Any]:
+    def get_bots(self, bot_type: str) -> Dict[str, Any]:
         try:
             response = self.client.get(
-                service=self.GET_BOTS,
+                service=f"{self.GET_BOTS}?bot_type={bot_type}",
             )
         except Exception as exc:
             logger.exception(f"BotAPIServices :: send_transaction_validator :: {exc}")

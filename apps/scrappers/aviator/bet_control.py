@@ -2,17 +2,13 @@ import random
 from playwright.sync_api import Locator
 from typing import Optional
 from enum import Enum
+from apps.scrappers.game_base import Control
 
 from apps.scrappers.game_base import AbstractControlBase
 
 
 # from game.utils import round_number
 # from ws.gui_events import send_event_to_gui
-
-
-class Control(Enum):
-    Control1 = 1
-    Control2 = 2
 
 
 class BetControl(AbstractControlBase):

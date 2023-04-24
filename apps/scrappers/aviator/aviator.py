@@ -1,8 +1,8 @@
 import abc
 from typing import List, Union
 from playwright.sync_api import sync_playwright, Browser, BrowserContext, Page, Locator
-from apps.scrappers.aviator.bet_control import BetControl, Control
-from apps.scrappers.game_base import AbstractGameBase
+from apps.scrappers.aviator.bet_control import BetControl
+from apps.scrappers.game_base import AbstractGameBase, Control
 from apps.utils.datetime import sleep_now
 
 # from ws.gui_events import send_event_to_gui

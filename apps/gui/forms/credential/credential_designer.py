@@ -139,14 +139,3 @@ class CredentialDesigner(object):
             self.tab_credentials.indexOf(self.page_crendential),
             _translate("Credentials", "Add Crendential"),
         )
-
-
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Credentials = QtWidgets.QDialog()
-    ui = Ui_Credentials()
-    ui.setupUi(Credentials)
-    Credentials.show()
-    sys.exit(app.exec())

@@ -34,6 +34,7 @@ class Bot:
     def __init__(
         self,
         id: int,
+        name: str,
         bot_type: str,
         risk_factor: float,
         min_multiplier_to_bet: float,
@@ -45,8 +46,10 @@ class Bot:
         stop_loss_percentage: float,
         take_profit_percentage: float,
         strategies: list[dict[str, any]],
+        **__kwargs,
     ):
         self.id = id
+        self.name = name
         self.bot_type = bot_type
         self.risk_factor = risk_factor
         self.min_multiplier_to_bet = min_multiplier_to_bet

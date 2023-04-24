@@ -13,3 +13,4 @@ urllib3==1.26.15
 websocket-client==1.5.1
 cryptography
 pytest-playwright==0.3.2
+localStoragePy==0.2.3

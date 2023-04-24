@@ -411,14 +411,3 @@ class LoginDesigner(object):
         self.label.setText(_translate("Login", "Username"))
         self.label_2.setText(_translate("Login", "Password"))
         self.btn_login.setText(_translate("Login", "Login"))
-
-
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Login = QtWidgets.QWidget()
-    ui = Ui_Login()
-    ui.setupUi(Login)
-    Login.show()
-    sys.exit(app.exec())

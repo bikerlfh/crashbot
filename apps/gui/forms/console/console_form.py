@@ -1,8 +1,10 @@
 from PyQt6.QtWidgets import QListWidgetItem, QMessageBox, QWidget
 
-from apps.forms.console.console_designer import ConsoleDesigner
-from apps.services import utils
-from apps.services.constants import HomeBets
+from apps.gui.forms.console.console_designer import ConsoleDesigner
+from apps.gui.services import utils
+from apps.constants import HomeBets, BotType, HomeBet
+
+from apps.game.game import Game
 
 
 class ConsoleForm(QWidget, ConsoleDesigner):
@@ -14,7 +16,8 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     ):
         super().__init__()
         self.logs_to_save = []
-        self.home_bet = None
+        self.home_bet: HomeBet = None
+        self.bot_type: BotType = None
         self.initial_balance = None
         self.balance = None
         self.setupUi(self)
@@ -24,6 +27,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.btn_set_max_amount.clicked.connect(
             self.button_set_max_amount_to_bet_clicked_event
         )
+        self.game: Game = None
 
     def __add_item_to_list(self, item: QListWidgetItem):
         current_row = self.list_log.currentRow()
@@ -45,10 +49,19 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         **kwargs,
     ):
         self.home_bet = HomeBets[home_bet_index]
-        self.lbl_home_bet.setText(self.home_bet["name"])
+        self.bot_type = BotType(bot_type)
+        self.lbl_home_bet.setText(self.home_bet.name)
         self.lbl_bot_type.setText(f"Bot: {bot_type}")
         self.txt_max_amount_to_bet.setText(str(max_amount_to_bet))
         self.btn_auto_bet.setText("AutoBet ON" if auto_play else "AutoBet OFF")
+        self.__initialize_game()
+
+    def __initialize_game(self):
+        self.game = Game(
+            home_bet=self.home_bet,
+            bot_type=self.bot_type,
+        )
+        self.game.initialize()
 
     def button_auto_bet_clicked_event(self):
         self.auto_play = not self.auto_play
@@ -68,8 +81,8 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         )
         if not amount_is_valid:
             min_, max_ = utils.get_range_amount_to_bet(
-                min_bet=self.home_bet["min_bet"],
-                max_bet=self.home_bet["max_bet"],
+                min_bet=self.home_bet.min_bet,
+                max_bet=self.home_bet.max_bet,
             )
             QMessageBox.warning(
                 self,

@@ -1,8 +1,8 @@
 from PyQt6 import QtWidgets
 
-from apps.forms.credential.credential_designer import CredentialDesigner
-from apps.services import utils
-from apps.services.constants import HomeBets
+from apps.gui.forms.credential.credential_designer import CredentialDesigner
+from apps.gui.services import utils
+from apps.constants import HomeBets
 
 
 class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
@@ -34,10 +34,10 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
 
     def __fill_cmb_fields(self):
         count_cmb_home_bet = self.cmb_home_bet.count()
-        for key, val in HomeBets.items():
+        for key, val in enumerate(HomeBets):
             if key >= count_cmb_home_bet:
                 self.cmb_home_bet.addItem("")
-            self.cmb_home_bet.setItemText(key, val["name"])
+            self.cmb_home_bet.setItemText(key, val.name)
 
     def btn_save_clicked(self):
         home_bet = self.cmb_home_bet.currentText()

@@ -3,14 +3,19 @@ from typing import Optional
 from PyQt6 import QtCore, QtGui
 from PyQt6.QtWidgets import QMainWindow, QStackedWidget, QWidget
 
-from apps.utils import os as utils_os
-from apps.forms.console.console_form import ConsoleForm
-from apps.forms.credential.credential_dialog import CredentialDialog
-from apps.forms.login.login_form import LoginForm
-from apps.forms.main.main_designer import MainDesigner
-from apps.forms.parameter.parameter_form import ParameterForm
-from apps.services.constants import ALLOWED_LOG_CODES_TO_SHOW
-from apps.services.socket import SocketIOClient
+from apps.gui.utils import os as utils_os
+from apps.gui.forms.console.console_form import ConsoleForm
+from apps.gui.forms.credential.credential_dialog import CredentialDialog
+from apps.gui.forms.login.login_form import LoginForm
+from apps.gui.forms.main.main_designer import MainDesigner
+from apps.gui.forms.parameter.parameter_form import ParameterForm
+from apps.gui.services.constants import ALLOWED_LOG_CODES_TO_SHOW
+from apps.api import services as api_services
+from apps import globals
+from apps.utils.local_storage import LocalStorage
+
+
+local_storage = LocalStorage()
 
 
 class MainForm(QMainWindow, MainDesigner):
@@ -19,16 +24,16 @@ class MainForm(QMainWindow, MainDesigner):
         self.setupUi(self)
         self.__init_screen()
         self.allowed_logs = ALLOWED_LOG_CODES_TO_SHOW
-        self.socket = SocketIOClient(
-            on_verify=self._on_verify,
-            on_login=self.login_screen.on_login,
-            on_start_bot=self.parameters_screen.on_start_bot,
-            on_log=self.console_screen.on_log,
-            on_auto_play=self.console_screen.on_auto_play,
-            on_set_max_amount_to_bet=self.console_screen.on_set_max_amount_to_bet,
-            on_update_balance=self.console_screen.on_update_balance,
-        )
-        self.socket.run()
+        # self.socket = SocketIOClient(
+        #     on_verify=self._on_verify,
+        #     on_login=self.login_screen.on_login,
+        #     on_start_bot=self.parameters_screen.on_start_bot,
+        #     on_log=self.console_screen.on_log,
+        #     on_auto_play=self.console_screen.on_auto_play,
+        #     on_set_max_amount_to_bet=self.console_screen.on_set_max_amount_to_bet,
+        #     on_update_balance=self.console_screen.on_update_balance,
+        # )
+        # self.socket.run()
         # verify token login
         self._verify_token()
         self._generate_menu_logs()
@@ -64,25 +69,20 @@ class MainForm(QMainWindow, MainDesigner):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    def _on_verify(self, data: dict[str, any]) -> None:
-        """
-        ws callback on verify token
-        :param data: dict(logged: bool)
-        :return: None
-        """
-        if not data.get("logged", False):
-            print("Token is invalid, showing login screen...")
+    def _verify_token(self) -> None:
+        print("Verifying token...")
+        # self.socket.verify()
+        token = local_storage.get(globals.LocalStorageKeys.TOKEN.value)
+        if not token:
             return
-        print("Token is valid, showing main screen...")
+        is_logged = api_services.request_token_verify(token=token)
+        if not is_logged:
+            return
         QtCore.QMetaObject.invokeMethod(
             self,
             "show_parameters_screen",
             QtCore.Qt.ConnectionType.QueuedConnection,
         )
-
-    def _verify_token(self) -> None:
-        print("Verifying token...")
-        self.socket.verify()
 
     def show_login_screen(self):
         self.__change_screen(
@@ -132,6 +132,6 @@ class MainForm(QMainWindow, MainDesigner):
             self.allowed_logs.remove(log_name.lower())
 
     def closeEvent(self, event) -> None:
-        self.socket.close_game()
-        self.socket.stop()
+        # self.socket.close_game()
+        # self.socket.stop()
         super().close()

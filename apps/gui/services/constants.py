@@ -19,36 +19,6 @@ class Event(Enum):
     EXCEPTION = "exception"
 
 
-BotTypes = ["aggressive", "tight", "loose"]
-# the key is the position of the combobox
-HomeBets = {
-    0: {
-        "id": 1,
-        "name": "Demo",
-        "min_bet": 1,
-        "max_bet": 100,
-    },
-    1: {
-        "id": 2,
-        "name": "Bet Play",
-        "min_bet": 100,
-        "max_bet": 50000,
-    },
-    2: {
-        "id": 3,
-        "name": "One Win",
-        "min_bet": 500,
-        "max_bet": 500000,
-    },
-    3: {  # NOQA
-        "id": 4,
-        "name": "Rivalo",  # NOQA
-        "min_bet": 500,
-        "max_bet": 500000,
-    },
-}
-
-
 LOG_CODES = {
     "info": {
         "foreground": None,

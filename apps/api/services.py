@@ -1,6 +1,10 @@
+import logging
 from typing import Optional
 from apps.api.bot_api import BotAPIConnector
 from apps.api.models import Prediction, BetData, Bot
+from apps.api.exceptions import BotAPINoAuthorizationException
+
+logger = logging.getLogger(__name__)
 
 
 def request_login(*, username: str, password: str) -> tuple[str | None, str | None]:
@@ -11,10 +15,16 @@ def request_login(*, username: str, password: str) -> tuple[str | None, str | No
     :return: access, refresh
     """
     bot_connector = BotAPIConnector()
-    response = bot_connector.services.login(username=username, password=password)
-    access = response.get("access")
-    refresh = response.get("refresh")
-    return access, refresh
+    try:
+        response = bot_connector.services.login(username=username, password=password)
+        access = response.get("access")
+        refresh = response.get("refresh")
+        return access, refresh
+    except BotAPINoAuthorizationException:
+        return None, None
+    except Exception as exc:
+        logger.exception(f"BotAPIServices :: request_login :: {exc}")
+        return None, None
 
 
 def request_token_refresh(*, refresh: str) -> str | None:
@@ -24,9 +34,15 @@ def request_token_refresh(*, refresh: str) -> str | None:
     :return:
     """
     bot_connector = BotAPIConnector()
-    response = bot_connector.services.token_refresh(refresh=refresh)
-    access = response.get("access")
-    return access
+    try:
+        response = bot_connector.services.token_refresh(refresh=refresh)
+        access = response.get("access")
+        return access
+    except BotAPINoAuthorizationException:
+        return None
+    except Exception as exc:
+        logger.exception(f"BotAPIServices :: request_token_refresh :: {exc}")
+        return None
 
 
 def request_token_verify(*, token: str) -> bool:
@@ -36,8 +52,14 @@ def request_token_verify(*, token: str) -> bool:
     :return:
     """
     bot_connector = BotAPIConnector()
-    is_valid = bot_connector.services.token_verify(token=token)
-    return is_valid
+    try:
+        is_valid = bot_connector.services.token_verify(token=token)
+        return is_valid
+    except BotAPINoAuthorizationException:
+        return False
+    except Exception as exc:
+        logger.exception(f"BotAPIServices :: request_token_verify :: {exc}")
+        return False
 
 
 def get_home_bets() -> dict[str, any]:
@@ -95,7 +117,7 @@ def get_bots(bot_type: str) -> list[Bot]:
     :return:
     """
     bot_connector = BotAPIConnector()
-    response = bot_connector.services.get_bot(bot_type=bot_type)
+    response = bot_connector.services.get_bots(bot_type=bot_type)
     bots = response.get("bots")
     data = [Bot(**bot) for bot in bots]
     return data

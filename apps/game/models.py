@@ -5,12 +5,6 @@ import random
 import string
 
 
-class BotType(Enum):
-    AGGRESSIVE = "aggressive"
-    TIGHT = "tight"
-    LOOSE = "loose"
-
-
 class Multiplier:
     def __init__(self, multiplier: float):
         self.multiplier = multiplier

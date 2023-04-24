@@ -5,7 +5,8 @@ from apps.game.utils import (
     format_number_to_multiple,
 )
 from apps.api.models import BotStrategy
-from apps.game.models import Bet, PredictionData, BotType
+from apps.game.models import Bet, PredictionData
+from apps.constants import BotType
 from apps.api import services as api_services
 from apps.game.prediction_core import PredictionCore
 
