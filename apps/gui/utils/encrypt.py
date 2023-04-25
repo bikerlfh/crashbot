@@ -9,7 +9,7 @@ from apps.gui.services.constants import DATA_FILE_PATH
 from apps.utils.patterns.singleton import Singleton
 
 
-class Encrypt(Singleton):
+class Encrypt(metaclass=Singleton):
     FILE_KEY_PATH: str
     KEY_ENCRYPTED: str
 
