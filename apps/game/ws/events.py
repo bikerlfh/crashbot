@@ -1,11 +1,14 @@
-from apps.utils.local_storage import LocalStorage
-from apps.game.ws.utils import make_error
-from apps.game.ws import handlers
-from apps.globals import GlobalVars
-from apps.constants import HomeBets, BotType, WSEvent
-from apps.game.game import Game
+# Libraries
 from socketio import AsyncServer
+
+# Internal
+from apps.constants import BotType, HomeBets, WSEvent
+from apps.game.game import Game
+from apps.game.ws import handlers
+from apps.game.ws.utils import make_error
+from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
+from apps.utils.local_storage import LocalStorage
 
 local_storage = LocalStorage()
 

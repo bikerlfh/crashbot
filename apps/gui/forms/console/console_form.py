@@ -1,8 +1,10 @@
+# Libraries
 from PyQt6.QtWidgets import QListWidgetItem, QMessageBox, QWidget
 
+# Internal
+from apps.constants import HomeBets
 from apps.gui.forms.console.console_designer import ConsoleDesigner
 from apps.gui.services import utils
-from apps.constants import HomeBets
 
 
 class ConsoleForm(QWidget, ConsoleDesigner):

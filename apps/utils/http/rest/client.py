@@ -7,10 +7,11 @@ from typing import Any, Callable, Dict, List, Optional, Union
 # Libraries
 import requests
 
-# from utils.core.sensible import obfuscate_sensible_data
-
 # Current Folder
 from .response import Response
+
+# from utils.core.sensible import obfuscate_sensible_data
+
 
 logger = logging.getLogger(__name__)
 

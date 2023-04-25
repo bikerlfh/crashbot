@@ -1,3 +1,4 @@
+# Internal
 from apps.scrappers.aviator.aviator import Aviator
 
 

@@ -1,11 +1,11 @@
-from apps.globals import GlobalVars
+# Internal
 from apps.api.models import BotStrategy
-from apps.game.models import Bet, PredictionData
 from apps.constants import BotType
-from apps.game.prediction_core import PredictionCore
 from apps.game.bots.base import BotBase
+from apps.game.models import Bet, PredictionData
+from apps.game.prediction_core import PredictionCore
 from apps.game.utils import adaptive_kelly_formula
-
+from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
 
 

@@ -1,24 +1,22 @@
 # Standard Library
 import inspect
 import logging
+from http import HTTPStatus
 from typing import Any, Dict, List, Optional
 
-# Django
-from http import HTTPStatus
-
-# Libraries
-from apps.utils.http.rest.response import Response
+# Internal
 from apps.api.constants import API_URL
 from apps.api.exceptions import (
     BotAPIBadRequestException,
-    BotAPINotFoundException,
     BotAPIConnectionException,
     BotAPINoAuthorizationException,
+    BotAPINotFoundException,
 )
 from apps.api.models import BetData
-from apps.utils.patterns.singleton import Singleton
 from apps.utils.http.rest.client import RESTClient
+from apps.utils.http.rest.response import Response
 from apps.utils.local_storage import LocalStorage
+from apps.utils.patterns.singleton import Singleton
 
 logger = logging.getLogger(__name__)
 
@@ -255,7 +253,7 @@ class BotAPIServices:
         data = dict(
             home_bet_id=home_bet_id,
             balance_amount=balance,
-            bets=[vars(bet) for bet in bets]
+            bets=[vars(bet) for bet in bets],
         )
         try:
             response = self.client.post(service=self.BET, data=data)

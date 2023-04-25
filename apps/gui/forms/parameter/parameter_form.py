@@ -1,10 +1,14 @@
+# Standard Library
 from typing import Optional
-from PyQt6 import QtWidgets
-from PyQt6.QtCore import QMetaObject, Qt, Q_ARG
 
+# Libraries
+from PyQt6 import QtWidgets
+from PyQt6.QtCore import Q_ARG, QMetaObject, Qt
+
+# Internal
+from apps.constants import BotType, HomeBets
 from apps.gui.forms.parameter.parameter_designer import ParameterDesigner
 from apps.gui.services import utils
-from apps.constants import BotType, HomeBets
 
 
 class ParameterForm(QtWidgets.QWidget, ParameterDesigner):

@@ -1,9 +1,10 @@
+# Standard Library
 from enum import Enum
 from os import getenv
 
+# Libraries
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
-
 
 LOG_CODES = {
     "info": {

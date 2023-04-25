@@ -1,4 +1,7 @@
+# Standard Library
 from typing import Dict
+
+# Internal
 from apps.api.models import Prediction
 
 # from ws.gui_events import send_event_to_gui
@@ -145,8 +148,7 @@ class PredictionModel:
             )
             if not prediction_:
                 prediction_ = PredictionCore(
-                    id=prediction.id,
-                    average_predictions=prediction.average_predictions
+                    id=prediction.id, average_predictions=prediction.average_predictions
                 )
                 # send_event_to_gui.log.debug(f"New PredictionCore: {prediction.id}")
             prediction_.add_prediction(

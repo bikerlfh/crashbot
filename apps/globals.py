@@ -3,10 +3,13 @@ globals variables
 use globals().get('auto_play') to get value
 use globals().setdefault('auto_play', False) to set value
 """
-from typing import Callable
-from enum import Enum
-from socketio import AsyncServer
+# Standard Library
 import asyncio
+from enum import Enum
+from typing import Callable
+
+# Libraries
+from socketio import AsyncServer
 
 
 class GlobalVars:
@@ -92,6 +95,5 @@ class GlobalVars:
             print("SIO is None")
             return
         asyncio.run_coroutine_threadsafe(
-            cls.SIO.emit(event, data=data),
-            asyncio.get_event_loop()
+            cls.SIO.emit(event, data=data), asyncio.get_event_loop()
         )

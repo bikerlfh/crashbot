@@ -1,7 +1,16 @@
+# Standard Library
 import abc
-from typing import Union
 from enum import Enum
-from playwright.sync_api import sync_playwright, Browser, BrowserContext, Page, Locator
+from typing import Union
+
+# Libraries
+from playwright.sync_api import (
+    Browser,
+    BrowserContext,
+    Locator,
+    Page,
+    sync_playwright,
+)
 
 
 class Control(Enum):

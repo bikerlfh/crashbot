@@ -1,7 +1,10 @@
-from typing import Optional
-from dataclasses import dataclass
+# Standard Library
 import random
 import string
+from dataclasses import dataclass
+from typing import Optional
+
+# Internal
 from apps.gui.gui_events import SendEventToGUI
 
 

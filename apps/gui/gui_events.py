@@ -1,5 +1,8 @@
-from typing import Optional
+# Standard Library
 from enum import Enum
+from typing import Optional
+
+# Internal
 from apps.globals import GlobalVars
 
 

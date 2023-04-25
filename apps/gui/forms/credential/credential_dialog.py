@@ -1,8 +1,10 @@
+# Libraries
 from PyQt6 import QtWidgets
 
+# Internal
+from apps.constants import HomeBets
 from apps.gui.forms.credential.credential_designer import CredentialDesigner
 from apps.gui.services import utils
-from apps.constants import HomeBets
 
 
 class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):

@@ -1,16 +1,17 @@
+# Standard Library
 from typing import Optional
-from apps.game.models import Multiplier, Bet
-from apps.constants import BotType
-from apps.api import services as api_services
-from apps.constants import HomeBet
-from apps.game.prediction_core import PredictionModel, PredictionCore
 
+# Internal
+from apps.api import services as api_services
+from apps.api.models import BetData
+from apps.constants import BotType, HomeBet
+from apps.game.bots.bots import Bot, BotStatic
+from apps.game.models import Bet, Multiplier
+from apps.game.prediction_core import PredictionCore, PredictionModel
+from apps.gui.gui_events import SendEventToGUI
 # from ws.client import WebSocketClient
 from apps.scrappers.game_base import AbstractGameBase, Control
-from apps.api.models import BetData
 from apps.utils.datetime import sleep_now
-from apps.game.bots.bots import Bot, BotStatic
-from apps.gui.gui_events import SendEventToGUI
 
 # from ws.gui_events import sendEventToGUI
 

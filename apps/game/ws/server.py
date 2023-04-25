@@ -1,9 +1,12 @@
-import uvicorn
+# Libraries
 import socketio
+import uvicorn
+
+# Internal
+from apps.constants import WSEvent
+from apps.game.ws import events
 from apps.game.ws.constants import WS_SERVER_HOST, WS_SERVER_PORT
 from apps.globals import GlobalVars
-from apps.game.ws import events
-from apps.constants import WSEvent
 
 sio = socketio.AsyncServer(async_mode="asgi")
 app = socketio.ASGIApp(sio)
@@ -33,7 +36,6 @@ async def verify(sid, data, room=None):
 
 @sio.on(WSEvent.AUTO_PLAY)
 async def set_auto_play(sid, data, room=None):
-    print("set_auto_play", data)
     data_ = events.auto_play_event(data)
     await sio.emit(WSEvent.AUTO_PLAY, data=data_, room=sid)
 

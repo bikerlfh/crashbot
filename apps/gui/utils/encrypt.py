@@ -1,7 +1,10 @@
+# Standard Library
 import os
 
+# Libraries
 from cryptography.fernet import Fernet
 
+# Internal
 from apps.gui.services.constants import DATA_FILE_PATH
 from apps.utils.patterns.singleton import Singleton
 

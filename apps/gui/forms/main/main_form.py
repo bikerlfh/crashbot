@@ -1,9 +1,11 @@
+# Standard Library
 from typing import Optional
 
+# Libraries
 from PyQt6 import QtCore, QtGui
-from PyQt6.QtWidgets import QMainWindow, QStackedWidget, QWidget, QMessageBox
+from PyQt6.QtWidgets import QMainWindow, QMessageBox, QStackedWidget, QWidget
 
-from apps.gui.utils import os as utils_os
+# Internal
 from apps.gui.forms.console.console_form import ConsoleForm
 from apps.gui.forms.credential.credential_dialog import CredentialDialog
 from apps.gui.forms.login.login_form import LoginForm
@@ -11,6 +13,7 @@ from apps.gui.forms.main.main_designer import MainDesigner
 from apps.gui.forms.parameter.parameter_form import ParameterForm
 from apps.gui.services.constants import ALLOWED_LOG_CODES_TO_SHOW
 from apps.gui.services.socket import SocketIOClient
+from apps.gui.utils import os as utils_os
 
 
 class MainForm(QMainWindow, MainDesigner):

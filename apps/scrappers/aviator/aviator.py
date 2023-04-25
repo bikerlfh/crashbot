@@ -1,11 +1,21 @@
+# Standard Library
 import abc
 from typing import List, Union
-from playwright.async_api import async_playwright, Browser, BrowserContext, Page, Locator
+
+# Libraries
+from playwright.async_api import (
+    Browser,
+    BrowserContext,
+    Locator,
+    Page,
+    async_playwright,
+)
+
+# Internal
+from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.aviator.bet_control import BetControl
 from apps.scrappers.game_base import AbstractGameBase, Control
 from apps.utils.datetime import sleep_now
-
-from apps.gui.gui_events import SendEventToGUI
 
 
 class Aviator(AbstractGameBase, abc.ABC):
@@ -26,10 +36,9 @@ class Aviator(AbstractGameBase, abc.ABC):
 
     async def _get_app_game(self) -> Locator:
         if not self._page:
-            SendEventToGUI.exception({
-                "location": "AviatorPage",
-                "message": "_getAppGame :: page is null"
-            })
+            SendEventToGUI.exception(
+                {"location": "AviatorPage", "message": "_getAppGame :: page is null"}
+            )
             print("_getAppGame :: page is null")
             raise Exception("_getAppGame :: page is null")
 
@@ -45,10 +54,9 @@ class Aviator(AbstractGameBase, abc.ABC):
                     print("page :: error timeout")
                     SendEventToGUI.log.debug("page :: error timeout")
                     continue
-                SendEventToGUI.exception({
-                    "location": "AviatorPage",
-                    "message": f"_getAppGame :: {e}"
-                })
+                SendEventToGUI.exception(
+                    {"location": "AviatorPage", "message": f"_getAppGame :: {e}"}
+                )
                 print(f"_getAppGame :: {e}")
                 raise e
 
@@ -81,26 +89,29 @@ class Aviator(AbstractGameBase, abc.ABC):
 
     async def read_game_limits(self):
         if self._app_game is None or self._page is None:
-            SendEventToGUI.exception({
-                "location": "AviatorPage",
-                "message": "readGameLimits :: _appGame or _page is null"
-            })
+            SendEventToGUI.exception(
+                {
+                    "location": "AviatorPage",
+                    "message": "readGameLimits :: _appGame or _page is null",
+                }
+            )
             raise Exception("readGameLimits :: _appGame is null")
         menu = self._app_game.locator(".dropdown-toggle.user")
         if menu is None:
-            SendEventToGUI.exception({
-                "location": "AviatorPage",
-                "message": "readGameLimits :: menu is null"
-            })
+            SendEventToGUI.exception(
+                {"location": "AviatorPage", "message": "readGameLimits :: menu is null"}
+            )
             raise Exception("readGameLimits :: menu is null")
         await menu.click()
         await self._page.wait_for_timeout(400)
         app_user_menu = self._app_game.locator("app-settings-menu")
         if app_user_menu is None:
-            SendEventToGUI.exception({
-                "location": "AviatorPage",
-                "message": "readGameLimits :: appusermenu is null"
-            })
+            SendEventToGUI.exception(
+                {
+                    "location": "AviatorPage",
+                    "message": "readGameLimits :: appusermenu is null",
+                }
+            )
             raise Exception("readGameLimits :: appusermenu is null")
         list_menu = app_user_menu.locator(".list-menu").last
         menu_limits = list_menu.locator(".list-menu-item").last
@@ -120,17 +131,21 @@ class Aviator(AbstractGameBase, abc.ABC):
 
     async def read_balance(self) -> Union[float, None]:
         if self._app_game is None:
-            SendEventToGUI.exception({
-                "location": "AviatorPage",
-                "message": "readBalance :: _appGame is null"
-            })
+            SendEventToGUI.exception(
+                {
+                    "location": "AviatorPage",
+                    "message": "readBalance :: _appGame is null",
+                }
+            )
             raise Exception("readBalance :: _appGame is null")
         self._balance_element = self._app_game.locator(".balance>div>.amount")
         if self._balance_element is None:
-            SendEventToGUI.exception({
-                "location": "AviatorPage",
-                "message": "readBalance :: balance element is null"
-            })
+            SendEventToGUI.exception(
+                {
+                    "location": "AviatorPage",
+                    "message": "readBalance :: balance element is null",
+                }
+            )
             raise Exception("balance element is null")
         self.balance = float(await self._balance_element.text_content() or "0")
         return self.balance
@@ -140,10 +155,12 @@ class Aviator(AbstractGameBase, abc.ABC):
 
     async def read_multipliers(self):
         if not self._page or not self._history_game:
-            SendEventToGUI.exception({
-                "location": "AviatorPage",
-                "message": "readMultipliers :: the page or the history game not exists"
-            })
+            SendEventToGUI.exception(
+                {
+                    "location": "AviatorPage",
+                    "message": "readMultipliers :: the page or the history game not exists",
+                }
+            )
             raise Exception(
                 "readMultipliers :: the page or the history game not exists"
             )
@@ -159,22 +176,22 @@ class Aviator(AbstractGameBase, abc.ABC):
 
     async def bet(self, amount: float, multiplier: float, control: Control):
         if self._controls is None:
-            SendEventToGUI.exception({
-                "location": "AviatorPage",
-                "message": "AviatorPage :: no _controls"
-            })
+            SendEventToGUI.exception(
+                {"location": "AviatorPage", "message": "AviatorPage :: no _controls"}
+            )
             raise Exception("AviatorPage :: no _controls")
         await self._controls.bet(amount, multiplier, control)
 
     async def wait_next_game(self):
         if self._history_game is None:
-            SendEventToGUI.exception({
-               "location": "AviatorPage",
-               "message": "waitNextGame :: no historyGame"
-            })
+            SendEventToGUI.exception(
+                {"location": "AviatorPage", "message": "waitNextGame :: no historyGame"}
+            )
             raise Exception("waitNextGame :: no historyGame")
         last_multiplier_saved = self.multipliers[-1]
-        await self._history_game.locator("app-bubble-multiplier").first.wait_for(timeout=1000)
+        await self._history_game.locator("app-bubble-multiplier").first.wait_for(
+            timeout=1000
+        )
         while True:
             locator = self._history_game.locator("app-bubble-multiplier").first
             last_multiplier_content = await locator.text_content(timeout=1000)

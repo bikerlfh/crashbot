@@ -1,5 +1,10 @@
+# Standard Library
 from enum import Enum
+
+# Libraries
 from localStoragePy import localStoragePy
+
+# Internal
 from apps.utils.patterns.singleton import Singleton
 
 

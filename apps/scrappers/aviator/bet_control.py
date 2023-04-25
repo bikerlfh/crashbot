@@ -1,11 +1,13 @@
+# Standard Library
 import random
-from playwright.async_api import Locator
-from typing import Optional
 from enum import Enum
-from apps.scrappers.game_base import Control
+from typing import Optional
 
-from apps.scrappers.game_base import AbstractControlBase
+# Libraries
+from playwright.async_api import Locator
 
+# Internal
+from apps.scrappers.game_base import AbstractControlBase, Control
 
 # from game.utils import round_number
 # from ws.gui_events import send_event_to_gui
@@ -99,7 +101,9 @@ class BetControl(AbstractControlBase):
         if not auto_cash_out_multiplier:
             raise Exception("buttons null autoCashOutMultiplier")
 
-        value = round(float(await auto_cash_out_multiplier.input_value(timeout=1000)), 2)
+        value = round(
+            float(await auto_cash_out_multiplier.input_value(timeout=1000)), 2
+        )
         if value != multiplier:
             await auto_cash_out_multiplier.fill("", timeout=1000)
             await auto_cash_out_multiplier.type(str(multiplier), delay=100)

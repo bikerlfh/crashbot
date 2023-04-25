@@ -1,10 +1,13 @@
+# Standard Library
 from typing import Callable, Optional
 
+# Libraries
 import socketio
 from PyQt6 import QtCore
 
+# Internal
 from apps.constants import WSEvent
-from apps.game.ws.constants import WS_SERVER_PORT, WS_SERVER_HOST
+from apps.game.ws.constants import WS_SERVER_HOST, WS_SERVER_PORT
 
 
 class SocketIOClient(QtCore.QThread):

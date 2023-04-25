@@ -1,8 +1,11 @@
+# Standard Library
 import logging
 from typing import Optional
+
+# Internal
 from apps.api.bot_api import BotAPIConnector
-from apps.api.models import Prediction, BetData, Bot
 from apps.api.exceptions import BotAPINoAuthorizationException
+from apps.api.models import BetData, Bot, Prediction
 
 logger = logging.getLogger(__name__)
 

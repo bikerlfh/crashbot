@@ -1,14 +1,17 @@
+# Standard Library
 from typing import List, Optional
+
+# Internal
+from apps.api import services as api_services
+from apps.api.models import BotStrategy
+from apps.constants import BotType
+from apps.game.models import Bet, PredictionData
+from apps.game.prediction_core import PredictionCore
 from apps.game.utils import (
-    generate_random_multiplier,
     adaptive_kelly_formula,
     format_number_to_multiple,
+    generate_random_multiplier,
 )
-from apps.api.models import BotStrategy
-from apps.game.models import Bet, PredictionData
-from apps.constants import BotType
-from apps.api import services as api_services
-from apps.game.prediction_core import PredictionCore
 from apps.gui.gui_events import SendEventToGUI
 
 
@@ -83,16 +86,22 @@ class BotBase:
         SendEventToGUI.log.info("Bot initialized")
         SendEventToGUI.log.info(f"Bot type: {self.BOT_TYPE}")
         SendEventToGUI.log.info(f"Bot risk factor: {self.RISK_FACTOR}")
-        SendEventToGUI.log.info(f"Bot min multiplier to bet: {self.MIN_MULTIPLIER_TO_BET}")
-        SendEventToGUI.log.info(f"Bot min multiplier to recover losses: {self.MIN_MULTIPLIER_TO_RECOVER_LOSSES}")
-        SendEventToGUI.log.info(f"Bot min category percentage to bet: {self.MIN_CATEGORY_PERCENTAGE_TO_BET}")
+        SendEventToGUI.log.info(
+            f"Bot min multiplier to bet: {self.MIN_MULTIPLIER_TO_BET}"
+        )
+        SendEventToGUI.log.info(
+            f"Bot min multiplier to recover losses: {self.MIN_MULTIPLIER_TO_RECOVER_LOSSES}"
+        )
+        SendEventToGUI.log.info(
+            f"Bot min category percentage to bet: {self.MIN_CATEGORY_PERCENTAGE_TO_BET}"
+        )
         SendEventToGUI.log.info(
             f"Bot min category percentage value in live to bet: "
             f"{self.MIN_CATEGORY_PERCENTAGE_VALUE_IN_LIVE_TO_BET}"
         )
         SendEventToGUI.log.info(
-             f"Bot min average prediction model in live to bet: "
-             f"{self.MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET}"
+            f"Bot min average prediction model in live to bet: "
+            f"{self.MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET}"
         )
         SendEventToGUI.log.info(f"Stop Loss: {self.stop_loss}")
         SendEventToGUI.log.info(f"Take Profit: {self.take_profit}")
@@ -141,7 +150,9 @@ class BotBase:
     def set_max_amount_to_bet(self, amount: float):
         self._max_amount_to_bet = round(amount, 0)
         if self._max_amount_to_bet > self.balance:
-            SendEventToGUI.log.debug(f"maxAmountToBet is greater than balance({self.balance})")
+            SendEventToGUI.log.debug(
+                f"maxAmountToBet is greater than balance({self.balance})"
+            )
             SendEventToGUI.log.debug("setting maxAmountToBet to balance")
             self._max_amount_to_bet = 0
         self._min_amount_to_bet = round(self._max_amount_to_bet / 3, 0)

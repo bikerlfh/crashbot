@@ -1,3 +1,4 @@
+# Internal
 from apps.scrappers.aviator.aviator import Aviator
 from apps.utils.datetime import sleep_now
 

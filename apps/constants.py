@@ -1,10 +1,13 @@
-from typing import Optional
-from enum import Enum
+# Standard Library
 from dataclasses import dataclass
-from apps.scrappers.game_base import AbstractGameBase
-from apps.scrappers.aviator.aviator_demo import AviatorDemo
+from enum import Enum
+from typing import Optional
+
+# Internal
 from apps.scrappers.aviator.aviator_bet_play import AviatorBetPlay
+from apps.scrappers.aviator.aviator_demo import AviatorDemo
 from apps.scrappers.aviator.aviator_one_win import AviatorOneWin
+from apps.scrappers.game_base import AbstractGameBase
 
 
 class WSEvent(str, Enum):
