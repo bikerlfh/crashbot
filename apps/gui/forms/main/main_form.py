@@ -12,7 +12,7 @@ from apps.gui.forms.login.login_form import LoginForm
 from apps.gui.forms.main.main_designer import MainDesigner
 from apps.gui.forms.parameter.parameter_form import ParameterForm
 from apps.gui.services.constants import ALLOWED_LOG_CODES_TO_SHOW
-from apps.gui.services.socket_client import SocketIOClient
+from apps.gui.services.socket import SocketIOClient
 from apps.gui.utils import os as utils_os
 
 

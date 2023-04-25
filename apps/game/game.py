@@ -12,6 +12,7 @@ from apps.gui.gui_events import SendEventToGUI
 # from ws.client import WebSocketClient
 from apps.scrappers.game_base import AbstractGameBase, Control
 from apps.utils.datetime import sleep_now
+from apps.globals import GlobalVars
 
 # from ws.gui_events import sendEventToGUI
 
@@ -212,7 +213,7 @@ class Game:
         while self.initialized:
             await self.wait_next_game()
             self.get_next_bet()
-            if globals().get("auto_play"):
+            if GlobalVars.get_auto_play():
                 await self.send_bets_to_aviator(self.bets)
             SendEventToGUI.log.info("***************************************")
 
