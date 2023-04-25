@@ -5,20 +5,6 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
 
 
-class Event(Enum):
-    VERIFY = "verify"
-    LOGIN = "login"
-    START_BOT = "startBot"
-    AUTO_PLAY = "autoPlay"
-    CLOSE_GAME = "closeGame"
-    SET_MAX_AMOUNT_TO_BET = "setMaxAmountToBet"
-    # events from server
-    LOG = "log"
-    UPDATE_BALANCE = "update_balance"
-    ERROR = "error"
-    EXCEPTION = "exception"
-
-
 LOG_CODES = {
     "info": {
         "foreground": None,

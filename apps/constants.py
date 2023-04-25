@@ -7,6 +7,20 @@ from apps.scrappers.aviator.aviator_bet_play import AviatorBetPlay
 from apps.scrappers.aviator.aviator_one_win import AviatorOneWin
 
 
+class WSEvent(str, Enum):
+    VERIFY = "verify"
+    LOGIN = "login"
+    START_BOT = "startBot"
+    AUTO_PLAY = "autoPlay"
+    CLOSE_GAME = "closeGame"
+    SET_MAX_AMOUNT_TO_BET = "setMaxAmountToBet"
+    # events from server
+    LOG = "log"
+    UPDATE_BALANCE = "update_balance"
+    ERROR = "error"
+    EXCEPTION = "exception"
+
+
 @dataclass
 class HomeBet:
     id: int

@@ -68,8 +68,8 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         )
         if not amount_is_valid:
             min_, max_ = utils.get_range_amount_to_bet(
-                min_bet=self.home_bet["min_bet"],
-                max_bet=self.home_bet["max_bet"],
+                min_bet=self.home_bet.min_bet,
+                max_bet=self.home_bet.max_bet,
             )
             QMessageBox.warning(
                 self,
@@ -87,7 +87,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         :return: None
         """
         self.btn_auto_bet.setText(
-            "AutoBet ON" if data.get("autoPlay") else "AutoBet OFF"
+            "AutoBet ON" if data.get("auto_play") else "AutoBet OFF"
         )
 
     def on_set_max_amount_to_bet(self, data):
@@ -96,7 +96,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         :param data: dict(maxAmountToBet: float)
         :return: None
         """
-        # print(f"max amount to bet {data} ")
+        print(f"max amount to bet {data} ")
         pass
 
     def on_update_balance(self, data):

@@ -253,7 +253,9 @@ class BotAPIServices:
         bets: list[BetData],
     ) -> Dict[str, Any]:
         data = dict(
-            home_bet_id=home_bet_id, balance=balance, bets=[vars(bet) for bet in bets]
+            home_bet_id=home_bet_id,
+            balance_amount=balance,
+            bets=[vars(bet) for bet in bets]
         )
         try:
             response = self.client.post(service=self.BET, data=data)

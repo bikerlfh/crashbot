@@ -2,7 +2,7 @@ from apps.utils.local_storage import LocalStorage
 from apps.game.ws.utils import make_error
 from apps.game.ws import handlers
 from apps.globals import GlobalVars
-from apps.constants import HomeBets, BotType
+from apps.constants import HomeBets, BotType, WSEvent
 from apps.game.game import Game
 from socketio import AsyncServer
 from apps.gui.gui_events import SendEventToGUI
@@ -39,7 +39,12 @@ def set_max_amount_to_bet_event(data: dict[str, any]) -> dict[str, any]:
     if not max_amount_to_bet:
         return make_error("maxAmountToBet is required")
     GlobalVars.set_max_amount_to_bet(max_amount_to_bet)
-    data = dict(max_amount_to_bet=GlobalVars.get_max_amount_to_bet())
+    game = GlobalVars.get_game()
+    if not game:
+        return make_error("game is not running")
+    max_amount_to_bet = GlobalVars.get_max_amount_to_bet()
+    game.bot.set_max_amount_to_bet(max_amount_to_bet)
+    data = dict(max_amount_to_bet=max_amount_to_bet)
     return data
 
 
@@ -79,7 +84,8 @@ async def start_bot_event(data: dict[str, any], sio: AsyncServer, sid: any) -> a
         return make_error("game is already running")
 
     game = Game(home_bet=home_bet, bot_type=bot_type, use_bot_static=True)
-    await sio.emit("startBot", data=dict(started=True), room=sid)
+    GlobalVars.set_game(game)
+    await sio.emit(WSEvent.START_BOT, data=dict(started=True), room=sid)
     try:
         await game.initialize()
         await game.play()

@@ -3,7 +3,7 @@ from typing import Callable, Optional
 import socketio
 from PyQt6 import QtCore
 
-from apps.gui.services.constants import Event
+from apps.constants import WSEvent
 from apps.game.ws.constants import WS_SERVER_PORT, WS_SERVER_HOST
 
 
@@ -38,27 +38,27 @@ class SocketIOClient(QtCore.QThread):
         self.__assign_events()
 
     def __assign_events(self) -> None:
-        # Define Events
+        # Define WSEvents
         self.__sio.on("connect", self._on_connect)
         self.__sio.on("disconnect", self._on_disconnect)
-        self.__sio.on(Event.VERIFY.value, self.on_verify or self._on_default)
-        self.__sio.on(Event.LOGIN.value, self.on_login or self._on_default)
-        self.__sio.on(Event.START_BOT.value, self.on_start_bot or self._on_default)
-        self.__sio.on(Event.AUTO_PLAY.value, self.on_auto_play or self._on_default)
-        self.__sio.on(Event.CLOSE_GAME.value, self.on_close_game or self._on_default)
-        self.__sio.on(Event.LOG.value, self.on_log or self._on_default)
+        self.__sio.on(WSEvent.VERIFY.value, self.on_verify or self._on_default)
+        self.__sio.on(WSEvent.LOGIN.value, self.on_login or self._on_default)
+        self.__sio.on(WSEvent.START_BOT.value, self.on_start_bot or self._on_default)
+        self.__sio.on(WSEvent.AUTO_PLAY.value, self.on_auto_play or self._on_default)
+        self.__sio.on(WSEvent.CLOSE_GAME.value, self.on_close_game or self._on_default)
+        self.__sio.on(WSEvent.LOG.value, self.on_log or self._on_default)
         self.__sio.on(
-            Event.SET_MAX_AMOUNT_TO_BET.value,
+            WSEvent.SET_MAX_AMOUNT_TO_BET.value,
             self.on_set_max_amount_to_bet or self._on_default,
         )
         self.__sio.on(
-            Event.UPDATE_BALANCE.value,
+            WSEvent.UPDATE_BALANCE.value,
             self.on_update_balance or self._on_default,
         )
-        self.__sio.on(Event.ERROR.value, self.on_error or self._on_default)
-        self.__sio.on(Event.EXCEPTION.value, self.on_exception or self._on_default)
+        self.__sio.on(WSEvent.ERROR.value, self.on_error or self._on_default)
+        self.__sio.on(WSEvent.EXCEPTION.value, self.on_exception or self._on_default)
 
-    def __execute_event(self, event: Event, data: any) -> None:
+    def __execute_event(self, event: WSEvent, data: any) -> None:
         self.__sio.emit(event.value, data)
 
     @staticmethod
@@ -81,11 +81,11 @@ class SocketIOClient(QtCore.QThread):
 
     def verify(self) -> None:
         # this verify if the login is valid
-        self.__execute_event(Event.VERIFY, {})
+        self.__execute_event(WSEvent.VERIFY, {})
 
     def login(self, *, username: str, password) -> None:
         data = dict(username=username, password=password)
-        self.__execute_event(Event.LOGIN, data)
+        self.__execute_event(WSEvent.LOGIN, data)
 
     def start_bot(
         self,
@@ -105,15 +105,15 @@ class SocketIOClient(QtCore.QThread):
             username=username,
             password=password,
         )
-        self.__execute_event(Event.START_BOT, data)
+        self.__execute_event(WSEvent.START_BOT, data)
 
     def auto_play(self, *, auto_play: bool) -> None:
         data = dict(auto_play=auto_play)
-        self.__execute_event(Event.AUTO_PLAY, data)
+        self.__execute_event(WSEvent.AUTO_PLAY, data)
 
     def set_max_amount_to_bet(self, *, max_amount_to_bet: float) -> None:
         data = dict(max_amount_to_bet=max_amount_to_bet)
-        self.__execute_event(Event.SET_MAX_AMOUNT_TO_BET, data)
+        self.__execute_event(WSEvent.SET_MAX_AMOUNT_TO_BET, data)
 
     def close_game(self) -> None:
-        self.__execute_event(Event.CLOSE_GAME, {})
+        self.__execute_event(WSEvent.CLOSE_GAME, {})
