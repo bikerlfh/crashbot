@@ -1,8 +1,16 @@
 from typing import Optional
 from enum import Enum
+from apps.globals import GlobalVars
 
 
-class LogCode(Enum):
+class GUIEvent(str, Enum):
+    LOG = "log"
+    UPDATE_BALANCE = "update_balance"
+    ERROR = "error"
+    EXCEPTION = "exception"
+
+
+class LogCode(str, Enum):
     INFO = "info"
     SUCCESS = "success"
     WARNING = "warning"
@@ -20,11 +28,7 @@ def _send_log_to_gui(data: any, code: Optional[LogCode] = LogCode.INFO):
     data = {"message": data} if isinstance(data, str) else data
     data.update(code=code.value)
     print(f"send log to gui {data}")
-    add_log_func = globals().get("add_log")
-    if not add_log_func:
-        print(f"Error in _send_log_to_gui: add_log_func is None")
-        return
-    add_log_func(data=data, code=code)
+    GlobalVars.emit_to_gui(GUIEvent.LOG, data)
 
 
 class SendEventToGUI:
@@ -50,3 +54,16 @@ class SendEventToGUI:
             _send_log_to_gui(message, LogCode.DEBUG)
 
     log = _LogEvent
+
+    @staticmethod
+    def balance(balance: float):
+        GlobalVars.emit_to_gui(GUIEvent.UPDATE_BALANCE, dict(balance=balance))
+
+    @staticmethod
+    def error(error: str):
+        GlobalVars.emit_to_gui(GUIEvent.ERROR, dict(error=error))
+
+    @staticmethod
+    def exception(exception: any):
+        exception = isinstance(exception, str) and exception or str(exception)
+        GlobalVars.emit_to_gui(GUIEvent.EXCEPTION, dict(exception=exception))

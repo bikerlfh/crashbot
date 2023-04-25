@@ -82,7 +82,7 @@ class Game:
     #     except Exception as error:
     #         SendEventToGUI.log.error(f"socketOnMessage: {error}")
 
-    def initialize(self):
+    async def initialize(self):
         """
         Init the game
         - init the websocket
@@ -93,7 +93,7 @@ class Game:
         # self._ws_client = WebSocketClient.getInstance()
         # self._ws_client.setOnMessage(self.ws_on_message.bind(self))
         SendEventToGUI.log.info("opening home bet.....")
-        self.game_page.open()
+        await self.game_page.open()
         SendEventToGUI.log.debug("reading the player's balance.....")
         self.initial_balance = self.game_page.balance
         self.balance = self.initial_balance

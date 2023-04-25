@@ -1,10 +1,20 @@
-from apps.api import services as api_services
 from apps.utils.local_storage import LocalStorage
+from apps.game.ws.utils import make_error
+from apps.game.ws import handlers
+from apps.globals import GlobalVars
+from apps.constants import HomeBets, BotType
+from apps.game.game import Game
+from socketio import AsyncServer
+from apps.gui.gui_events import SendEventToGUI
 
 local_storage = LocalStorage()
 
 
-def login(data: dict[str, any]) -> bool:
+def verify_event(**_kwargs) -> dict[str, any]:
+    return handlers.verify_token()
+
+
+def login_event(data: dict[str, any]) -> dict[str, any]:
     """
     ws callback for login
     :param data: dict(logged: bool)
@@ -13,24 +23,68 @@ def login(data: dict[str, any]) -> bool:
     username = data.get("username")
     password = data.get("password")
     if not username or not password:
-        return False
-
-    token, refresh = api_services.request_login(username=username, password=password)
-    if not token or not refresh:
-        return False
-    local_storage.set(LocalStorage.LocalStorageKeys.TOKEN.value, token)
-    local_storage.set(LocalStorage.LocalStorageKeys.REFRESH.value, refresh)
-    return True
+        return make_error("username and password are required")
+    return handlers.login(username=username, password=password)
 
 
-def verify(data: dict[str, any]) -> bool:
-    """
-    ws callback for verify
-    :param data: dict(logged: bool)
-    :return: None
-    """
-    token = data.get("token")
-    if not token:
-        return False
-    is_valid = api_services.request_token_verify(token=token)
-    return is_valid
+def auto_play_event(data: dict[str, any]) -> dict[str, any]:
+    auto_play = data.get("auto_play")
+    GlobalVars.set_auto_play(auto_play)
+    data_ = dict(auto_play=GlobalVars.get_auto_play())
+    return data_
+
+
+def set_max_amount_to_bet_event(data: dict[str, any]) -> dict[str, any]:
+    max_amount_to_bet = data.get("max_amount_to_bet")
+    if not max_amount_to_bet:
+        return make_error("maxAmountToBet is required")
+    GlobalVars.set_max_amount_to_bet(max_amount_to_bet)
+    data = dict(max_amount_to_bet=GlobalVars.get_max_amount_to_bet())
+    return data
+
+
+def close_game_event(**_kwargs) -> dict[str, any]:
+    game = GlobalVars.get_game()
+    if not game:
+        return dict(closed=True)
+    game.close()
+    GlobalVars.set_game(None)
+    return dict(closed=True)
+
+
+async def start_bot_event(data: dict[str, any], sio: AsyncServer, sid: any) -> any:
+    GlobalVars.set_io(sio)
+    breakpoint()
+    bot_type = data.get("bot_type")
+    home_bet_id = data.get("home_bet_id")
+    max_amount_to_bet = data.get("max_amount_to_bet")
+    auto_play = data.get("auto_play")
+    username = data.get("username")
+    password = data.get("password")
+    if not bot_type or not home_bet_id or not max_amount_to_bet or auto_play is None:
+        return make_error(
+            "bot_type, home_bet_id, max_amount_to_bet " "and auto_play are required"
+        )
+
+    home_bet = list(filter(lambda x: x.id == home_bet_id, HomeBets))
+    if not home_bet:
+        return make_error("invalid home_bet_id")
+    home_bet = home_bet[0]
+    bot_type = BotType(bot_type)
+    GlobalVars.set_max_amount_to_bet(max_amount_to_bet)
+    GlobalVars.set_auto_play(auto_play)
+    GlobalVars.set_username(username)
+    GlobalVars.set_password(password)
+    game = GlobalVars.get_game()
+    if game:
+        return make_error("game is already running")
+
+    game = Game(home_bet=home_bet, bot_type=bot_type, use_bot_static=True)
+    await sio.emit("startBot", data=dict(started=True), room=sid)
+    try:
+        game.initialize()
+        game.play()
+    except Exception as e:
+        game.close()
+        GlobalVars.set_game(None)
+        SendEventToGUI.exception(e)

@@ -45,7 +45,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         **kwargs,
     ):
         self.home_bet = HomeBets[home_bet_index]
-        self.lbl_home_bet.setText(self.home_bet["name"])
+        self.lbl_home_bet.setText(self.home_bet.name)
         self.lbl_bot_type.setText(f"Bot: {bot_type}")
         self.txt_max_amount_to_bet.setText(str(max_amount_to_bet))
         self.btn_auto_bet.setText("AutoBet ON" if auto_play else "AutoBet OFF")

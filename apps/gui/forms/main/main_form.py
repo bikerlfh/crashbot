@@ -1,7 +1,7 @@
 from typing import Optional
 
 from PyQt6 import QtCore, QtGui
-from PyQt6.QtWidgets import QMainWindow, QStackedWidget, QWidget
+from PyQt6.QtWidgets import QMainWindow, QStackedWidget, QWidget, QMessageBox
 
 from apps.gui.utils import os as utils_os
 from apps.gui.forms.console.console_form import ConsoleForm
@@ -88,6 +88,15 @@ class MainForm(QMainWindow, MainDesigner):
         self.__change_screen(
             screen=self.login_screen, width=300, height=250, title="Login"
         )
+
+    @QtCore.pyqtSlot(str, str)
+    def show_message_box(self, title: str, message: str):
+        print("show_message_box", message)
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Icon.Information)
+        msg.setText(message)
+        msg.setWindowTitle(title)
+        msg.exec()
 
     @QtCore.pyqtSlot()
     def show_parameters_screen(self):

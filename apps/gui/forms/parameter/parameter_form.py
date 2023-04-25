@@ -1,5 +1,6 @@
+from typing import Optional
 from PyQt6 import QtWidgets
-from PyQt6.QtCore import QMetaObject, Qt
+from PyQt6.QtCore import QMetaObject, Qt, Q_ARG
 
 from apps.gui.forms.parameter.parameter_designer import ParameterDesigner
 from apps.gui.services import utils
@@ -104,13 +105,19 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         :param data: dict(started: bool)
         :return: None
         """
-        started = data.get("started", None)
+        print("parameter_form :: on_start_bot", data)
+        started = data.get("started", False)
+        print("on_start_bot :: started", data)
         if not started:
+            error = data.get("error", None)
             # TODO invokeMethod QMessageBox from MainWindow
-            """if error := data.get("error"):
-                QMessageBox.warning(self, f"Error - {error.get('code')}", error.get("message"))
+            QMetaObject.invokeMethod(
+                self.main_window,
+                "show_message_box",
+                Q_ARG(str, error.get("code", "")),
+                Q_ARG(str, error.get("message")),
+            )
             self.btn_start.setDisabled(False)
-            """
             return
         QMetaObject.invokeMethod(
             self.main_window,

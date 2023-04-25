@@ -22,3 +22,15 @@ class LocalStorage(metaclass=Singleton):
 
     def clear(self):
         self.local_storage.clear()
+
+    def set_token(self, token: str):
+        self.set(LocalStorage.LocalStorageKeys.TOKEN.value, token)
+
+    def get_token(self):
+        return self.get(LocalStorage.LocalStorageKeys.TOKEN.value)
+
+    def set_refresh(self, refresh: str):
+        self.set(LocalStorage.LocalStorageKeys.REFRESH.value, refresh)
+
+    def get_refresh(self):
+        return self.get(LocalStorage.LocalStorageKeys.REFRESH.value)

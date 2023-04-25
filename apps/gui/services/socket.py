@@ -61,11 +61,11 @@ class SocketIOClient(QtCore.QThread):
 
     @staticmethod
     def _on_connect() -> None:
-        print("connected to server")
+        print(f"GUI :: connected to server {URL_SOCKET}")
 
     @staticmethod
     def _on_disconnect() -> None:
-        print("disconnect from server")
+        print("GUI :: disconnect from server")
 
     @staticmethod
     def _on_default(data: any) -> None:
@@ -96,21 +96,21 @@ class SocketIOClient(QtCore.QThread):
         password: Optional[str] = None,
     ) -> None:
         data = dict(
-            botType=bot_type,
-            homeBetId=home_bet_id,
-            maxAmountToBet=max_amount_to_bet,
-            autoPlay=auto_play,
+            bot_type=bot_type,
+            home_bet_id=home_bet_id,
+            max_amount_to_bet=max_amount_to_bet,
+            auto_play=auto_play,
             username=username,
             password=password,
         )
         self.__execute_event(Event.START_BOT, data)
 
     def auto_play(self, *, auto_play: bool) -> None:
-        data = dict(autoPlay=auto_play)
+        data = dict(auto_play=auto_play)
         self.__execute_event(Event.AUTO_PLAY, data)
 
     def set_max_amount_to_bet(self, *, max_amount_to_bet: float) -> None:
-        data = dict(maxAmountToBet=max_amount_to_bet)
+        data = dict(max_amount_to_bet=max_amount_to_bet)
         self.__execute_event(Event.SET_MAX_AMOUNT_TO_BET, data)
 
     def close_game(self) -> None:

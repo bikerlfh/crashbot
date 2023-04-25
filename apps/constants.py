@@ -25,7 +25,7 @@ HomeBets: list[HomeBet] = [
     HomeBet(
         id=1,
         name="demo",
-        min_bet=0.1,
+        min_bet=1,
         max_bet=100,
         url="https://www.spribe.co/games/aviator",
         game_page=AviatorDemo,
