@@ -28,9 +28,8 @@ class AbstractControlBase(abc.ABC):
 
 
 class AbstractGameBase(abc.ABC):
-
     def __init__(self, url: str):
-        self.playwright: Union[sync_playwright,None] = None
+        self.playwright: Union[sync_playwright, None] = None
         self._browser: Union[Browser, None] = None
         self._context: Union[BrowserContext, None] = None
         self._page: Union[Page, None] = None

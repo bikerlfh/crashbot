@@ -19,7 +19,6 @@ from apps.api.models import BetData
 from apps.utils.patterns.singleton import Singleton
 from apps.utils.http.rest.client import RESTClient
 from apps.utils.local_storage import LocalStorage
-from apps.globals import LocalStorageKeys
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +31,7 @@ class BotAPIConnector(metaclass=Singleton):
         headers = {
             "Content-Type": "application/json",
             "Cache-Control": "no-cache",
-            "Authorization": f"Bearer {local_storage.get(LocalStorageKeys.TOKEN.value)}"
+            "Authorization": f"Bearer {local_storage.get(LocalStorage.LocalStorageKeys.TOKEN.value)}",
         }
         self.client = RESTClient(api_url=API_URL, headers=headers)
         self.services = BotAPIServices(client=self.client)

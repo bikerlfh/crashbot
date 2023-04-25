@@ -3,7 +3,7 @@ from PyQt6.QtCore import QMetaObject, Qt
 
 from apps.gui.forms.parameter.parameter_designer import ParameterDesigner
 from apps.gui.services import utils
-from apps.constants import HomeBets, BotType
+from apps.constants import BotType, HomeBets
 
 
 class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
@@ -19,16 +19,16 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
 
     def __fill_cmb_fields(self):
         count_cmb_bot = self.cmb_home_bet.count()
-        for i in range(len(HomeBets)):
-            if i >= count_cmb_bot:
+        for key, val in enumerate(HomeBets):
+            if key >= count_cmb_bot:
                 self.cmb_home_bet.addItem("")
-            self.cmb_home_bet.setItemText(i, HomeBets[i].name)
+            self.cmb_home_bet.setItemText(key, val.name)
         count_cmb_bot = self.cmb_bot_type.count()
         bot_type = BotType.to_list()
-        for i, value in enumerate(bot_type):
+        for i in range(len(bot_type)):
             if i >= count_cmb_bot:
                 self.cmb_bot_type.addItem("")
-            self.cmb_bot_type.setItemText(i, value.title())
+            self.cmb_bot_type.setItemText(i, bot_type[i].title())
 
     def __set_max_amount_to_bet(self, index: int):
         home_bet = HomeBets[index]
@@ -85,25 +85,18 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             if self.chk_use_credentials.isChecked():
                 home_bet_index = self.cmb_home_bet.currentIndex()
                 home_bet = HomeBets[home_bet_index]
-                credential = utils.get_credentials_by_home_bet(
-                    home_bet=home_bet.name
-                )
+                credential = utils.get_credentials_by_home_bet(home_bet=home_bet.name)
                 data["username"] = credential.get("username")
                 data["password"] = credential.get("password")
-            # self.main_window.socket.start_bot(
-            #     bot_type=data.get("bot_type"),
-            #     home_bet_id=data.get("home_bet_id"),
-            #     max_amount_to_bet=data.get("max_amount_to_bet"),
-            #     auto_play=data.get("auto_play", False),
-            #     username=data.get("username"),
-            #     password=data.get("password"),
-            # )
-            self.btn_start.setDisabled(True)
-            QMetaObject.invokeMethod(
-                self.main_window,
-                "show_console_screen",
-                Qt.ConnectionType.QueuedConnection,
+            self.main_window.socket.start_bot(
+                bot_type=data.get("bot_type"),
+                home_bet_id=data.get("home_bet_id"),
+                max_amount_to_bet=data.get("max_amount_to_bet"),
+                auto_play=data.get("auto_play", False),
+                username=data.get("username"),
+                password=data.get("password"),
             )
+            self.btn_start.setDisabled(True)
 
     def on_start_bot(self, data: dict[str, any]):
         """

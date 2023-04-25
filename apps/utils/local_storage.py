@@ -1,10 +1,15 @@
+from enum import Enum
 from localStoragePy import localStoragePy
 from apps.utils.patterns.singleton import Singleton
 
 
 class LocalStorage(metaclass=Singleton):
+    class LocalStorageKeys(Enum):
+        TOKEN = "token"
+        REFRESH = "refresh"
+
     def __init__(self):
-        self.local_storage = localStoragePy('co.crashbot.local', 'json')
+        self.local_storage = localStoragePy("co.crashbot.local", "json")
 
     def get(self, key: str):
         return self.local_storage.getItem(key)

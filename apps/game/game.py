@@ -10,9 +10,9 @@ from apps.scrappers.game_base import AbstractGameBase, Control
 from apps.api.models import BetData
 from apps.utils.datetime import sleep_now
 from apps.game.bots.bots import Bot, BotStatic
+from apps.gui.gui_events import SendEventToGUI
 
 # from ws.gui_events import sendEventToGUI
-from apps import globals
 
 
 class Game:
@@ -67,7 +67,7 @@ class Game:
     #         chat_id = data.get("chat_id", None)
     #         others = data.get("others", None)
     #         if not all([home_bet_id, min_multiplier, max_multiplier]):
-    #             # sendEventToGUI.log.debug(f"socketOnMessage: data incomplete {json.dumps(data)}")
+    #             SendEventToGUI.log.debug(f"socketOnMessage: data incomplete {json.dumps(data)}")
     #             return
     #         if home_bet_id != self.home_bet.id:
     #             # the home bet of the bet is not the same as the current home bet
@@ -80,7 +80,7 @@ class Game:
     #         self.bets.append(Bet(amount2, max_multiplier))
     #         self.send_bets_to_aviator(self.bets).then(lambda: None).catch(lambda error: self.bets.clear())
     #     except Exception as error:
-    #         # sendEventToGUI.log.error(f"socketOnMessage: {error}")
+    #         SendEventToGUI.log.error(f"socketOnMessage: {error}")
 
     def initialize(self):
         """
@@ -92,13 +92,13 @@ class Game:
         # sendLogToGUI("connecting to websocket.....")
         # self._ws_client = WebSocketClient.getInstance()
         # self._ws_client.setOnMessage(self.ws_on_message.bind(self))
-        # sendEventToGUI.log.info("opening home bet.....")
+        SendEventToGUI.log.info("opening home bet.....")
         self.game_page.open()
-        # sendEventToGUI.log.debug("reading the player's balance.....")
+        SendEventToGUI.log.debug("reading the player's balance.....")
         self.initial_balance = self.game_page.balance
         self.balance = self.initial_balance
         # sendEventToGUI.balance(self.balance)
-        # sendEventToGUI.log.debug("loading the player.....")
+        SendEventToGUI.log.debug("loading the player.....")
         self.multipliers_to_save = self.game_page.multipliers
         self.multipliers = list(
             map(lambda item: Multiplier(item), self.multipliers_to_save)
@@ -106,7 +106,7 @@ class Game:
         self.request_save_multipliers()
         self.bot.initialize(self.initial_balance)
         self.initialized = True
-        # sendEventToGUI.log.success("Game initialized")
+        SendEventToGUI.log.success("Game initialized")
 
     def close(self):
         self.game_page.close()
@@ -125,15 +125,15 @@ class Game:
         """
         if len(self.multipliers_to_save) < self.MAX_MULTIPLIERS_TO_SAVE:
             return
-        # sendEventToGUI.log.debug("saving multipliers.....")
+        SendEventToGUI.log.debug("saving multipliers.....")
         try:
             api_services.add_multipliers(
                 home_bet_id=self.home_bet.id, multipliers=self.multipliers_to_save
             )
             self.multipliers_to_save = []
-            # sendEventToGUI.log.debug(f"multipliers saved: {response.data.multipliers}")
+            # SendEventToGUI.log.debug(f"multipliers saved: {response.data.multipliers}")
         except Exception as error:
-            # sendEventToGUI.log.debug(f"error in requestSaveMultipliers: {error}")
+            SendEventToGUI.log.debug(f"error in requestSaveMultipliers: {error}")
             print(f"error in requestSaveMultipliers: {error}")
 
     def request_save_bets(self, bets):
@@ -152,16 +152,16 @@ class Game:
             )
             for bet in bets
         ]
-        # sendEventToGUI.log.debug("saving bets.....")
+        SendEventToGUI.log.debug("saving bets.....")
         try:
             api_services.create_bets(
                 home_bet_id=self.home_bet.id,
                 balance=round(self.balance, 2),
                 bets=bets_to_save,
             )
-            # sendEventToGUI.log.debug(f"bets saved: [{response.data.bet_ids}]")
+            # SendEventToGUI.log.debug(f"bets saved: [{response.data.bet_ids}]")
         except Exception as error:
-            # sendEventToGUI.log.debug(f"Error in requestSaveBets: {error}")
+            SendEventToGUI.log.debug(f"Error in requestSaveBets: {error}")
             print(f"Error in requestSaveBets: {error}")
 
     def request_get_prediction(self) -> Optional[PredictionCore]:
@@ -174,7 +174,7 @@ class Game:
                 home_bet_id=self.home_bet.id, multipliers=multipliers
             )
         except Exception as e:
-            # sendEventToGUI.log.debug(f"Error in request_get_prediction: {e}")
+            SendEventToGUI.log.debug(f"Error in request_get_prediction: {e}")
             return None
         self._prediction_model.add_predictions(predictions)
         return self._prediction_model.get_best_prediction()
@@ -183,6 +183,7 @@ class Game:
         """
         Wait for the next game to start
         """
+        SendEventToGUI.log.info("waiting for the next game.....")
         self.game_page.wait_next_game()
         self.balance = self.read_balance_to_aviator()
         self.bot.update_balance(self.balance)
@@ -197,20 +198,22 @@ class Game:
             return
         for index, bet in enumerate(bets):
             control = Control.Control1 if index == 0 else Control.Control2
-            # sendEventToGUI.log.info(f"Sending bet to aviator {bet.amount} * {bet.multiplier} control: {control}")
+            SendEventToGUI.log.info(
+                f"Sending bet to aviator {bet.amount} * {bet.multiplier} control: {control}"
+            )
             self.game_page.bet(bet.amount, bet.multiplier, control)
             sleep_now(1000)
 
     def play(self):
         if not self.initialized:
-            # sendEventToGUI.log.error("The game is not initialized")
+            SendEventToGUI.log.error("The game is not initialized")
             return
         while self.initialized:
             self.wait_next_game()
             self.get_next_bet()
-            if globals.auto_play:
+            if globals().get("auto_play"):
                 self.send_bets_to_aviator(self.bets)
-            # sendEventToGUI.log.info("***************************************")
+            SendEventToGUI.log.info("***************************************")
 
     def evaluate_bets(self, multiplier: float) -> None:
         """
