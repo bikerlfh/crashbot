@@ -1,7 +1,7 @@
 import uvicorn
 import socketio
 from apps.game.ws.constants import WS_SERVER_HOST, WS_SERVER_PORT
-
+from apps.globals import GlobalVars
 from apps.game.ws import events
 
 
@@ -11,12 +11,12 @@ app = socketio.ASGIApp(sio)
 
 @sio.on("connect")
 async def connect(sid, environ):
-    print("connect ", sid)
+    print("connect to game server", sid)
 
 
 @sio.on("disconnect")
 def disconnect(sid):
-    print("disconnect ", sid)
+    print("disconnect to game server", sid)
 
 
 @sio.on("login")
@@ -45,7 +45,7 @@ async def set_max_amount_to_bet(sid, data, room=None):
 
 @sio.on("closeGame")
 async def close_game(sid, data, room=None):
-    data_ = events.close_game_event()
+    data_ = await events.close_game_event()
     await sio.emit("closeGame", data=data_, room=sid)
 
 
@@ -55,4 +55,5 @@ async def start_bot(sid, data, room=None):
 
 
 def run_server():
+    GlobalVars.set_io(sio)
     uvicorn.run(app, host=WS_SERVER_HOST, port=WS_SERVER_PORT)

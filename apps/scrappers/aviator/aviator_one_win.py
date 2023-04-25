@@ -1,5 +1,5 @@
-import asyncio
 from apps.scrappers.aviator.aviator import Aviator
+from apps.utils.datetime import sleep_now
 
 
 class AviatorOneWin(Aviator):
@@ -7,13 +7,13 @@ class AviatorOneWin(Aviator):
         super().__init__(url)
         self._frame = None
 
-    def _login(self):
+    async def _login(self):
         if not self._page:
             raise Exception("_login :: page is null")
 
         page_login_button = self._page.locator("button.login")
-        self._click(page_login_button)
-        asyncio.sleep(1)
+        await self._click(page_login_button)
+        sleep_now(1)
 
         username = globals().get("username")
         password = globals().get("password")
@@ -30,14 +30,14 @@ class AviatorOneWin(Aviator):
         self._page.wait_for_timeout(1000)
 
         login_button_2 = self._page.locator("button.modal-button[type='submit']")
-        self._click(login_button_2)
-        self._page.wait_for_timeout(2000)
+        await self._click(login_button_2)
+        await self._page.wait_for_timeout(2000)
 
-    def _get_app_game(self):
+    async def _get_app_game(self):
         if not self._page:
             raise Exception("_getAppGame :: page is null")
 
-        self._page.wait_for_url("**/casino/play/spribe_aviator**", timeout=50000)
+        await self._page.wait_for_url("**/casino/play/spribe_aviator**", timeout=50000)
 
         while True:
             try:
@@ -45,14 +45,14 @@ class AviatorOneWin(Aviator):
                     ".CasinoGamePromoted_game_vXIG_"
                 ).frame_locator("[src^=https]")
                 self._app_game = self._frame.locator("app-game").first
-                self._app_game.locator(".result-history").wait_for(timeout=5000)
+                await self._app_game.locator(".result-history").wait_for(timeout=5000)
                 return self._app_game
             except Exception as e:
                 if isinstance(e, TimeoutError):
                     continue
                 raise e
 
-    def read_game_limits(self):
+    async def read_game_limits(self):
         if self._frame is None:
             raise Exception("readGameLimits :: _frame is null")
 
@@ -63,8 +63,8 @@ class AviatorOneWin(Aviator):
         if menu is None:
             raise Exception("readGameLimits :: menu is null")
 
-        menu.click()
-        self._page.wait_for_timeout(400)
+        await menu.click()
+        await self._page.wait_for_timeout(400)
 
         app_user_menu = self._app_game.locator("app-settings-menu")
         if app_user_menu is None:
@@ -72,15 +72,15 @@ class AviatorOneWin(Aviator):
 
         list_menu = app_user_menu.locator(".list-menu").last
         menu_limits = list_menu.locator(".list-menu-item").last
-        menu_limits.click()
-        self._page.wait_for_timeout(400)
+        await menu_limits.click()
+        await self._page.wait_for_timeout(400)
 
-        limits = self._frame.locator("app-game-limits ul>li>span").all()
-        self.minimum_bet = float((limits[0].text_content() or "0").split(" ")[0])
-        self.maximum_bet = float((limits[1].text_content() or "0").split(" ")[0])
+        limits = await self._frame.locator("app-game-limits ul>li>span").all()
+        self.minimum_bet = float((await limits[0].text_content() or "0").split(" ")[0])
+        self.maximum_bet = float((await limits[1].text_content() or "0").split(" ")[0])
         self.maximum_win_for_one_bet = float(
-            (limits[2].text_content() or "0").split(" ")[0]
+            (await limits[2].text_content() or "0").split(" ")[0]
         )
 
         button_close = self._frame.locator("ngb-modal-window")
-        button_close.click()
+        await button_close.click()

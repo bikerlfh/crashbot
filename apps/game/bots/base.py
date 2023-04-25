@@ -9,6 +9,7 @@ from apps.game.models import Bet, PredictionData
 from apps.constants import BotType
 from apps.api import services as api_services
 from apps.game.prediction_core import PredictionCore
+from apps.gui.gui_events import SendEventToGUI
 
 
 class BotBase:
@@ -58,7 +59,7 @@ class BotBase:
         self.balance = balance
         bot_data = api_services.get_bots(bot_type=self.BOT_TYPE.value)
         if len(bot_data) == 0:
-            # send_event_to_GUI.exception("No bot data found")
+            SendEventToGUI.exception("No bot data found")
             raise ValueError("No bot data found")
 
         bot = bot_data[0]
@@ -79,19 +80,23 @@ class BotBase:
         self.STRATEGIES = bot.strategies
         self.stop_loss = self.initial_balance * self.STOP_LOSS_PERCENTAGE
         self.take_profit = self.initial_balance * self.TAKE_PROFIT_PERCENTAGE
-        # send_event_to_GUI.log.info("Bot initialized")
-        # send_event_to_GUI.log.info(f"Bot type: {self.BOT_TYPE}")
-        # send_event_to_GUI.log.info(f"Bot risk factor: {self.RISK_FACTOR}")
-        # send_event_to_GUI.log.info(f"Bot min multiplier to bet: {self.MIN_MULTIPLIER_TO_BET}")
-        # send_event_to_GUI.log.info(f"Bot min multiplier to recover losses: {self.MIN_MULTIPLIER_TO_RECOVER_LOSSES}")
-        # send_event_to_GUI.log.info(f"Bot min category percentage to bet: {self.MIN_CATEGORY_PERCENTAGE_TO_BET}")
-        # send_event_to_GUI.log.info(
-        #     f"Bot min category percentage value in live to bet: {self.MIN_CATEGORY_PERCENTAGE_VALUE_IN_LIVE_TO_BET}")
-        # send_event_to_GUI.log.info(
-        #     f"Bot min average prediction model in live to bet: {self.MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET}")
-        # send_event_to_GUI.log.info(f"Stop Loss: {self.stopLoss}")
-        # send_event_to_GUI.log.info(f"Take Profit: {self.takeProfit}")
-        # send_event_to_GUI.log.debug(f"Bot strategies count: {len(self.STRATEGIES)}")
+        SendEventToGUI.log.info("Bot initialized")
+        SendEventToGUI.log.info(f"Bot type: {self.BOT_TYPE}")
+        SendEventToGUI.log.info(f"Bot risk factor: {self.RISK_FACTOR}")
+        SendEventToGUI.log.info(f"Bot min multiplier to bet: {self.MIN_MULTIPLIER_TO_BET}")
+        SendEventToGUI.log.info(f"Bot min multiplier to recover losses: {self.MIN_MULTIPLIER_TO_RECOVER_LOSSES}")
+        SendEventToGUI.log.info(f"Bot min category percentage to bet: {self.MIN_CATEGORY_PERCENTAGE_TO_BET}")
+        SendEventToGUI.log.info(
+            f"Bot min category percentage value in live to bet: "
+            f"{self.MIN_CATEGORY_PERCENTAGE_VALUE_IN_LIVE_TO_BET}"
+        )
+        SendEventToGUI.log.info(
+             f"Bot min average prediction model in live to bet: "
+             f"{self.MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET}"
+        )
+        SendEventToGUI.log.info(f"Stop Loss: {self.stop_loss}")
+        SendEventToGUI.log.info(f"Take Profit: {self.take_profit}")
+        SendEventToGUI.log.debug(f"Bot strategies count: {len(self.STRATEGIES)}")
 
     def validate_bet_amount(self, amount: float) -> float:
         # if amount < minimumBet, set amount = minimumBet
@@ -136,8 +141,8 @@ class BotBase:
     def set_max_amount_to_bet(self, amount: float):
         self._max_amount_to_bet = round(amount, 0)
         if self._max_amount_to_bet > self.balance:
-            # sendEventToGUI.log.debug(f"maxAmountToBet is greater than balance({self.balance})")
-            # sendEventToGUI.log.debug("setting maxAmountToBet to balance")
+            SendEventToGUI.log.debug(f"maxAmountToBet is greater than balance({self.balance})")
+            SendEventToGUI.log.debug("setting maxAmountToBet to balance")
             self._max_amount_to_bet = 0
         self._min_amount_to_bet = round(self._max_amount_to_bet / 3, 0)
         if self.amount_multiple:
@@ -147,8 +152,8 @@ class BotBase:
             self._min_amount_to_bet = format_number_to_multiple(
                 self._min_amount_to_bet, self.amount_multiple
             )
-        # sendEventToGUI.log.success(f"Min bet amount: {self._minAmountToBet}")
-        # sendEventToGUI.log.success(f"Max bet amount: {self._maxAmountToBet}")
+        SendEventToGUI.log.success(f"Min bet amount: {self._min_amount_to_bet}")
+        SendEventToGUI.log.success(f"Max bet amount: {self._max_amount_to_bet}")
 
     def evaluate_bets(self, multiplier_result: float):
         total_amount = 0
@@ -185,7 +190,7 @@ class BotBase:
 
     def update_balance(self, balance: float):
         self.balance = balance
-        # sendEventToGUI.balance(self.balance)
+        SendEventToGUI.balance(self.balance)
 
     def get_prediction_data(self, prediction: PredictionCore) -> PredictionData:
         category_percentage = prediction.get_category_percentage()
@@ -205,8 +210,8 @@ class BotBase:
             >= self.MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET
         )
         prediction_data = PredictionData(
+            prediction.get_prediction_value(),
             prediction.get_prediction_round_value(),
-            prediction.get_predition_value(),
             prediction.get_probability_value(),
             category_percentage,
             category_percentage_value_in_live,
@@ -322,7 +327,7 @@ class BotBase:
             )
             self.bets.append(Bet(amount, prediction_value))
         else:
-            # to categories 2 and 3
+            # to categorize 2 and 3
             amount = self.calculate_amount_bet(1.95, category_percentage, strategy)
             self.bets.append(Bet(amount, 1.95))
             multiplier = generate_random_multiplier(2, 3)
@@ -340,9 +345,10 @@ class BotBase:
         number_of_bet = self.get_number_of_bets()
         strategy = self.get_strategy(number_of_bet)
         if not strategy:
-            # send_event_to_gui.log.warning(
-            #     f"No strategy found for profit percentage: {self.get_profit_percent()}"
-            # )
+            SendEventToGUI.log.warning(
+                f"No strategy found for profit percentage: "
+                f"{self.get_profit_percent()}"
+            )
             return []
 
         profit = self.get_profit()
@@ -350,14 +356,14 @@ class BotBase:
             self.reset_losses()
 
         prediction_data = self.get_prediction_data(prediction)
-        # send_event_to_gui.log.debug(f"profit: {profit}")
+        SendEventToGUI.log.debug(f"profit: {profit}")
         prediction_data.print_data()
         if self.in_stop_loss():
-            # send_event_to_gui.log.warning("Stop loss reached")
+            SendEventToGUI.log.warning("Stop loss reached")
             return []
 
         if self.in_take_profit():
-            # send_event_to_gui.log.success("Take profit reached")
+            SendEventToGUI.log.success("Take profit reached")
             return []
 
         if not prediction_data.in_category_percentage:
@@ -367,11 +373,11 @@ class BotBase:
             return []
 
         if prediction_data.prediction_value < self.MIN_MULTIPLIER_TO_BET:
-            # send_event_to_gui.log.warning("Prediction value is too low")
+            SendEventToGUI.log.warning("Prediction value is too low")
             return []
 
         if prediction_data.probability < self.MIN_PROBABILITY_TO_BET:
-            # send_event_to_gui.log.debug("Probability is too low")
+            SendEventToGUI.log.debug("Probability is too low")
             return []
 
         # CATEGORY 1

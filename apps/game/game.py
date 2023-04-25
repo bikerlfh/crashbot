@@ -108,16 +108,16 @@ class Game:
         self.initialized = True
         SendEventToGUI.log.success("Game initialized")
 
-    def close(self):
-        self.game_page.close()
+    async def close(self):
+        await self.game_page.close()
         # TODO: clean all variables
         self.initialized = False
 
-    def read_balance_to_aviator(self):
+    async def read_balance_to_aviator(self):
         """
         Read the balance from the Aviator
         """
-        return self.game_page.read_balance() or 0
+        return await self.game_page.read_balance() or 0
 
     def request_save_multipliers(self):
         """
@@ -131,7 +131,7 @@ class Game:
                 home_bet_id=self.home_bet.id, multipliers=self.multipliers_to_save
             )
             self.multipliers_to_save = []
-            # SendEventToGUI.log.debug(f"multipliers saved: {response.data.multipliers}")
+            SendEventToGUI.log.debug(f"multipliers saved")
         except Exception as error:
             SendEventToGUI.log.debug(f"error in requestSaveMultipliers: {error}")
             print(f"error in requestSaveMultipliers: {error}")
@@ -159,7 +159,7 @@ class Game:
                 balance=round(self.balance, 2),
                 bets=bets_to_save,
             )
-            # SendEventToGUI.log.debug(f"bets saved: [{response.data.bet_ids}]")
+            SendEventToGUI.log.debug(f"bets saved")
         except Exception as error:
             SendEventToGUI.log.debug(f"Error in requestSaveBets: {error}")
             print(f"Error in requestSaveBets: {error}")
@@ -179,18 +179,18 @@ class Game:
         self._prediction_model.add_predictions(predictions)
         return self._prediction_model.get_best_prediction()
 
-    def wait_next_game(self):
+    async def wait_next_game(self):
         """
         Wait for the next game to start
         """
         SendEventToGUI.log.info("waiting for the next game.....")
-        self.game_page.wait_next_game()
-        self.balance = self.read_balance_to_aviator()
+        await self.game_page.wait_next_game()
+        self.balance = await self.read_balance_to_aviator()
         self.bot.update_balance(self.balance)
         self.add_multiplier(self.game_page.multipliers[-1])
         self.bets = []
 
-    def send_bets_to_aviator(self, bets: list[Bet]):
+    async def send_bets_to_aviator(self, bets: list[Bet]):
         """
         Send the bets to the Aviator
         """
@@ -201,18 +201,18 @@ class Game:
             SendEventToGUI.log.info(
                 f"Sending bet to aviator {bet.amount} * {bet.multiplier} control: {control}"
             )
-            self.game_page.bet(bet.amount, bet.multiplier, control)
+            await self.game_page.bet(bet.amount, bet.multiplier, control)
             sleep_now(1000)
 
-    def play(self):
+    async def play(self):
         if not self.initialized:
             SendEventToGUI.log.error("The game is not initialized")
             return
         while self.initialized:
-            self.wait_next_game()
+            await self.wait_next_game()
             self.get_next_bet()
             if globals().get("auto_play"):
-                self.send_bets_to_aviator(self.bets)
+                await self.send_bets_to_aviator(self.bets)
             SendEventToGUI.log.info("***************************************")
 
     def evaluate_bets(self, multiplier: float) -> None:
@@ -248,7 +248,7 @@ class Game:
         )
         prediction = self.request_get_prediction()
         if prediction is None:
-            # send_event_to_GUI.log.warning("No prediction found")
+            SendEventToGUI.log.warning("No prediction found")
             return []
         self.bets = self.bot.get_next_bet(prediction)
         return self.bets

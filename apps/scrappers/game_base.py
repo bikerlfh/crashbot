@@ -11,19 +11,19 @@ class Control(Enum):
 
 class AbstractControlBase(abc.ABC):
     @abc.abstractmethod
-    def init(self):
+    async def init(self):
         ...
 
     @abc.abstractmethod
-    def set_auto_cash_out(self, multiplier, control):
+    async def set_auto_cash_out(self, multiplier, control):
         ...
 
     @abc.abstractmethod
-    def update_amount(self, amount, control):
+    async def update_amount(self, amount, control):
         ...
 
     @abc.abstractmethod
-    def bet(self, amount, multiplier, control):
+    async def bet(self, amount, multiplier, control):
         ...
 
 
@@ -45,37 +45,37 @@ class AbstractGameBase(abc.ABC):
         self.balance: int = 0
 
     @abc.abstractmethod
-    def _click(self, element: any):
+    async def _click(self, element: any):
         ...
 
     @abc.abstractmethod
-    def _login(self):
+    async def _login(self):
         ...
 
     @abc.abstractmethod
-    def open(self):
+    async def open(self):
         ...
 
     @abc.abstractmethod
-    def close(self):
+    async def close(self):
         ...
 
     @abc.abstractmethod
-    def read_game_limits(self):
+    async def read_game_limits(self):
         ...
 
     @abc.abstractmethod
-    def read_balance(self) -> float:
+    async def read_balance(self) -> float:
         ...
 
     @abc.abstractmethod
-    def read_multipliers(self):
+    async def read_multipliers(self):
         ...
 
     @abc.abstractmethod
-    def bet(self, amount: float, multiplier: float, control: Control):
+    async def bet(self, amount: float, multiplier: float, control: Control):
         ...
 
     @abc.abstractmethod
-    def wait_next_game(self):
+    async def wait_next_game(self):
         ...

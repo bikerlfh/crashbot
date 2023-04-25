@@ -3,7 +3,8 @@ from typing import Callable, Optional
 import socketio
 from PyQt6 import QtCore
 
-from apps.gui.services.constants import URL_SOCKET, Event
+from apps.gui.services.constants import Event
+from apps.game.ws.constants import WS_SERVER_PORT, WS_SERVER_HOST
 
 
 class SocketIOClient(QtCore.QThread):
@@ -22,6 +23,7 @@ class SocketIOClient(QtCore.QThread):
         on_exception: Optional[Callable] = None,
     ):
         super().__init__()
+        self.WS_SERVER_URL = f"http://{WS_SERVER_HOST}:{WS_SERVER_PORT}"
         self.on_verify = on_verify
         self.on_login = on_login
         self.on_start_bot = on_start_bot
@@ -61,7 +63,7 @@ class SocketIOClient(QtCore.QThread):
 
     @staticmethod
     def _on_connect() -> None:
-        print(f"GUI :: connected to server {URL_SOCKET}")
+        print(f"GUI :: connected to server: {WS_SERVER_HOST}:{WS_SERVER_PORT}")
 
     @staticmethod
     def _on_disconnect() -> None:
@@ -72,7 +74,7 @@ class SocketIOClient(QtCore.QThread):
         print(f"WS callback not specify!!!: {data}")
 
     def run(self) -> None:
-        self.__sio.connect(URL_SOCKET)
+        self.__sio.connect(self.WS_SERVER_URL)
 
     def stop(self) -> None:
         self.__sio.disconnect()

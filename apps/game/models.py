@@ -1,8 +1,8 @@
 from typing import Optional
 from dataclasses import dataclass
-from enum import Enum
 import random
 import string
+from apps.gui.gui_events import SendEventToGUI
 
 
 class Multiplier:
@@ -20,16 +20,16 @@ class Bet:
         self.amount = amount
         self.multiplier = multiplier
         self.prediction = prediction or self.multiplier
-        self.multiplierResult = None
+        self.multiplier_result = None
         self.profit = 0
 
     def __generate_external_id(self):
         return "".join(random.choices(string.ascii_uppercase + string.digits, k=16))
 
     def evaluate(self, multiplier_result: float):
-        self.multiplierResult = multiplier_result
+        self.multiplier_result = multiplier_result
         if multiplier_result > self.multiplier:
-            self.profit += self.amount * (self.multiplierResult - 1)
+            self.profit += self.amount * (self.multiplier_result - 1)
         else:
             self.profit -= self.amount
         return round(self.profit, 2)
@@ -48,16 +48,17 @@ class PredictionData:
     in_average_prediction_of_model: bool
 
     def print_data(self) -> None:
-        print(f"Prediction Value: {self.prediction_value}")
-        print(f"Prediction Round: {self.prediction_round}")
-        print(f"Probability: {self.probability}")
-        print(f"Category Percentage: {self.category_percentage}")
-        print(
-            f"Category Percentage Value In Live: {self.category_percentage_value_in_live}"
+        SendEventToGUI.log.success(
+            f"prediction: {self.prediction_round}({self.prediction_value}) - "
+            f"probability: {self.probability}"
         )
-        print(f"Average Prediction Of Model: {self.average_prediction_of_model}")
-        print(f"In Category Percentage: {self.in_category_percentage}")
-        print(
-            f"In Category Percentage Value In Live: {self.in_category_percentage_value_in_live}"
+        SendEventToGUI.log.info(
+            f"CatPer: {self.category_percentage} - "
+            f"CatPerVal: {self.category_percentage_value_in_live} - "
+            f"AvgModel: {self.average_prediction_of_model}"
         )
-        print(f"In Average Prediction Of Model: {self.in_average_prediction_of_model}")
+        SendEventToGUI.log.debug(
+            f"InCatPer: {self.in_category_percentage} - "
+            f"InCatPerVal: {self.in_category_percentage_value_in_live} - "
+            f"InAvgModel: {self.in_average_prediction_of_model}"
+        )

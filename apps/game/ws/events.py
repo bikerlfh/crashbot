@@ -43,18 +43,17 @@ def set_max_amount_to_bet_event(data: dict[str, any]) -> dict[str, any]:
     return data
 
 
-def close_game_event(**_kwargs) -> dict[str, any]:
+async def close_game_event(**_kwargs) -> dict[str, any]:
     game = GlobalVars.get_game()
     if not game:
         return dict(closed=True)
-    game.close()
+    await game.close()
     GlobalVars.set_game(None)
     return dict(closed=True)
 
 
 async def start_bot_event(data: dict[str, any], sio: AsyncServer, sid: any) -> any:
     GlobalVars.set_io(sio)
-    breakpoint()
     bot_type = data.get("bot_type")
     home_bet_id = data.get("home_bet_id")
     max_amount_to_bet = data.get("max_amount_to_bet")
@@ -82,9 +81,9 @@ async def start_bot_event(data: dict[str, any], sio: AsyncServer, sid: any) -> a
     game = Game(home_bet=home_bet, bot_type=bot_type, use_bot_static=True)
     await sio.emit("startBot", data=dict(started=True), room=sid)
     try:
-        game.initialize()
-        game.play()
+        await game.initialize()
+        await game.play()
     except Exception as e:
-        game.close()
+        await game.close()
         GlobalVars.set_game(None)
         SendEventToGUI.exception(e)

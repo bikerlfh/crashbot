@@ -27,7 +27,6 @@ def _send_log_to_gui(data: any, code: Optional[LogCode] = LogCode.INFO):
     """
     data = {"message": data} if isinstance(data, str) else data
     data.update(code=code.value)
-    print(f"send log to gui {data}")
     GlobalVars.emit_to_gui(GUIEvent.LOG, data)
 
 
