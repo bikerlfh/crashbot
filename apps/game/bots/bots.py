@@ -39,6 +39,7 @@ class BotStatic(BotBase):
     In control 2, the bot will bet the min amount of money that the customer selects.
     The min amount of bet should be less than the max amount of bet / 3 example: max bet = 300, min bet = 300/3 = 100.
     """
+    RECOVERY_PERCENTAGE_TO_MAX_BET = 1
 
     def __init__(
         self,
@@ -98,29 +99,24 @@ class BotStatic(BotBase):
             profit, multiplier
         )
         if amount_to_recover_losses < self.minimum_bet:
-            SendEventToGUI.log.debug(
-                f"get_bet_recovery_amount :: "
-                f"amount_to_recover_losses <= self.minimum_bet "
-                f"({amount_to_recover_losses} <= {self.minimum_bet})"
-            )
             return self.minimum_bet
         # calculate the amount to bet to recover last amount loss
         last_amount_loss = self.calculate_recovery_amount(
-            self.get_min_lost_amount(), multiplier
+            self.get_last_lost_amount(), multiplier
         )
         # calculates the maximum amount allowed to recover in a single bet
         max_recovery_amount = (
-            self.maximum_bet * 0.5
-        )  # 50% of maximum bet (this can be a parameter of the bot)
+            self.maximum_bet * self.RECOVERY_PERCENTAGE_TO_MAX_BET
+        )
         amount = min(
             amount_to_recover_losses, max_recovery_amount, self.balance
         )
-        amount = last_amount_loss if amount >= max_recovery_amount else amount
+        # amount = last_amount_loss if amount >= max_recovery_amount else amount
         amount = max(amount, self.minimum_bet)
         # validation of new balance after bet recovery with the stop loss
         possible_loss = abs(profit) + amount
         if possible_loss >= self.stop_loss:
-            amount = min(round(amount * 0.3, 2), last_amount_loss)
+            amount = min(round(amount * 0.5, 2), last_amount_loss)
             SendEventToGUI.log.debug(
                 f"get_bet_recovery_amount ::"
                 f"possible_loss >= self.stop_loss"
@@ -150,7 +146,7 @@ class BotStatic(BotBase):
                 f"{self.MIN_MULTIPLIER_TO_RECOVER_LOSSES}, no recovery bets"
             )
             return []
-        SendEventToGUI.log.debug(f"Amount Lost: {self.amounts_lost}")
+        SendEventToGUI.log.debug("generating recovery bets")
         bets = []
         amount = self.get_bet_recovery_amount(
             multiplier, probability, strategy
@@ -171,8 +167,8 @@ class BotStatic(BotBase):
         self.bets = []
         profit = self.get_profit()
         category_percentage = prediction_data.category_percentage
+        SendEventToGUI.log.debug(f"Amount Lost: {self.amounts_lost}")
         if profit < 0:
-            SendEventToGUI.log.debug("generate_bets :: profit < 0")
             # always the multiplier to recover losses is 1.95
             self.bets = self.generate_recovery_bets(
                 self.MIN_MULTIPLIER_TO_RECOVER_LOSSES,

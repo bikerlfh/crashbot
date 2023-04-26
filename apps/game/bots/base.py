@@ -31,6 +31,9 @@ class BotBase:
     STOP_LOSS_PERCENTAGE: float = 0
     TAKE_PROFIT_PERCENTAGE: float = 0
 
+    # use to calculate the recovery amount to bet
+    RECOVERY_PERCENTAGE_TO_MAX_BET: float = 0.5
+
     STRATEGIES: List[BotStrategy] = []
     amount_multiple: Optional[float] = None
     initial_balance: float = 0
@@ -150,11 +153,16 @@ class BotBase:
     def reset_losses(self):
         self.amounts_lost = []
 
-    def get_min_lost_amount(self) -> float:
-        if len(self.amounts_lost) > 3:
+    def get_last_lost_amount(self) -> float:
+        """
+        Get the last lost amount
+        if there are more than 4 lost amounts, return the average
+        :return:
+        """
+        if len(self.amounts_lost) > 4:
             average = sum(self.amounts_lost) / len(self.amounts_lost)
             return average
-        return min(self.amounts_lost)
+        return max(self.amounts_lost)
 
     def set_max_amount_to_bet(self, amount: float):
         self._max_amount_to_bet = round(amount, 0)
@@ -275,11 +283,11 @@ class BotBase:
         )
         # calculate the amount to bet to recover last amount loss
         last_amount_loss = self.calculate_recovery_amount(
-            self.get_min_lost_amount(), multiplier
+            self.get_last_lost_amount(), multiplier
         )
         # calculates the maximum amount allowed to recover in a single bet
         max_recovery_amount = (
-            self.maximum_bet * 0.5
+            self.maximum_bet * self.RECOVERY_PERCENTAGE_TO_MAX_BET
         )  # 50% of maximum bet (this can be a parameter of the bot)
         amount = min(
             amount_to_recover_losses, max_recovery_amount, self.balance
