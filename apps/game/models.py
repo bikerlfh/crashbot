@@ -16,7 +16,10 @@ class Multiplier:
 
 class Bet:
     def __init__(
-        self, amount: float, multiplier: float, prediction: Optional[float] = None
+        self,
+        amount: float,
+        multiplier: float,
+        prediction: Optional[float] = None,
     ):
         # generate external_id with random string of 32 chars
         self.external_id = self.__generate_external_id()
@@ -27,7 +30,9 @@ class Bet:
         self.profit = 0
 
     def __generate_external_id(self):
-        return "".join(random.choices(string.ascii_uppercase + string.digits, k=16))
+        return "".join(
+            random.choices(string.ascii_uppercase + string.digits, k=16)
+        )
 
     def evaluate(self, multiplier_result: float):
         self.multiplier_result = multiplier_result

@@ -39,7 +39,9 @@ class PredictionCore:
         self.probability_values.append(probability)
         self.average_predictions_of_model = average_predictions
         if self.category_percentages[prediction_round] is None:
-            self.category_percentages[prediction_round] = category_percentage  # NOQA
+            self.category_percentages[
+                prediction_round
+            ] = category_percentage  # NOQA
         if self.category_percentages_values_in_live[prediction_round] is None:
             self.category_percentages_values_in_live[
                 prediction_round
@@ -72,7 +74,9 @@ class PredictionCore:
                 if value_round == i:
                     count_i += 1
                     round_multiplier = round(self.multiplier_results[j], 0)
-                    round_multiplier = 2 if round_multiplier >= 2 else round_multiplier
+                    round_multiplier = (
+                        2 if round_multiplier >= 2 else round_multiplier
+                    )
                     if value_round == round_multiplier:
                         count += 1
                     if value <= self.multiplier_results[j]:
@@ -115,7 +119,9 @@ class PredictionCore:
         return self.probability_values[-1]
 
     def get_category_percentage(self) -> float:
-        return self.category_percentages.get(self.get_prediction_round_value(), 0)
+        return self.category_percentages.get(
+            self.get_prediction_round_value(), 0
+        )
 
     def get_category_percentage_value_in_live(self) -> float:
         return self.category_percentages_values_in_live.get(
@@ -144,11 +150,17 @@ class PredictionModel:
         new_predictions = []
         for prediction in predictions:
             prediction_ = next(
-                (item for item in self.predictions if item.id == prediction.id), None
+                (
+                    item
+                    for item in self.predictions
+                    if item.id == prediction.id
+                ),
+                None,
             )
             if not prediction_:
                 prediction_ = PredictionCore(
-                    id=prediction.id, average_predictions=prediction.average_predictions
+                    id=prediction.id,
+                    average_predictions=prediction.average_predictions,
                 )
                 # send_event_to_gui.log.debug(f"New PredictionCore: {prediction.id}")
             prediction_.add_prediction(
@@ -165,7 +177,9 @@ class PredictionModel:
 
     def add_multiplier_result(self, multiplier: float):
         for prediction in self.predictions:
-            if len(prediction.multiplier_results) < len(prediction.prediction_rounds):
+            if len(prediction.multiplier_results) < len(
+                prediction.prediction_rounds
+            ):
                 prediction.add_multiplier_result(multiplier)
 
     def evaluate_models(self, min_bot_average_prediction_model: float):
@@ -174,7 +188,8 @@ class PredictionModel:
         self.predictions = [
             p
             for p in self.predictions
-            if p.average_predictions_of_model > min_bot_average_prediction_model
+            if p.average_predictions_of_model
+            > min_bot_average_prediction_model
             or len(p.multiplier_results) < self.MAX_RESULTS_TO_EVALUATE
         ]
         # send_event_to_gui.log.debug(f"Next Count Prediction: {len(self.predictions)}")

@@ -46,9 +46,15 @@ class SocketIOClient(QtCore.QThread):
         self.__sio.on("disconnect", self._on_disconnect)
         self.__sio.on(WSEvent.VERIFY.value, self.on_verify or self._on_default)
         self.__sio.on(WSEvent.LOGIN.value, self.on_login or self._on_default)
-        self.__sio.on(WSEvent.START_BOT.value, self.on_start_bot or self._on_default)
-        self.__sio.on(WSEvent.AUTO_PLAY.value, self.on_auto_play or self._on_default)
-        self.__sio.on(WSEvent.CLOSE_GAME.value, self.on_close_game or self._on_default)
+        self.__sio.on(
+            WSEvent.START_BOT.value, self.on_start_bot or self._on_default
+        )
+        self.__sio.on(
+            WSEvent.AUTO_PLAY.value, self.on_auto_play or self._on_default
+        )
+        self.__sio.on(
+            WSEvent.CLOSE_GAME.value, self.on_close_game or self._on_default
+        )
         self.__sio.on(WSEvent.LOG.value, self.on_log or self._on_default)
         self.__sio.on(
             WSEvent.SET_MAX_AMOUNT_TO_BET.value,
@@ -59,7 +65,9 @@ class SocketIOClient(QtCore.QThread):
             self.on_update_balance or self._on_default,
         )
         self.__sio.on(WSEvent.ERROR.value, self.on_error or self._on_default)
-        self.__sio.on(WSEvent.EXCEPTION.value, self.on_exception or self._on_default)
+        self.__sio.on(
+            WSEvent.EXCEPTION.value, self.on_exception or self._on_default
+        )
 
     def __execute_event(self, event: WSEvent, data: any) -> None:
         self.__sio.emit(event.value, data)

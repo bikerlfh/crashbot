@@ -14,9 +14,9 @@ from apps.utils.datetime import sleep_now
 
 if __name__ == "__main__":
     GlobalVars.init()
-    x = threading.Thread(target=game_server.run_server, args={})
-    x.start()
-    sleep_now(2)
+    ws_server_thread = threading.Thread(target=game_server.run_server, args={})
+    ws_server_thread.start()
+    sleep_now(1)
     app = QApplication(sys.argv)
     qdarktheme.setup_theme("dark")
     window = MainForm()

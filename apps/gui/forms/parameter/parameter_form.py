@@ -19,7 +19,9 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         self.__fill_cmb_fields()
         self.main_window = main_window
         self.btn_start.clicked.connect(self.button_start_clicked_event)
-        self.cmb_home_bet.currentIndexChanged.connect(self.__set_max_amount_to_bet)
+        self.cmb_home_bet.currentIndexChanged.connect(
+            self.__set_max_amount_to_bet
+        )
         self.__set_max_amount_to_bet(0)
 
     def __fill_cmb_fields(self):
@@ -55,7 +57,9 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             QtWidgets.QMessageBox.warning(self, "Error", "Select a home bet")
             return
         if not max_amount_to_bet:
-            QtWidgets.QMessageBox.warning(self, "Error", "Set a max amount to bet")
+            QtWidgets.QMessageBox.warning(
+                self, "Error", "Set a max amount to bet"
+            )
             return
 
         home_bet = HomeBets[home_bet_index]
@@ -90,7 +94,9 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             if self.chk_use_credentials.isChecked():
                 home_bet_index = self.cmb_home_bet.currentIndex()
                 home_bet = HomeBets[home_bet_index]
-                credential = utils.get_credentials_by_home_bet(home_bet=home_bet.name)
+                credential = utils.get_credentials_by_home_bet(
+                    home_bet=home_bet.name
+                )
                 data["username"] = credential.get("username")
                 data["password"] = credential.get("password")
             self.main_window.socket.start_bot(

@@ -12,11 +12,11 @@ from playwright.async_api import (
 )
 
 # Internal
+from apps.game.models import Bet
 from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.aviator.bet_control import BetControl
 from apps.scrappers.game_base import AbstractGameBase, Control
 from apps.utils.datetime import sleep_now
-from apps.game.models import Bet
 
 
 class Aviator(AbstractGameBase, abc.ABC):
@@ -38,7 +38,10 @@ class Aviator(AbstractGameBase, abc.ABC):
     async def _get_app_game(self) -> Locator:
         if not self._page:
             SendEventToGUI.exception(
-                {"location": "AviatorPage", "message": "_getAppGame :: page is null"}
+                {
+                    "location": "AviatorPage",
+                    "message": "_getAppGame :: page is null",
+                }
             )
             print("_getAppGame :: page is null")
             raise Exception("_getAppGame :: page is null")
@@ -46,9 +49,13 @@ class Aviator(AbstractGameBase, abc.ABC):
         _app_game = None
         while True:
             try:
-                await self._page.locator("app-game").first.wait_for(timeout=50000)
+                await self._page.locator("app-game").first.wait_for(
+                    timeout=50000
+                )
                 _app_game = self._page.locator("app-game").first
-                await _app_game.locator(".result-history").wait_for(timeout=50000)
+                await _app_game.locator(".result-history").wait_for(
+                    timeout=50000
+                )
                 return _app_game
             except Exception as e:
                 if isinstance(e, TimeoutError):
@@ -56,7 +63,10 @@ class Aviator(AbstractGameBase, abc.ABC):
                     SendEventToGUI.log.debug("page :: error timeout")
                     continue
                 SendEventToGUI.exception(
-                    {"location": "AviatorPage", "message": f"_getAppGame :: {e}"}
+                    {
+                        "location": "AviatorPage",
+                        "message": f"_getAppGame :: {e}",
+                    }
                 )
                 print(f"_getAppGame :: {e}")
                 raise e
@@ -64,8 +74,7 @@ class Aviator(AbstractGameBase, abc.ABC):
     async def open(self):
         self.playwright = await async_playwright().start()
         self._browser = await self.playwright.chromium.launch(
-            headless=False,
-            args=["--start-maximized"]
+            headless=False, args=["--start-maximized"]
         )
         self._context = await self._browser.new_context(no_viewport=True)
         # self._browser = await self.playwright.chromium.launch(headless=False)
@@ -105,7 +114,10 @@ class Aviator(AbstractGameBase, abc.ABC):
         menu = self._app_game.locator(".dropdown-toggle.user")
         if menu is None:
             SendEventToGUI.exception(
-                {"location": "AviatorPage", "message": "readGameLimits :: menu is null"}
+                {
+                    "location": "AviatorPage",
+                    "message": "readGameLimits :: menu is null",
+                }
             )
             raise Exception("readGameLimits :: menu is null")
         await menu.click()
@@ -124,8 +136,12 @@ class Aviator(AbstractGameBase, abc.ABC):
         await menu_limits.click()
         await self._page.wait_for_timeout(400)
         limits = await self._page.locator("app-game-limits ul>li>span").all()
-        self.minimum_bet = float((await limits[0].text_content()).split(" ")[0] or "0")
-        self.maximum_bet = float((await limits[1].text_content()).split(" ")[0] or "0")
+        self.minimum_bet = float(
+            (await limits[0].text_content()).split(" ")[0] or "0"
+        )
+        self.maximum_bet = float(
+            (await limits[1].text_content()).split(" ")[0] or "0"
+        )
         self.maximum_win_for_one_bet = float(
             (await limits[2].text_content()).split(" ")[0] or "0"
         )
@@ -133,7 +149,9 @@ class Aviator(AbstractGameBase, abc.ABC):
         await button_close.click()
         SendEventToGUI.log.debug(f"minimumBet: {self.minimum_bet}")
         SendEventToGUI.log.debug(f"maximumBet: {self.maximum_bet}")
-        SendEventToGUI.log.debug(f"maximumWinForOneBet: {self.maximum_win_for_one_bet}")
+        SendEventToGUI.log.debug(
+            f"maximumWinForOneBet: {self.maximum_win_for_one_bet}"
+        )
 
     async def read_balance(self) -> Union[float, None]:
         if self._app_game is None:
@@ -183,7 +201,10 @@ class Aviator(AbstractGameBase, abc.ABC):
     async def bet(self, bets: List[Bet]):
         if self._controls is None:
             SendEventToGUI.exception(
-                {"location": "AviatorPage", "message": "AviatorPage :: no _controls"}
+                {
+                    "location": "AviatorPage",
+                    "message": "AviatorPage :: no _controls",
+                }
             )
             raise Exception("AviatorPage :: no _controls")
         for i, bet in enumerate(bets):
@@ -198,13 +219,16 @@ class Aviator(AbstractGameBase, abc.ABC):
     async def wait_next_game(self):
         if self._history_game is None:
             SendEventToGUI.exception(
-                {"location": "AviatorPage", "message": "waitNextGame :: no historyGame"}
+                {
+                    "location": "AviatorPage",
+                    "message": "waitNextGame :: no historyGame",
+                }
             )
             raise Exception("waitNextGame :: no historyGame")
         last_multiplier_saved = self.multipliers[-1]
-        await self._history_game.locator("app-bubble-multiplier").first.wait_for(
-            timeout=1000
-        )
+        await self._history_game.locator(
+            "app-bubble-multiplier"
+        ).first.wait_for(timeout=1000)
         while True:
             locator = self._history_game.locator("app-bubble-multiplier").first
             last_multiplier_content = await locator.text_content(timeout=1000)
@@ -215,7 +239,9 @@ class Aviator(AbstractGameBase, abc.ABC):
             )
             if last_multiplier_saved != last_multiplier:
                 self.multipliers.append(last_multiplier)
-                SendEventToGUI.log.success(f"New Multiplier: {last_multiplier}")
+                SendEventToGUI.log.success(
+                    f"New Multiplier: {last_multiplier}"
+                )
                 self.multipliers = self.multipliers[1:]
                 return
             sleep_now(200)

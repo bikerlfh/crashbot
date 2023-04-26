@@ -43,11 +43,13 @@ class AviatorBetPlay(Aviator):
 
         while True:
             try:
-                self._frame = self._page.frame_locator("#gameFrame").frame_locator(
-                    "#spribe-game"
-                )
+                self._frame = self._page.frame_locator(
+                    "#gameFrame"
+                ).frame_locator("#spribe-game")
                 self._app_game = self._frame.locator("app-game").first
-                await self._app_game.locator(".result-history").wait_for(timeout=5000)
+                await self._app_game.locator(".result-history").wait_for(
+                    timeout=5000
+                )
                 return self._app_game
             except Exception as e:
                 if isinstance(e, TimeoutError):
@@ -82,8 +84,12 @@ class AviatorBetPlay(Aviator):
         await self._page.wait_for_timeout(400)
 
         limits = await self._frame.locator("app-game-limits ul>li>span").all()
-        self.minimum_bet = float((await limits[0].text_content()).split(" ")[0] or "0")
-        self.maximum_bet = float((await limits[1].text_content()).split(" ")[0] or "0")
+        self.minimum_bet = float(
+            (await limits[0].text_content()).split(" ")[0] or "0"
+        )
+        self.maximum_bet = float(
+            (await limits[1].text_content()).split(" ")[0] or "0"
+        )
         self.maximum_win_for_one_bet = float(
             (await limits[2].text_content()).split(" ")[0] or "0"
         )

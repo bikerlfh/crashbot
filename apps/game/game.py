@@ -8,12 +8,10 @@ from apps.constants import BotType, HomeBet
 from apps.game.bots.bots import Bot, BotStatic
 from apps.game.models import Bet, Multiplier
 from apps.game.prediction_core import PredictionCore, PredictionModel
+from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
 # from ws.client import WebSocketClient
 from apps.scrappers.game_base import AbstractGameBase
-from apps.globals import GlobalVars
-
-# from ws.gui_events import sendEventToGUI
 
 
 class Game:
@@ -53,7 +51,9 @@ class Game:
                 bot_type, self.minimum_bet, self.maximum_bet
             )
         self.maximum_win_for_one_bet: float = self.maximum_bet * 100
-        self._prediction_model: PredictionModel = PredictionModel.get_instance()
+        self._prediction_model: PredictionModel = (
+            PredictionModel.get_instance()
+        )
         # globals.home_betId = self.home_bet.id
 
     # def ws_on_message(self, event):
@@ -129,12 +129,15 @@ class Game:
         SendEventToGUI.log.debug("saving multipliers.....")
         try:
             api_services.add_multipliers(
-                home_bet_id=self.home_bet.id, multipliers=self.multipliers_to_save
+                home_bet_id=self.home_bet.id,
+                multipliers=self.multipliers_to_save,
             )
             self.multipliers_to_save = []
             SendEventToGUI.log.debug(f"multipliers saved")
         except Exception as error:
-            SendEventToGUI.log.debug(f"error in requestSaveMultipliers: {error}")
+            SendEventToGUI.log.debug(
+                f"error in requestSaveMultipliers: {error}"
+            )
             print(f"error in requestSaveMultipliers: {error}")
 
     def request_save_bets(self, bets):
@@ -200,15 +203,13 @@ class Game:
         await self.game_page.bet(bets)
 
     async def play(self):
-        if not self.initialized:
-            SendEventToGUI.log.error("The game is not initialized")
-            return
         while self.initialized:
             await self.wait_next_game()
             self.get_next_bet()
             if GlobalVars.get_auto_play() and self.bets:
                 await self.send_bets_to_aviator(self.bets)
             SendEventToGUI.log.info("***************************************")
+        SendEventToGUI.log.error("The game is not initialized")
 
     def evaluate_bets(self, multiplier: float) -> None:
         """

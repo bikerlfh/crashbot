@@ -12,6 +12,8 @@ from playwright.sync_api import (
     Page,
     sync_playwright,
 )
+
+# Internal
 from apps.game.models import Bet
 
 
@@ -21,7 +23,6 @@ class Control(Enum):
 
 
 class AbstractControlBase(abc.ABC):
-
     def _random_delay(self) -> int:
         return random.randint(15, 50)
 
