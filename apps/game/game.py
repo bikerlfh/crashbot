@@ -10,8 +10,7 @@ from apps.game.models import Bet, Multiplier
 from apps.game.prediction_core import PredictionCore, PredictionModel
 from apps.gui.gui_events import SendEventToGUI
 # from ws.client import WebSocketClient
-from apps.scrappers.game_base import AbstractGameBase, Control
-from apps.utils.datetime import sleep_now
+from apps.scrappers.game_base import AbstractGameBase
 from apps.globals import GlobalVars
 
 # from ws.gui_events import sendEventToGUI
@@ -198,13 +197,7 @@ class Game:
         """
         if not bets:
             return
-        for index, bet in enumerate(bets):
-            control = Control.Control1 if index == 0 else Control.Control2
-            SendEventToGUI.log.info(
-                f"Sending bet to aviator {bet.amount} * {bet.multiplier} control: {control}"
-            )
-            await self.game_page.bet(bet.amount, bet.multiplier, control)
-            sleep_now(1000)
+        await self.game_page.bet(bets)
 
     async def play(self):
         if not self.initialized:
@@ -213,7 +206,7 @@ class Game:
         while self.initialized:
             await self.wait_next_game()
             self.get_next_bet()
-            if GlobalVars.get_auto_play():
+            if GlobalVars.get_auto_play() and self.bets:
                 await self.send_bets_to_aviator(self.bets)
             SendEventToGUI.log.info("***************************************")
 

@@ -1,5 +1,6 @@
 # Standard Library
 import abc
+import random
 from enum import Enum
 from typing import Union
 
@@ -11,6 +12,7 @@ from playwright.sync_api import (
     Page,
     sync_playwright,
 )
+from apps.game.models import Bet
 
 
 class Control(Enum):
@@ -19,6 +21,10 @@ class Control(Enum):
 
 
 class AbstractControlBase(abc.ABC):
+
+    def _random_delay(self) -> int:
+        return random.randint(15, 50)
+
     @abc.abstractmethod
     async def init(self):
         ...
@@ -82,7 +88,7 @@ class AbstractGameBase(abc.ABC):
         ...
 
     @abc.abstractmethod
-    async def bet(self, amount: float, multiplier: float, control: Control):
+    async def bet(self, bets: list[Bet]):
         ...
 
     @abc.abstractmethod

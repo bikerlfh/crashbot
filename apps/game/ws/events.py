@@ -95,4 +95,7 @@ async def start_bot_event(data: dict[str, any], sio: AsyncServer, sid: any) -> a
     except Exception as e:
         await game.close()
         GlobalVars.set_game(None)
-        SendEventToGUI.exception(e)
+        SendEventToGUI.exception(dict(
+            exception=str(e),
+            message="Error while running the bot",
+        ))

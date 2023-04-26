@@ -16,6 +16,7 @@ from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.aviator.bet_control import BetControl
 from apps.scrappers.game_base import AbstractGameBase, Control
 from apps.utils.datetime import sleep_now
+from apps.game.models import Bet
 
 
 class Aviator(AbstractGameBase, abc.ABC):
@@ -62,8 +63,13 @@ class Aviator(AbstractGameBase, abc.ABC):
 
     async def open(self):
         self.playwright = await async_playwright().start()
-        self._browser = await self.playwright.chromium.launch(headless=False)
-        self._context = await self._browser.new_context()
+        self._browser = await self.playwright.chromium.launch(
+            headless=False,
+            args=["--start-maximized"]
+        )
+        self._context = await self._browser.new_context(no_viewport=True)
+        # self._browser = await self.playwright.chromium.launch(headless=False)
+        # self._context = await self._browser.new_context()
         self._page = await self._context.new_page()
         await self._page.goto(self.url, timeout=50000)
         await self._login()
@@ -85,7 +91,7 @@ class Aviator(AbstractGameBase, abc.ABC):
             return
         await self._page.close()
         await self._browser.close()
-        # TODO: implment close session of home bet
+        # TODO: implement close session of home bet
 
     async def read_game_limits(self):
         if self._app_game is None or self._page is None:
@@ -174,13 +180,20 @@ class Aviator(AbstractGameBase, abc.ABC):
                 self.multipliers.append(self._format_multiplier(multiplier))
         await self._page.wait_for_timeout(2000)
 
-    async def bet(self, amount: float, multiplier: float, control: Control):
+    async def bet(self, bets: List[Bet]):
         if self._controls is None:
             SendEventToGUI.exception(
                 {"location": "AviatorPage", "message": "AviatorPage :: no _controls"}
             )
             raise Exception("AviatorPage :: no _controls")
-        await self._controls.bet(amount, multiplier, control)
+        for i, bet in enumerate(bets):
+            control = Control.Control1 if i == 0 else Control.Control2
+            SendEventToGUI.log.info(
+                f"Sending bet to aviator {bet.amount} * "
+                f"{bet.multiplier} control: {control}"
+            )
+            await self._controls.bet(bet.amount, bet.multiplier, control)
+            sleep_now(1)
 
     async def wait_next_game(self):
         if self._history_game is None:

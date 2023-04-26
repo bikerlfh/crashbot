@@ -1,6 +1,5 @@
 # Standard Library
 import random
-from enum import Enum
 from typing import Optional
 
 # Libraries
@@ -9,11 +8,13 @@ from playwright.async_api import Locator
 # Internal
 from apps.scrappers.game_base import AbstractControlBase, Control
 
-# from game.utils import round_number
-# from ws.gui_events import send_event_to_gui
-
 
 class BetControl(AbstractControlBase):
+    # TODO implement no auto cash out
+    BTN_BET_SELECTOR = "button.btn-success.bet"
+    BTN_BET_DANGER_SELECTOR = "button.btn-danger.bet"
+    BTN_CASH_OUT_SELECTOR = "button.btn-warning.cash-out"
+
     def __init__(self, aviator_page: Locator):
         self.aviator_page = aviator_page
         self._bet_control_1: Optional[Locator] = None
@@ -30,16 +31,15 @@ class BetControl(AbstractControlBase):
         self._auto_cash_out_multiplier_2: Optional[Locator] = None
         self._bet_button_1: Optional[Locator] = None
         self._bet_button_2: Optional[Locator] = None
-
-        self.is_active_auto_cash_out_control_1 = False
-        self.is_active_auto_cash_out_control_2 = False
         self.was_load = False
 
-    def _random_delay(self) -> int:
-        return random.randint(15, 50)
-
     async def init(self):
+        await self.aviator_page.locator("app-bet-control").first.wait_for(timeout=15000)
         bet_controls = self.aviator_page.locator("app-bet-control")
+        # validating if the game has 2 controls
+        count_controls = await bet_controls.count()
+        if count_controls == 1:
+            await bet_controls.first.locator("sec-hand-btn.add.btn").first.click()
         self._bet_control_1 = bet_controls.first
         self._bet_control_2 = bet_controls.last
 
@@ -87,10 +87,10 @@ class BetControl(AbstractControlBase):
         self._auto_cash_out_multiplier_1 = cash_out_spinner_1.locator("input").first
         self._auto_cash_out_multiplier_2 = cash_out_spinner_2.locator("input").first
 
-        bet_buttons = self.aviator_page.locator("button.bet")
-        self._bet_button_1 = bet_buttons.first
-        self._bet_button_2 = bet_buttons.last
-
+        # bet_buttons = self.aviator_page.locator("button.bet")
+        # bet_buttons = self.aviator_page.locator("button.btn-success.bet")
+        self._bet_button_1 = self._bet_control_1.locator("button.bet").first
+        self._bet_button_2 = self._bet_control_2.locator("button.bet").first
         self.was_load = True
 
     async def set_auto_cash_out(self, multiplier, control):
