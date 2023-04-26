@@ -30,8 +30,8 @@ async def login(sid, data, room=None):
 
 @sio.on(WSEvent.VERIFY)
 async def verify(sid, data, room=None):
-    is_valid = events.verify_event()
-    await sio.emit("verify", data={"logged": is_valid}, room=sid)
+    data_ = events.verify_event()
+    await sio.emit("verify", data=data_, room=sid)
 
 
 @sio.on(WSEvent.AUTO_PLAY)

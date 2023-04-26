@@ -39,6 +39,7 @@ class BotStatic(BotBase):
     In control 2, the bot will bet the min amount of money that the customer selects.
     The min amount of bet should be less than the max amount of bet / 3 example: max bet = 300, min bet = 300/3 = 100.
     """
+
     RECOVERY_PERCENTAGE_TO_MAX_BET = 1
 
     def __init__(

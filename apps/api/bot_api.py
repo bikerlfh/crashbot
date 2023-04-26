@@ -29,7 +29,7 @@ class BotAPIConnector(metaclass=Singleton):
         headers = {
             "Content-Type": "application/json",
             "Cache-Control": "no-cache",
-            "Authorization": f"Bearer {local_storage.get(LocalStorage.LocalStorageKeys.TOKEN.value)}",
+            "Authorization": f"Bearer {local_storage.get_token()}",
         }
         self.client = RESTClient(api_url=API_URL, headers=headers)
         self.services = BotAPIServices(client=self.client)

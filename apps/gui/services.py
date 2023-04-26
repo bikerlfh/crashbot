@@ -1,5 +1,4 @@
 # Standard Library
-from datetime import datetime
 from typing import Optional
 
 # Libraries
@@ -7,7 +6,7 @@ from PyQt6.QtWidgets import QListWidgetItem
 
 # Internal
 from apps.constants import HomeBet
-from apps.gui.services.constants import (
+from apps.gui.constants import (
     ALLOWED_LOG_CODES_TO_SHOW,
     CREDENTIALS_FILE_PATH,
     LOG_CODES,
@@ -139,7 +138,7 @@ def get_credentials() -> list[dict[str, any]] | None:
 
 def get_credentials_by_home_bet(*, home_bet: str) -> dict[str, any]:
     """
-    Get credentials by home bet
+    Get credentials
     :param home_bet: home bet
     :return: dict
     """

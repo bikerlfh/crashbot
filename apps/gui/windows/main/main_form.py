@@ -6,14 +6,14 @@ from PyQt6 import QtCore, QtGui
 from PyQt6.QtWidgets import QMainWindow, QMessageBox, QStackedWidget, QWidget
 
 # Internal
-from apps.gui.forms.console.console_form import ConsoleForm
-from apps.gui.forms.credential.credential_dialog import CredentialDialog
-from apps.gui.forms.login.login_form import LoginForm
-from apps.gui.forms.main.main_designer import MainDesigner
-from apps.gui.forms.parameter.parameter_form import ParameterForm
-from apps.gui.services.constants import ALLOWED_LOG_CODES_TO_SHOW
-from apps.gui.services.socket import SocketIOClient
+from apps.gui.constants import ALLOWED_LOG_CODES_TO_SHOW
+from apps.gui.socket import SocketIOClient
 from apps.gui.utils import os as utils_os
+from apps.gui.windows.console.console_form import ConsoleForm
+from apps.gui.windows.credential.credential_dialog import CredentialDialog
+from apps.gui.windows.login.login_form import LoginForm
+from apps.gui.windows.main.main_designer import MainDesigner
+from apps.gui.windows.parameter.parameter_form import ParameterForm
 
 
 class MainForm(QMainWindow, MainDesigner):
@@ -61,7 +61,7 @@ class MainForm(QMainWindow, MainDesigner):
         if title:
             self.setWindowTitle(title)
         self.stacked_widget.setCurrentWidget(screen)
-        # if it's not macos, add height to window (menu bar)
+        # if it's not osX, add height to window (menu bar)
         if utils_os.is_linux() or utils_os.is_windows():
             height += 44
         self.resize(width, height)
@@ -78,7 +78,8 @@ class MainForm(QMainWindow, MainDesigner):
         :param data: dict(logged: bool)
         :return: None
         """
-        if not data.get("logged", False):
+        logged = data.get("logged", False)
+        if not logged:
             print("Token is invalid, showing login screen...")
             return
         print("Token is valid, showing main screen...")

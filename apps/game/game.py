@@ -10,6 +10,7 @@ from apps.game.models import Bet, Multiplier
 from apps.game.prediction_core import PredictionCore, PredictionModel
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
+
 # from ws.client import WebSocketClient
 from apps.scrappers.game_base import AbstractGameBase
 

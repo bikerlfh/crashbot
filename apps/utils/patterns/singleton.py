@@ -1,5 +1,5 @@
 class Singleton(type):
-    """Class to make a other class singleton with this in metaclass parameter"""
+    """Class to make another class singleton with this in metaclass parameter"""
 
     _instances = {}
 

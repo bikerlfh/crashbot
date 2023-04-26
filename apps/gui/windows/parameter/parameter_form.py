@@ -1,5 +1,4 @@
 # Standard Library
-from typing import Optional
 
 # Libraries
 from PyQt6 import QtWidgets
@@ -7,8 +6,8 @@ from PyQt6.QtCore import Q_ARG, QMetaObject, Qt
 
 # Internal
 from apps.constants import BotType, HomeBets
-from apps.gui.forms.parameter.parameter_designer import ParameterDesigner
-from apps.gui.services import utils
+from apps.gui import services
+from apps.gui.windows.parameter.parameter_designer import ParameterDesigner
 
 
 class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
@@ -39,7 +38,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
 
     def __set_max_amount_to_bet(self, index: int):
         home_bet = HomeBets[index]
-        min_, max_ = utils.get_range_amount_to_bet(
+        min_, max_ = services.get_range_amount_to_bet(
             min_bet=home_bet.min_bet,
             max_bet=home_bet.max_bet,
         )
@@ -65,12 +64,12 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         home_bet = HomeBets[home_bet_index]
         home_bet_id = home_bet.id
         max_amount_to_bet = float(max_amount_to_bet)
-        amount_is_valid = utils.validate_max_amount_to_bet(
+        amount_is_valid = services.validate_max_amount_to_bet(
             home_bet=home_bet,
             max_amount_to_bet=max_amount_to_bet,
         )
         if not amount_is_valid:
-            min_, max_ = utils.get_range_amount_to_bet(
+            min_, max_ = services.get_range_amount_to_bet(
                 min_bet=home_bet.min_bet,
                 max_bet=home_bet.max_bet,
             )
@@ -94,7 +93,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             if self.chk_use_credentials.isChecked():
                 home_bet_index = self.cmb_home_bet.currentIndex()
                 home_bet = HomeBets[home_bet_index]
-                credential = utils.get_credentials_by_home_bet(
+                credential = services.get_credentials_by_home_bet(
                     home_bet=home_bet.name
                 )
                 data["username"] = credential.get("username")

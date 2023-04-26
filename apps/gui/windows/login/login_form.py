@@ -3,7 +3,7 @@ from PyQt6 import QtWidgets
 from PyQt6.QtCore import QMetaObject, Qt
 
 # Internal
-from apps.gui.forms.login.login_designer import LoginDesigner
+from apps.gui.windows.login.login_designer import LoginDesigner
 
 
 class LoginForm(QtWidgets.QWidget, LoginDesigner):

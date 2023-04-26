@@ -3,8 +3,8 @@ from PyQt6.QtWidgets import QListWidgetItem, QMessageBox, QWidget
 
 # Internal
 from apps.constants import HomeBets
-from apps.gui.forms.console.console_designer import ConsoleDesigner
-from apps.gui.services import utils
+from apps.gui import services
+from apps.gui.windows.console.console_designer import ConsoleDesigner
 
 
 class ConsoleForm(QWidget, ConsoleDesigner):
@@ -65,13 +65,13 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             self.txt_max_amount_to_bet.setFocus()
             return
         amount = float(amount)
-        amount_is_valid = utils.validate_max_amount_to_bet(
+        amount_is_valid = services.validate_max_amount_to_bet(
             home_bet=self.home_bet,
             max_amount_to_bet=amount,
             balance=self.balance,
         )
         if not amount_is_valid:
-            min_, max_ = utils.get_range_amount_to_bet(
+            min_, max_ = services.get_range_amount_to_bet(
                 min_bet=self.home_bet.min_bet,
                 max_bet=self.home_bet.max_bet,
             )
@@ -86,7 +86,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
 
     def on_auto_play(self, data):
         """
-        ws callback on auto play
+        ws callback on autoplay
         :param data: dict(autoPlay: bool)
         :return: None
         """
@@ -126,7 +126,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         # if len(self.logs_to_save) > self.MAX_LOGS_ITEMS:
         #    utils.save_logs(logs=self.logs_to_save)
         #    self.logs_to_save = []
-        list_item = utils.make_list_item(
+        list_item = services.make_list_item(
             data=data, allowed_codes=self.main_window.allowed_logs
         )
         if list_item:

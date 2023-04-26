@@ -3,8 +3,8 @@ from PyQt6 import QtWidgets
 
 # Internal
 from apps.constants import HomeBets
-from apps.gui.forms.credential.credential_designer import CredentialDesigner
-from apps.gui.services import utils
+from apps.gui import services
+from apps.gui.windows.credential.credential_designer import CredentialDesigner
 
 
 class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
@@ -25,7 +25,7 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
 
     def showCredentials(self):
         self.tab_credentials.setCurrentIndex(0)
-        self.credentials = utils.get_credentials()
+        self.credentials = services.get_credentials()
         self.lst_credentials_home_bet.clear()
         if not self.credentials:
             return
@@ -57,7 +57,7 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
         credential = dict(
             home_bet=home_bet, username=username, password=password
         )
-        utils.save_credentials(credential=credential)
+        services.save_credentials(credential=credential)
         self.txt_username.setText("")
         self.txt_password.setText("")
         self.txt_username.setFocus()
@@ -69,11 +69,11 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
             return
         item = items[0]
         home_bet = item.text()
-        utils.remove_credentials(home_bet=home_bet)
+        services.remove_credentials(home_bet=home_bet)
         self.showCredentials()
 
     def btn_remove_all_clicked(self):
-        utils.remove_credentials()
+        services.remove_credentials()
         self.showCredentials()
 
     def home_bet_changed(self):

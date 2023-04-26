@@ -91,7 +91,7 @@ class SocketIOClient(QtCore.QThread):
         self.__sio.disconnect()
 
     def verify(self) -> None:
-        # this verify if the login is valid
+        # this verifies if the login is valid
         self.__execute_event(WSEvent.VERIFY, {})
 
     def login(self, *, username: str, password) -> None:
