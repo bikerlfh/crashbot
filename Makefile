@@ -11,4 +11,4 @@ black: ## black
 	black . --line-length=79
 
 generate-installer:
-	pyinstaller --onefile --icon=resources/bot.ico app.py
+	pyinstaller --onefile --icon=resources/bot.ico crashbot.py

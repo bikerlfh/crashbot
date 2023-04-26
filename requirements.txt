@@ -14,4 +14,4 @@ websocket-client==1.5.1
 cryptography
 pytest-playwright==0.3.2
 localStoragePy==0.2.3
-uvicorn==0.21.1
+uvicorn[standard]==0.21.1

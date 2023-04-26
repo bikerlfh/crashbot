@@ -1,5 +1,7 @@
 # Internal
 from apps.scrappers.aviator.aviator import Aviator
+from apps.globals import GlobalVars
+from apps.gui.gui_events import SendEventToGUI
 
 
 class AviatorBetPlay(Aviator):
@@ -9,29 +11,31 @@ class AviatorBetPlay(Aviator):
 
     async def _login(self):
         if not self._page:
-            raise Exception("_login :: page is null")
+            SendEventToGUI.exception(dict(
+                location="AviatorBetPlay._login",
+                message="page is null",
+            ))
+            return
+        username = GlobalVars.get_username()
+        password = GlobalVars.get_password()
+        if not username or not password:
+            SendEventToGUI.log.success("Please set username and password to login!")
+            return
+        username_input = self._page.locator("input#userName")
+        password_input = self._page.locator("input#password")
+        login_button = self._page.locator("button#btnLoginPrimary")
 
-        username = globals().get("username")
-        password = globals().get("password")
-
-        if username and password:
-            username_input = self._page.locator("input#userName")
-            password_input = self._page.locator("input#password")
-            login_button = self._page.locator("button#btnLoginPrimary")
-
-            username_input.type(username, delay=100)
-            password_input.type(password, delay=100)
-            await self._click(login_button)
-        else:
-            print("Please set username and password to login!")
-
-        self._page.locator("#spanUser").wait_for(timeout=50000)
+        await username_input.type(username, delay=100)
+        await password_input.type(password, delay=100)
+        await self._click(login_button)
+        await self._page.locator("#spanUser").wait_for(timeout=50000)
         search_button = self._page.locator("input.inputSearch")
         await self._page.wait_for_timeout(1000)
         await search_button.type("aviator", delay=150)
         await self._page.wait_for_timeout(2000)
         # TODO fix this
-        # self._click(self._page.locator("button.btnSlot"))
+        # await self._page.locator("button.btnSlot").wait_for(timeout=5000)
+        # await self._click(self._page.locator("button.btnSlot").first)
 
     async def _get_app_game(self):
         if not self._page:
@@ -40,12 +44,11 @@ class AviatorBetPlay(Aviator):
         await self._page.wait_for_url(
             "**/slots/launchGame?gameCode=SPB_aviator**", timeout=50000
         )
-
         while True:
             try:
                 self._frame = self._page.frame_locator(
                     "#gameFrame"
-                ).frame_locator("#spribe-game")
+                ).frame_locator("#spribe-game").first
                 self._app_game = self._frame.locator("app-game").first
                 await self._app_game.locator(".result-history").wait_for(
                     timeout=5000
@@ -53,9 +56,10 @@ class AviatorBetPlay(Aviator):
                 return self._app_game
             except Exception as e:
                 if isinstance(e, TimeoutError):
-                    print("page :: error timeout")
+                    SendEventToGUI.log.debug("_get_app_game :: timeout")
                     continue
-                raise e
+                SendEventToGUI.log.debug(f"_get_app_game :: exception :: {str(e)}")
+                # raise e
 
     async def read_game_limits(self):
         if self._frame is None:

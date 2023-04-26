@@ -125,7 +125,7 @@ class BotStatic(BotBase):
                 f"new amount={amount}"
             )
         # kelly_amount = adaptive_kelly_formula(multiplier, probability, self.RISK_FACTOR, amount)
-        amount = max(amount, self.minimum_bet)
+        amount = round(max(amount, self.minimum_bet), 2)
         SendEventToGUI.log.debug(
             f"BotStatic :: get_bet_recovery_amount {amount}"
         )
