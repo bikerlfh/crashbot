@@ -1,7 +1,7 @@
 # Libraries
 import socketio
 import uvicorn
-
+from threading import Event
 # Internal
 from apps.constants import WSEvent
 from apps.game.ws import events
@@ -11,6 +11,8 @@ from apps.globals import GlobalVars
 sio = socketio.AsyncServer(async_mode="asgi")
 app = socketio.ASGIApp(sio)
 
+event_ = None
+
 
 @sio.on("connect")
 async def connect(sid, environ):
@@ -19,6 +21,8 @@ async def connect(sid, environ):
 
 @sio.on("disconnect")
 def disconnect(sid):
+    GlobalVars.WS_SERVER_EVENT.set()
+    print("event set:", GlobalVars.WS_SERVER_EVENT.is_set())
     print("disconnect to game server", sid)
 
 
@@ -57,6 +61,7 @@ async def start_bot(sid, data, room=None):
     await events.start_bot_event(data, sio, sid)
 
 
-def run_server():
+def run_server(event: Event):
     GlobalVars.set_io(sio)
+    GlobalVars.WS_SERVER_EVENT = event
     uvicorn.run(app, host=WS_SERVER_HOST, port=WS_SERVER_PORT)

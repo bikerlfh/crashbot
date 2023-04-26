@@ -7,7 +7,7 @@ use globals().setdefault('auto_play', False) to set value
 import asyncio
 from enum import Enum
 from typing import Callable
-
+from threading import Event
 # Libraries
 from socketio import AsyncServer
 
@@ -15,6 +15,7 @@ from socketio import AsyncServer
 class GlobalVars:
     SIO: AsyncServer = None
     GAME: any = None
+    WS_SERVER_EVENT: Event
 
     class VARS(str, Enum):
         AUTO_PLAY = "AUTO_PLAY"
