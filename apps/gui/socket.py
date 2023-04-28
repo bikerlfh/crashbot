@@ -50,9 +50,7 @@ class SocketIOClient(QtCore.QThread):
         self.__sio.on(WSEvent.LOGIN, self.on_login or self._on_default)
         self.__sio.on(WSEvent.START_BOT, self.on_start_bot or self._on_default)
         self.__sio.on(WSEvent.AUTO_PLAY, self.on_auto_play or self._on_default)
-        self.__sio.on(
-            WSEvent.CLOSE_GAME, self.on_close_game or self._on_default
-        )
+        self.__sio.on(WSEvent.CLOSE_GAME, self.on_close_game or self._on_default)
         self.__sio.on(WSEvent.LOG, self.on_log or self._on_default)
         self.__sio.on(
             WSEvent.SET_MAX_AMOUNT_TO_BET,

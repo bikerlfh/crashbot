@@ -10,9 +10,7 @@ from apps.api.models import BetData, Bot, Prediction
 logger = logging.getLogger(__name__)
 
 
-def request_login(
-    *, username: str, password: str
-) -> tuple[str | None, str | None]:
+def request_login(*, username: str, password: str) -> tuple[str | None, str | None]:
     """
     request_login
     :param username:
@@ -21,9 +19,7 @@ def request_login(
     """
     bot_connector = BotAPIConnector()
     try:
-        response = bot_connector.services.login(
-            username=username, password=password
-        )
+        response = bot_connector.services.login(username=username, password=password)
         access = response.get("access")
         refresh = response.get("refresh")
         return access, refresh
@@ -79,9 +75,7 @@ def get_home_bets() -> dict[str, any]:
     return response
 
 
-def add_multipliers(
-    *, home_bet_id: int, multipliers: list[float]
-) -> dict[str, any]:
+def add_multipliers(*, home_bet_id: int, multipliers: list[float]) -> dict[str, any]:
     """
     add_multipliers
     :param home_bet_id:
@@ -132,9 +126,7 @@ def get_bots(bot_type: str) -> list[Bot]:
     return data
 
 
-def update_balance(
-    *, customer_id: int, home_bet_id: int, balance: float
-) -> None:
+def update_balance(*, customer_id: int, home_bet_id: int, balance: float) -> None:
     """
     update_balance
     :param customer_id:

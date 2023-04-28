@@ -53,12 +53,11 @@ class LogsDBHandler(SQLiteEngine, metaclass=Singleton):
                     log["app"],
                     log.get("path", None),
                     timestamp.strftime(self.TIMESTAMP_FORMAT),
-
                 )
             )
         self.executemany(
             "INSERT INTO Logs (message, level, timestamp) VALUES (?, ?, ?, ?, ?)",
-            values
+            values,
         )
         self.commit()
 

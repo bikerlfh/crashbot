@@ -60,9 +60,7 @@ async def close_game_event(**_kwargs) -> dict[str, any]:
     return dict(closed=True)
 
 
-async def start_bot_event(
-    data: dict[str, any], sio: AsyncServer, sid: any
-) -> any:
+async def start_bot_event(data: dict[str, any], sio: AsyncServer, sid: any) -> any:
     GlobalVars.set_io(sio)
     bot_type = data.get("bot_type")
     home_bet_id = data.get("home_bet_id")
@@ -70,15 +68,9 @@ async def start_bot_event(
     auto_play = data.get("auto_play")
     username = data.get("username")
     password = data.get("password")
-    if (
-        not bot_type
-        or not home_bet_id
-        or not max_amount_to_bet
-        or auto_play is None
-    ):
+    if not bot_type or not home_bet_id or not max_amount_to_bet or auto_play is None:
         return make_error(
-            "bot_type, home_bet_id, max_amount_to_bet "
-            "and auto_play are required"
+            "bot_type, home_bet_id, max_amount_to_bet " "and auto_play are required"
         )
 
     home_bet = list(filter(lambda x: x.id == home_bet_id, HomeBets))
