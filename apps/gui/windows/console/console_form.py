@@ -1,4 +1,5 @@
 # Libraries
+from PyQt6 import QtCore
 from PyQt6.QtWidgets import QListWidgetItem, QMessageBox, QWidget
 
 # Internal
@@ -11,6 +12,10 @@ from apps.utils.logs import services as logs_services
 
 class ConsoleForm(QWidget, ConsoleDesigner):
     MAX_LOGS_ITEMS = 50
+    receive_log_signal = QtCore.pyqtSignal(dict)
+    receive_multipliers_signal = QtCore.pyqtSignal(dict)
+    receive_balance_signal = QtCore.pyqtSignal(dict)
+    receive_auto_play_signal = QtCore.pyqtSignal(dict)
 
     def __init__(
         self,
@@ -30,6 +35,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             self.button_set_max_amount_to_bet_clicked_event
         )
         self.bar_multiplier = BarMultiplier(self.gbox_graph, [], 30)
+        self.receive_log_signal.connect(self._on_receive_log)
+        self.receive_multipliers_signal.connect(self._on_receive_multipliers)
+        self.receive_balance_signal.connect(self._on_receive_balance)
+        self.receive_auto_play_signal.connect(self._on_receive_auto_play)
 
     def __add_item_to_list(self, item: QListWidgetItem):
         current_row = self.list_log.currentRow()
@@ -92,6 +101,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         :param data: dict(autoPlay: bool)
         :return: None
         """
+        self._on_receive_auto_play.emit(data)
+
+    @QtCore.pyqtSlot(dict)
+    def _on_receive_auto_play(self, data: dict):
         try:
             self.btn_auto_bet.setText(
                 "AutoBet ON" if data.get("auto_play") else "AutoBet OFF"
@@ -107,6 +120,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         :param data: dict(balance: float)
         :return: None
         """
+        self.receive_balance_signal.emit(data)
+
+    @QtCore.pyqtSlot(dict)
+    def _on_receive_balance(self, data: dict):
         try:
             self.balance = float(data.get("balance"))
             if self.initial_balance is None:
@@ -116,7 +133,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             self.lbl_profit.setText(str(profit))
         except Exception as e:
             logs_services.save_gui_log(
-                message=f"Error on update balance: {e}", level="exception"
+                message=f"Error _on_receive_balance: {e}", level="exception"
             )
 
     def on_log(self, data):
@@ -125,6 +142,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         :param data: dict(code: message)
         :return: None
         """
+        self.receive_log_signal.emit(data)
+
+    @QtCore.pyqtSlot(dict)
+    def _on_receive_log(self, data: dict[str, str]):
         try:
             list_item = services.make_list_item(
                 data=data, allowed_codes=self.main_window.allowed_logs
@@ -140,10 +161,14 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         :param data: dict(multipliers: list)
         :return: None
         """
+        self.receive_multipliers_signal.emit(data)
+
+    @QtCore.pyqtSlot(dict)
+    def _on_receive_multipliers(self, data: dict[str, list]):
         try:
             multipliers = data.get("multipliers", [])
             self.bar_multiplier.add_multipliers(multipliers=multipliers)
         except Exception as e:
             logs_services.save_gui_log(
-                message=f"Error on add multipliers: {e}", level="exception"
+                message=f"Error on receive multipliers: {e}", level="exception"
             )
