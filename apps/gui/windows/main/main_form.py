@@ -81,9 +81,7 @@ class MainForm(QMainWindow, MainDesigner):
         """
         logged = data.get("logged", False)
         if not logged:
-            print("Token is invalid, showing login screen...")
             return
-        print("Token is valid, showing main screen...")
         QtCore.QMetaObject.invokeMethod(
             self,
             "show_parameters_screen",
@@ -91,7 +89,6 @@ class MainForm(QMainWindow, MainDesigner):
         )
 
     def _verify_token(self) -> None:
-        print("Verifying token...")
         self.socket.verify()
 
     def show_login_screen(self):
@@ -101,7 +98,6 @@ class MainForm(QMainWindow, MainDesigner):
 
     @QtCore.pyqtSlot(str, str)
     def show_message_box(self, title: str, message: str):
-        print("show_message_box", message)
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Icon.Information)
         msg.setText(message)

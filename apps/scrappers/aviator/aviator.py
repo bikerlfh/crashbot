@@ -43,7 +43,6 @@ class Aviator(AbstractGameBase, abc.ABC):
                     "message": "_getAppGame :: page is null",
                 }
             )
-            print("_getAppGame :: page is null")
             raise Exception("_getAppGame :: page is null")
 
         _app_game = None
@@ -59,8 +58,7 @@ class Aviator(AbstractGameBase, abc.ABC):
                 return _app_game
             except Exception as e:
                 if isinstance(e, TimeoutError):
-                    print("page :: error timeout")
-                    SendEventToGUI.log.debug("page :: error timeout")
+                    SendEventToGUI.log.debug("get app game :: timeout")
                     continue
                 SendEventToGUI.exception(
                     {
@@ -68,7 +66,6 @@ class Aviator(AbstractGameBase, abc.ABC):
                         "message": f"_getAppGame :: {e}",
                     }
                 )
-                print(f"_getAppGame :: {e}")
                 raise e
 
     async def open(self):
@@ -90,9 +87,6 @@ class Aviator(AbstractGameBase, abc.ABC):
         # await self.read_game_limits()
         self._controls = BetControl(self._app_game)
         await self._controls.init()
-        print("Aviator loaded")
-        print("balance :: ", self.balance)
-        print("multipliers :: ", self.multipliers)
         SendEventToGUI.log.success("Aviator loaded")
 
     async def close(self):

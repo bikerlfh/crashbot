@@ -103,7 +103,6 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         :param data: dict(maxAmountToBet: float)
         :return: None
         """
-        print(f"max amount to bet {data} ")
         pass
 
     def on_update_balance(self, data):

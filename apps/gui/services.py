@@ -13,7 +13,7 @@ from apps.gui.constants import (
     MAX_AMOUNT_BALANCE_PERCENTAGE,
     MAX_AMOUNT_HOME_BET_PERCENTAGE,
 )
-from apps.gui.utils import csv
+from apps.utils import csv
 from apps.gui.utils.encrypt import Encrypt
 
 

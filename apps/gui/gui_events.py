@@ -1,6 +1,7 @@
 # Standard Library
 from enum import Enum
 from typing import Optional
+from apps.utils.logs.logs_db_handler import LogsDBHandler
 
 # Internal
 from apps.globals import GlobalVars
@@ -29,9 +30,11 @@ def _send_log_to_gui(data: any, code: Optional[LogCode] = LogCode.INFO):
     :param code: LogCode
     :return: None
     """
+    log_handler = LogsDBHandler(app="GAME")
     data = {"message": data} if isinstance(data, str) else data
     data.update(code=code.value)
     GlobalVars.emit_to_gui(GUIEvent.LOG, data)
+    log_handler.insert_log(message=data.get("message"), level=data.get("code"))
 
 
 class SendEventToGUI:

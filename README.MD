@@ -1,5 +1,5 @@
 
-Command generate py with ui
+## Command generate py with ui
 ##################################################################
 
 pyuic6 -x [path ui] -o [path file ui]
@@ -9,11 +9,18 @@ pyuic6 -x ui/login.ui -o file.py
 
 ##################################################################
 
-## INSTALL
+# Install Requirements
 
-# INSTALL DESIGNER UI IN UBUNTU
+### - Sqlite 3
+
+#### Linux
+sudo apt-get install sqlite3
+#### Windows
+https://www.sqlite.org/download.html
+
+
+### INSTALL DESIGNER UI IN UBUNTU
 https://pythonbasics.org/qt-designer-python/
-https://www.pythontutorial.net/pyqt/qt-designer/
 
 /usr/lib/x86_64-linux-gnu/qt5/bin
 
@@ -28,3 +35,8 @@ pip install -r requirements.txt
 * MAX_AMOUNT_HOME_BET_PERCENTAGE:  max amount home bet percentage (0.01 - 1)
 * MAX_AMOUNT_BALANCE_PERCENTAGE: max amount balance percentage (0.01 - 1)
 * ALLOWED_LOG_CODES: allowed log codes (comma separated without spaces) example:info,error,debug,warning
+
+
+# Logs
+
+you can find the logs in the folder data/logs.db (sqlite3)

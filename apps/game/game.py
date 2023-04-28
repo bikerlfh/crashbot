@@ -140,7 +140,6 @@ class Game:
             SendEventToGUI.log.debug(
                 f"error in requestSaveMultipliers: {error}"
             )
-            print(f"error in requestSaveMultipliers: {error}")
 
     def request_save_bets(self):
         """

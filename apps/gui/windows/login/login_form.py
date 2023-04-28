@@ -23,7 +23,6 @@ class LoginForm(QtWidgets.QWidget, LoginDesigner):
         logged = data.get("logged", False)
         if not logged:
             # TODO add message box with error in credentials
-            print("login failed", data)
             self.btn_login.setDisabled(False)
             return
         QMetaObject.invokeMethod(

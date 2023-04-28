@@ -114,9 +114,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         :param data: dict(started: bool)
         :return: None
         """
-        print("parameter_form :: on_start_bot", data)
         started = data.get("started", False)
-        print("on_start_bot :: started", data)
         if not started:
             error = data.get("error", None)
             # TODO invokeMethod QMessageBox from MainWindow

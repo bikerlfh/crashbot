@@ -1,6 +1,7 @@
 # Internal
 from apps.scrappers.aviator.aviator import Aviator
 from apps.utils.datetime import sleep_now
+from apps.gui.gui_events import SendEventToGUI
 
 
 class AviatorOneWin(Aviator):
@@ -20,7 +21,7 @@ class AviatorOneWin(Aviator):
         password = globals().get("password")
 
         if not username or not password:
-            print("please set username and password to login!")
+            SendEventToGUI.log.warning("please set username and password to login!")
             return
 
         user_name_input = self._page.locator("input[name='login']")
