@@ -1,11 +1,23 @@
+from typing import Optional
 from datetime import datetime
 from apps.utils.logs.logs_db_handler import LogsDBHandler
 
 
-def save_log(
-    *,
-    message: str,
-    level: str,
-    timestamp: datetime
-):
-    LogsDBHandler().insert_log(message, level, timestamp)
+def save_game_log(
+    *, message: str, level: str, timestamp: Optional[datetime] = None
+) -> None:
+    log_handler = LogsDBHandler()
+    timestamp = timestamp or datetime.now()
+    log_handler.insert_log(
+        message=message, level=level, app="GAME", timestamp=timestamp
+    )
+
+
+def save_gui_log(
+    *, message: str, level: str, timestamp: Optional[datetime] = None
+) -> None:
+    log_handler = LogsDBHandler()
+    timestamp = timestamp or datetime.now()
+    log_handler.insert_log(
+        message=message, level=level, app="GUI", timestamp=timestamp
+    )

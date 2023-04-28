@@ -106,9 +106,7 @@ class BotAPIServices:
                 ),
             )
         except Exception as exc:
-            logger.exception(
-                f"BotAPIServices :: login :: {exc}"
-            )
+            logger.exception(f"BotAPIServices :: login :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body
@@ -127,9 +125,7 @@ class BotAPIServices:
                 ),
             )
         except Exception as exc:
-            logger.exception(
-                f"BotAPIServices :: token_refresh :: {exc}"
-            )
+            logger.exception(f"BotAPIServices :: token_refresh :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body
@@ -148,9 +144,7 @@ class BotAPIServices:
                 ),
             )
         except Exception as exc:
-            logger.exception(
-                f"BotAPIServices :: token_verify :: {exc}"
-            )
+            logger.exception(f"BotAPIServices :: token_verify :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.status == HTTPStatus.OK
@@ -161,9 +155,7 @@ class BotAPIServices:
                 service=self.HOME_BET,
             )
         except Exception as exc:
-            logger.exception(
-                f"BotAPIServices :: get_home_bet :: {exc}"
-            )
+            logger.exception(f"BotAPIServices :: get_home_bet :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body
@@ -175,9 +167,7 @@ class BotAPIServices:
                 service=service,
             )
         except Exception as exc:
-            logger.exception(
-                f"BotAPIServices :: get_home_bet_detail :: {exc}"
-            )
+            logger.exception(f"BotAPIServices :: get_home_bet_detail :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body
@@ -194,9 +184,7 @@ class BotAPIServices:
                 ),
             )
         except Exception as exc:
-            logger.exception(
-                f"BotAPIServices :: add_multipliers :: {exc}"
-            )
+            logger.exception(f"BotAPIServices :: add_multipliers :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body
@@ -217,9 +205,7 @@ class BotAPIServices:
         try:
             response = self.client.post(service=self.GET_PREDICTION, data=data)
         except Exception as exc:
-            logger.exception(
-                f"BotAPIServices :: request_prediction :: {exc}"
-            )
+            logger.exception(f"BotAPIServices :: request_prediction :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body
@@ -230,9 +216,7 @@ class BotAPIServices:
                 service=f"{self.GET_BOTS}?bot_type={bot_type}",
             )
         except Exception as exc:
-            logger.exception(
-                f"BotAPIServices :: get_bots :: {exc}"
-            )
+            logger.exception(f"BotAPIServices :: get_bots :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body
@@ -254,9 +238,7 @@ class BotAPIServices:
                 ),
             )
         except Exception as exc:
-            logger.exception(
-                f"BotAPIServices :: update_balance :: {exc}"
-            )
+            logger.exception(f"BotAPIServices :: update_balance :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body
@@ -276,9 +258,7 @@ class BotAPIServices:
         try:
             response = self.client.post(service=self.BET, data=data)
         except Exception as exc:
-            logger.exception(
-                f"BotAPIServices :: create_bet :: {exc}"
-            )
+            logger.exception(f"BotAPIServices :: create_bet :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body
@@ -294,9 +274,7 @@ class BotAPIServices:
                 service=service,
             )
         except Exception as exc:
-            logger.exception(
-                f"BotAPIServices :: get_bet :: {exc}"
-            )
+            logger.exception(f"BotAPIServices :: get_bet :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body

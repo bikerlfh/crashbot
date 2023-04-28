@@ -166,7 +166,9 @@ class Game:
             )
             SendEventToGUI.log.debug(f"bets saved")
         except Exception as error:
-            SendEventToGUI.log.debug(f"Error in requestSaveBets :: bet: {error}")
+            SendEventToGUI.log.debug(
+                f"Error in requestSaveBets :: bet: {error}"
+            )
 
     def request_get_prediction(self) -> Optional[PredictionCore]:
         """

@@ -12,7 +12,7 @@ class BarMultiplier(QVBoxLayout):
         self,
         parent: QMainWindow | QWidget,
         multipliers: list[float],
-        max_multipliers: int = 18
+        max_multipliers: int = 18,
     ):
         super().__init__(parent)
         self.max_multipliers = max_multipliers
@@ -94,7 +94,7 @@ class BarMultiplier(QVBoxLayout):
         if not multipliers:
             return
         if len(multipliers) > self.max_multipliers:
-            multipliers = multipliers[-self.max_multipliers:]
+            multipliers = multipliers[-self.max_multipliers :]
         self.bar_heights = self.__get_bar_height(multipliers)
         self.bar_colors = self.__get_bar_color(multipliers)
         self.x_data = [i + 1 for i in range(len(self.bar_heights))]
@@ -106,44 +106,71 @@ class BarMultiplier(QVBoxLayout):
             bar_patch = self.round_bar(i, 0, 1, val, 0.5, self.bar_colors[i])
             ax.add_patch(bar_patch)
         x_line = np.arange(len(self.x_data)) + 0.5
-        ax.plot(x_line, self.bar_heights, color='w', marker='o', markersize=1)
-        ax.grid(axis='y', color='gray', linestyle='dashed', linewidth=0.4)
+        ax.plot(x_line, self.bar_heights, color="w", marker="o", markersize=1)
+        ax.grid(axis="y", color="gray", linestyle="dashed", linewidth=0.4)
         for label in ax.get_yticklabels():
-            label.set_color('white')
+            label.set_color("white")
         self.draw()
 
     @staticmethod
-    def round_bar(x, y, width, height, radius=0.4, color='skyblue'):
+    def round_bar(x, y, width, height, radius=0.4, color="skyblue"):
         left, right = x, x + width
         bottom, top = y, y + height
         path_ = [
             (left, bottom),
-            (right, bottom), (right, bottom), (right, bottom),
-            (right, top), (right, top), (right, top),
-            (left, top), (left, top), (left, top),
-            (left, bottom)
+            (right, bottom),
+            (right, bottom),
+            (right, bottom),
+            (right, top),
+            (right, top),
+            (right, top),
+            (left, top),
+            (left, top),
+            (left, top),
+            (left, bottom),
         ]
         if height > 0:
             path_ = [
                 (left, bottom),
-                (right, bottom), (right, bottom), (right, bottom),
-                (right, top - radius), (right, top), (right - radius, top),
-                (left + radius, top), (left, top), (left, top - radius),
-                (left, bottom)
+                (right, bottom),
+                (right, bottom),
+                (right, bottom),
+                (right, top - radius),
+                (right, top),
+                (right - radius, top),
+                (left + radius, top),
+                (left, top),
+                (left, top - radius),
+                (left, bottom),
             ]
         elif height < 0:
             path_ = [
                 (left, bottom),
-                (right, bottom), (right, bottom), (right, bottom),
-                (right, top + radius), (right, top), (right - radius, top),
-                (left + radius, top), (left, top), (left, top + radius),
-                (left, bottom)
+                (right, bottom),
+                (right, bottom),
+                (right, bottom),
+                (right, top + radius),
+                (right, top),
+                (right - radius, top),
+                (left + radius, top),
+                (left, top),
+                (left, top + radius),
+                (left, bottom),
             ]
-        path = Path(path_, [ # NOQA
-            Path.MOVETO,
-            Path.LINETO, Path.CURVE3, Path.CURVE3,
-            Path.LINETO, Path.CURVE3, Path.CURVE3,
-            Path.LINETO, Path.CURVE3, Path.CURVE3,
-            Path.LINETO,
-        ])
-        return PathPatch(path, facecolor=color, edgecolor='k')
+        path = Path(
+            path_,
+            [  # NOQA
+                Path.MOVETO,
+                Path.LINETO,
+                Path.CURVE3,
+                Path.CURVE3,
+                Path.LINETO,
+                Path.CURVE3,
+                Path.CURVE3,
+                Path.LINETO,
+                Path.CURVE3,
+                Path.CURVE3,
+                Path.LINETO,
+            ],
+        )
+        return PathPatch(path, facecolor=color, edgecolor="k")

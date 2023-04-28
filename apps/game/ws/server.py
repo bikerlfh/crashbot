@@ -2,6 +2,7 @@
 import socketio
 import uvicorn
 from threading import Event
+
 # Internal
 from apps.constants import WSEvent
 from apps.game.ws import events

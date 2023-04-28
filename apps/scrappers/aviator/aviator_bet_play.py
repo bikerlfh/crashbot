@@ -11,15 +11,19 @@ class AviatorBetPlay(Aviator):
 
     async def _login(self):
         if not self._page:
-            SendEventToGUI.exception(dict(
-                location="AviatorBetPlay._login",
-                message="page is null",
-            ))
+            SendEventToGUI.exception(
+                dict(
+                    location="AviatorBetPlay._login",
+                    message="page is null",
+                )
+            )
             return
         username = GlobalVars.get_username()
         password = GlobalVars.get_password()
         if not username or not password:
-            SendEventToGUI.log.success("Please set username and password to login!")
+            SendEventToGUI.log.success(
+                "Please set username and password to login!"
+            )
             return
         username_input = self._page.locator("input#userName")
         password_input = self._page.locator("input#password")
@@ -46,9 +50,11 @@ class AviatorBetPlay(Aviator):
         )
         while True:
             try:
-                self._frame = self._page.frame_locator(
-                    "#gameFrame"
-                ).frame_locator("#spribe-game").first
+                self._frame = (
+                    self._page.frame_locator("#gameFrame")
+                    .frame_locator("#spribe-game")
+                    .first
+                )
                 self._app_game = self._frame.locator("app-game").first
                 await self._app_game.locator(".result-history").wait_for(
                     timeout=5000
@@ -58,7 +64,9 @@ class AviatorBetPlay(Aviator):
                 if isinstance(e, TimeoutError):
                     SendEventToGUI.log.debug("_get_app_game :: timeout")
                     continue
-                SendEventToGUI.log.debug(f"_get_app_game :: exception :: {str(e)}")
+                SendEventToGUI.log.debug(
+                    f"_get_app_game :: exception :: {str(e)}"
+                )
                 # raise e
 
     async def read_game_limits(self):

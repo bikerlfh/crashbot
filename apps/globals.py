@@ -8,6 +8,7 @@ import asyncio
 from enum import Enum
 from typing import Callable
 from threading import Event
+
 # Libraries
 from socketio import AsyncServer
 

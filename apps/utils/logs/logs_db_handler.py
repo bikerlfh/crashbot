@@ -5,19 +5,19 @@ from apps.utils.patterns.singleton import Singleton
 
 
 class LogsDBHandler(SQLiteEngine, metaclass=Singleton):
-    def __init__(self, *, app: str):
+    def __init__(self):
         super().__init__("data/logs.db")
-        self.app = app
         self.create_table()
 
     def create_table(self):
         self.execute(
-            '''CREATE TABLE IF NOT EXISTS Logs(
+            """CREATE TABLE IF NOT EXISTS Logs(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 message TEXT,
                 level TEXT,
                 app TEXT,
-                timestamp TEXT)''')
+                timestamp TEXT)"""
+        )
         self.commit()
 
     def insert_log(
@@ -25,6 +25,7 @@ class LogsDBHandler(SQLiteEngine, metaclass=Singleton):
         *,
         message: str | dict,
         level: str,
+        app: str,
         timestamp: Optional[datetime] = None
     ):
         if isinstance(message, dict):
@@ -32,16 +33,16 @@ class LogsDBHandler(SQLiteEngine, metaclass=Singleton):
         if not timestamp:
             timestamp = datetime.now()
         timestamp = timestamp.strftime(self.TIMESTAMP_FORMAT)
-        sql_ = '''INSERT INTO Logs (message, level, app, timestamp) VALUES (?, ?, ?, ?)'''
-        self.execute(sql_, (message, level, self.app, timestamp))
+        sql_ = """INSERT INTO Logs (message, level, app, timestamp) VALUES (?, ?, ?, ?)"""
+        self.execute(sql_, (message, level, app, timestamp))
         self.commit()
 
     def get_logs(self, *, timestamp: str = None):
         params = None
-        sql_ = '''SELECT * FROM Logs'''
+        sql_ = """SELECT * FROM Logs"""
         if timestamp:
             params = (timestamp,)
-            sql_ = '''SELECT * FROM Logs WHERE timestamp = ?'''
+            sql_ = """SELECT * FROM Logs WHERE timestamp = ?"""
         self.execute(sql_, params)
         return self.fetchall()
 
@@ -49,5 +50,5 @@ class LogsDBHandler(SQLiteEngine, metaclass=Singleton):
         now = datetime.now()
         delta = timedelta(days=days)
         cutoff = (now - delta).strftime(self.TIMESTAMP_FORMAT)
-        self.execute('''DELETE FROM Logs WHERE timestamp < ?''', (cutoff,))
+        self.execute("""DELETE FROM Logs WHERE timestamp < ?""", (cutoff,))
         self.commit()

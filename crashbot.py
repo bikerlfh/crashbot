@@ -1,5 +1,6 @@
 # Standard Library
 from threading import Event, Thread
+
 # Internal
 from apps.game.ws import server as game_server
 from apps.globals import GlobalVars
@@ -12,7 +13,7 @@ if __name__ == "__main__":
     ws_server_thread = Thread(
         target=game_server.run_server,
         args=(event,),
-        daemon=(not event.is_set())
+        daemon=(not event.is_set()),
     )
     ws_server_thread.start()
     sleep_now(1)

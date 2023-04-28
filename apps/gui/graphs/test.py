@@ -15,12 +15,45 @@ class MyMainWindow(QMainWindow):
         self.gbox_graph.setGeometry(QtCore.QRect(0, 10, 631, 281))
         self.gbox_graph.setTitle("")
         self.gbox_graph.setObjectName("gbox_graph")
-        self.bar_multiplier = BarMultiplier(self.gbox_graph, [1.5, 1.2, 1.2, 2, 3, 4, 1, 444,6,1,5,2,3,6,5,4,8,5,1,21,23,5,65,1,2,5,1,1,1,], 30)
-
+        self.bar_multiplier = BarMultiplier(
+            self.gbox_graph,
+            [
+                1.5,
+                1.2,
+                1.2,
+                2,
+                3,
+                4,
+                1,
+                444,
+                6,
+                1,
+                5,
+                2,
+                3,
+                6,
+                5,
+                4,
+                8,
+                5,
+                1,
+                21,
+                23,
+                5,
+                65,
+                1,
+                2,
+                5,
+                1,
+                1,
+                1,
+            ],
+            30,
+        )
 
         # Create a button to add data to the plot
         # Create a button to add data to the plot
-        self.button = QPushButton('Add Data', self)
+        self.button = QPushButton("Add Data", self)
         self.button.clicked.connect(self.add_data)
         self.bar_multiplier.draw()
 
@@ -28,7 +61,7 @@ class MyMainWindow(QMainWindow):
         self.bar_multiplier.add_multipliers([1.0])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
     qdarktheme.setup_theme("dark")
     window = MyMainWindow()
