@@ -13,8 +13,8 @@ from apps.gui.constants import (
     MAX_AMOUNT_BALANCE_PERCENTAGE,
     MAX_AMOUNT_HOME_BET_PERCENTAGE,
 )
-from apps.utils import csv
 from apps.gui.utils.encrypt import Encrypt
+from apps.utils import csv
 
 
 def make_list_item(

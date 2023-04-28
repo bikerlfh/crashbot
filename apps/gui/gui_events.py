@@ -1,10 +1,10 @@
 # Standard Library
 from enum import Enum
 from typing import Optional
-from apps.utils.logs import services as log_services
 
 # Internal
 from apps.globals import GlobalVars
+from apps.utils.logs import services as log_services
 
 
 class GUIEvent(str, Enum):

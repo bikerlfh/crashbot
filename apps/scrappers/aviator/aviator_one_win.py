@@ -1,7 +1,7 @@
 # Internal
+from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.aviator.aviator import Aviator
 from apps.utils.datetime import sleep_now
-from apps.gui.gui_events import SendEventToGUI
 
 
 class AviatorOneWin(Aviator):

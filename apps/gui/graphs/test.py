@@ -1,10 +1,12 @@
+# Standard Library
 import sys
-import numpy as np
-from PyQt6 import QtCore
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QGroupBox
 
-from bar_multipliers import BarMultiplier
+# Libraries
+import numpy as np
 import qdarktheme
+from bar_multipliers import BarMultiplier
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QApplication, QGroupBox, QMainWindow, QPushButton
 
 
 class MyMainWindow(QMainWindow):

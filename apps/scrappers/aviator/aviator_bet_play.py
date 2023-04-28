@@ -1,7 +1,7 @@
 # Internal
-from apps.scrappers.aviator.aviator import Aviator
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
+from apps.scrappers.aviator.aviator import Aviator
 
 
 class AviatorBetPlay(Aviator):

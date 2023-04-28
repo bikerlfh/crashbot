@@ -1,7 +1,9 @@
+# Standard Library
+from threading import Event
+
 # Libraries
 import socketio
 import uvicorn
-from threading import Event
 
 # Internal
 from apps.constants import WSEvent

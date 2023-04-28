@@ -1,10 +1,11 @@
-import numpy as np
-from PyQt6.QtWidgets import QVBoxLayout, QWidget, QMainWindow
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
+# Libraries
 import matplotlib.pyplot as plt
-from matplotlib.path import Path
+import numpy as np
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.patches import PathPatch
+from matplotlib.path import Path
 from matplotlib.ticker import MaxNLocator
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
 
 class BarMultiplier(QVBoxLayout):

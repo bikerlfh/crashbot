@@ -6,8 +6,8 @@ use globals().setdefault('auto_play', False) to set value
 # Standard Library
 import asyncio
 from enum import Enum
-from typing import Callable
 from threading import Event
+from typing import Callable
 
 # Libraries
 from socketio import AsyncServer

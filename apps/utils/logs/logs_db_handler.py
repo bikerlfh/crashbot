@@ -1,7 +1,10 @@
-from typing import Optional
+# Standard Library
 from datetime import datetime, timedelta
-from apps.utils.sqlite_engine import SQLiteEngine
+from typing import Optional
+
+# Internal
 from apps.utils.patterns.singleton import Singleton
+from apps.utils.sqlite_engine import SQLiteEngine
 
 
 class LogsDBHandler(SQLiteEngine, metaclass=Singleton):

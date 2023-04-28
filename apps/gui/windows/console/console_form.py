@@ -4,8 +4,8 @@ from PyQt6.QtWidgets import QListWidgetItem, QMessageBox, QWidget
 # Internal
 from apps.constants import HomeBets
 from apps.gui import services
-from apps.gui.windows.console.console_designer import ConsoleDesigner
 from apps.gui.graphs.bar_multipliers import BarMultiplier
+from apps.gui.windows.console.console_designer import ConsoleDesigner
 
 
 class ConsoleForm(QWidget, ConsoleDesigner):
