@@ -24,7 +24,7 @@ class BarMultiplier(QVBoxLayout):
         fig.set_figwidth(parent.geometry().width() / 100)
         fig.set_figheight(parent.geometry().height() / 100)
         fig.tight_layout()
-        fig.set_facecolor("#474747")
+        fig.set_facecolor("#232323")
         ax.set_facecolor("#000000")
         ax.yaxis.set_major_locator(MaxNLocator(integer=True, nbins=10))
         ax.xaxis.set_major_locator(MaxNLocator(integer=True, nbins=10))
@@ -108,6 +108,8 @@ class BarMultiplier(QVBoxLayout):
         x_line = np.arange(len(self.x_data)) + 0.5
         ax.plot(x_line, self.bar_heights, color='w', marker='o', markersize=1)
         ax.grid(axis='y', color='gray', linestyle='dashed', linewidth=0.4)
+        for label in ax.get_yticklabels():
+            label.set_color('white')
         self.draw()
 
     @staticmethod

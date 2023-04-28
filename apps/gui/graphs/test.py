@@ -1,10 +1,10 @@
 import sys
 import numpy as np
 from PyQt6 import QtCore
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton,QGroupBox
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QGroupBox
+
 from bar_multipliers import BarMultiplier
+import qdarktheme
 
 
 class MyMainWindow(QMainWindow):
@@ -30,6 +30,7 @@ class MyMainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    qdarktheme.setup_theme("dark")
     window = MyMainWindow()
     window.show()
     sys.exit(app.exec())
