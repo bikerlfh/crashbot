@@ -73,24 +73,6 @@ class BarMultiplier(QVBoxLayout):
                 bar_colors.append("crimson")
         return bar_colors
 
-    """def add_multipliers(self, multipliers: list[float]):
-        if not multipliers:
-            return
-        # Append the new height to the list of bar heights
-        if len(multipliers) > self.max_multipliers:
-            multipliers = multipliers[-self.max_multipliers:]
-        self.bar_heights = self.__get_bar_height(multipliers)
-        self.bar_colors = self.__get_bar_color(multipliers)
-        self.x_data = [i + 1 for i in range(len(self.bar_heights))]
-        ax = self.canvas.figure.axes[0]
-        ax.clear()
-        ax.set_xlim(0.5, len(self.bar_heights) + 0.5)
-        ax.set_xticks([])
-        ax.plot(self.x_data, self.bar_heights, color='w')  # , marker='o', markersize=1, markeredgecolor='k')
-        ax.bar(self.x_data, self.bar_heights, self.bar_width, color=self.bar_colors, capstyle='round')
-        ax.grid(axis='y', color='gray', linestyle='dashed', linewidth=0.4)
-        self.draw()"""
-
     def add_multipliers(self, multipliers: list[float]):
         if not multipliers:
             return

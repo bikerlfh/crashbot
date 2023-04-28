@@ -1,5 +1,3 @@
-# Standard Library
-
 # Libraries
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import Q_ARG, QMetaObject, Qt
@@ -8,6 +6,7 @@ from PyQt6.QtCore import Q_ARG, QMetaObject, Qt
 from apps.constants import BotType, HomeBets
 from apps.gui import services
 from apps.gui.windows.parameter.parameter_designer import ParameterDesigner
+from apps.utils.logs import services as logs_services
 
 
 class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
@@ -15,10 +14,10 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         super().__init__()
         self.values = None
         self.setupUi(self)
-        self.__fill_cmb_fields()
         self.main_window = main_window
         self.btn_start.clicked.connect(self.button_start_clicked_event)
         self.cmb_home_bet.currentIndexChanged.connect(self.__set_max_amount_to_bet)
+        self.__fill_cmb_fields()
         self.__set_max_amount_to_bet(0)
 
     def __fill_cmb_fields(self):
@@ -85,24 +84,23 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
 
     def button_start_clicked_event(self):
         data = self.get_values()
-        if data:
-            if self.chk_use_credentials.isChecked():
-                home_bet_index = self.cmb_home_bet.currentIndex()
-                home_bet = HomeBets[home_bet_index]
-                credential = services.get_credentials_by_home_bet(
-                    home_bet=home_bet.name
-                )
-                data["username"] = credential.get("username")
-                data["password"] = credential.get("password")
-            self.main_window.socket.start_bot(
-                bot_type=data.get("bot_type"),
-                home_bet_id=data.get("home_bet_id"),
-                max_amount_to_bet=data.get("max_amount_to_bet"),
-                auto_play=data.get("auto_play", False),
-                username=data.get("username"),
-                password=data.get("password"),
-            )
-            self.btn_start.setDisabled(True)
+        if not data:
+            return
+        if self.chk_use_credentials.isChecked():
+            home_bet_index = self.cmb_home_bet.currentIndex()
+            home_bet = HomeBets[home_bet_index]
+            credential = services.get_credentials_by_home_bet(home_bet=home_bet.name)
+            data["username"] = credential.get("username")
+            data["password"] = credential.get("password")
+        self.main_window.socket.start_bot(
+            bot_type=data.get("bot_type"),
+            home_bet_id=data.get("home_bet_id"),
+            max_amount_to_bet=data.get("max_amount_to_bet"),
+            auto_play=data.get("auto_play", False),
+            username=data.get("username"),
+            password=data.get("password"),
+        )
+        self.btn_start.setDisabled(True)
 
     def on_start_bot(self, data: dict[str, any]):
         """
@@ -110,19 +108,24 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         :param data: dict(started: bool)
         :return: None
         """
-        started = data.get("started", False)
-        if not started:
-            error = data.get("error", None)
+        try:
+            started = data.get("started", False)
+            if not started:
+                error = data.get("error", None)
+                QMetaObject.invokeMethod(
+                    self.main_window,
+                    "show_message_box",
+                    Q_ARG(str, error.get("code", "")),
+                    Q_ARG(str, error.get("message")),
+                )
+                self.btn_start.setDisabled(False)
+                return
             QMetaObject.invokeMethod(
                 self.main_window,
-                "show_message_box",
-                Q_ARG(str, error.get("code", "")),
-                Q_ARG(str, error.get("message")),
+                "show_console_screen",
+                Qt.ConnectionType.QueuedConnection,
             )
-            self.btn_start.setDisabled(False)
-            return
-        QMetaObject.invokeMethod(
-            self.main_window,
-            "show_console_screen",
-            Qt.ConnectionType.QueuedConnection,
-        )
+        except Exception as e:
+            logs_services.save_gui_log(
+                message=f"Error on_start_bot: {e}", level="exception"
+            )

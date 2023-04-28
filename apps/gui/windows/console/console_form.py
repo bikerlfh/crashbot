@@ -92,17 +92,14 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         :param data: dict(autoPlay: bool)
         :return: None
         """
-        self.btn_auto_bet.setText(
-            "AutoBet ON" if data.get("auto_play") else "AutoBet OFF"
-        )
-
-    def on_set_max_amount_to_bet(self, data):
-        """
-        ws callback on set max amount to bet
-        :param data: dict(maxAmountToBet: float)
-        :return: None
-        """
-        pass
+        try:
+            self.btn_auto_bet.setText(
+                "AutoBet ON" if data.get("auto_play") else "AutoBet OFF"
+            )
+        except Exception as e:
+            logs_services.save_gui_log(
+                message=f"Error on autoplay: {e}", level="exception"
+            )
 
     def on_update_balance(self, data):
         """
@@ -110,12 +107,17 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         :param data: dict(balance: float)
         :return: None
         """
-        self.balance = float(data.get("balance"))
-        if self.initial_balance is None:
-            self.initial_balance = self.balance
-        self.lbl_balance.setText(str(self.balance))
-        profit = round(self.balance - self.initial_balance, 2)
-        self.lbl_profit.setText(str(profit))
+        try:
+            self.balance = float(data.get("balance"))
+            if self.initial_balance is None:
+                self.initial_balance = self.balance
+            self.lbl_balance.setText(str(self.balance))
+            profit = round(self.balance - self.initial_balance, 2)
+            self.lbl_profit.setText(str(profit))
+        except Exception as e:
+            logs_services.save_gui_log(
+                message=f"Error on update balance: {e}", level="exception"
+            )
 
     def on_log(self, data):
         """
@@ -138,5 +140,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         :param data: dict(multipliers: list)
         :return: None
         """
-        multipliers = data.get("multipliers", [])
-        self.bar_multiplier.add_multipliers(multipliers=multipliers)
+        try:
+            multipliers = data.get("multipliers", [])
+            self.bar_multiplier.add_multipliers(multipliers=multipliers)
+        except Exception as e:
+            logs_services.save_gui_log(
+                message=f"Error on add multipliers: {e}", level="exception"
+            )

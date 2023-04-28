@@ -28,7 +28,6 @@ class MainForm(QMainWindow, MainDesigner):
             on_start_bot=self.parameters_screen.on_start_bot,
             on_log=self.console_screen.on_log,
             on_auto_play=self.console_screen.on_auto_play,
-            on_set_max_amount_to_bet=self.console_screen.on_set_max_amount_to_bet,
             on_update_balance=self.console_screen.on_update_balance,
             on_add_multipliers=self.console_screen.on_add_multipliers,
         )
