@@ -19,6 +19,7 @@ class LogsDBHandler(SQLiteEngine, metaclass=Singleton):
                 message TEXT,
                 level TEXT,
                 app TEXT,
+                path TEXT NULL,
                 timestamp TEXT)"""
         )
         self.commit()
@@ -29,23 +30,44 @@ class LogsDBHandler(SQLiteEngine, metaclass=Singleton):
         message: str | dict,
         level: str,
         app: str,
-        timestamp: Optional[datetime] = None
+        timestamp: Optional[datetime] = None,
+        path: Optional[str] = None,
     ):
         if isinstance(message, dict):
             message = str(message)
         if not timestamp:
             timestamp = datetime.now()
         timestamp = timestamp.strftime(self.TIMESTAMP_FORMAT)
-        sql_ = """INSERT INTO Logs (message, level, app, timestamp) VALUES (?, ?, ?, ?)"""
-        self.execute(sql_, (message, level, app, timestamp))
+        sql_ = "INSERT INTO Logs (message, level, app, path, timestamp) VALUES (?, ?, ?, ?, ?)"
+        self.execute(sql_, (message, level, app, path, timestamp))
+        self.commit()
+
+    def insert_logs(self, *, logs: list[dict[str, any]]):
+        values = []
+        for log in logs:
+            timestamp = log.get("timestamp", datetime.now())
+            values.append(
+                (
+                    log["message"],
+                    log["level"],
+                    log["app"],
+                    log.get("path", None),
+                    timestamp.strftime(self.TIMESTAMP_FORMAT),
+
+                )
+            )
+        self.executemany(
+            "INSERT INTO Logs (message, level, timestamp) VALUES (?, ?, ?, ?, ?)",
+            values
+        )
         self.commit()
 
     def get_logs(self, *, timestamp: str = None):
         params = None
-        sql_ = """SELECT * FROM Logs"""
+        sql_ = "SELECT * FROM Logs"
         if timestamp:
             params = (timestamp,)
-            sql_ = """SELECT * FROM Logs WHERE timestamp = ?"""
+            sql_ = "SELECT * FROM Logs WHERE timestamp = ?"
         self.execute(sql_, params)
         return self.fetchall()
 
@@ -53,5 +75,5 @@ class LogsDBHandler(SQLiteEngine, metaclass=Singleton):
         now = datetime.now()
         delta = timedelta(days=days)
         cutoff = (now - delta).strftime(self.TIMESTAMP_FORMAT)
-        self.execute("""DELETE FROM Logs WHERE timestamp < ?""", (cutoff,))
+        self.execute("DELETE FROM Logs WHERE timestamp < ?", (cutoff,))
         self.commit()

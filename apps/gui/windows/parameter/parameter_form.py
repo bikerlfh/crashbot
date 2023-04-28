@@ -117,7 +117,6 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         started = data.get("started", False)
         if not started:
             error = data.get("error", None)
-            # TODO invokeMethod QMessageBox from MainWindow
             QMetaObject.invokeMethod(
                 self.main_window,
                 "show_message_box",

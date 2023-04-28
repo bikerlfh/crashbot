@@ -70,9 +70,8 @@ class Aviator(AbstractGameBase, abc.ABC):
 
     async def open(self):
         self.playwright = await async_playwright().start()
-        self._browser = await self.playwright.chromium.launch(
-            headless=False, args=["--start-maximized"]
-        )
+        # to lunch the browser maximized add args=["--start-maximized"]
+        self._browser = await self.playwright.chromium.launch(headless=False)
         self._context = await self._browser.new_context(no_viewport=True)
         # self._browser = await self.playwright.chromium.launch(headless=False)
         # self._context = await self._browser.new_context()

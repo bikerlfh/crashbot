@@ -48,8 +48,8 @@ class MainForm(QMainWindow, MainDesigner):
         self.setCentralWidget(self.stacked_widget)
         self.credential_screen = CredentialDialog()
         self.showMaximized()
-        self.show_login_screen()
         self.action_crendentials.triggered.connect(self.show_credential)
+        self.show_login_screen()
 
     def __change_screen(
         self,
@@ -66,8 +66,9 @@ class MainForm(QMainWindow, MainDesigner):
         if utils_os.is_linux() or utils_os.is_windows():
             height += 44
         self.resize(width, height)
-        self.setMinimumSize(QtCore.QSize(width, height))
-        self.setMaximumSize(QtCore.QSize(width, height))
+        q_size = QtCore.QSize(width, height)
+        self.setMinimumSize(q_size)
+        self.setMaximumSize(q_size)
         qr = self.frameGeometry()
         cp = self.screen().availableGeometry().center()
         qr.moveCenter(cp)
@@ -143,8 +144,8 @@ class MainForm(QMainWindow, MainDesigner):
         log_name = _action.text()
         if _action.isChecked():
             self.allowed_logs.append(log_name.lower())
-        else:
-            self.allowed_logs.remove(log_name.lower())
+            return
+        self.allowed_logs.remove(log_name.lower())
 
     def closeEvent(self, event) -> None:
         self.socket.close_game()

@@ -6,6 +6,7 @@ from apps.constants import HomeBets
 from apps.gui import services
 from apps.gui.graphs.bar_multipliers import BarMultiplier
 from apps.gui.windows.console.console_designer import ConsoleDesigner
+from apps.utils.logs import services as logs_services
 
 
 class ConsoleForm(QWidget, ConsoleDesigner):
@@ -124,15 +125,16 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         :param data: dict(code: message)
         :return: None
         """
-        # self.logs_to_save.append(data)
-        # if len(self.logs_to_save) > self.MAX_LOGS_ITEMS:
-        #    utils.save_logs(logs=self.logs_to_save)
-        #    self.logs_to_save = []
-        list_item = services.make_list_item(
-            data=data, allowed_codes=self.main_window.allowed_logs
-        )
-        if list_item:
-            self.__add_item_to_list(list_item)
+        try:
+            list_item = services.make_list_item(
+                data=data, allowed_codes=self.main_window.allowed_logs
+            )
+            if list_item:
+                self.__add_item_to_list(list_item)
+        except Exception as e:
+            logs_services.save_gui_log(
+                message=f"Error on log: {e}", level="exception"
+            )
 
     def on_add_multipliers(self, data):
         """
