@@ -10,7 +10,6 @@ from apps.utils.logs import services as logs_services
 # from PyQt6.QtCore import Q_ARG, QMetaObject
 
 
-
 class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
     receive_start_bot_signal = QtCore.pyqtSignal(dict)
 

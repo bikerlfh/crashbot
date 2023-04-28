@@ -713,29 +713,6 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QGroupBox" name="groupBox_2">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>290</y>
-     <width>631</width>
-     <height>261</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Logs</string>
-   </property>
-   <widget class="QListWidget" name="list_log">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>611</width>
-      <height>221</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
   <widget class="QGroupBox" name="gbox_graph">
    <property name="geometry">
     <rect>
@@ -745,11 +722,38 @@
      <height>281</height>
     </rect>
    </property>
+   <property name="tabletTracking">
+    <bool>false</bool>
+   </property>
+   <property name="acceptDrops">
+    <bool>false</bool>
+   </property>
+   <property name="whatsThis">
+    <string notr="true"/>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
    <property name="title">
     <string/>
    </property>
+   <property name="flat">
+    <bool>false</bool>
+   </property>
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
   </widget>
-  <zorder>groupBox_2</zorder>
+  <widget class="QListWidget" name="list_log">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>300</y>
+     <width>631</width>
+     <height>241</height>
+    </rect>
+   </property>
+  </widget>
   <zorder>btn_set_max_amount</zorder>
   <zorder>btn_auto_bet</zorder>
   <zorder>label</zorder>
@@ -764,6 +768,7 @@
   <zorder>line_3</zorder>
   <zorder>lbl_balance</zorder>
   <zorder>gbox_graph</zorder>
+  <zorder>list_log</zorder>
  </widget>
  <resources/>
  <connections/>

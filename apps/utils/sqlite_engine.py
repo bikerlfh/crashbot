@@ -1,4 +1,5 @@
 # Standard Library
+import os
 import sqlite3
 
 
@@ -6,6 +7,10 @@ class SQLiteEngine:
     TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
 
     def __init__(self, database):
+        # validate dir path
+        directory = os.path.dirname(database)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         self.conn = sqlite3.connect(database)
         self.cursor = self.conn.cursor()
 
