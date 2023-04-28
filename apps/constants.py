@@ -20,6 +20,7 @@ class WSEvent(str, Enum):
     # events from server
     LOG = "log"
     UPDATE_BALANCE = "update_balance"
+    ADD_MULTIPLIERS = "add_multipliers"
     ERROR = "error"
     EXCEPTION = "exception"
 

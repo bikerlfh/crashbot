@@ -162,6 +162,8 @@ class BotBase:
         if len(self.amounts_lost) > 4:
             average = sum(self.amounts_lost) / len(self.amounts_lost)
             return average
+        if len(self.amounts_lost) == 0:
+            return 0
         return max(self.amounts_lost)
 
     def set_max_amount_to_bet(self, amount: float):

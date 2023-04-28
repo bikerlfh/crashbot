@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>consoleForm</class>
+ <widget class="QWidget" name="consoleForm">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>897</width>
-    <height>557</height>
+    <width>901</width>
+    <height>562</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -18,8 +18,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>897</width>
-    <height>557</height>
+    <width>1920</width>
+    <height>1080</height>
    </size>
   </property>
   <property name="palette">
@@ -470,16 +470,6 @@
   <property name="inputMethodHints">
    <set>Qt::ImhPreferNumbers</set>
   </property>
-  <widget class="QListWidget" name="list_log">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>10</y>
-     <width>621</width>
-     <height>531</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QPushButton" name="btn_set_max_amount">
    <property name="geometry">
     <rect>
@@ -723,7 +713,43 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <zorder>list_log</zorder>
+  <widget class="QGroupBox" name="groupBox_2">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>290</y>
+     <width>631</width>
+     <height>261</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Logs</string>
+   </property>
+   <widget class="QListWidget" name="list_log">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>611</width>
+      <height>221</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="gbox_graph">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>10</y>
+     <width>631</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+  </widget>
+  <zorder>groupBox_2</zorder>
   <zorder>btn_set_max_amount</zorder>
   <zorder>btn_auto_bet</zorder>
   <zorder>label</zorder>
@@ -737,6 +763,7 @@
   <zorder>line_2</zorder>
   <zorder>line_3</zorder>
   <zorder>lbl_balance</zorder>
+  <zorder>gbox_graph</zorder>
  </widget>
  <resources/>
  <connections/>

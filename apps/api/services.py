@@ -162,7 +162,7 @@ def create_bets(
     response = bot_connector.services.create_bet(
         home_bet_id=home_bet_id, balance=balance, bets=bets
     )
-    bets = response.get("bets")
+    bets = response.get("bets", [])
     data = [BetData(**bet) for bet in bets]
     return data
 

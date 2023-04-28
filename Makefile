@@ -1,5 +1,5 @@
 designer:
-	Designer ui/$(ui).ui
+	designer ui/$(ui).ui
 
 generate-ui:
 	pyuic6 -x ui/$(ui).ui -o file.py

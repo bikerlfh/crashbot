@@ -30,6 +30,7 @@ class MainForm(QMainWindow, MainDesigner):
             on_auto_play=self.console_screen.on_auto_play,
             on_set_max_amount_to_bet=self.console_screen.on_set_max_amount_to_bet,
             on_update_balance=self.console_screen.on_update_balance,
+            on_add_multipliers=self.console_screen.on_add_multipliers,
         )
         self.socket.run()
         # verify token login

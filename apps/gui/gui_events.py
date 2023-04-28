@@ -9,6 +9,7 @@ from apps.globals import GlobalVars
 class GUIEvent(str, Enum):
     LOG = "log"
     UPDATE_BALANCE = "update_balance"
+    ADD_MULTIPLIERS = "add_multipliers"
     ERROR = "error"
     EXCEPTION = "exception"
 
@@ -62,6 +63,10 @@ class SendEventToGUI:
         GlobalVars.emit_to_gui(GUIEvent.UPDATE_BALANCE, dict(balance=balance))
 
     @staticmethod
+    def send_multipliers(multipliers: list[float]):
+        GlobalVars.emit_to_gui(GUIEvent.ADD_MULTIPLIERS, dict(multipliers=multipliers))
+
+    @staticmethod
     def error(error: str):
         GlobalVars.emit_to_gui(GUIEvent.ERROR, dict(error=error))
 
@@ -69,3 +74,4 @@ class SendEventToGUI:
     def exception(exception: any):
         exception = isinstance(exception, str) and exception or str(exception)
         GlobalVars.emit_to_gui(GUIEvent.EXCEPTION, dict(exception=exception))
+

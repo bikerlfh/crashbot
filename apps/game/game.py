@@ -102,6 +102,7 @@ class Game:
         # sendEventToGUI.balance(self.balance)
         SendEventToGUI.log.debug("loading the player.....")
         self.multipliers_to_save = self.game_page.multipliers
+        SendEventToGUI.send_multipliers(self.multipliers_to_save)
         self.multipliers = list(
             map(lambda item: Multiplier(item), self.multipliers_to_save)
         )
@@ -141,11 +142,11 @@ class Game:
             )
             print(f"error in requestSaveMultipliers: {error}")
 
-    def request_save_bets(self, bets):
+    def request_save_bets(self):
         """
         Save the bets in the database
         """
-        if not bets:
+        if not self.bets:
             return
         bets_to_save = [
             BetData(
@@ -155,7 +156,7 @@ class Game:
                 round(bet.amount, 2),
                 bet.multiplier_result,
             )
-            for bet in bets
+            for bet in self.bets
         ]
         SendEventToGUI.log.debug("saving bets.....")
         try:
@@ -166,8 +167,7 @@ class Game:
             )
             SendEventToGUI.log.debug(f"bets saved")
         except Exception as error:
-            SendEventToGUI.log.debug(f"Error in requestSaveBets: {error}")
-            print(f"Error in requestSaveBets: {error}")
+            SendEventToGUI.log.debug(f"Error in requestSaveBets :: bet: {error}")
 
     def request_get_prediction(self) -> Optional[PredictionCore]:
         """
@@ -231,10 +231,11 @@ class Game:
         self.evaluate_bets(multiplier)
         self.multipliers.append(Multiplier(multiplier))
         self.multipliers_to_save.append(multiplier)
-        self.request_save_bets(self.bets)
+        self.request_save_bets()
         self.request_save_multipliers()
         # remove the first multiplier
         self.multipliers = self.multipliers[1:]
+        SendEventToGUI.send_multipliers([multiplier])
 
     def get_next_bet(self) -> list[Bet]:
         """

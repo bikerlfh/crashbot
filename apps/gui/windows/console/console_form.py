@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QListWidgetItem, QMessageBox, QWidget
 from apps.constants import HomeBets
 from apps.gui import services
 from apps.gui.windows.console.console_designer import ConsoleDesigner
+from apps.gui.graphs.bar_multipliers import BarMultiplier
 
 
 class ConsoleForm(QWidget, ConsoleDesigner):
@@ -15,6 +16,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         main_window: any,
     ):
         super().__init__()
+
         self.logs_to_save = []
         self.home_bet = None
         self.initial_balance = None
@@ -26,6 +28,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.btn_set_max_amount.clicked.connect(
             self.button_set_max_amount_to_bet_clicked_event
         )
+        self.bar_multiplier = BarMultiplier(self.gbox_graph, [], 30)
 
     def __add_item_to_list(self, item: QListWidgetItem):
         current_row = self.list_log.currentRow()
@@ -131,3 +134,12 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         )
         if list_item:
             self.__add_item_to_list(list_item)
+
+    def on_add_multipliers(self, data):
+        """
+        ws callback on add multipliers
+        :param data: dict(multipliers: list)
+        :return: None
+        """
+        multipliers = data.get("multipliers", [])
+        self.bar_multiplier.add_multipliers(multipliers=multipliers)

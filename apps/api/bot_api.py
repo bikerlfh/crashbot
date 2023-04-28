@@ -107,7 +107,7 @@ class BotAPIServices:
             )
         except Exception as exc:
             logger.exception(
-                f"BotAPIServices :: send_transaction_validator :: {exc}"
+                f"BotAPIServices :: login :: {exc}"
             )
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
@@ -128,7 +128,7 @@ class BotAPIServices:
             )
         except Exception as exc:
             logger.exception(
-                f"BotAPIServices :: send_transaction_validator :: {exc}"
+                f"BotAPIServices :: token_refresh :: {exc}"
             )
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
@@ -149,7 +149,7 @@ class BotAPIServices:
             )
         except Exception as exc:
             logger.exception(
-                f"BotAPIServices :: send_transaction_validator :: {exc}"
+                f"BotAPIServices :: token_verify :: {exc}"
             )
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
@@ -162,7 +162,7 @@ class BotAPIServices:
             )
         except Exception as exc:
             logger.exception(
-                f"BotAPIServices :: send_transaction_validator :: {exc}"
+                f"BotAPIServices :: get_home_bet :: {exc}"
             )
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
@@ -176,7 +176,7 @@ class BotAPIServices:
             )
         except Exception as exc:
             logger.exception(
-                f"BotAPIServices :: send_transaction_validator :: {exc}"
+                f"BotAPIServices :: get_home_bet_detail :: {exc}"
             )
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
@@ -195,7 +195,7 @@ class BotAPIServices:
             )
         except Exception as exc:
             logger.exception(
-                f"BotAPIServices :: send_transaction_validator :: {exc}"
+                f"BotAPIServices :: add_multipliers :: {exc}"
             )
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
@@ -218,7 +218,7 @@ class BotAPIServices:
             response = self.client.post(service=self.GET_PREDICTION, data=data)
         except Exception as exc:
             logger.exception(
-                f"BotAPIServices :: send_transaction_validator :: {exc}"
+                f"BotAPIServices :: request_prediction :: {exc}"
             )
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
@@ -231,7 +231,7 @@ class BotAPIServices:
             )
         except Exception as exc:
             logger.exception(
-                f"BotAPIServices :: send_transaction_validator :: {exc}"
+                f"BotAPIServices :: get_bots :: {exc}"
             )
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
@@ -255,7 +255,7 @@ class BotAPIServices:
             )
         except Exception as exc:
             logger.exception(
-                f"BotAPIServices :: send_transaction_validator :: {exc}"
+                f"BotAPIServices :: update_balance :: {exc}"
             )
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
@@ -277,7 +277,7 @@ class BotAPIServices:
             response = self.client.post(service=self.BET, data=data)
         except Exception as exc:
             logger.exception(
-                f"BotAPIServices :: send_transaction_validator :: {exc}"
+                f"BotAPIServices :: create_bet :: {exc}"
             )
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
@@ -295,7 +295,7 @@ class BotAPIServices:
             )
         except Exception as exc:
             logger.exception(
-                f"BotAPIServices :: send_transaction_validator :: {exc}"
+                f"BotAPIServices :: get_bet :: {exc}"
             )
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)

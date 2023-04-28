@@ -24,6 +24,7 @@ class SocketIOClient(QtCore.QThread):
         on_update_balance: Optional[Callable] = None,
         on_error: Optional[Callable] = None,
         on_exception: Optional[Callable] = None,
+        on_add_multipliers: Optional[Callable] = None,
     ):
         super().__init__()
         self.WS_SERVER_URL = f"http://{WS_SERVER_HOST}:{WS_SERVER_PORT}"
@@ -37,6 +38,7 @@ class SocketIOClient(QtCore.QThread):
         self.on_update_balance = on_update_balance
         self.on_error = on_error
         self.on_exception = on_exception
+        self.on_add_multipliers = on_add_multipliers
         self.__sio = socketio.Client()
         self.__assign_events()
 
@@ -44,30 +46,31 @@ class SocketIOClient(QtCore.QThread):
         # Define WSEvents
         self.__sio.on("connect", self._on_connect)
         self.__sio.on("disconnect", self._on_disconnect)
-        self.__sio.on(WSEvent.VERIFY.value, self.on_verify or self._on_default)
-        self.__sio.on(WSEvent.LOGIN.value, self.on_login or self._on_default)
+        self.__sio.on(WSEvent.VERIFY, self.on_verify or self._on_default)
+        self.__sio.on(WSEvent.LOGIN, self.on_login or self._on_default)
         self.__sio.on(
-            WSEvent.START_BOT.value, self.on_start_bot or self._on_default
+            WSEvent.START_BOT, self.on_start_bot or self._on_default
         )
         self.__sio.on(
-            WSEvent.AUTO_PLAY.value, self.on_auto_play or self._on_default
+            WSEvent.AUTO_PLAY, self.on_auto_play or self._on_default
         )
         self.__sio.on(
-            WSEvent.CLOSE_GAME.value, self.on_close_game or self._on_default
+            WSEvent.CLOSE_GAME, self.on_close_game or self._on_default
         )
-        self.__sio.on(WSEvent.LOG.value, self.on_log or self._on_default)
+        self.__sio.on(WSEvent.LOG, self.on_log or self._on_default)
         self.__sio.on(
-            WSEvent.SET_MAX_AMOUNT_TO_BET.value,
+            WSEvent.SET_MAX_AMOUNT_TO_BET,
             self.on_set_max_amount_to_bet or self._on_default,
         )
         self.__sio.on(
-            WSEvent.UPDATE_BALANCE.value,
+            WSEvent.UPDATE_BALANCE,
             self.on_update_balance or self._on_default,
         )
-        self.__sio.on(WSEvent.ERROR.value, self.on_error or self._on_default)
+        self.__sio.on(WSEvent.ERROR, self.on_error or self._on_default)
         self.__sio.on(
-            WSEvent.EXCEPTION.value, self.on_exception or self._on_default
+            WSEvent.EXCEPTION, self.on_exception or self._on_default
         )
+        self.__sio.on(WSEvent.ADD_MULTIPLIERS, self.on_add_multipliers or self._on_default)
 
     def __execute_event(self, event: WSEvent, data: any) -> None:
         self.__sio.emit(event.value, data)
