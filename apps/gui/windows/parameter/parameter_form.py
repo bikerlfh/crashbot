@@ -1,6 +1,5 @@
 # Libraries
-from PyQt6 import QtWidgets
-from PyQt6.QtCore import Q_ARG, QMetaObject, Qt
+from PyQt6 import QtCore, QtWidgets
 
 # Internal
 from apps.constants import BotType, HomeBets
@@ -8,17 +7,25 @@ from apps.gui import services
 from apps.gui.windows.parameter.parameter_designer import ParameterDesigner
 from apps.utils.logs import services as logs_services
 
+# from PyQt6.QtCore import Q_ARG, QMetaObject
+
+
 
 class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
+    receive_start_bot_signal = QtCore.pyqtSignal(dict)
+
     def __init__(self, main_window: any):
         super().__init__()
         self.values = None
         self.setupUi(self)
         self.main_window = main_window
         self.btn_start.clicked.connect(self.button_start_clicked_event)
-        self.cmb_home_bet.currentIndexChanged.connect(self.__set_max_amount_to_bet)
+        self.cmb_home_bet.currentIndexChanged.connect(
+            self.__set_max_amount_to_bet
+        )
         self.__fill_cmb_fields()
         self.__set_max_amount_to_bet(0)
+        self.receive_start_bot_signal.connect(self._on_receive_start_bot)
 
     def __fill_cmb_fields(self):
         count_cmb_bot = self.cmb_home_bet.count()
@@ -53,7 +60,9 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             QtWidgets.QMessageBox.warning(self, "Error", "Select a home bet")
             return
         if not max_amount_to_bet:
-            QtWidgets.QMessageBox.warning(self, "Error", "Set a max amount to bet")
+            QtWidgets.QMessageBox.warning(
+                self, "Error", "Set a max amount to bet"
+            )
             return
 
         home_bet = HomeBets[home_bet_index]
@@ -89,7 +98,9 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         if self.chk_use_credentials.isChecked():
             home_bet_index = self.cmb_home_bet.currentIndex()
             home_bet = HomeBets[home_bet_index]
-            credential = services.get_credentials_by_home_bet(home_bet=home_bet.name)
+            credential = services.get_credentials_by_home_bet(
+                home_bet=home_bet.name
+            )
             data["username"] = credential.get("username")
             data["password"] = credential.get("password")
         self.main_window.socket.start_bot(
@@ -108,23 +119,30 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         :param data: dict(started: bool)
         :return: None
         """
+        self.receive_start_bot_signal.emit(data)
+
+    def _on_receive_start_bot(self, data: dict[str, any]):
         try:
             started = data.get("started", False)
             if not started:
                 error = data.get("error", None)
-                QMetaObject.invokeMethod(
+                self.main_window.show_message_box(
+                    error.get("code", ""), error.get("message")
+                )
+                """QMetaObject.invokeMethod(
                     self.main_window,
                     "show_message_box",
                     Q_ARG(str, error.get("code", "")),
                     Q_ARG(str, error.get("message")),
-                )
+                )"""
                 self.btn_start.setDisabled(False)
                 return
-            QMetaObject.invokeMethod(
+            self.main_window.show_console_screen()
+            """QMetaObject.invokeMethod(
                 self.main_window,
                 "show_console_screen",
                 Qt.ConnectionType.QueuedConnection,
-            )
+            )"""
         except Exception as e:
             logs_services.save_gui_log(
                 message=f"Error on_start_bot: {e}", level="exception"

@@ -21,7 +21,9 @@ class AviatorBetPlay(Aviator):
         username = GlobalVars.get_username()
         password = GlobalVars.get_password()
         if not username or not password:
-            SendEventToGUI.log.success("Please set username and password to login!")
+            SendEventToGUI.log.success(
+                "Please set username and password to login!"
+            )
             return
         username_input = self._page.locator("input#userName")
         password_input = self._page.locator("input#password")
@@ -54,13 +56,17 @@ class AviatorBetPlay(Aviator):
                     .first
                 )
                 self._app_game = self._frame.locator("app-game").first
-                await self._app_game.locator(".result-history").wait_for(timeout=5000)
+                await self._app_game.locator(".result-history").wait_for(
+                    timeout=5000
+                )
                 return self._app_game
             except Exception as e:
                 if isinstance(e, TimeoutError):
                     SendEventToGUI.log.debug("_get_app_game :: timeout")
                     continue
-                SendEventToGUI.log.debug(f"_get_app_game :: exception :: {str(e)}")
+                SendEventToGUI.log.debug(
+                    f"_get_app_game :: exception :: {str(e)}"
+                )
                 # raise e
 
     async def read_game_limits(self):
@@ -90,8 +96,12 @@ class AviatorBetPlay(Aviator):
         await self._page.wait_for_timeout(400)
 
         limits = await self._frame.locator("app-game-limits ul>li>span").all()
-        self.minimum_bet = float((await limits[0].text_content()).split(" ")[0] or "0")
-        self.maximum_bet = float((await limits[1].text_content()).split(" ")[0] or "0")
+        self.minimum_bet = float(
+            (await limits[0].text_content()).split(" ")[0] or "0"
+        )
+        self.maximum_bet = float(
+            (await limits[1].text_content()).split(" ")[0] or "0"
+        )
         self.maximum_win_for_one_bet = float(
             (await limits[2].text_content()).split(" ")[0] or "0"
         )

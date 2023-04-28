@@ -355,7 +355,9 @@ class ConsoleDesigner(object):
         )
         consoleForm.setPalette(palette)
         consoleForm.setWindowTitle("Form")
-        consoleForm.setInputMethodHints(QtCore.Qt.InputMethodHint.ImhPreferNumbers)
+        consoleForm.setInputMethodHints(
+            QtCore.Qt.InputMethodHint.ImhPreferNumbers
+        )
         self.btn_set_max_amount = QtWidgets.QPushButton(parent=consoleForm)
         self.btn_set_max_amount.setGeometry(QtCore.QRect(19, 380, 211, 41))
         font = QtGui.QFont()
@@ -487,7 +489,9 @@ class ConsoleDesigner(object):
 
     def retranslateUi(self, consoleForm):
         _translate = QtCore.QCoreApplication.translate
-        self.btn_set_max_amount.setText(_translate("consoleForm", "Set Amount Bet"))
+        self.btn_set_max_amount.setText(
+            _translate("consoleForm", "Set Amount Bet")
+        )
         self.btn_auto_bet.setText(_translate("consoleForm", "AutoBet ON"))
         self.label.setText(_translate("consoleForm", "Amount Bet"))
         self.label_2.setText(_translate("consoleForm", "Balance:"))

@@ -15,7 +15,11 @@ def save_game_log(
     caller_frame = inspect.stack()[1]
     path = f"{caller_frame.function}::{caller_frame.lineno}"
     log_handler.insert_log(
-        message=message, level=level, app="GAME", timestamp=timestamp, path=path
+        message=message,
+        level=level,
+        app="GAME",
+        timestamp=timestamp,
+        path=path,
     )
 
 
