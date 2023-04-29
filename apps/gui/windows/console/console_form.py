@@ -103,7 +103,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         :param data: dict(autoPlay: bool)
         :return: None
         """
-        self._on_receive_auto_play.emit(data)
+        self.receive_auto_play_signal.emit(data)
 
     @QtCore.pyqtSlot(dict)
     def _on_receive_auto_play(self, data: dict):
