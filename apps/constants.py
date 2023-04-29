@@ -87,3 +87,8 @@ class BotType(Enum):
     @classmethod
     def to_list(cls):
         return [key.value for key in cls]
+
+
+class BetType(str, Enum):
+    MANUAL = "manual"
+    AUTOMATIC = "automatic"

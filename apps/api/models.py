@@ -2,6 +2,9 @@
 from dataclasses import dataclass
 from typing import Optional
 
+# Internal
+from apps.constants import BetType
+
 
 @dataclass
 class Prediction:
@@ -20,6 +23,7 @@ class BetData:
     multiplier: float
     amount: float
     multiplier_result: Optional[float] = None
+    bet_type: Optional[str] = BetType.AUTOMATIC.value
 
 
 @dataclass

@@ -191,6 +191,7 @@ class Game:
         SendEventToGUI.log.info("waiting for the next game.....")
         await self.game_page.wait_next_game()
         self.balance = await self.read_balance_to_aviator()
+        # TODO implement create manual bets
         self.bot.update_balance(self.balance)
         self.add_multiplier(self.game_page.multipliers[-1])
         self.bets = []

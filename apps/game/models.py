@@ -19,6 +19,7 @@ class Bet:
         self,
         amount: float,
         multiplier: float,
+        bet_type: Optional[str] = None,
         prediction: Optional[float] = None,
     ):
         # generate external_id with random string of 32 chars
@@ -28,6 +29,7 @@ class Bet:
         self.prediction = prediction or self.multiplier
         self.multiplier_result = None
         self.profit = 0
+        self.bet_type = bet_type
 
     def __generate_external_id(self):
         return "".join(
@@ -37,7 +39,7 @@ class Bet:
     def evaluate(self, multiplier_result: float):
         self.multiplier_result = multiplier_result
         if multiplier_result > self.multiplier:
-            self.profit += self.amount * (self.multiplier_result - 1)
+            self.profit += self.amount * (self.multiplier - 1)
         else:
             self.profit -= self.amount
         return round(self.profit, 2)
