@@ -1,6 +1,7 @@
 # Standard Library
 from dataclasses import dataclass
 from enum import Enum
+from os import getenv
 from typing import Optional
 
 # Internal
@@ -8,6 +9,11 @@ from apps.scrappers.aviator.aviator_bet_play import AviatorBetPlay
 from apps.scrappers.aviator.aviator_demo import AviatorDemo
 from apps.scrappers.aviator.aviator_one_win import AviatorOneWin
 from apps.scrappers.game_base import AbstractGameBase
+
+# TODO fix this
+IS_ALLOWED_TO_SAVE_MULTIPLIERS = bool(
+    getenv("IS_ALLOWED_TO_SAVE_MULTIPLIERS", 1)
+)  # 1 = True, 0 = False
 
 
 class WSEvent(str, Enum):

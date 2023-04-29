@@ -4,7 +4,7 @@ from typing import Optional
 # Internal
 from apps.api import services as api_services
 from apps.api.models import BetData
-from apps.constants import BotType, HomeBet
+from apps.constants import IS_ALLOWED_TO_SAVE_MULTIPLIERS, BotType, HomeBet
 from apps.game.bots.bots import Bot, BotStatic
 from apps.game.models import Bet, Multiplier
 from apps.game.prediction_core import PredictionCore, PredictionModel
@@ -125,6 +125,9 @@ class Game:
         """
         Save the multipliers in the database
         """
+        # TODO fix this
+        if not IS_ALLOWED_TO_SAVE_MULTIPLIERS:
+            return
         if len(self.multipliers_to_save) < self.MAX_MULTIPLIERS_TO_SAVE:
             return
         SendEventToGUI.log.debug("saving multipliers.....")
