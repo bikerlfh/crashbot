@@ -1,7 +1,7 @@
 # Internal
 from apps.api.models import BotStrategy
 from apps.constants import BotType
-from apps.game.bots.base import BotBase
+from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, PredictionData
 from apps.game.prediction_core import PredictionCore
 from apps.game.utils import adaptive_kelly_formula
@@ -40,8 +40,6 @@ class BotStatic(BotBase):
     The min amount of bet should be less than the max amount of bet / 3 example: max bet = 300, min bet = 300/3 = 100.
     """
 
-    RECOVERY_PERCENTAGE_TO_MAX_BET = 1
-
     def __init__(
         self,
         bot_type: BotType,
@@ -53,8 +51,6 @@ class BotStatic(BotBase):
         @param bot_type: BotType bot type
         @param minimum_bet: float minimum bet allowed by home bet
         @param maximum_bet: float maximum bet allowed by home bet
-        @param min_bet_amount: float minimum bet amount allowed by customer
-        @param max_bet_amount: float maximum bet amount allowed by customer
         @param amount_multiple: float
         """
         super().__init__(bot_type, minimum_bet, maximum_bet, amount_multiple)
@@ -107,7 +103,7 @@ class BotStatic(BotBase):
         )
         # calculates the maximum amount allowed to recover in a single bet
         max_recovery_amount = (
-            self.maximum_bet * self.RECOVERY_PERCENTAGE_TO_MAX_BET
+            self.maximum_bet * self.MAX_RECOVERY_PERCENTAGE_ON_MAX_BET
         )
         amount = min(
             amount_to_recover_losses, max_recovery_amount, self.balance

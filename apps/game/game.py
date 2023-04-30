@@ -246,7 +246,7 @@ class Game:
         Get the next bet from the prediction
         """
         self._prediction_model.evaluate_models(
-            self.bot.MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET
+            self.bot.MIN_AVERAGE_MODEL_PREDICTION
         )
         prediction = self.request_get_prediction()
         if prediction is None:

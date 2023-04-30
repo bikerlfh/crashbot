@@ -61,9 +61,6 @@ class PredictionCore:
         # send_event_to_gui.log.debug(f"Prediction Rounds: {self.prediction_rounds}")
         # send_event_to_gui.log.debug(f"Prediction Values: {self.prediction_values}")
         # send_event_to_gui.log.debug(f"Multiplier Results: {self.multiplier_results}")
-        round_multiplier = 0
-        value_round = 0
-        value = 0
         for i in range(1, 3):
             count_i = 0
             count = 0
@@ -93,7 +90,6 @@ class PredictionCore:
     def calculate_average_model_prediction(self):
         # send_event_to_gui.log.debug("------------- PredictionCore: calculateAverageModelPrediction -------------")
         correct_values_count = 0
-        round_multiplier = 0
         for i in range(len(self.multiplier_results)):
             round_multiplier = round(self.multiplier_results[i], 0)
             round_multiplier = 2 if round_multiplier >= 2 else round_multiplier

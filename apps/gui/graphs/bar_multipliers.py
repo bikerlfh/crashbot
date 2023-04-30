@@ -37,7 +37,6 @@ class BarMultiplier(QVBoxLayout):
         self.bar_colors = []
         self.x_data = []
         self.add_multipliers(multipliers)
-        ax_box = ax.get_position()
         x0 = 0.05
         y0 = 0.05
         x1 = 0.92

@@ -59,7 +59,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         bot_type: str,
         max_amount_to_bet: str,
         auto_play: bool,
-        **kwargs,
+        **_kwargs,
     ):
         self.home_bet = HomeBets[home_bet_index]
         self.lbl_home_bet.setText(self.home_bet.name)

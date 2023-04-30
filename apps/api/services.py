@@ -5,7 +5,7 @@ from typing import Optional
 # Internal
 from apps.api.bot_api import BotAPIConnector
 from apps.api.exceptions import BotAPINoAuthorizationException
-from apps.api.models import BetData, Bot, Prediction
+from apps.api.models import BetData, Bot, Prediction, HomeBet
 
 logger = logging.getLogger(__name__)
 
@@ -69,14 +69,15 @@ def request_token_verify(*, token: str) -> bool:
         return False
 
 
-def get_home_bets() -> dict[str, any]:
+def get_home_bets() -> list[HomeBet]:
     """
     request_home_bet
     :return:
     """
     bot_connector = BotAPIConnector()
-    response = bot_connector.services.get_home_bet()
-    return response
+    home_bets = bot_connector.services.get_home_bet()
+    data = [HomeBet(**data) for data in home_bets]
+    return data
 
 
 def add_multipliers(

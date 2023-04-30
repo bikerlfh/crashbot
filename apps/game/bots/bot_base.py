@@ -25,14 +25,12 @@ class BotBase:
     MIN_MULTIPLIER_TO_BET: float = 1.5
     MIN_MULTIPLIER_TO_RECOVER_LOSSES: float = 2.0
     MIN_PROBABILITY_TO_BET: float = 0.5
+    # use to calculate the recovery amount to bet
+    MAX_RECOVERY_PERCENTAGE_ON_MAX_BET: float = 0.5  # 0.5 = 50%
     MIN_CATEGORY_PERCENTAGE_TO_BET: float = 0.8  # 0.8 = 80%
-    MIN_CATEGORY_PERCENTAGE_VALUE_IN_LIVE_TO_BET: float = 0.8  # 0.8 = 80%
-    MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET: float = 0.8  # 0.8 = 80%
+    MIN_AVERAGE_MODEL_PREDICTION: float = 0.8  # 0.8 = 80%
     STOP_LOSS_PERCENTAGE: float = 0
     TAKE_PROFIT_PERCENTAGE: float = 0
-
-    # use to calculate the recovery amount to bet
-    RECOVERY_PERCENTAGE_TO_MAX_BET: float = 0.5
 
     STRATEGIES: List[BotStrategy] = []
     amount_multiple: Optional[float] = None
@@ -72,19 +70,16 @@ class BotBase:
         self.MIN_CATEGORY_PERCENTAGE_TO_BET = (
             bot.min_category_percentage_to_bet
         )
-        self.MIN_CATEGORY_PERCENTAGE_VALUE_IN_LIVE_TO_BET = (
-            bot.min_category_percentage_value_in_live_to_bet
-        )
-        self.MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET = (
-            bot.min_average_prediction_model_in_live_to_bet
-        )
+        self.MIN_AVERAGE_MODEL_PREDICTION = bot.min_average_model_prediction
         self.RISK_FACTOR = bot.risk_factor
         self.MIN_MULTIPLIER_TO_BET = bot.min_multiplier_to_bet
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = (
             bot.min_multiplier_to_recover_losses
         )
         self.MIN_PROBABILITY_TO_BET = bot.min_probability_to_bet
-
+        self.MAX_RECOVERY_PERCENTAGE_ON_MAX_BET = (
+            bot.max_recovery_percentage_on_max_bet
+        )
         self.STOP_LOSS_PERCENTAGE = bot.stop_loss_percentage
         self.TAKE_PROFIT_PERCENTAGE = bot.take_profit_percentage
         self.STRATEGIES = bot.strategies
@@ -103,12 +98,8 @@ class BotBase:
             f"Bot min category percentage to bet: {self.MIN_CATEGORY_PERCENTAGE_TO_BET}"
         )
         SendEventToGUI.log.info(
-            f"Bot min category percentage value in live to bet: "
-            f"{self.MIN_CATEGORY_PERCENTAGE_VALUE_IN_LIVE_TO_BET}"
-        )
-        SendEventToGUI.log.info(
             f"Bot min average prediction model in live to bet: "
-            f"{self.MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET}"
+            f"{self.MIN_AVERAGE_MODEL_PREDICTION}"
         )
         SendEventToGUI.log.info(f"Stop Loss: {self.stop_loss}")
         SendEventToGUI.log.info(f"Take Profit: {self.take_profit}")
@@ -234,27 +225,22 @@ class BotBase:
             prediction.get_category_percentage_value_in_live()
         )
         average_predictions_of_model = prediction.average_predictions_of_model
-        in_category_percentage_value_in_live = (
-            category_percentage_value_in_live
-            >= self.MIN_CATEGORY_PERCENTAGE_VALUE_IN_LIVE_TO_BET
-        )
         in_category_percentage = (
             category_percentage >= self.MIN_CATEGORY_PERCENTAGE_TO_BET
         )
-        in_average_predictions_of_model = (
+        in_average_prediction_of_model = (
             average_predictions_of_model
-            >= self.MIN_AVERAGE_PREDICTION_MODEL_IN_LIVE_TO_BET
+            >= self.MIN_AVERAGE_MODEL_PREDICTION
         )
         prediction_data = PredictionData(
-            prediction.get_prediction_value(),
-            prediction.get_prediction_round_value(),
-            prediction.get_probability_value(),
-            category_percentage,
-            category_percentage_value_in_live,
-            average_predictions_of_model,
-            in_category_percentage,
-            in_category_percentage_value_in_live,
-            in_average_predictions_of_model,
+            prediction_value=prediction.get_prediction_value(),
+            prediction_round=prediction.get_prediction_round_value(),
+            probability=prediction.get_probability_value(),
+            category_percentage=category_percentage,
+            category_percentage_value_in_live=category_percentage_value_in_live,
+            average_prediction_of_model=average_predictions_of_model,
+            in_category_percentage=in_category_percentage,
+            in_average_prediction_of_model=in_average_prediction_of_model,
         )
         return prediction_data
 
@@ -289,7 +275,7 @@ class BotBase:
         )
         # calculates the maximum amount allowed to recover in a single bet
         max_recovery_amount = (
-            self.maximum_bet * self.RECOVERY_PERCENTAGE_TO_MAX_BET
+            self.maximum_bet * self.MAX_RECOVERY_PERCENTAGE_ON_MAX_BET
         )  # 50% of maximum bet (this can be a parameter of the bot)
         amount = min(
             amount_to_recover_losses, max_recovery_amount, self.balance
@@ -430,10 +416,6 @@ class BotBase:
 
         # CATEGORY 1
         if prediction_data.prediction_round == 1:
-            if not prediction_data.in_category_percentage_value_in_live:
-                return []
-
             return self.generate_bets(prediction_data, strategy)
-
         # CATEGORY 2 and 3
         return self.generate_bets(prediction_data, strategy)

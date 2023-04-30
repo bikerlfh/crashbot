@@ -54,7 +54,6 @@ class PredictionData:
     category_percentage_value_in_live: float
     average_prediction_of_model: float
     in_category_percentage: bool
-    in_category_percentage_value_in_live: bool
     in_average_prediction_of_model: bool
 
     def print_data(self) -> None:
@@ -69,6 +68,5 @@ class PredictionData:
         )
         SendEventToGUI.log.debug(
             f"InCatPer: {self.in_category_percentage} - "
-            f"InCatPerVal: {self.in_category_percentage_value_in_live} - "
             f"InAvgModel: {self.in_average_prediction_of_model}"
         )
