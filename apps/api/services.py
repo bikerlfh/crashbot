@@ -5,7 +5,7 @@ from typing import Optional
 # Internal
 from apps.api.bot_api import BotAPIConnector
 from apps.api.exceptions import BotAPINoAuthorizationException
-from apps.api.models import BetData, Bot, Prediction, HomeBet
+from apps.api.models import BetData, Bot, HomeBet, Prediction
 
 logger = logging.getLogger(__name__)
 

@@ -229,8 +229,7 @@ class BotBase:
             category_percentage >= self.MIN_CATEGORY_PERCENTAGE_TO_BET
         )
         in_average_prediction_of_model = (
-            average_predictions_of_model
-            >= self.MIN_AVERAGE_MODEL_PREDICTION
+            average_predictions_of_model >= self.MIN_AVERAGE_MODEL_PREDICTION
         )
         prediction_data = PredictionData(
             prediction_value=prediction.get_prediction_value(),

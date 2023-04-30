@@ -13,7 +13,7 @@ class HomeBet:
     url: str
     min_bet: float
     max_bet: float
-    
+
 
 @dataclass
 class Prediction:
@@ -75,9 +75,7 @@ class Bot:
         self.max_recovery_percentage_on_max_bet = (
             max_recovery_percentage_on_max_bet
         )
-        self.min_average_model_prediction = (
-            min_average_model_prediction
-        )
+        self.min_average_model_prediction = min_average_model_prediction
         self.stop_loss_percentage = stop_loss_percentage
         self.take_profit_percentage = take_profit_percentage
         self.strategies = [BotStrategy(**strategy) for strategy in strategies]
