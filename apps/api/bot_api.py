@@ -5,7 +5,6 @@ from http import HTTPStatus
 from typing import Any, Dict, List, Optional
 
 # Internal
-from apps.api.constants import API_URL
 from apps.api.exceptions import (
     BotAPIBadRequestException,
     BotAPIConnectionException,
@@ -13,6 +12,7 @@ from apps.api.exceptions import (
     BotAPINotFoundException,
 )
 from apps.api.models import BetData
+from apps.globals import GlobalVars
 from apps.utils.http.rest.client import RESTClient
 from apps.utils.http.rest.response import Response
 from apps.utils.local_storage import LocalStorage
@@ -26,17 +26,20 @@ local_storage = LocalStorage()
 class BotAPIConnector(metaclass=Singleton):
     def __init__(self):
         self.validate_config()
+        self.API_URL = GlobalVars.config.API_URL
         headers = {
             "Content-Type": "application/json",
             "Cache-Control": "no-cache",
             "Authorization": f"Bearer {local_storage.get_token()}",
         }
-        self.client = RESTClient(api_url=API_URL, headers=headers)
+        self.client = RESTClient(api_url=self.API_URL, headers=headers)
         self.services = BotAPIServices(client=self.client)
 
     @staticmethod
     def validate_config():
-        assert isinstance(API_URL, str), "API_URL must be a str instance"
+        assert isinstance(
+            GlobalVars.config.API_URL, str
+        ), "API_URL must be a str instance"
 
     def update_token(self):
         token = local_storage.get_token()
