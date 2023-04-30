@@ -6,7 +6,7 @@ from PyQt6 import QtCore, QtGui
 from PyQt6.QtWidgets import QMainWindow, QMessageBox, QStackedWidget, QWidget
 
 # Internal
-from apps.gui.constants import ALLOWED_LOG_CODES_TO_SHOW
+from apps.globals import GlobalVars
 from apps.gui.socket import SocketIOClient
 from apps.gui.utils import os as utils_os
 from apps.gui.windows.console.console_form import ConsoleForm
@@ -21,7 +21,7 @@ class MainForm(QMainWindow, MainDesigner):
         super().__init__()
         self.setupUi(self)
         self.__init_screen()
-        self.allowed_logs = ALLOWED_LOG_CODES_TO_SHOW
+        self.allowed_logs = GlobalVars.config.ALLOWED_LOG_CODES_TO_SHOW
         self.socket = SocketIOClient(
             on_verify=self._on_verify,
             on_login=self.login_screen.on_login,

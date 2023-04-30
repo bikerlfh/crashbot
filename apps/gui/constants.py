@@ -29,17 +29,5 @@ LOG_CODES = {
     },
 }
 
-
-MAX_AMOUNT_HOME_BET_PERCENTAGE = float(
-    getenv("MAX_AMOUNT_HOME_BET_PERCENTAGE", 0.5)
-)
-MAX_AMOUNT_BALANCE_PERCENTAGE = float(
-    getenv("MAX_AMOUNT_BALANCE_PERCENTAGE", 0.1)
-)
-
-ALLOWED_LOG_CODES_TO_SHOW = getenv(
-    "ALLOWED_LOG_CODES", ",".join([code for code in LOG_CODES.keys()])
-).split(",")
-
 DATA_FILE_PATH = getenv("DATA_FILE_PATH", "data")
 CREDENTIALS_FILE_PATH = f"{DATA_FILE_PATH}/credentials.csv"

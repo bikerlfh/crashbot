@@ -10,6 +10,15 @@ from apps.api.models import BetData, Bot, HomeBet, Prediction
 logger = logging.getLogger(__name__)
 
 
+def update_token() -> None:
+    """
+    update_token
+    :return:
+    """
+    bot_connector = BotAPIConnector()
+    bot_connector.update_token()
+
+
 def request_login(
     *, username: str, password: str
 ) -> tuple[str | None, str | None]:

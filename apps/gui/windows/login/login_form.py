@@ -35,11 +35,11 @@ class LoginForm(QtWidgets.QWidget, LoginDesigner):
         logged = data.get("logged", False)
         if not logged:
             # TODO add message box with error in credentials
+            self.main_window.show_message_box(
+                title="Error",
+                message="Invalid credentials",
+                # icon=QtWidgets.QMessageBox.Icon.Critical,
+            )
             self.btn_login.setDisabled(False)
             return
         self.main_window.show_parameters_screen()
-        """ QMetaObject.invokeMethod(
-            self.main_window,
-            "show_parameters_screen",
-            Qt.ConnectionType.QueuedConnection,
-        )"""

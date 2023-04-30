@@ -37,4 +37,5 @@ def login(username: str, password: str) -> dict[str, any]:
         return dict(logged=False)
     local_storage.set_token(token)
     local_storage.set_refresh(refresh)
+    api_services.update_token()
     return dict(logged=True)

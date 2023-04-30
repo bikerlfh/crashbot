@@ -9,6 +9,10 @@ from apps.utils.datetime import sleep_now
 
 if __name__ == "__main__":
     GlobalVars.init()
+    # Standard Library
+    import pdb
+
+    pdb.set_trace()
     event = Event()
     ws_server_thread = Thread(
         target=game_server.run_server,

@@ -6,13 +6,8 @@ from PyQt6.QtWidgets import QListWidgetItem
 
 # Internal
 from apps.constants import HomeBet
-from apps.gui.constants import (
-    ALLOWED_LOG_CODES_TO_SHOW,
-    CREDENTIALS_FILE_PATH,
-    LOG_CODES,
-    MAX_AMOUNT_BALANCE_PERCENTAGE,
-    MAX_AMOUNT_HOME_BET_PERCENTAGE,
-)
+from apps.globals import GlobalVars
+from apps.gui.constants import CREDENTIALS_FILE_PATH, LOG_CODES
 from apps.gui.utils.encrypt import Encrypt
 from apps.utils import csv
 
@@ -28,7 +23,9 @@ def make_list_item(
     :param allowed_codes: allowed codes
     :return: QListWidgetItem
     """
-    allowed_codes = allowed_codes or ALLOWED_LOG_CODES_TO_SHOW
+    allowed_codes = (
+        allowed_codes or GlobalVars.config.ALLOWED_LOG_CODES_TO_SHOW
+    )
     code = data.get("code", None)
     if code not in allowed_codes:
         return
@@ -58,10 +55,10 @@ def get_range_amount_to_bet(
     :return: tuple
     """
     min_bet = min_bet * 3
-    max_bet = max_bet * MAX_AMOUNT_HOME_BET_PERCENTAGE
+    max_bet = max_bet * GlobalVars.config.MAX_AMOUNT_HOME_BET_PERCENTAGE
     if balance:
         min_bet = min(min_bet, balance)
-        max_balance = balance * MAX_AMOUNT_BALANCE_PERCENTAGE
+        max_balance = balance * GlobalVars.config.MAX_AMOUNT_BALANCE_PERCENTAGE
         max_bet = min(max_bet, max_balance)
     return min_bet, max_bet
 

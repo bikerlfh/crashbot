@@ -38,6 +38,10 @@ class BotAPIConnector(metaclass=Singleton):
     def validate_config():
         assert isinstance(API_URL, str), "API_URL must be a str instance"
 
+    def update_token(self):
+        token = local_storage.get_token()
+        self.client.headers["Authorization"] = f"Bearer {token}"
+
 
 class BotAPIServices:
     LOGIN = "api/token/"

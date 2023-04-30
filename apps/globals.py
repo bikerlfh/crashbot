@@ -12,11 +12,15 @@ from typing import Callable
 # Libraries
 from socketio import AsyncServer
 
+# Internal
+from apps.config import Config
+
 
 class GlobalVars:
     SIO: AsyncServer = None
     GAME: any = None
     WS_SERVER_EVENT: Event
+    config: Config
 
     class VARS(str, Enum):
         AUTO_PLAY = "AUTO_PLAY"
@@ -34,6 +38,11 @@ class GlobalVars:
         globals().setdefault(GlobalVars.VARS.USERNAME, None)
         globals().setdefault(GlobalVars.VARS.PASSWORD, None)
         globals().setdefault(GlobalVars.VARS.EMIT_TO_GUI, None)
+        GlobalVars.init_config()
+
+    @classmethod
+    def init_config(cls) -> None:
+        cls.config = Config()
 
     @classmethod
     def set_game(cls, game: any) -> None:
