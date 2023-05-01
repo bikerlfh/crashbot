@@ -1,5 +1,5 @@
 # Standard Library
-from typing import Optional
+from typing import Optional, Tuple
 
 # Libraries
 from PyQt6.QtWidgets import QListWidgetItem
@@ -68,13 +68,13 @@ def validate_max_amount_to_bet(
     home_bet: HomeBet,
     max_amount_to_bet: float,
     balance: Optional[float] = None,
-) -> bool:
+) -> Tuple[bool, float, float]:
     """
     Validate max bet amount
     :param home_bet: home bet
     :param max_amount_to_bet: amount to bet
     :param balance: balance
-    :return: bool
+    :return: bool, min_bet, max_bet
     """
     min_bet = home_bet.min_bet
     max_bet = home_bet.max_bet
@@ -83,7 +83,7 @@ def validate_max_amount_to_bet(
         max_bet=max_bet,
         balance=balance,
     )
-    return min_bet <= max_amount_to_bet <= max_bet
+    return min_bet <= max_amount_to_bet <= max_bet, min_bet, max_bet
 
 
 def save_credentials(

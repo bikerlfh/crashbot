@@ -16,6 +16,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     receive_multipliers_signal = QtCore.pyqtSignal(dict)
     receive_balance_signal = QtCore.pyqtSignal(dict)
     receive_auto_play_signal = QtCore.pyqtSignal(dict)
+    receive_game_loaded_signal = QtCore.pyqtSignal(dict)
 
     def __init__(
         self,
@@ -39,6 +40,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.receive_multipliers_signal.connect(self._on_receive_multipliers)
         self.receive_balance_signal.connect(self._on_receive_balance)
         self.receive_auto_play_signal.connect(self._on_receive_auto_play)
+        self.receive_game_loaded_signal.connect(self._on_receive_game_loaded)
+        self.btn_auto_bet.setEnabled(False)
+        self.btn_set_max_amount.setEnabled(False)
+        self.txt_max_amount_to_bet.setEnabled(False)
 
     def __add_item_to_list(self, item: QListWidgetItem):
         current_row = self.list_log.currentRow()
@@ -78,16 +83,12 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             self.txt_max_amount_to_bet.setFocus()
             return
         amount = float(amount)
-        amount_is_valid = services.validate_max_amount_to_bet(
+        amount_is_valid, min_, max_ = services.validate_max_amount_to_bet(
             home_bet=self.home_bet,
             max_amount_to_bet=amount,
             balance=self.balance,
         )
         if not amount_is_valid:
-            min_, max_ = services.get_range_amount_to_bet(
-                min_bet=self.home_bet.min_bet,
-                max_bet=self.home_bet.max_bet,
-            )
             QMessageBox.warning(
                 self,
                 "Amount to bet is not valid",
@@ -176,3 +177,24 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             logs_services.save_gui_log(
                 message=f"Error on receive multipliers: {e}", level="exception"
             )
+
+    def on_game_loaded(self, data):
+        """
+        ws callback on game loaded
+        :param data: dict(game: str)
+        :return: None
+        """
+        self.receive_game_loaded_signal.emit(data)
+
+    @QtCore.pyqtSlot(dict)
+    def _on_receive_game_loaded(self, data: dict[str, str]):
+        loaded = data.get("loaded", False)
+        if loaded:
+            self.btn_auto_bet.setEnabled(True)
+            self.btn_set_max_amount.setEnabled(True)
+            self.txt_max_amount_to_bet.setEnabled(True)
+            return
+        self.main_window.show_message_box(
+            title="Game not loaded",
+            message="Please, reload the page and try again",
+        )

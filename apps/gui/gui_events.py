@@ -11,6 +11,7 @@ class GUIEvent(str, Enum):
     LOG = "log"
     UPDATE_BALANCE = "update_balance"
     ADD_MULTIPLIERS = "add_multipliers"
+    GAME_LOADED = "game_loaded"
     ERROR = "error"
     EXCEPTION = "exception"
 
@@ -70,6 +71,12 @@ class SendEventToGUI:
     def send_multipliers(multipliers: list[float]):
         GlobalVars.emit_to_gui(
             GUIEvent.ADD_MULTIPLIERS, dict(multipliers=multipliers)
+        )
+
+    @staticmethod
+    def game_loaded(is_game_loaded: bool):
+        GlobalVars.emit_to_gui(
+            GUIEvent.GAME_LOADED, dict(loaded=is_game_loaded)
         )
 
     @staticmethod

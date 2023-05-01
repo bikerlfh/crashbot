@@ -25,8 +25,9 @@ class WSEvent(str, Enum):
     SET_MAX_AMOUNT_TO_BET = "setMaxAmountToBet"
     # events from server
     LOG = "log"
-    UPDATE_BALANCE = "update_balance"
     ADD_MULTIPLIERS = "add_multipliers"
+    UPDATE_BALANCE = "update_balance"
+    GAME_LOADED = "game_loaded"
     ERROR = "error"
     EXCEPTION = "exception"
 

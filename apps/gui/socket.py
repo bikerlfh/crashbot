@@ -22,6 +22,7 @@ class SocketIOClient(QtCore.QThread):
         on_set_max_amount_to_bet: Optional[Callable] = None,
         on_log: Optional[Callable] = None,
         on_update_balance: Optional[Callable] = None,
+        on_game_loaded: Optional[Callable] = None,
         on_error: Optional[Callable] = None,
         on_exception: Optional[Callable] = None,
         on_add_multipliers: Optional[Callable] = None,
@@ -36,6 +37,7 @@ class SocketIOClient(QtCore.QThread):
         self.on_set_max_amount_to_bet = on_set_max_amount_to_bet
         self.on_log = on_log
         self.on_update_balance = on_update_balance
+        self.on_game_loaded = on_game_loaded
         self.on_error = on_error
         self.on_exception = on_exception
         self.on_add_multipliers = on_add_multipliers
@@ -61,6 +63,9 @@ class SocketIOClient(QtCore.QThread):
         self.__sio.on(
             WSEvent.UPDATE_BALANCE,
             self.on_update_balance or self._on_default,
+        )
+        self.__sio.on(
+            WSEvent.GAME_LOADED, self.on_game_loaded or self._on_default
         )
         self.__sio.on(WSEvent.ERROR, self.on_error or self._on_default)
         self.__sio.on(WSEvent.EXCEPTION, self.on_exception or self._on_default)

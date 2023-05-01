@@ -26,7 +26,7 @@ class Config(metaclass=Singleton):
             "debug",
         ]
         self.MAX_AMOUNT_HOME_BET_PERCENTAGE = 0.5
-        self.MAX_AMOUNT_BALANCE_PERCENTAGE = 0.1
+        self.MAX_AMOUNT_BALANCE_PERCENTAGE = 0.005
         self.read_config()
 
     def __create_config(self):

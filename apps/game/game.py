@@ -110,6 +110,7 @@ class Game:
         self.bot.initialize(self.initial_balance)
         self.initialized = True
         SendEventToGUI.log.success("Game initialized")
+        SendEventToGUI.game_loaded(True)
 
     async def close(self):
         await self.game_page.close()
