@@ -158,14 +158,14 @@ class BotBase:
         return max(self.amounts_lost)
 
     def set_max_amount_to_bet(self, amount: float):
-        self._max_amount_to_bet = round(amount, 0)
+        self._max_amount_to_bet = round(amount * 0.7, 0)
         if self._max_amount_to_bet > self.balance:
             SendEventToGUI.log.debug(
                 f"maxAmountToBet is greater than balance({self.balance})"
             )
             SendEventToGUI.log.debug("setting maxAmountToBet to balance")
             self._max_amount_to_bet = 0
-        self._min_amount_to_bet = round(self._max_amount_to_bet / 3, 0)
+        self._min_amount_to_bet = round(self._max_amount_to_bet * 0.3, 0)
         if self.amount_multiple:
             self._max_amount_to_bet = format_number_to_multiple(
                 self._max_amount_to_bet, self.amount_multiple
@@ -173,6 +173,9 @@ class BotBase:
             self._min_amount_to_bet = format_number_to_multiple(
                 self._min_amount_to_bet, self.amount_multiple
             )
+        total = self._max_amount_to_bet + self._min_amount_to_bet
+        if total < amount:
+            self._max_amount_to_bet += amount - total
         SendEventToGUI.log.success(
             f"Min bet amount: {self._min_amount_to_bet}"
         )
