@@ -19,11 +19,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         self.setupUi(self)
         self.main_window = main_window
         self.btn_start.clicked.connect(self.button_start_clicked_event)
-        self.cmb_home_bet.currentIndexChanged.connect(
-            self.__set_max_amount_to_bet
-        )
         self.__fill_cmb_fields()
-        self.__set_max_amount_to_bet(0)
         self.receive_start_bot_signal.connect(self._on_receive_start_bot)
 
     def __fill_cmb_fields(self):
@@ -39,55 +35,24 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
                 self.cmb_bot_type.addItem("")
             self.cmb_bot_type.setItemText(i, bot_type[i].title())
 
-    def __set_max_amount_to_bet(self, index: int):
-        home_bet = HomeBets[index]
-        min_, max_ = services.get_range_amount_to_bet(
-            min_bet=home_bet.min_bet,
-            max_bet=home_bet.max_bet,
-        )
-        self.txt_max_bet_amount.setText(str(min_))
-
     def get_values(self) -> dict[str, any] | None:
         bot_type = self.cmb_bot_type.currentText().lower()
         home_bet_index = self.cmb_home_bet.currentIndex()
-        max_amount_to_bet = self.txt_max_bet_amount.text()
-        auto_play = self.chk_autoplay.isChecked()
         if not bot_type:
             QtWidgets.QMessageBox.warning(self, "Error", "Select a bot type")
             return
         if home_bet_index < 0:
             QtWidgets.QMessageBox.warning(self, "Error", "Select a home bet")
             return
-        if not max_amount_to_bet:
-            QtWidgets.QMessageBox.warning(
-                self, "Error", "Set a max amount to bet"
-            )
-            return
 
         home_bet = HomeBets[home_bet_index]
         home_bet_id = home_bet.id
-        max_amount_to_bet = float(max_amount_to_bet)
-        amount_is_valid = services.validate_max_amount_to_bet(
-            home_bet=home_bet,
-            max_amount_to_bet=max_amount_to_bet,
-        )
-        if not amount_is_valid:
-            min_, max_ = services.get_range_amount_to_bet(
-                min_bet=home_bet.min_bet,
-                max_bet=home_bet.max_bet,
-            )
-            QtWidgets.QMessageBox.warning(
-                self,
-                "Amount to bet is not valid",
-                f"Amount to bet must be between {min_} and {max_}",
-            )
-            return
         return dict(
             bot_type=bot_type,
             home_bet_index=home_bet_index,
             home_bet_id=home_bet_id,
-            max_amount_to_bet=max_amount_to_bet,
-            auto_play=auto_play,
+            max_amount_to_bet=0,
+            auto_play=False,
         )
 
     def button_start_clicked_event(self):

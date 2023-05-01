@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'apps/gui/resources/ui/parameter.ui'
+# Form implementation generated from reading ui file 'ui/parameter.ui'
 #
 # Created by: PyQt6 UI code generator 6.5.0
 #
@@ -13,11 +13,9 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class ParameterDesigner(object):
     def setupUi(self, Parameters):
         Parameters.setObjectName("Parameters")
-        Parameters.resize(409, 291)
-        Parameters.setMinimumSize(QtCore.QSize(409, 291))
-        Parameters.setMaximumSize(QtCore.QSize(409, 291))
+        Parameters.resize(409, 399)
         self.groupBox = QtWidgets.QGroupBox(parent=Parameters)
-        self.groupBox.setGeometry(QtCore.QRect(10, 10, 391, 271))
+        self.groupBox.setGeometry(QtCore.QRect(10, 10, 391, 381))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.groupBox.setFont(font)
@@ -53,8 +51,29 @@ class ParameterDesigner(object):
         self.cmb_bot_type.addItem("")
         self.cmb_bot_type.addItem("")
         self.cmb_bot_type.addItem("")
+        self.chk_autoplay = QtWidgets.QCheckBox(parent=self.groupBox)
+        self.chk_autoplay.setGeometry(QtCore.QRect(20, 180, 341, 30))
+        self.chk_autoplay.setMinimumSize(QtCore.QSize(0, 30))
+        self.chk_autoplay.setMaximumSize(QtCore.QSize(16777215, 30))
+        self.chk_autoplay.setToolTipDuration(3)
+        self.chk_autoplay.setIconSize(QtCore.QSize(20, 20))
+        self.chk_autoplay.setObjectName("chk_autoplay")
+        self.label_3 = QtWidgets.QLabel(parent=self.groupBox)
+        self.label_3.setGeometry(QtCore.QRect(20, 220, 341, 22))
+        self.label_3.setMinimumSize(QtCore.QSize(0, 22))
+        self.label_3.setMaximumSize(QtCore.QSize(16777215, 22))
+        self.label_3.setObjectName("label_3")
+        self.txt_max_bet_amount = QtWidgets.QLineEdit(parent=self.groupBox)
+        self.txt_max_bet_amount.setGeometry(QtCore.QRect(20, 250, 351, 30))
+        self.txt_max_bet_amount.setMinimumSize(QtCore.QSize(0, 30))
+        self.txt_max_bet_amount.setMaximumSize(QtCore.QSize(16777215, 30))
+        self.txt_max_bet_amount.setInputMethodHints(
+            QtCore.Qt.InputMethodHint.ImhDigitsOnly
+        )
+        self.txt_max_bet_amount.setMaxLength(6)
+        self.txt_max_bet_amount.setObjectName("txt_max_bet_amount")
         self.btn_start = QtWidgets.QPushButton(parent=self.groupBox)
-        self.btn_start.setGeometry(QtCore.QRect(20, 210, 351, 41))
+        self.btn_start.setGeometry(QtCore.QRect(20, 330, 351, 41))
         self.btn_start.setMinimumSize(QtCore.QSize(0, 30))
         self.btn_start.setMaximumSize(QtCore.QSize(16777215, 300))
         self.btn_start.setCursor(
@@ -62,7 +81,7 @@ class ParameterDesigner(object):
         )
         self.btn_start.setObjectName("btn_start")
         self.chk_use_credentials = QtWidgets.QCheckBox(parent=self.groupBox)
-        self.chk_use_credentials.setGeometry(QtCore.QRect(20, 170, 341, 30))
+        self.chk_use_credentials.setGeometry(QtCore.QRect(20, 290, 341, 30))
         self.chk_use_credentials.setMinimumSize(QtCore.QSize(0, 30))
         self.chk_use_credentials.setMaximumSize(QtCore.QSize(16777215, 30))
         self.chk_use_credentials.setToolTipDuration(3)
@@ -85,19 +104,9 @@ class ParameterDesigner(object):
         self.cmb_bot_type.setItemText(0, _translate("Parameters", "Agressive"))
         self.cmb_bot_type.setItemText(1, _translate("Parameters", "Tight"))
         self.cmb_bot_type.setItemText(2, _translate("Parameters", "Loose"))
+        self.chk_autoplay.setText(_translate("Parameters", "AutoPlay"))
+        self.label_3.setText(_translate("Parameters", "Max bet amount"))
         self.btn_start.setText(_translate("Parameters", "Start"))
         self.chk_use_credentials.setText(
             _translate("Parameters", "Use saved credentials")
         )
-
-
-if __name__ == "__main__":
-    # Standard Library
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Parameters = QtWidgets.QWidget()
-    ui = Ui_Parameters()
-    ui.setupUi(Parameters)
-    Parameters.show()
-    sys.exit(app.exec())

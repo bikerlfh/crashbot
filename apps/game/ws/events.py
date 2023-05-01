@@ -66,28 +66,23 @@ async def start_bot_event(
     GlobalVars.set_io(sio)
     bot_type = data.get("bot_type")
     home_bet_id = data.get("home_bet_id")
-    max_amount_to_bet = data.get("max_amount_to_bet")
-    auto_play = data.get("auto_play")
     username = data.get("username")
     password = data.get("password")
-    if (
-        not bot_type
-        or not home_bet_id
-        or not max_amount_to_bet
-        or auto_play is None
-    ):
-        return make_error(
-            "bot_type, home_bet_id, max_amount_to_bet "
-            "and auto_play are required"
+    if not bot_type or not home_bet_id:
+        await sio.emit(
+            WSEvent.START_BOT,
+            data=make_error("bot_type and home_bet_id are required"),
+            room=sid,
         )
-
+        return
     home_bet = list(filter(lambda x: x.id == home_bet_id, HomeBets))
     if not home_bet:
-        return make_error("invalid home_bet_id")
+        await sio.emit(
+            WSEvent.START_BOT, data=make_error("invalid home_bet_id"), room=sid
+        )
+        return
     home_bet = home_bet[0]
     bot_type = BotType(bot_type)
-    GlobalVars.set_max_amount_to_bet(max_amount_to_bet)
-    GlobalVars.set_auto_play(auto_play)
     GlobalVars.set_username(username)
     GlobalVars.set_password(password)
     game = GlobalVars.get_game()

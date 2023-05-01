@@ -9,7 +9,7 @@ dist/
 data/
 build/
 
-*.ini
+conf.ini
 # Compiled Java class files
 *.class
 .ipynb_checkpoints

@@ -59,7 +59,7 @@ class Config(metaclass=Singleton):
     def write_config(self):
         with open(self.config_file, "w") as file:
             file.write("# Default configuration\n")
-            file.write(f'API_URL="{self.API_URL}"\n')
+            file.write(f"API_URL={self.API_URL}\n")
             file.write(
                 f'ALLOWED_LOG_CODES_TO_SHOW={",".join(self.ALLOWED_LOG_CODES_TO_SHOW)}\n'
             )

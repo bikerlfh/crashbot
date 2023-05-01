@@ -7,8 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>409</width>
-    <height>399</height>
+    <height>291</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>409</width>
+    <height>291</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>409</width>
+    <height>291</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Parameters</string>
@@ -19,7 +31,7 @@
      <x>10</x>
      <y>10</y>
      <width>391</width>
-     <height>381</height>
+     <height>271</height>
     </rect>
    </property>
    <property name="font">
@@ -162,98 +174,11 @@
      </property>
     </item>
    </widget>
-   <widget class="QCheckBox" name="chk_autoplay">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>180</y>
-      <width>341</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>30</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>30</height>
-     </size>
-    </property>
-    <property name="toolTipDuration">
-     <number>3</number>
-    </property>
-    <property name="text">
-     <string>AutoPlay</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>20</width>
-      <height>20</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>220</y>
-      <width>341</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>22</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>22</height>
-     </size>
-    </property>
-    <property name="text">
-     <string>Max bet amount</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txt_max_bet_amount">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>250</y>
-      <width>351</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>30</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>30</height>
-     </size>
-    </property>
-    <property name="inputMethodHints">
-     <set>Qt::ImhDigitsOnly</set>
-    </property>
-    <property name="maxLength">
-     <number>6</number>
-    </property>
-   </widget>
    <widget class="QPushButton" name="btn_start">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>330</y>
+      <y>210</y>
       <width>351</width>
       <height>41</height>
      </rect>
@@ -281,7 +206,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>290</y>
+      <y>170</y>
       <width>341</width>
       <height>30</height>
      </rect>

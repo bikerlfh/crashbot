@@ -66,12 +66,14 @@ class MainForm(QMainWindow, MainDesigner):
             height += 44
         self.resize(width, height)
         q_size = QtCore.QSize(width, height)
+        # q_rect = QtCore.QRect(0, 0, width, height)
         self.setMinimumSize(q_size)
         self.setMaximumSize(q_size)
         qr = self.frameGeometry()
         cp = self.screen().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
+        # self.setGeometry(q_rect)
 
     def _on_verify(self, data: dict[str, any]) -> None:
         """
@@ -109,7 +111,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.__change_screen(
             screen=self.parameters_screen,
             width=412,
-            height=420,
+            height=291,
             title="Parameters",
         )
 
@@ -147,6 +149,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.allowed_logs.remove(log_name.lower())
 
     def closeEvent(self, event) -> None:
-        self.socket.close_game()
-        self.socket.stop()
+        if self.socket:
+            self.socket.close_game()
+            self.socket.stop()
         super().close()

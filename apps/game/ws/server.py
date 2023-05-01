@@ -31,8 +31,8 @@ def disconnect(sid):
 
 @sio.on(WSEvent.LOGIN)
 async def login(sid, data, room=None):
-    is_logged = events.login_event(data)
-    await sio.emit("login", data={"logged": is_logged}, room=sid)
+    data_ = events.login_event(data)
+    await sio.emit("login", data=data_, room=sid)
 
 
 @sio.on(WSEvent.VERIFY)

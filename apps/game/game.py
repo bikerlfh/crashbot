@@ -98,6 +98,7 @@ class Game:
         SendEventToGUI.log.debug("reading the player's balance.....")
         self.initial_balance = self.game_page.balance
         self.balance = self.initial_balance
+        SendEventToGUI.balance(self.balance)
         # sendEventToGUI.balance(self.balance)
         SendEventToGUI.log.debug("loading the player.....")
         self.multipliers_to_save = self.game_page.multipliers
