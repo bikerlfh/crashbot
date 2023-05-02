@@ -47,7 +47,7 @@ class BarMultiplier(QVBoxLayout):
     def draw(self):
         self.canvas.draw()
 
-    def __get_bar_height(self, multipliers: list[float]):
+    def __get_bar_height(self, multipliers: list[float]) -> list[int]:
         bar_height = self.bar_heights or []
         if bar_height:
             bar_height.pop(0)
@@ -71,6 +71,36 @@ class BarMultiplier(QVBoxLayout):
             else:
                 bar_colors.append("crimson")
         return bar_colors
+
+    @staticmethod
+    def _find_support_resistance(
+        *,
+        prices: list[int],
+        window=3
+    ) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
+        """
+        Find support and resistance levels
+        support, resistance = self._find_support_resistance(prices=self.bar_heights)
+        for s in support:
+            plt.axhline(y=s[1], color='m', linestyle='--', linewidth=0.8, label="Soporte" if s == support[0] else None)
+        for r in resistance:
+            plt.axhline(y=r[1], color='c', linestyle='--', linewidth=0.8,
+                        label="Resistencia" if r == resistance[0] else None)
+        :param prices:
+        :param window:
+        :return:
+        """
+        support = []
+        resistance = []
+        for index in range(window, len(prices) - window):
+            price_range = prices[index - window: index + window + 1]
+            max_price = max(price_range)
+            min_price = min(price_range)
+            if prices[index] == max_price:
+                resistance.append((index, max_price))
+            elif prices[index] == min_price:
+                support.append((index, min_price))
+        return support, resistance
 
     def add_multipliers(self, multipliers: list[float]):
         if not multipliers:
