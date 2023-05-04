@@ -51,9 +51,7 @@ class Game:
                 bot_type, self.minimum_bet, self.maximum_bet
             )
         self.maximum_win_for_one_bet: float = self.maximum_bet * 100
-        self._prediction_model: PredictionModel = (
-            PredictionModel.get_instance()
-        )
+        self._prediction_model: PredictionModel = PredictionModel.get_instance()
         # globals.home_betId = self.home_bet.id
 
     # def ws_on_message(self, event):
@@ -141,9 +139,7 @@ class Game:
             self.multipliers_to_save = []
             SendEventToGUI.log.debug(f"multipliers saved")
         except Exception as error:
-            SendEventToGUI.log.debug(
-                f"error in requestSaveMultipliers: {error}"
-            )
+            SendEventToGUI.log.debug(f"error in requestSaveMultipliers: {error}")
 
     def request_save_bets(self):
         """
@@ -170,9 +166,7 @@ class Game:
             )
             SendEventToGUI.log.debug(f"bets saved")
         except Exception as error:
-            SendEventToGUI.log.debug(
-                f"Error in requestSaveBets :: bet: {error}"
-            )
+            SendEventToGUI.log.debug(f"Error in requestSaveBets :: bet: {error}")
 
     def request_get_prediction(self) -> Optional[PredictionCore]:
         """
@@ -201,20 +195,19 @@ class Game:
         self.add_multiplier(self.game_page.multipliers[-1])
         self.bets = []
 
-    async def send_bets_to_aviator(self, bets: list[Bet]):
+    async def send_bets_to_aviator(self):
         """
         Send the bets to the Aviator
         """
-        if not bets:
+        if not self.bets:
             return
-        await self.game_page.bet(bets)
+        await self.game_page.bet(self.bets)
 
     async def play(self):
         while self.initialized:
             await self.wait_next_game()
             self.get_next_bet()
-            if GlobalVars.get_auto_play() and self.bets:
-                await self.send_bets_to_aviator(self.bets)
+            await self.send_bets_to_aviator()
             SendEventToGUI.log.info("***************************************")
         SendEventToGUI.log.error("The game is not initialized")
 
@@ -247,12 +240,16 @@ class Game:
         """
         Get the next bet from the prediction
         """
-        self._prediction_model.evaluate_models(
-            self.bot.MIN_AVERAGE_MODEL_PREDICTION
-        )
+        self._prediction_model.evaluate_models(self.bot.MIN_AVERAGE_MODEL_PREDICTION)
         prediction = self.request_get_prediction()
         if prediction is None:
             SendEventToGUI.log.warning("No prediction found")
             return []
-        self.bets = self.bot.get_next_bet(prediction)
+        bets = self.bot.get_next_bet(prediction)
+        if GlobalVars.get_auto_play():
+            self.bets = bets
+        else:
+            SendEventToGUI.log.debug(
+                f"possible bets: " f"{[str(vars(bet)) for bet in bets]}"
+            )
         return self.bets

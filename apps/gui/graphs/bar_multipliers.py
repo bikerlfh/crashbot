@@ -74,9 +74,7 @@ class BarMultiplier(QVBoxLayout):
 
     @staticmethod
     def _find_support_resistance(
-        *,
-        prices: list[int],
-        window=3
+        *, prices: list[int], window=3
     ) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
         """
         Find support and resistance levels
@@ -93,7 +91,7 @@ class BarMultiplier(QVBoxLayout):
         support = []
         resistance = []
         for index in range(window, len(prices) - window):
-            price_range = prices[index - window: index + window + 1]
+            price_range = prices[index - window : index + window + 1]
             max_price = max(price_range)
             min_price = min(price_range)
             if prices[index] == max_price:

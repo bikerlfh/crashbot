@@ -67,14 +67,10 @@ class Bot:
         self.bot_type = bot_type
         self.risk_factor = risk_factor
         self.min_multiplier_to_bet = min_multiplier_to_bet
-        self.min_multiplier_to_recover_losses = (
-            min_multiplier_to_recover_losses
-        )
+        self.min_multiplier_to_recover_losses = min_multiplier_to_recover_losses
         self.min_probability_to_bet = min_probability_to_bet
         self.min_category_percentage_to_bet = min_category_percentage_to_bet
-        self.max_recovery_percentage_on_max_bet = (
-            max_recovery_percentage_on_max_bet
-        )
+        self.max_recovery_percentage_on_max_bet = max_recovery_percentage_on_max_bet
         self.min_average_model_prediction = min_average_model_prediction
         self.stop_loss_percentage = stop_loss_percentage
         self.take_profit_percentage = take_profit_percentage

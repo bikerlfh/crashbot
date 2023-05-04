@@ -51,17 +51,13 @@ pip install -r requirements.txt
 you can find the logs in the folder data/logs.db (sqlite3)
 
 
-# COMPILE APPLICATION:
-
-For the compilation of the application, it will be done with **pyinstaller** the following command applies to all operating systems
-
+# make executable
 ```
-pip install pyinstaller
-```
-```
-pyinstaller --onefile --icon=resources/bot.ico crashbot.py
+pyinstaller --onefile --icon=apps/gui/resources/icon/bot.ico crashbot.py
 ```
 or
 ```
 make generate-installer
 ```
+### if you use pyenv install the version
+PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install 3.10.4
