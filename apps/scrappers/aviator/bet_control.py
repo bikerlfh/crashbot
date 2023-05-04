@@ -33,16 +33,12 @@ class BetControl(AbstractControlBase):
         self.was_load = False
 
     async def init(self):
-        await self.aviator_page.locator("app-bet-control").first.wait_for(
-            timeout=15000
-        )
+        await self.aviator_page.locator("app-bet-control").first.wait_for(timeout=15000)
         bet_controls = self.aviator_page.locator("app-bet-control")
         # validating if the game has 2 controls
         count_controls = await bet_controls.count()
         if count_controls == 1:
-            await bet_controls.first.locator(
-                "sec-hand-btn.add.btn"
-            ).first.click()
+            await bet_controls.first.locator("sec-hand-btn.add.btn").first.click()
         self._bet_control_1 = bet_controls.first
         self._bet_control_2 = bet_controls.last
 
@@ -87,12 +83,8 @@ class BetControl(AbstractControlBase):
             ".cashout-spinner-wrapper"
         ).first
 
-        self._auto_cash_out_multiplier_1 = cash_out_spinner_1.locator(
-            "input"
-        ).first
-        self._auto_cash_out_multiplier_2 = cash_out_spinner_2.locator(
-            "input"
-        ).first
+        self._auto_cash_out_multiplier_1 = cash_out_spinner_1.locator("input").first
+        self._auto_cash_out_multiplier_2 = cash_out_spinner_2.locator("input").first
 
         # bet_buttons = self.aviator_page.locator("button.bet")
         # bet_buttons = self.aviator_page.locator("button.btn-success.bet")
@@ -117,7 +109,9 @@ class BetControl(AbstractControlBase):
         )
         if value != multiplier:
             await auto_cash_out_multiplier.fill("", timeout=1000)
-            await auto_cash_out_multiplier.type(str(multiplier), delay=self._random_delay())
+            await auto_cash_out_multiplier.type(
+                str(multiplier), delay=self._random_delay()
+            )
 
     async def update_amount(self, amount, control):
         input_element = self._amount_input_1

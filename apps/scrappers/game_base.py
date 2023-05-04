@@ -23,7 +23,8 @@ class Control(Enum):
 
 
 class AbstractControlBase(abc.ABC):
-    def _random_delay(self) -> int:
+    @staticmethod
+    def _random_delay() -> int:
         return random.randint(15, 50)
 
     @abc.abstractmethod
@@ -59,6 +60,10 @@ class AbstractGameBase(abc.ABC):
         self.url: str = url
         self.multipliers: list[float] = []
         self.balance: int = 0
+
+    @staticmethod
+    def _format_multiplier(multiplier: str) -> float:
+        return float(multiplier.replace(r"/\s / g", "").replace("x", ""))
 
     @abc.abstractmethod
     async def _click(self, element: any):

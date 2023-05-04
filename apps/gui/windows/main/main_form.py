@@ -52,12 +52,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.show_login_screen()
 
     def __change_screen(
-        self,
-        *,
-        screen: QWidget,
-        width: int,
-        height: int,
-        title: Optional[str] = None
+        self, *, screen: QWidget, width: int, height: int, title: Optional[str] = None
     ) -> None:
         if title:
             self.setWindowTitle(title)
