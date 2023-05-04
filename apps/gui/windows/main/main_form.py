@@ -1,5 +1,5 @@
 # Standard Library
-from typing import Optional
+from typing import Optional, cast
 
 # Libraries
 from PyQt6 import QtCore, QtGui
@@ -142,7 +142,7 @@ class MainForm(QMainWindow, MainDesigner):
         return action
 
     def action_checkeable(self):
-        _action: QtGui.QAction = self.sender()
+        _action = cast(QtGui.QAction, self.sender())
         log_name = _action.text()
         if _action.isChecked():
             self.allowed_logs.append(log_name.lower())

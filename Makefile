@@ -14,10 +14,10 @@ generate-ui-console:
 	pyuic6 -x apps/gui/resources/ui/console.ui -o apps/gui/windows/console/console_designer_new.py
 
 run:
-	python app.py
+	python crashbot.py
 
 black: ## black
 	black . --line-length=79
 
 generate-installer:
-	pyinstaller --onefile --icon=resources/bot.ico crashbot.py
+	pyinstaller --onefile --icon=/apps/gui/resources/bot.ico crashbot.py
