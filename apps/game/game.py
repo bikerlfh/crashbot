@@ -201,20 +201,19 @@ class Game:
         self.add_multiplier(self.game_page.multipliers[-1])
         self.bets = []
 
-    async def send_bets_to_aviator(self, bets: list[Bet]):
+    async def send_bets_to_aviator(self):
         """
         Send the bets to the Aviator
         """
-        if not bets:
+        if not self.bets:
             return
-        await self.game_page.bet(bets)
+        await self.game_page.bet(self.bets)
 
     async def play(self):
         while self.initialized:
             await self.wait_next_game()
             self.get_next_bet()
-            if GlobalVars.get_auto_play() and self.bets:
-                await self.send_bets_to_aviator(self.bets)
+            await self.send_bets_to_aviator()
             SendEventToGUI.log.info("***************************************")
         SendEventToGUI.log.error("The game is not initialized")
 
@@ -254,5 +253,12 @@ class Game:
         if prediction is None:
             SendEventToGUI.log.warning("No prediction found")
             return []
-        self.bets = self.bot.get_next_bet(prediction)
+        bets = self.bot.get_next_bet(prediction)
+        if GlobalVars.get_auto_play():
+            self.bets = bets
+        else:
+            SendEventToGUI.log.debug(
+                f"possible bets: "
+                f"{[str(vars(bet)) for bet in bets]}"
+            )
         return self.bets

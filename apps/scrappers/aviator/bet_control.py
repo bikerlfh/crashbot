@@ -102,18 +102,22 @@ class BetControl(AbstractControlBase):
 
     async def set_auto_cash_out(self, multiplier, control):
         auto_cash_out_multiplier = self._auto_cash_out_multiplier_1
+        auto_cash_out_switcher = self._auto_cash_out_switcher_1
         if control == Control.Control2:
             auto_cash_out_multiplier = self._auto_cash_out_multiplier_2
+            auto_cash_out_switcher = self._auto_cash_out_switcher_2
 
         if not auto_cash_out_multiplier:
             raise Exception("buttons null autoCashOutMultiplier")
-
+        is_enabled = await auto_cash_out_multiplier.is_enabled()
+        if not is_enabled:
+            await auto_cash_out_switcher.click(delay=self._random_delay())
         value = round(
             float(await auto_cash_out_multiplier.input_value(timeout=1000)), 2
         )
         if value != multiplier:
             await auto_cash_out_multiplier.fill("", timeout=1000)
-            await auto_cash_out_multiplier.type(str(multiplier), delay=100)
+            await auto_cash_out_multiplier.type(str(multiplier), delay=self._random_delay())
 
     async def update_amount(self, amount, control):
         input_element = self._amount_input_1

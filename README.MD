@@ -1,4 +1,3 @@
-
 ## Command generate py with ui
 ##################################################################
 
@@ -46,3 +45,11 @@ pip install -r requirements.txt
 # Logs
 
 you can find the logs in the folder data/logs.db (sqlite3)
+
+
+# make executable
+
+pyinstaller --onefile --windowed --icon=apps/gui/resources/icon/bot.ico crashbot.py
+
+### if you use pyenv install the version
+PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install 3.10.4

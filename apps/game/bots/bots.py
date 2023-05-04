@@ -202,6 +202,7 @@ class BotStatic(BotBase):
             self.bets.append(Bet(self._max_amount_to_bet, 1.95))
             self.bets.append(Bet(self._min_amount_to_bet, 2))
         self.bets = list(filter(lambda b: b.amount > 0, self.bets))
+        SendEventToGUI.log.debug(f"bot bets: {self.bets}")
         return self.bets
 
     def get_next_bet(self, prediction: PredictionCore) -> list[Bet]:
@@ -245,7 +246,7 @@ class BotStatic(BotBase):
             return []
         # CATEGORY 1 not bet
         if prediction_data.prediction_round == 1:
-            SendEventToGUI.log.warning("Prediction round is 1")
+            SendEventToGUI.log.debug("Prediction round is 1")
             return []
         # CATEGORY 2
         return self.generate_bets(prediction_data, strategy)
