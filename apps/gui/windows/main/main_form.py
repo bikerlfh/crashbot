@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import QMainWindow, QMessageBox, QStackedWidget, QWidget
 
 # Internal
 from apps.globals import GlobalVars
+from apps.constants import VERSION
 from apps.gui.socket import SocketIOClient
 from apps.gui.utils import os as utils_os
 from apps.gui.windows.console.console_form import ConsoleForm
@@ -36,6 +37,7 @@ class MainForm(QMainWindow, MainDesigner):
         # verify token login
         self._verify_token()
         self._generate_menu_logs()
+        self._load_version()
 
     def __init_screen(self) -> None:
         self.stacked_widget = QStackedWidget(self)
@@ -50,6 +52,10 @@ class MainForm(QMainWindow, MainDesigner):
         self.showMaximized()
         self.action_crendentials.triggered.connect(self.show_credential)
         self.show_login_screen()
+
+    def _load_version(self) -> None:
+        self.lbl_version.setText(VERSION)
+        self.statusbar.addPermanentWidget(self.lbl_version)
 
     def __change_screen(
         self, *, screen: QWidget, width: int, height: int, title: Optional[str] = None
@@ -91,7 +97,7 @@ class MainForm(QMainWindow, MainDesigner):
 
     def show_login_screen(self):
         self.__change_screen(
-            screen=self.login_screen, width=300, height=250, title="Login"
+            screen=self.login_screen, width=300, height=280, title="Login"
         )
 
     @QtCore.pyqtSlot(str, str)
@@ -122,12 +128,6 @@ class MainForm(QMainWindow, MainDesigner):
     def show_credential(self):
         self.credential_screen.exec()
 
-    def _generate_menu_logs(self) -> None:
-        self.menu_logs.clear()
-        for code in self.allowed_logs:
-            action = self._add_action(code.capitalize())
-            self.menu_logs.addAction(action)
-
     def _add_action(self, title: str) -> QtGui.QAction:
         action = QtGui.QAction(parent=self)
         action.setText(title)
@@ -135,6 +135,12 @@ class MainForm(QMainWindow, MainDesigner):
         action.setChecked(True)
         action.changed.connect(self.action_checkeable)
         return action
+
+    def _generate_menu_logs(self) -> None:
+        self.menu_logs.clear()
+        for code in self.allowed_logs:
+            action = self._add_action(code.capitalize())
+            self.menu_logs.addAction(action)
 
     def action_checkeable(self):
         _action = cast(QtGui.QAction, self.sender())

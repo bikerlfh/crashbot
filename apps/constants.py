@@ -15,6 +15,8 @@ IS_ALLOWED_TO_SAVE_MULTIPLIERS = bool(
     getenv("IS_ALLOWED_TO_SAVE_MULTIPLIERS", 1)
 )  # 1 = True, 0 = False
 
+VERSION: str = "1.0.0"
+
 
 class WSEvent(str, Enum):
     VERIFY = "verify"

@@ -26,7 +26,32 @@
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
-    <widget class="QWidget" name="page"/>
+    <widget class="QWidget" name="page">
+     <widget class="QLabel" name="lbl_version">
+      <property name="geometry">
+       <rect>
+        <x>670</x>
+        <y>510</y>
+        <width>41</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <italic>false</italic>
+        <bold>true</bold>
+        <kerning>false</kerning>
+       </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="text">
+       <string>1.0.0</string>
+      </property>
+     </widget>
+    </widget>
     <widget class="QWidget" name="page_2"/>
    </widget>
    <widget class="QLabel" name="label">
