@@ -7,7 +7,7 @@ from PyQt6 import QtCore
 
 # Internal
 from apps.constants import WSEvent
-from apps.game.ws.constants import WS_SERVER_HOST, WS_SERVER_PORT
+from apps.game.ws_server.constants import WS_SERVER_HOST, WS_SERVER_PORT
 
 
 class SocketIOClient(QtCore.QThread):

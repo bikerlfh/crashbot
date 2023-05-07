@@ -4,13 +4,13 @@ from typing import Optional
 # Internal
 from apps.api import services as api_services
 from apps.api.models import BetData
-from apps.constants import IS_ALLOWED_TO_SAVE_MULTIPLIERS, BotType, HomeBet
+from apps.constants import BotType, HomeBet
 from apps.game.bots.bots import Bot, BotStatic
 from apps.game.models import Bet, Multiplier
 from apps.game.prediction_core import PredictionCore, PredictionModel
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
-# from ws.client import WebSocketClient
+# from ws_server.client import WebSocketClient
 from apps.scrappers.game_base import AbstractGameBase
 
 
@@ -128,7 +128,7 @@ class Game:
         Save the multipliers in the database
         """
         # TODO fix this
-        if not IS_ALLOWED_TO_SAVE_MULTIPLIERS:
+        if not GlobalVars.get_allowed_to_save_multipliers():
             return
         if len(self.multipliers_to_save) < self.MAX_MULTIPLIERS_TO_SAVE:
             return

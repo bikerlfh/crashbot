@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import QMainWindow, QMessageBox, QStackedWidget, QWidget
 # Internal
 from apps.constants import VERSION
 from apps.globals import GlobalVars
-from apps.gui.socket import SocketIOClient
+from apps.gui.socket_io_client import SocketIOClient
 from apps.gui.utils import os as utils_os
 from apps.gui.windows.console.console_form import ConsoleForm
 from apps.gui.windows.credential.credential_dialog import CredentialDialog
@@ -84,7 +84,7 @@ class MainForm(QMainWindow, MainDesigner):
 
     def _on_verify(self, data: dict[str, any]) -> None:
         """
-        ws callback on verify token
+        ws_server callback on verify token
         :param data: dict(logged: bool)
         :return: None
         """
@@ -125,7 +125,7 @@ class MainForm(QMainWindow, MainDesigner):
     @QtCore.pyqtSlot()
     def show_console_screen(self):
         data = self.parameters_screen.get_values()
-        self.console_screen.set_values(**data)
+        self.console_screen.initialize(**data)
         self.__change_screen(
             screen=self.console_screen, width=897, height=557, title="Console"
         )

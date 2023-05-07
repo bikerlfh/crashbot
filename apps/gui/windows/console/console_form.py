@@ -8,6 +8,7 @@ from apps.gui import services
 from apps.gui.graphs.bar_multipliers import BarMultiplier
 from apps.gui.windows.console.console_designer import ConsoleDesigner
 from apps.utils.logs import services as logs_services
+from apps.ws_client import WebSocketClient
 
 
 class ConsoleForm(QWidget, ConsoleDesigner):
@@ -44,6 +45,8 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.btn_auto_bet.setEnabled(False)
         self.btn_set_max_amount.setEnabled(False)
         self.txt_max_amount_to_bet.setEnabled(False)
+        # NOTE at this point the class should have been instantiated.
+        self.ws_client = WebSocketClient()
 
     def __add_item_to_list(self, item: QListWidgetItem):
         current_row = self.list_log.currentRow()
@@ -57,7 +60,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         if self.list_log.count() >= self.MAX_LOGS_ITEMS:
             self.list_log.takeItem(self.MAX_LOGS_ITEMS - 1)
 
-    def set_values(
+    def initialize(
         self,
         *,
         home_bet_index: int,
@@ -71,6 +74,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.lbl_bot_type.setText(f"Bot: {bot_type}")
         self.txt_max_amount_to_bet.setText(str(max_amount_to_bet))
         self.btn_auto_bet.setText("AutoBet ON" if auto_play else "AutoBet OFF")
+        self.ws_client.set_home_bet(home_bet_id=self.home_bet.id)
 
     def button_auto_bet_clicked_event(self):
         self.auto_play = not self.auto_play
@@ -100,7 +104,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
 
     def on_auto_play(self, data):
         """
-        ws callback on autoplay
+        ws_server callback on autoplay
         :param data: dict(autoPlay: bool)
         :return: None
         """
@@ -119,7 +123,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
 
     def on_update_balance(self, data):
         """
-        ws callback on update balance
+        ws_server callback on update balance
         :param data: dict(balance: float)
         :return: None
         """
@@ -141,7 +145,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
 
     def on_log(self, data):
         """
-        ws callback on log
+        ws_server callback on log
         :param data: dict(code: message)
         :return: None
         """
@@ -162,7 +166,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
 
     def on_add_multipliers(self, data):
         """
-        ws callback on add multipliers
+        ws_server callback on add multipliers
         :param data: dict(multipliers: list)
         :return: None
         """
@@ -180,7 +184,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
 
     def on_game_loaded(self, data):
         """
-        ws callback on game loaded
+        ws_server callback on game loaded
         :param data: dict(game: str)
         :return: None
         """

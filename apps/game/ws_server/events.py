@@ -4,8 +4,8 @@ from socketio import AsyncServer
 # Internal
 from apps.constants import BotType, HomeBets, WSEvent
 from apps.game.game import Game
-from apps.game.ws import handlers
-from apps.game.ws.utils import make_error
+from apps.game.ws_server import handlers
+from apps.game.ws_server.utils import make_error
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
 from apps.utils.local_storage import LocalStorage
@@ -19,7 +19,7 @@ def verify_event(**_kwargs) -> dict[str, any]:
 
 def login_event(data: dict[str, any]) -> dict[str, any]:
     """
-    ws callback for login
+    ws_server callback for login
     :param data: dict(logged: bool)
     :return: None
     """

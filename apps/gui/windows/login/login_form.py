@@ -25,7 +25,7 @@ class LoginForm(QtWidgets.QWidget, LoginDesigner):
 
     def on_login(self, data: dict[str, any]) -> None:
         """
-        ws callback for login
+        ws_server callback for login
         :param data: dict(logged: bool)
         :return: None
         """

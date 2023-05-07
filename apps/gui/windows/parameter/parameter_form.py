@@ -7,8 +7,6 @@ from apps.gui import services
 from apps.gui.windows.parameter.parameter_designer import ParameterDesigner
 from apps.utils.logs import services as logs_services
 
-# from PyQt6.QtCore import Q_ARG, QMetaObject
-
 
 class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
     receive_start_bot_signal = QtCore.pyqtSignal(dict)
@@ -79,7 +77,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
 
     def on_start_bot(self, data: dict[str, any]):
         """
-        ws callback on start bot
+        ws_server callback on start bot
         :param data: dict(started: bool)
         :return: None
         """
@@ -93,20 +91,9 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
                 self.main_window.show_message_box(
                     error.get("code", ""), error.get("message")
                 )
-                """QMetaObject.invokeMethod(
-                    self.main_window,
-                    "show_message_box",
-                    Q_ARG(str, error.get("code", "")),
-                    Q_ARG(str, error.get("message")),
-                )"""
                 self.btn_start.setDisabled(False)
                 return
             self.main_window.show_console_screen()
-            """QMetaObject.invokeMethod(
-                self.main_window,
-                "show_console_screen",
-                Qt.ConnectionType.QueuedConnection,
-            )"""
         except Exception as e:
             logs_services.save_gui_log(
                 message=f"Error on_start_bot: {e}", level="exception"

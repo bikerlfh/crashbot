@@ -1,10 +1,5 @@
-# Standard Library
-from typing import Dict
-
 # Internal
 from apps.api.models import Prediction
-
-# from ws.gui_events import send_event_to_gui
 
 
 class PredictionCore:

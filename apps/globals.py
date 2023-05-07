@@ -5,6 +5,7 @@ use globals().setdefault('auto_play', False) to set value
 """
 # Standard Library
 import asyncio
+import logging
 from enum import Enum
 from threading import Event
 from typing import Callable
@@ -14,6 +15,8 @@ from socketio import AsyncServer
 
 # Internal
 from apps.config import Config
+
+logger = logging.getLogger(__name__)
 
 
 class GlobalVars:
@@ -29,6 +32,8 @@ class GlobalVars:
         USERNAME = "USERNAME"
         PASSWORD = "PASSWORD"
         EMIT_TO_GUI = "EMIT_TO_GUI"
+        ALLOWED_TO_SAVE_MULTIPLIERS = "ALLOWED_TO_SAVE_MULTIPLIERS"
+        WS_CLIENT_BACKEND_STARTED = "WS_CLIENT_BACKEND_STARTED"
 
     @staticmethod
     def init() -> None:
@@ -38,11 +43,23 @@ class GlobalVars:
         globals().setdefault(GlobalVars.VARS.USERNAME, None)
         globals().setdefault(GlobalVars.VARS.PASSWORD, None)
         globals().setdefault(GlobalVars.VARS.EMIT_TO_GUI, None)
+        globals().setdefault(GlobalVars.VARS.WS_CLIENT_BACKEND_STARTED, False)
+        globals().setdefault(
+            GlobalVars.VARS.ALLOWED_TO_SAVE_MULTIPLIERS, False
+        )
         GlobalVars.init_config()
 
     @classmethod
     def init_config(cls) -> None:
         cls.config = Config()
+
+    @classmethod
+    def is_connected(cls) -> bool:
+        """
+        add everything you need to start the app to work properly
+        """
+        ws_client_stated = cls.get_ws_client_backend_started()
+        return ws_client_stated
 
     @classmethod
     def set_game(cls, game: any) -> None:
@@ -91,6 +108,26 @@ class GlobalVars:
     @staticmethod
     def set_password(password: str) -> None:
         globals()[GlobalVars.VARS.PASSWORD] = password
+
+    @classmethod
+    def set_allowed_to_save_multipliers(cls, allowed: bool) -> None:
+        globals()[GlobalVars.VARS.ALLOWED_TO_SAVE_MULTIPLIERS] = allowed
+        logger.info(
+            "ALLOWED_TO_SAVE_MULTIPLIERS: ",
+            cls.get_allowed_to_save_multipliers(),
+        )
+
+    @classmethod
+    def get_allowed_to_save_multipliers(cls) -> bool:
+        return globals().get(GlobalVars.VARS.ALLOWED_TO_SAVE_MULTIPLIERS)
+
+    @classmethod
+    def get_ws_client_backend_started(cls) -> bool:
+        return globals().get(GlobalVars.VARS.WS_CLIENT_BACKEND_STARTED)
+
+    @classmethod
+    def set_ws_client_backend_started(cls, started: bool) -> None:
+        globals()[GlobalVars.VARS.WS_CLIENT_BACKEND_STARTED] = started
 
     @classmethod
     def set_io(cls, sio: AsyncServer) -> None:

@@ -7,8 +7,8 @@ import uvicorn
 
 # Internal
 from apps.constants import WSEvent
-from apps.game.ws import events
-from apps.game.ws.constants import WS_SERVER_HOST, WS_SERVER_PORT
+from apps.game.ws_server import events
+from apps.game.ws_server.constants import WS_SERVER_HOST, WS_SERVER_PORT
 from apps.globals import GlobalVars
 
 sio = socketio.AsyncServer(async_mode="asgi")
