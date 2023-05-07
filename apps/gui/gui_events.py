@@ -34,7 +34,9 @@ def _send_log_to_gui(data: any, code: Optional[LogCode] = LogCode.INFO):
     data = {"message": data} if isinstance(data, str) else data
     data.update(code=code.value)
     GlobalVars.emit_to_gui(GUIEvent.LOG, data)
-    log_services.save_game_log(message=data.get("message"), level=data.get("code"))
+    log_services.save_game_log(
+        message=data.get("message"), level=data.get("code")
+    )
 
 
 class SendEventToGUI:
@@ -67,11 +69,15 @@ class SendEventToGUI:
 
     @staticmethod
     def send_multipliers(multipliers: list[float]):
-        GlobalVars.emit_to_gui(GUIEvent.ADD_MULTIPLIERS, dict(multipliers=multipliers))
+        GlobalVars.emit_to_gui(
+            GUIEvent.ADD_MULTIPLIERS, dict(multipliers=multipliers)
+        )
 
     @staticmethod
     def game_loaded(is_game_loaded: bool):
-        GlobalVars.emit_to_gui(GUIEvent.GAME_LOADED, dict(loaded=is_game_loaded))
+        GlobalVars.emit_to_gui(
+            GUIEvent.GAME_LOADED, dict(loaded=is_game_loaded)
+        )
 
     @staticmethod
     def error(error: str):

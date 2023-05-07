@@ -23,7 +23,9 @@ def make_list_item(
     :param allowed_codes: allowed codes
     :return: QListWidgetItem
     """
-    allowed_codes = allowed_codes or GlobalVars.config.ALLOWED_LOG_CODES_TO_SHOW
+    allowed_codes = (
+        allowed_codes or GlobalVars.config.ALLOWED_LOG_CODES_TO_SHOW
+    )
     code = data.get("code", None)
     if code not in allowed_codes:
         return
@@ -95,7 +97,11 @@ def save_credentials(
     """
     file_name = CREDENTIALS_FILE_PATH
     data = csv.read_data(file_name=file_name) or []
-    data = [item for item in data if item.get("home_bet") != credential.get("home_bet")]
+    data = [
+        item
+        for item in data
+        if item.get("home_bet") != credential.get("home_bet")
+    ]
     credential["username"] = Encrypt().encrypt(credential["username"])
     credential["password"] = Encrypt().encrypt(credential["password"])
     data.append(credential)

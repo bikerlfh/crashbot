@@ -51,7 +51,9 @@ class Game:
                 bot_type, self.minimum_bet, self.maximum_bet
             )
         self.maximum_win_for_one_bet: float = self.maximum_bet * 100
-        self._prediction_model: PredictionModel = PredictionModel.get_instance()
+        self._prediction_model: PredictionModel = (
+            PredictionModel.get_instance()
+        )
         # globals.home_betId = self.home_bet.id
 
     # def ws_on_message(self, event):
@@ -139,7 +141,9 @@ class Game:
             self.multipliers_to_save = []
             SendEventToGUI.log.debug(f"multipliers saved")
         except Exception as error:
-            SendEventToGUI.log.debug(f"error in requestSaveMultipliers: {error}")
+            SendEventToGUI.log.debug(
+                f"error in requestSaveMultipliers: {error}"
+            )
 
     def request_save_bets(self):
         """
@@ -166,7 +170,9 @@ class Game:
             )
             SendEventToGUI.log.debug(f"bets saved")
         except Exception as error:
-            SendEventToGUI.log.debug(f"Error in requestSaveBets :: bet: {error}")
+            SendEventToGUI.log.debug(
+                f"Error in requestSaveBets :: bet: {error}"
+            )
 
     def request_get_prediction(self) -> Optional[PredictionCore]:
         """
@@ -240,7 +246,9 @@ class Game:
         """
         Get the next bet from the prediction
         """
-        self._prediction_model.evaluate_models(self.bot.MIN_AVERAGE_MODEL_PREDICTION)
+        self._prediction_model.evaluate_models(
+            self.bot.MIN_AVERAGE_MODEL_PREDICTION
+        )
         prediction = self.request_get_prediction()
         if prediction is None:
             SendEventToGUI.log.warning("No prediction found")

@@ -8,6 +8,11 @@ from apps.utils.local_storage import LocalStorage
 local_storage = LocalStorage()
 
 
+def _get_customer_data() -> None:
+    customer_data = api_services.get_customer_data()
+    local_storage.set_customer_id(customer_id=customer_data.customer_id)
+
+
 def verify_token(token: Optional[str] = None) -> dict[str, any]:
     token = token or local_storage.get_token()
     if token:
@@ -27,13 +32,18 @@ def login(username: str, password: str) -> dict[str, any]:
         token = api_services.request_token_refresh(refresh=refresh)
         if token:
             local_storage.set_token(token=token)
+            api_services.update_token()
+            _get_customer_data()
             return dict(logged=True)
     if not username or not password:
         return dict(logged=False)
-    token, refresh = api_services.request_login(username=username, password=password)
+    token, refresh = api_services.request_login(
+        username=username, password=password
+    )
     if not token or not refresh:
         return dict(logged=False)
     local_storage.set_token(token)
     local_storage.set_refresh(refresh)
     api_services.update_token()
+    _get_customer_data()
     return dict(logged=True)

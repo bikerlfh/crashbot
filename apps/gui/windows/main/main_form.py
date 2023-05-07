@@ -6,8 +6,8 @@ from PyQt6 import QtCore, QtGui
 from PyQt6.QtWidgets import QMainWindow, QMessageBox, QStackedWidget, QWidget
 
 # Internal
-from apps.globals import GlobalVars
 from apps.constants import VERSION
+from apps.globals import GlobalVars
 from apps.gui.socket import SocketIOClient
 from apps.gui.utils import os as utils_os
 from apps.gui.windows.console.console_form import ConsoleForm
@@ -58,14 +58,19 @@ class MainForm(QMainWindow, MainDesigner):
         self.statusbar.addPermanentWidget(self.lbl_version)
 
     def __change_screen(
-        self, *, screen: QWidget, width: int, height: int, title: Optional[str] = None
+        self,
+        *,
+        screen: QWidget,
+        width: int,
+        height: int,
+        title: Optional[str] = None
     ) -> None:
         if title:
             self.setWindowTitle(title)
         self.stacked_widget.setCurrentWidget(screen)
         # if it's not osX, add height to window (menu bar)
         if utils_os.is_linux() or utils_os.is_windows():
-            height += 44
+            height += 55
         self.resize(width, height)
         q_size = QtCore.QSize(width, height)
         # q_rect = QtCore.QRect(0, 0, width, height)

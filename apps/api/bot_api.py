@@ -56,6 +56,7 @@ class BotAPIServices:
     GET_PREDICTION = "predictions/predict/"
     GET_BOTS = "predictions/bots/"
     UPDATE_BALANCE = "customers/balance/"
+    CUSTOMER_DATA = "customers/me/"
     BET = "bets/"
 
     def __init__(self, *, client: RESTClient):
@@ -224,6 +225,17 @@ class BotAPIServices:
             )
         except Exception as exc:
             logger.exception(f"BotAPIServices :: get_bots :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def get_me_data(self) -> Dict[str, Any]:
+        try:
+            response = self.client.get(
+                service=self.CUSTOMER_DATA,
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: update_balance :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body

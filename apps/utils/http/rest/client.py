@@ -29,7 +29,9 @@ class RESTClient:
     VERIFY = True
     auth = {}
 
-    def __init__(self, *, api_url: str, headers: Optional[Dict[str, Any]] = None):
+    def __init__(
+        self, *, api_url: str, headers: Optional[Dict[str, Any]] = None
+    ):
         self.api_url = api_url
         if headers:
             self.headers = headers

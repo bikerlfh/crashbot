@@ -12,6 +12,7 @@ class LocalStorage(metaclass=Singleton):
     class LocalStorageKeys(Enum):
         TOKEN = "token"
         REFRESH = "refresh"
+        CUSTOMER_ID = "customer_id"
 
     def __init__(self):
         self.local_storage = localStoragePy("co.crashbot.local", "json")
@@ -39,3 +40,9 @@ class LocalStorage(metaclass=Singleton):
 
     def get_refresh(self):
         return self.get(LocalStorage.LocalStorageKeys.REFRESH.value)
+
+    def set_customer_id(self, customer_id: int):
+        self.set(LocalStorage.LocalStorageKeys.CUSTOMER_ID.value, customer_id)
+
+    def get_customer_id(self):
+        return self.get(LocalStorage.LocalStorageKeys.CUSTOMER_ID.value)

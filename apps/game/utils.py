@@ -31,7 +31,9 @@ def kelly_formula(b: float, p: float, capital: float) -> float:
     return round(capital * f, 2)
 
 
-def adaptive_kelly_formula(b: float, p: float, R: float, capital: float) -> float:
+def adaptive_kelly_formula(
+    b: float, p: float, R: float, capital: float
+) -> float:
     """
     The Adaptive Kelly formula is a formula used to determine the optimal fraction of one's capital to bet on a given bet.
     The formula is: f* = (bp - q) / b * (1 + R)

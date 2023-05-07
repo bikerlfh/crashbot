@@ -21,7 +21,9 @@ class AviatorOneWin(Aviator):
         password = globals().get("password")
 
         if not username or not password:
-            SendEventToGUI.log.warning("please set username and password to login!")
+            SendEventToGUI.log.warning(
+                "please set username and password to login!"
+            )
             return
 
         user_name_input = self._page.locator("input[name='login']")
@@ -31,7 +33,9 @@ class AviatorOneWin(Aviator):
         password_input.type(password, delay=100)
         self._page.wait_for_timeout(1000)
 
-        login_button_2 = self._page.locator("button.modal-button[type='submit']")
+        login_button_2 = self._page.locator(
+            "button.modal-button[type='submit']"
+        )
         await self._click(login_button_2)
         await self._page.wait_for_timeout(2000)
 
@@ -39,7 +43,9 @@ class AviatorOneWin(Aviator):
         if not self._page:
             raise Exception("_getAppGame :: page is null")
 
-        await self._page.wait_for_url("**/casino/play/spribe_aviator**", timeout=50000)
+        await self._page.wait_for_url(
+            "**/casino/play/spribe_aviator**", timeout=50000
+        )
 
         while True:
             try:
@@ -47,7 +53,9 @@ class AviatorOneWin(Aviator):
                     ".CasinoGamePromoted_game_vXIG_"
                 ).frame_locator("[src^=https]")
                 self._app_game = self._frame.locator("app-game").first
-                await self._app_game.locator(".result-history").wait_for(timeout=5000)
+                await self._app_game.locator(".result-history").wait_for(
+                    timeout=5000
+                )
                 return self._app_game
             except Exception as e:
                 if isinstance(e, TimeoutError):
@@ -78,8 +86,12 @@ class AviatorOneWin(Aviator):
         await self._page.wait_for_timeout(400)
 
         limits = await self._frame.locator("app-game-limits ul>li>span").all()
-        self.minimum_bet = float((await limits[0].text_content() or "0").split(" ")[0])
-        self.maximum_bet = float((await limits[1].text_content() or "0").split(" ")[0])
+        self.minimum_bet = float(
+            (await limits[0].text_content() or "0").split(" ")[0]
+        )
+        self.maximum_bet = float(
+            (await limits[1].text_content() or "0").split(" ")[0]
+        )
         self.maximum_win_for_one_bet = float(
             (await limits[2].text_content() or "0").split(" ")[0]
         )
