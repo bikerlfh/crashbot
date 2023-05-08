@@ -209,21 +209,33 @@ class Aviator(AbstractGameBase, abc.ABC):
             raise Exception("waitNextGame :: no historyGame")
         last_multiplier_saved = self.multipliers[-1]
         while True:
-            await self._history_game.locator(
-                "app-bubble-multiplier"
-            ).first.wait_for(timeout=5000)
-            locator = self._history_game.locator("app-bubble-multiplier").first
-            last_multiplier_content = await locator.text_content(timeout=1000)
-            last_multiplier = (
-                self._format_multiplier(last_multiplier_content)
-                if last_multiplier_content
-                else last_multiplier_saved
-            )
-            if last_multiplier_saved != last_multiplier:
-                self.multipliers.append(last_multiplier)
-                SendEventToGUI.log.success(
-                    f"New Multiplier: {last_multiplier}"
+            try:
+                await self._history_game.locator(
+                    "app-bubble-multiplier"
+                ).first.wait_for(timeout=5000)
+                locator = self._history_game.locator("app-bubble-multiplier",).first
+                last_multiplier_content = await locator.text_content(timeout=1000)
+                last_multiplier = (
+                    self._format_multiplier(last_multiplier_content)
+                    if last_multiplier_content
+                    else last_multiplier_saved
                 )
-                self.multipliers = self.multipliers[1:]
-                return
-            sleep_now(0.2)
+                if last_multiplier_saved != last_multiplier:
+                    self.multipliers.append(last_multiplier)
+                    SendEventToGUI.log.success(
+                        f"New Multiplier: {last_multiplier}"
+                    )
+                    self.multipliers = self.multipliers[1:]
+                    return
+                sleep_now(0.2)
+            except Exception as e:
+                if isinstance(e, TimeoutError):
+                    SendEventToGUI.log.debug("wait_next_game :: timeout")
+                    continue
+                SendEventToGUI.exception(
+                    {
+                        "location": "AviatorPage",
+                        "message": f"wait_next_game :: {e}",
+                    }
+                )
+                raise e
