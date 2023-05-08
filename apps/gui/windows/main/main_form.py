@@ -23,6 +23,8 @@ class MainForm(QMainWindow, MainDesigner):
         self.setupUi(self)
         self.__init_screen()
         self.allowed_logs = GlobalVars.config.ALLOWED_LOG_CODES_TO_SHOW
+        self._generate_menu_logs()
+        self._load_version()
         self.socket = SocketIOClient(
             on_verify=self._on_verify,
             on_login=self.login_screen.on_login,
@@ -36,8 +38,6 @@ class MainForm(QMainWindow, MainDesigner):
         self.socket.run()
         # verify token login
         self._verify_token()
-        self._generate_menu_logs()
-        self._load_version()
 
     def __init_screen(self) -> None:
         self.stacked_widget = QStackedWidget(self)
@@ -51,6 +51,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.credential_screen = CredentialDialog()
         self.showMaximized()
         self.action_crendentials.triggered.connect(self.show_credential)
+        self.action_exit.triggered.connect(self.closeEvent)
         self.show_login_screen()
 
     def _load_version(self) -> None:
@@ -156,7 +157,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.allowed_logs.remove(log_name.lower())
 
     def closeEvent(self, event) -> None:
-        if self.socket:
+        if self.socket and self.socket.is_connected:
             self.socket.close_game()
             self.socket.stop()
         super().close()

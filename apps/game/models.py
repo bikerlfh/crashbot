@@ -31,6 +31,9 @@ class Bet:
         self.profit = 0
         self.bet_type = bet_type
 
+    def __str__(self):
+        return f"{self.amount} * {self.multiplier}"
+
     def __generate_external_id(self):
         return "".join(
             random.choices(string.ascii_uppercase + string.digits, k=16)

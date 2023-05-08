@@ -43,6 +43,7 @@ class SocketIOClient(QtCore.QThread):
         self.on_add_multipliers = on_add_multipliers
         self.__sio = socketio.Client()
         self.__assign_events()
+        self.is_connected = False
 
     def __assign_events(self) -> None:
         # Define WSEvents
@@ -77,13 +78,13 @@ class SocketIOClient(QtCore.QThread):
     def __execute_event(self, event: WSEvent, data: any) -> None:
         self.__sio.emit(event.value, data)
 
-    @staticmethod
-    def _on_connect() -> None:
+    def _on_connect(self) -> None:
         print(f"GUI :: connected to server: {WS_SERVER_HOST}:{WS_SERVER_PORT}")
+        self.is_connected = True
 
-    @staticmethod
-    def _on_disconnect() -> None:
+    def _on_disconnect(self) -> None:
         print("GUI :: disconnect from server")
+        self.is_connected = False
 
     @staticmethod
     def _on_default(data: any) -> None:

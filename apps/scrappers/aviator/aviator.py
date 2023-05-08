@@ -208,10 +208,10 @@ class Aviator(AbstractGameBase, abc.ABC):
             )
             raise Exception("waitNextGame :: no historyGame")
         last_multiplier_saved = self.multipliers[-1]
-        await self._history_game.locator(
-            "app-bubble-multiplier"
-        ).first.wait_for(timeout=5000)
         while True:
+            await self._history_game.locator(
+                "app-bubble-multiplier"
+            ).first.wait_for(timeout=5000)
             locator = self._history_game.locator("app-bubble-multiplier").first
             last_multiplier_content = await locator.text_content(timeout=1000)
             last_multiplier = (
