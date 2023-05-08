@@ -196,7 +196,7 @@ class Aviator(AbstractGameBase, abc.ABC):
                 f"{bet.multiplier} control: {control}"
             )
             await self._controls.bet(bet.amount, bet.multiplier, control)
-            sleep_now(1)
+            sleep_now(0.5)
 
     async def wait_next_game(self):
         if self._history_game is None:
@@ -226,4 +226,4 @@ class Aviator(AbstractGameBase, abc.ABC):
                 )
                 self.multipliers = self.multipliers[1:]
                 return
-            sleep_now(200)
+            sleep_now(0.2)

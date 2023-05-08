@@ -2,5 +2,5 @@
 import time
 
 
-def sleep_now(seconds: int):
+def sleep_now(seconds: float):
     time.sleep(seconds)
