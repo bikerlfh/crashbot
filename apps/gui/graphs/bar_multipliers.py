@@ -7,6 +7,9 @@ from matplotlib.path import Path
 from matplotlib.ticker import MaxNLocator
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
+# Internal
+from apps.utils import graphs as graph_utils
+
 
 class BarMultiplier(QVBoxLayout):
     def __init__(
@@ -51,11 +54,14 @@ class BarMultiplier(QVBoxLayout):
         bar_height = self.bar_heights or []
         if bar_height:
             bar_height.pop(0)
-        for multiplier in multipliers:
+        bar_height = graph_utils.convert_multipliers_to_coordinate(
+            multipliers, bar_height
+        )
+        """for multiplier in multipliers:
             value = 1 if multiplier >= 2 else -1
             last_value = 0 if len(bar_height) == 0 else bar_height[-1]
             value_ = last_value + value
-            bar_height.append(value_)
+            bar_height.append(value_)"""
         return bar_height
 
     def __get_bar_color(self, multipliers: list[float]):

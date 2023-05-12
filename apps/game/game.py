@@ -3,14 +3,13 @@ from typing import Optional
 
 # Internal
 from apps.api import services as api_services
-from apps.api.models import BetData
+from apps.api.models import BetData, MultiplierPositions
 from apps.constants import BotType, HomeBet
 from apps.game.bots.bots import Bot, BotStatic
 from apps.game.models import Bet, Multiplier
 from apps.game.prediction_core import PredictionCore, PredictionModel
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
-# from ws_server.client import WebSocketClient
 from apps.scrappers.game_base import AbstractGameBase
 
 
@@ -21,7 +20,6 @@ class Game:
     maximum_bet: float = 0
     maximum_win_for_one_bet: float = 0
     _prediction_model: PredictionModel
-    # _ws_client: Optional[WebSocketClient] = None
     initialized: bool = False
     # automatic betting
     bot: Bot | BotStatic
@@ -31,6 +29,8 @@ class Game:
     multipliers: list[Multiplier] = []
     multipliers_to_save: list[float] = []
     bets: list[Bet] = []
+
+    multiplier_positions: MultiplierPositions = None
 
     def __init__(
         self,
@@ -54,34 +54,6 @@ class Game:
         self._prediction_model: PredictionModel = (
             PredictionModel.get_instance()
         )
-        # globals.home_betId = self.home_bet.id
-
-    # def ws_on_message(self, event):
-    #     """
-    #     Handle the websocket messages to create bets
-    #     """
-    #     try:
-    #         data = json.loads(event.data)
-    #         home_bet_id = data.get("home_bet_id", None)
-    #         min_multiplier = data.get("min_multiplier", None)
-    #         max_multiplier = data.get("max_multiplier", None)
-    #         chat_id = data.get("chat_id", None)
-    #         others = data.get("others", None)
-    #         if not all([home_bet_id, min_multiplier, max_multiplier]):
-    #             SendEventToGUI.log.debug(f"socketOnMessage: data incomplete {json.dumps(data)}")
-    #             return
-    #         if home_bet_id != self.home_bet.id:
-    #             # the home bet of the bet is not the same as the current home bet
-    #             return
-    #         # TODO: fix this. Amount should be calculated from the multiplier
-    #         # amount = self.calculate_amount_bet(min_multiplier)
-    #         amount = self.bot.validate_bet_amount(round(self.balance * 0.1))
-    #         amount2 = self.bot.validate_bet_amount(round(amount / 3))
-    #         self.bets.append(Bet(amount, min_multiplier))
-    #         self.bets.append(Bet(amount2, max_multiplier))
-    #         self.send_bets_to_aviator(self.bets).then(lambda: None).catch(lambda error: self.bets.clear())
-    #     except Exception as error:
-    #         SendEventToGUI.log.error(f"socketOnMessage: {error}")
 
     async def initialize(self):
         """
@@ -89,25 +61,23 @@ class Game:
         - init the websocket
         - Open the browser
         """
-        # NOTE: activate when the websocket is ready
-        # sendLogToGUI("connecting to websocket.....")
-        # self._ws_client = WebSocketClient.getInstance()
-        # self._ws_client.setOnMessage(self.ws_on_message.bind(self))
         SendEventToGUI.log.info("opening home bet.....")
         await self.game_page.open()
         SendEventToGUI.log.debug("reading the player's balance.....")
         self.initial_balance = self.game_page.balance
         self.balance = self.initial_balance
         SendEventToGUI.balance(self.balance)
-        # sendEventToGUI.balance(self.balance)
         SendEventToGUI.log.debug("loading the player.....")
         self.multipliers_to_save = self.game_page.multipliers
         SendEventToGUI.send_multipliers(self.multipliers_to_save)
         self.multipliers = list(
             map(lambda item: Multiplier(item), self.multipliers_to_save)
         )
+        self.bot.initialize(
+            balance=self.initial_balance,
+            multipliers=self.multipliers_to_save,
+        )
         self.request_save_multipliers()
-        self.bot.initialize(self.initial_balance)
         self.initialized = True
         SendEventToGUI.log.success("Game initialized")
         SendEventToGUI.game_loaded(True)
@@ -123,6 +93,20 @@ class Game:
         """
         return await self.game_page.read_balance() or 0
 
+    def request_multiplier_positions(self):
+        """
+        Get the multiplier positions from the database
+        """
+        try:
+            self.multiplier_positions = api_services.get_multiplier_positions(
+                home_bet_id=self.home_bet.id
+            )
+            SendEventToGUI.log.debug(f"multiplier positions received")
+        except Exception as error:
+            SendEventToGUI.log.debug(
+                f"Error in requestMultiplierPositions: {error}"
+            )
+
     def request_save_multipliers(self):
         """
         Save the multipliers in the database
@@ -132,7 +116,6 @@ class Game:
             return
         if len(self.multipliers_to_save) < self.MAX_MULTIPLIERS_TO_SAVE:
             return
-        SendEventToGUI.log.debug("saving multipliers.....")
         try:
             api_services.add_multipliers(
                 home_bet_id=self.home_bet.id,
@@ -140,6 +123,7 @@ class Game:
             )
             self.multipliers_to_save = []
             SendEventToGUI.log.debug(f"multipliers saved")
+            self.request_multiplier_positions()
         except Exception as error:
             SendEventToGUI.log.debug(
                 f"error in requestSaveMultipliers: {error}"
@@ -235,6 +219,7 @@ class Game:
         self._prediction_model.add_multiplier_result(multiplier)
         self.evaluate_bets(multiplier)
         self.multipliers.append(Multiplier(multiplier))
+        self.bot.add_multiplier(multiplier)
         self.multipliers_to_save.append(multiplier)
         self.request_save_bets()
         self.request_save_multipliers()
@@ -253,7 +238,10 @@ class Game:
         if prediction is None:
             SendEventToGUI.log.warning("No prediction found")
             return []
-        bets = self.bot.get_next_bet(prediction)
+        bets = self.bot.get_next_bet(
+            prediction=prediction,
+            multiplier_positions=self.multiplier_positions,
+        )
         if GlobalVars.get_auto_play():
             self.bets = bets
         else:

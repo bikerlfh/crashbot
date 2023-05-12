@@ -55,6 +55,7 @@ class BotAPIServices:
     ADD_MULTIPLIERS = "home-bet/multiplier/"
     GET_PREDICTION = "predictions/predict/"
     GET_BOTS = "predictions/bots/"
+    GET_POSITIONS = "predictions/positions/"
     UPDATE_BALANCE = "customers/balance/"
     CUSTOMER_DATA = "customers/me/"
     BET = "bets/"
@@ -218,7 +219,7 @@ class BotAPIServices:
         self.validate_response(response=response)
         return response.body
 
-    def get_bots(self, bot_type: str) -> Dict[str, Any]:
+    def get_bots(self, *, bot_type: str) -> Dict[str, Any]:
         try:
             response = self.client.get(
                 service=f"{self.GET_BOTS}?bot_type={bot_type}",
@@ -229,13 +230,24 @@ class BotAPIServices:
         self.validate_response(response=response)
         return response.body
 
+    def get_multiplier_positions(self, *, home_bet_id: int) -> Dict[str, Any]:
+        try:
+            response = self.client.get(
+                service=f"{self.GET_POSITIONS}?home_bet_id={home_bet_id}",
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: get_positions :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
     def get_me_data(self) -> Dict[str, Any]:
         try:
             response = self.client.get(
                 service=self.CUSTOMER_DATA,
             )
         except Exception as exc:
-            logger.exception(f"BotAPIServices :: update_balance :: {exc}")
+            logger.exception(f"BotAPIServices :: get_me_data :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body

@@ -1,5 +1,10 @@
 # Standard Library
+import copy
 import random
+from typing import Optional
+
+# Internal
+from apps.api.models import MultiplierPositions
 
 
 def generate_random_multiplier(min_: float, max_: float) -> float:
@@ -46,3 +51,49 @@ def adaptive_kelly_formula(
     """
     f = ((b * p - (1 - p)) / b) * (1 + R)
     return round(capital * f, 2)
+
+
+def predict_next_multiplier(
+    *,
+    data: MultiplierPositions,
+    last_multipliers: list[float],
+    use_all_time: Optional[bool] = True
+) -> tuple[int, float]:
+    """
+    predict the next multiplier range.
+    this is a basic prediction, it will be improved in the future.
+    :param data: data from backend
+    :param last_multipliers:
+    :param use_all_time: if True, use all_time data, else use today data
+    :return: tuple(next_value, percentage)
+    """
+
+    def _get_last_position_multiplier(multiplier_: int) -> int:
+        multi = copy.copy(last_multipliers)
+        multi.reverse()
+        for i in range(len(multi)):
+            if multi[i] >= multiplier_:
+                return i + 1
+        return -1
+
+    if not last_multipliers:
+        return 0, 0
+    data_ = data.all_time if use_all_time else data.today
+    max_value = (0, 0)
+    for key in reversed(data_):
+        values = data_[key]
+        multiplier = int(key)
+        if multiplier < 2:
+            continue
+        index_ = _get_last_position_multiplier(multiplier)
+        if index_ < 0:
+            continue
+        count = int(values.count)
+        positions = values.positions
+        for position, position_count in positions.items():
+            position_ = int(position)
+            if index_ > position_:
+                percentage = round(position_count / count, 2)
+                if max_value[1] < percentage:
+                    max_value = (multiplier, percentage)
+    return max_value

@@ -1,10 +1,13 @@
+# Standard Library
+from typing import Optional
+
 # Internal
-from apps.api.models import BotStrategy
+from apps.api.models import BotStrategy, MultiplierPositions
 from apps.constants import BotType
+from apps.game import utils as game_utils
 from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, PredictionData
 from apps.game.prediction_core import PredictionCore
-from apps.game.utils import adaptive_kelly_formula
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
 
@@ -13,18 +16,6 @@ class Bot(BotBase):
     """
     The Bot class is a class used to determine the optimal fraction of one's capital to bet on a given bet.
     """
-
-    def __init__(
-        self,
-        bot_type: BotType,
-        minimum_bet: float = 0,
-        maximum_bet: float = 0,
-        amount_multiple: float = None,
-    ):
-        super().__init__(bot_type, minimum_bet, maximum_bet, amount_multiple)
-
-    def initialize(self, balance: float):
-        super().initialize(balance)
 
     def set_max_amount_to_bet(self, amount: float):
         # # SendEventToGUI.log.info("this bot not allowed to set max_amount_to_bet.")
@@ -56,9 +47,8 @@ class BotStatic(BotBase):
         super().__init__(bot_type, minimum_bet, maximum_bet, amount_multiple)
         self._initial_balance = 0
 
-    def initialize(self, balance: float):
-        # SendEventToGUI.log.debug("initializing bot static")
-        super().initialize(balance)
+    def initialize(self, *, balance: float, multipliers: list[float]):
+        super().initialize(balance=balance, multipliers=multipliers)
         self._initial_balance = balance
         self.set_max_amount_to_bet(GlobalVars.get_max_amount_to_bet())
 
@@ -120,7 +110,7 @@ class BotStatic(BotBase):
                 f"({possible_loss} >= {self.stop_loss}) ::"
                 f"new amount={amount}"
             )
-        # kelly_amount = adaptive_kelly_formula(multiplier, probability, self.RISK_FACTOR, amount)
+        # kelly_amount = game_utils.adaptive_kelly_formula(multiplier, probability, self.RISK_FACTOR, amount)
         amount = round(max(amount, self.minimum_bet), 2)
         SendEventToGUI.log.debug(
             f"BotStatic :: get_bet_recovery_amount {amount}"
@@ -175,19 +165,32 @@ class BotStatic(BotBase):
             return self.bets
         # to category 2
         # if the profit is greater than 10% of the initial balance
-        profit_percentage = self.get_profit_percent()
-        if profit_percentage > 0.10:
-            SendEventToGUI.log.debug(
-                "generate_bets :: profit_percentage > 0.10"
+        # get the possible next second multiplier
+        min_multiplier, max_multiplier = self.predict_next_multiplier()
+        second_multiplier = 2
+        if min_multiplier > 0:
+            second_multiplier = game_utils.generate_random_multiplier(
+                min_multiplier, max_multiplier
             )
-            max_bet_kelly_amount = adaptive_kelly_formula(
+            SendEventToGUI.log.debug(
+                f"generate_bets :: second multiplier"
+                f"min_multiplier={min_multiplier} "
+                f"max_multiplier={max_multiplier} "
+                f"second_multiplier={second_multiplier}"
+            )
+        profit_percentage = self.get_profit_percent()
+        if profit_percentage > 0.10 or self.is_bullish_game:
+            SendEventToGUI.log.debug(
+                "generate_bets :: profit_percentage > 0.10 or is_bullish_game"
+            )
+            max_bet_kelly_amount = game_utils.adaptive_kelly_formula(
                 1.95,
                 category_percentage,
                 self.RISK_FACTOR,
                 self._max_amount_to_bet,
             )
-            min_bet_kelly_amount = adaptive_kelly_formula(
-                2,
+            min_bet_kelly_amount = game_utils.adaptive_kelly_formula(
+                second_multiplier,
                 category_percentage,
                 self.RISK_FACTOR,
                 self._min_amount_to_bet,
@@ -196,23 +199,33 @@ class BotStatic(BotBase):
                 Bet(max(max_bet_kelly_amount, self._max_amount_to_bet), 1.95)
             )
             self.bets.append(
-                Bet(max(min_bet_kelly_amount, self._min_amount_to_bet), 2)
+                Bet(
+                    max(min_bet_kelly_amount, self._min_amount_to_bet),
+                    second_multiplier,
+                )
             )
         else:
             self.bets.append(Bet(self._max_amount_to_bet, 1.95))
-            self.bets.append(Bet(self._min_amount_to_bet, 2))
+            self.bets.append(Bet(self._min_amount_to_bet, second_multiplier))
         self.bets = list(filter(lambda b: b.amount > 0, self.bets))
         SendEventToGUI.log.debug(f"bot bets: {self.bets}")
         return self.bets
 
-    def get_next_bet(self, prediction: PredictionCore) -> list[Bet]:
+    def get_next_bet(
+        self,
+        *,
+        prediction: PredictionCore,
+        multiplier_positions: Optional[MultiplierPositions] = None,
+    ) -> list[Bet]:
         """
         Get the next bet.
         :param prediction: The prediction core.
+        :param multiplier_positions: The multiplier positions.
         :return: The next bet.
         """
         if prediction is None:
             return []
+        self.multiplier_positions = multiplier_positions
         profit = self.get_profit()
         if profit >= 0:
             self.reset_losses()

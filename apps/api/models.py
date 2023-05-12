@@ -84,3 +84,15 @@ class Bot:
 @dataclass
 class CustomerData:
     customer_id: int
+
+
+@dataclass
+class Positions:
+    count: int
+    positions: dict[int, int]
+
+
+@dataclass
+class MultiplierPositions:
+    all_time: dict[int, Positions]
+    today: dict[int, Positions]

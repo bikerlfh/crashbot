@@ -5,7 +5,15 @@ from typing import Optional
 # Internal
 from apps.api.bot_api import BotAPIConnector
 from apps.api.exceptions import BotAPINoAuthorizationException
-from apps.api.models import BetData, Bot, CustomerData, HomeBet, Prediction
+from apps.api.models import (
+    BetData,
+    Bot,
+    CustomerData,
+    HomeBet,
+    MultiplierPositions,
+    Positions,
+    Prediction,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -140,6 +148,26 @@ def get_bots(bot_type: str) -> list[Bot]:
     bots = response.get("bots")
     data = [Bot(**bot) for bot in bots]
     return data
+
+
+def get_multiplier_positions(*, home_bet_id: int) -> MultiplierPositions:
+    bot_connector = BotAPIConnector()
+    response = bot_connector.services.get_multiplier_positions(
+        home_bet_id=home_bet_id
+    )
+    all_time = response.get("all_time", {})
+    today = response.get("today", {})
+    all_time_ = {}
+    today_ = {}
+    for key, value in all_time.items():
+        all_time_[int(key)] = Positions(**value)
+    for key, value in today.items():
+        today_[int(key)] = Positions(**value)
+    positions = MultiplierPositions(
+        all_time=all_time_,
+        today=today_,
+    )
+    return positions
 
 
 def get_customer_data() -> CustomerData:

@@ -213,8 +213,12 @@ class Aviator(AbstractGameBase, abc.ABC):
                 await self._history_game.locator(
                     "app-bubble-multiplier"
                 ).first.wait_for(timeout=5000)
-                locator = self._history_game.locator("app-bubble-multiplier",).first
-                last_multiplier_content = await locator.text_content(timeout=1000)
+                locator = self._history_game.locator(
+                    "app-bubble-multiplier",
+                ).first
+                last_multiplier_content = await locator.text_content(
+                    timeout=1000
+                )
                 last_multiplier = (
                     self._format_multiplier(last_multiplier_content)
                     if last_multiplier_content
