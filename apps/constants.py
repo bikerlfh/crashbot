@@ -65,12 +65,12 @@ HomeBets: list[HomeBet] = [
         name="One Win",
         min_bet=500,
         max_bet=500000,
-        url="https://www.spribe.co/games/aviator",
+        url="https://1wslue.top/casino/",
         game_page=AviatorOneWin,
     ),
     HomeBet(
         id=4,
-        name="Rivalo",
+        name="Rivalo", # NOQA
         min_bet=500,
         max_bet=500000,
         url="https://www.rivalo.co",

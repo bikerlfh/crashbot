@@ -244,7 +244,7 @@ class Game:
         )
         if GlobalVars.get_auto_play():
             self.bets = bets
-        else:
+        elif bets:
             SendEventToGUI.log.debug(
                 f"possible bets: " f"{[str(vars(bet)) for bet in bets]}"
             )

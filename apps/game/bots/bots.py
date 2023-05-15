@@ -166,20 +166,18 @@ class BotStatic(BotBase):
         # to category 2
         # if the profit is greater than 10% of the initial balance
         # get the possible next second multiplier
-        min_multiplier, max_multiplier = self.predict_next_multiplier()
         second_multiplier = 2
-        if min_multiplier > 0:
+        min_multiplier, max_multiplier = self.predict_next_multiplier()
+        if min_multiplier > second_multiplier:
             second_multiplier = game_utils.generate_random_multiplier(
                 min_multiplier, max_multiplier
             )
             SendEventToGUI.log.debug(
-                f"generate_bets :: second multiplier"
-                f"min_multiplier={min_multiplier} "
-                f"max_multiplier={max_multiplier} "
-                f"second_multiplier={second_multiplier}"
+                f"generate_bets :: second multiplier ({second_multiplier})"
+                f"{min_multiplier} - {max_multiplier} "
             )
         profit_percentage = self.get_profit_percent()
-        if profit_percentage > 0.10 or self.is_bullish_game:
+        if profit_percentage > 0 or self.is_bullish_game:
             SendEventToGUI.log.debug(
                 "generate_bets :: profit_percentage > 0.10 or is_bullish_game"
             )
@@ -208,7 +206,6 @@ class BotStatic(BotBase):
             self.bets.append(Bet(self._max_amount_to_bet, 1.95))
             self.bets.append(Bet(self._min_amount_to_bet, second_multiplier))
         self.bets = list(filter(lambda b: b.amount > 0, self.bets))
-        SendEventToGUI.log.debug(f"bot bets: {self.bets}")
         return self.bets
 
     def get_next_bet(

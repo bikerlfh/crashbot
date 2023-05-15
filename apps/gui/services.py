@@ -83,6 +83,8 @@ def validate_max_amount_to_bet(
         max_bet=max_bet,
         balance=balance,
     )
+    min_bet = round(min_bet, 0)
+    max_bet = round(max_bet, 0)
     return min_bet <= max_amount_to_bet <= max_bet, min_bet, max_bet
 
 
