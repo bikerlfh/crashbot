@@ -70,7 +70,7 @@ HomeBets: list[HomeBet] = [
     ),
     HomeBet(
         id=4,
-        name="Rivalo", # NOQA
+        name="Rivalo",  # NOQA
         min_bet=500,
         max_bet=500000,
         url="https://www.rivalo.co",

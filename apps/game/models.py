@@ -35,9 +35,7 @@ class Bet:
         return f"{self.amount} * {self.multiplier}"
 
     def __generate_external_id(self):
-        return "".join(
-            random.choices(string.ascii_uppercase + string.digits, k=16)
-        )
+        return "".join(random.choices(string.ascii_uppercase + string.digits, k=16))
 
     def evaluate(self, multiplier_result: float):
         self.multiplier_result = multiplier_result

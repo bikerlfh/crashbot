@@ -37,9 +37,7 @@ class WebSocketClient(metaclass=Singleton):
         GlobalVars.set_allowed_to_save_multipliers(allowed=allowed)
 
     def set_home_bet(self, home_bet_id: int) -> None:
-        message = SocketMessage(
-            func="set_home_bet", data=dict(home_bet_id=home_bet_id)
-        )
+        message = SocketMessage(func="set_home_bet", data=dict(home_bet_id=home_bet_id))
         if self.ws.sock.connected:
             self.ws.send(json.dumps(vars(message)))
 
@@ -60,7 +58,7 @@ class WebSocketClient(metaclass=Singleton):
         self.close()
         print("WS BACKEND :: Connection closed")
 
-    def on_error(self, error, **kwargs):
+    def on_error(self, ws, error):
         print("Error:", error)
 
     def on_open(self, ws, **_kwargs):

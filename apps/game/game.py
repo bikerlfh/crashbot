@@ -51,9 +51,7 @@ class Game:
                 bot_type, self.minimum_bet, self.maximum_bet
             )
         self.maximum_win_for_one_bet: float = self.maximum_bet * 100
-        self._prediction_model: PredictionModel = (
-            PredictionModel.get_instance()
-        )
+        self._prediction_model: PredictionModel = PredictionModel.get_instance()
 
     async def initialize(self):
         """
@@ -103,9 +101,7 @@ class Game:
             )
             SendEventToGUI.log.debug(f"multiplier positions received")
         except Exception as error:
-            SendEventToGUI.log.debug(
-                f"Error in requestMultiplierPositions: {error}"
-            )
+            SendEventToGUI.log.debug(f"Error in requestMultiplierPositions: {error}")
 
     def request_save_multipliers(self):
         """
@@ -125,9 +121,7 @@ class Game:
             SendEventToGUI.log.debug(f"multipliers saved")
             self.request_multiplier_positions()
         except Exception as error:
-            SendEventToGUI.log.debug(
-                f"error in requestSaveMultipliers: {error}"
-            )
+            SendEventToGUI.log.debug(f"error in requestSaveMultipliers: {error}")
 
     def request_save_bets(self):
         """
@@ -154,9 +148,7 @@ class Game:
             )
             SendEventToGUI.log.debug(f"bets saved")
         except Exception as error:
-            SendEventToGUI.log.debug(
-                f"Error in requestSaveBets :: bet: {error}"
-            )
+            SendEventToGUI.log.debug(f"Error in requestSaveBets :: bet: {error}")
 
     def request_get_prediction(self) -> Optional[PredictionCore]:
         """
@@ -191,7 +183,9 @@ class Game:
         """
         if not self.bets:
             return
-        await self.game_page.bet(self.bets)
+        await self.game_page.bet(
+            bets=self.bets, use_auto_cash_out=GlobalVars.get_auto_cash_out()
+        )
 
     async def play(self):
         while self.initialized:
@@ -231,9 +225,7 @@ class Game:
         """
         Get the next bet from the prediction
         """
-        self._prediction_model.evaluate_models(
-            self.bot.MIN_AVERAGE_MODEL_PREDICTION
-        )
+        self._prediction_model.evaluate_models(self.bot.MIN_AVERAGE_MODEL_PREDICTION)
         prediction = self.request_get_prediction()
         if prediction is None:
             SendEventToGUI.log.warning("No prediction found")

@@ -2,7 +2,7 @@ designer:
 	designer apps/gui/resources/ui/$(ui).ui
 
 generate-ui:
-	pyuic6 -x apps/gui/resources/ui/$(ui).ui -o file.py
+	pyuic6 -x apps/gui/resources/ui/${ui}.ui -o file.py
 
 generate-ui-app:
 	pyuic6 -x apps/gui/resources/ui/app.ui -o apps/gui/windows/main/main_designer_new.py

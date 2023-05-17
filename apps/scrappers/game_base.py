@@ -2,7 +2,7 @@
 import abc
 import random
 from enum import Enum
-from typing import Union
+from typing import Optional, Union
 
 # Libraries
 from playwright.sync_api import (
@@ -32,15 +32,34 @@ class AbstractControlBase(abc.ABC):
         ...
 
     @abc.abstractmethod
-    async def set_auto_cash_out(self, multiplier, control):
+    async def set_auto_cash_out(
+        self,
+        *,
+        control: Control,
+        multiplier: Optional[float] = 0.0,
+        enabled: Optional[bool] = True,
+    ):
         ...
 
     @abc.abstractmethod
-    async def update_amount(self, amount, control):
+    async def update_amount(self, *, amount: float, control: Control):
         ...
 
     @abc.abstractmethod
-    async def bet(self, amount, multiplier, control):
+    def wait_manual_cash_out(
+        self, *, amount: float, multiplier: float, control: Control
+    ):
+        ...
+
+    @abc.abstractmethod
+    async def bet(
+        self,
+        *,
+        amount: float,
+        multiplier: float,
+        control: int,
+        use_auto_cash_out: Optional[bool] = False,
+    ) -> None:
         ...
 
 
@@ -94,7 +113,9 @@ class AbstractGameBase(abc.ABC):
         ...
 
     @abc.abstractmethod
-    async def bet(self, bets: list[Bet]):
+    async def bet(
+        self, *, bets: list[Bet], use_auto_cash_out: Optional[bool] = True
+    ) -> None:
         ...
 
     @abc.abstractmethod

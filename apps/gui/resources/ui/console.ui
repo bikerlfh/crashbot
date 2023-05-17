@@ -474,14 +474,13 @@
    <property name="geometry">
     <rect>
      <x>19</x>
-     <y>380</y>
+     <y>350</y>
      <width>211</width>
      <height>41</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -496,14 +495,13 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>490</y>
+     <y>430</y>
      <width>211</width>
      <height>41</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -521,7 +519,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>310</y>
+     <y>280</y>
      <width>191</width>
      <height>20</height>
     </rect>
@@ -529,7 +527,6 @@
    <property name="font">
     <font>
      <pointsize>16</pointsize>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -544,7 +541,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>160</y>
+     <y>150</y>
      <width>91</width>
      <height>30</height>
     </rect>
@@ -552,7 +549,6 @@
    <property name="font">
     <font>
      <pointsize>16</pointsize>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -564,7 +560,7 @@
    <property name="geometry">
     <rect>
      <x>130</x>
-     <y>160</y>
+     <y>150</y>
      <width>111</width>
      <height>30</height>
     </rect>
@@ -572,7 +568,6 @@
    <property name="font">
     <font>
      <pointsize>16</pointsize>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -584,7 +579,7 @@
    <property name="geometry">
     <rect>
      <x>130</x>
-     <y>200</y>
+     <y>190</y>
      <width>111</width>
      <height>30</height>
     </rect>
@@ -592,7 +587,6 @@
    <property name="font">
     <font>
      <pointsize>16</pointsize>
-     <weight>75</weight>
      <bold>true</bold>
      <kerning>true</kerning>
     </font>
@@ -605,7 +599,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>200</y>
+     <y>190</y>
      <width>81</width>
      <height>30</height>
     </rect>
@@ -613,7 +607,6 @@
    <property name="font">
     <font>
      <pointsize>16</pointsize>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -633,7 +626,6 @@
    <property name="font">
     <font>
      <pointsize>16</pointsize>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -653,7 +645,6 @@
    <property name="font">
     <font>
      <pointsize>16</pointsize>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -665,7 +656,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>340</y>
+     <y>310</y>
      <width>211</width>
      <height>31</height>
     </rect>
@@ -678,7 +669,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>130</y>
+     <y>120</y>
      <width>241</width>
      <height>16</height>
     </rect>
@@ -691,7 +682,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>270</y>
+     <y>240</y>
      <width>241</width>
      <height>16</height>
     </rect>
@@ -704,7 +695,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>440</y>
+     <y>410</y>
      <width>241</width>
      <height>16</height>
     </rect>
@@ -754,6 +745,30 @@
     </rect>
    </property>
   </widget>
+  <widget class="QPushButton" name="btn_auto_cash_out">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>490</y>
+     <width>211</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="toolTip">
+    <string extracomment="turn on/of auto bet"/>
+   </property>
+   <property name="text">
+    <string>Auto CashOut OFF</string>
+   </property>
+  </widget>
   <zorder>btn_set_max_amount</zorder>
   <zorder>btn_auto_bet</zorder>
   <zorder>label</zorder>
@@ -769,6 +784,7 @@
   <zorder>lbl_balance</zorder>
   <zorder>gbox_graph</zorder>
   <zorder>list_log</zorder>
+  <zorder>btn_auto_cash_out</zorder>
  </widget>
  <resources/>
  <connections/>

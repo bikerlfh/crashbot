@@ -32,6 +32,7 @@ class GlobalVars:
         USERNAME = "USERNAME"
         PASSWORD = "PASSWORD"
         EMIT_TO_GUI = "EMIT_TO_GUI"
+        AUTO_CASH_OUT = "AUTO_CASH_OUT"
         ALLOWED_TO_SAVE_MULTIPLIERS = "ALLOWED_TO_SAVE_MULTIPLIERS"
         WS_CLIENT_BACKEND_STARTED = "WS_CLIENT_BACKEND_STARTED"
 
@@ -43,10 +44,9 @@ class GlobalVars:
         globals().setdefault(GlobalVars.VARS.USERNAME, None)
         globals().setdefault(GlobalVars.VARS.PASSWORD, None)
         globals().setdefault(GlobalVars.VARS.EMIT_TO_GUI, None)
+        globals().setdefault(GlobalVars.VARS.AUTO_CASH_OUT, False)
         globals().setdefault(GlobalVars.VARS.WS_CLIENT_BACKEND_STARTED, False)
-        globals().setdefault(
-            GlobalVars.VARS.ALLOWED_TO_SAVE_MULTIPLIERS, False
-        )
+        globals().setdefault(GlobalVars.VARS.ALLOWED_TO_SAVE_MULTIPLIERS, False)
         GlobalVars.init_config()
 
     @classmethod
@@ -108,6 +108,14 @@ class GlobalVars:
     @staticmethod
     def set_password(password: str) -> None:
         globals()[GlobalVars.VARS.PASSWORD] = password
+
+    @staticmethod
+    def get_auto_cash_out() -> bool:
+        return globals().get(GlobalVars.VARS.AUTO_CASH_OUT)
+
+    @staticmethod
+    def set_auto_cash_out(auto_cash_out: bool) -> None:
+        globals()[GlobalVars.VARS.AUTO_CASH_OUT] = auto_cash_out
 
     @classmethod
     def set_allowed_to_save_multipliers(cls, allowed: bool) -> None:

@@ -60,9 +60,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         if self.chk_use_credentials.isChecked():
             home_bet_index = self.cmb_home_bet.currentIndex()
             home_bet = HomeBets[home_bet_index]
-            credential = services.get_credentials_by_home_bet(
-                home_bet=home_bet.name
-            )
+            credential = services.get_credentials_by_home_bet(home_bet=home_bet.name)
             data["username"] = credential.get("username")
             data["password"] = credential.get("password")
         self.main_window.socket.start_bot(

@@ -82,9 +82,7 @@ class BotStatic(BotBase):
         profit = self.get_profit()
         # NOTE: no use minBet by strategy
         # min_bet = self.balance * strategy.min_amount_percentage_to_bet
-        amount_to_recover_losses = self.calculate_recovery_amount(
-            profit, multiplier
-        )
+        amount_to_recover_losses = self.calculate_recovery_amount(profit, multiplier)
         if amount_to_recover_losses < self.minimum_bet:
             return self.minimum_bet
         # calculate the amount to bet to recover last amount loss
@@ -92,12 +90,8 @@ class BotStatic(BotBase):
             self.get_last_lost_amount(), multiplier
         )
         # calculates the maximum amount allowed to recover in a single bet
-        max_recovery_amount = (
-            self.maximum_bet * self.MAX_RECOVERY_PERCENTAGE_ON_MAX_BET
-        )
-        amount = min(
-            amount_to_recover_losses, max_recovery_amount, self.balance
-        )
+        max_recovery_amount = self.maximum_bet * self.MAX_RECOVERY_PERCENTAGE_ON_MAX_BET
+        amount = min(amount_to_recover_losses, max_recovery_amount, self.balance)
         # amount = last_amount_loss if amount >= max_recovery_amount else amount
         amount = max(amount, self.minimum_bet)
         # validation of new balance after bet recovery with the stop loss
@@ -112,9 +106,7 @@ class BotStatic(BotBase):
             )
         # kelly_amount = game_utils.adaptive_kelly_formula(multiplier, probability, self.RISK_FACTOR, amount)
         amount = round(max(amount, self.minimum_bet), 2)
-        SendEventToGUI.log.debug(
-            f"BotStatic :: get_bet_recovery_amount {amount}"
-        )
+        SendEventToGUI.log.debug(f"BotStatic :: get_bet_recovery_amount {amount}")
         return amount
 
     def generate_recovery_bets(
@@ -135,9 +127,7 @@ class BotStatic(BotBase):
             return []
         SendEventToGUI.log.debug("generating recovery bets")
         bets = []
-        amount = self.get_bet_recovery_amount(
-            multiplier, probability, strategy
-        )
+        amount = self.get_bet_recovery_amount(multiplier, probability, strategy)
         amount = self.validate_bet_amount(amount)
         bets.append(Bet(amount, multiplier))
         return list(filter(lambda b: b.amount > 0, bets))
@@ -244,16 +234,14 @@ class BotStatic(BotBase):
             SendEventToGUI.log.success("Take profit reached")
             return []
         if not prediction_data.in_category_percentage:
-            SendEventToGUI.log.warning(
-                "Prediction value is not in category percentage"
-            )
+            SendEventToGUI.log.warning("Prediction value is not in category percentage")
             return []
-        if prediction_data.prediction_value < self.MIN_MULTIPLIER_TO_BET:
+        """if prediction_data.prediction_value < self.MIN_MULTIPLIER_TO_BET:
             SendEventToGUI.log.warning("Prediction value is too low")
             return []
         if prediction_data.probability < self.MIN_PROBABILITY_TO_BET:
             SendEventToGUI.log.debug("Probability is too low")
-            return []
+            return []"""
         # CATEGORY 1 not bet
         if prediction_data.prediction_round == 1:
             SendEventToGUI.log.debug("Prediction round is 1")

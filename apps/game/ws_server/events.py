@@ -60,9 +60,7 @@ async def close_game_event(**_kwargs) -> dict[str, any]:
     return dict(closed=True)
 
 
-async def start_bot_event(
-    data: dict[str, any], sio: AsyncServer, sid: any
-) -> any:
+async def start_bot_event(data: dict[str, any], sio: AsyncServer, sid: any) -> any:
     GlobalVars.set_io(sio)
     bot_type = data.get("bot_type")
     home_bet_id = data.get("home_bet_id")

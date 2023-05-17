@@ -59,19 +59,15 @@ class MainForm(QMainWindow, MainDesigner):
         self.statusbar.addPermanentWidget(self.lbl_version)
 
     def __change_screen(
-        self,
-        *,
-        screen: QWidget,
-        width: int,
-        height: int,
-        title: Optional[str] = None
+        self, *, screen: QWidget, width: int, height: int, title: Optional[str] = None
     ) -> None:
         if title:
             self.setWindowTitle(title)
         self.stacked_widget.setCurrentWidget(screen)
         # if it's not osX, add height to window (menu bar)
+        height += 22
         if utils_os.is_linux() or utils_os.is_windows():
-            height += 55
+            height += 33
         self.resize(width, height)
         q_size = QtCore.QSize(width, height)
         # q_rect = QtCore.QRect(0, 0, width, height)

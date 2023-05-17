@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import QListWidgetItem, QMessageBox, QWidget
 
 # Internal
 from apps.constants import HomeBets
+from apps.globals import GlobalVars
 from apps.gui import services
 from apps.gui.graphs.bar_multipliers import BarMultiplier
 from apps.gui.windows.console.console_designer import ConsoleDesigner
@@ -33,6 +34,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.auto_play = False
         self.main_window = main_window
         self.btn_auto_bet.clicked.connect(self.button_auto_bet_clicked_event)
+        self.btn_auto_cash_out.clicked.connect(self.button_auto_cash_out_clicked_event)
         self.btn_set_max_amount.clicked.connect(
             self.button_set_max_amount_to_bet_clicked_event
         )
@@ -44,7 +46,9 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.receive_game_loaded_signal.connect(self._on_receive_game_loaded)
         self.btn_auto_bet.setEnabled(False)
         self.btn_set_max_amount.setEnabled(False)
+        self.btn_auto_cash_out.setEnabled(False)
         self.txt_max_amount_to_bet.setEnabled(False)
+        self.txt_max_amount_to_bet.setInputMask("9999999999")
         # NOTE at this point the class should have been instantiated.
         self.ws_client = WebSocketClient()
 
@@ -53,9 +57,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         # add new item to the top
         self.list_log.insertItem(0, item)
         if current_row:
-            current_row = (
-                current_row + 1 if current_row < self.MAX_LOGS_ITEMS else 1
-            )
+            current_row = current_row + 1 if current_row < self.MAX_LOGS_ITEMS else 1
             self.list_log.setCurrentRow(current_row)
         if self.list_log.count() >= self.MAX_LOGS_ITEMS:
             self.list_log.takeItem(self.MAX_LOGS_ITEMS - 1)
@@ -79,6 +81,13 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     def button_auto_bet_clicked_event(self):
         self.auto_play = not self.auto_play
         self.main_window.socket.auto_play(auto_play=self.auto_play)
+
+    def button_auto_cash_out_clicked_event(self):
+        auto_cash_out = not GlobalVars.get_auto_cash_out()
+        GlobalVars.set_auto_cash_out(auto_cash_out)
+        self.btn_auto_cash_out.setText(
+            "Auto CashOut ON" if auto_cash_out else "Auto CashOut OFF"
+        )
 
     def button_set_max_amount_to_bet_clicked_event(self):
         amount = self.txt_max_amount_to_bet.text()
@@ -160,9 +169,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             if list_item:
                 self.__add_item_to_list(list_item)
         except Exception as e:
-            logs_services.save_gui_log(
-                message=f"Error on log: {e}", level="exception"
-            )
+            logs_services.save_gui_log(message=f"Error on log: {e}", level="exception")
 
     def on_add_multipliers(self, data):
         """
@@ -196,6 +203,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         if loaded:
             self.btn_auto_bet.setEnabled(True)
             self.btn_set_max_amount.setEnabled(True)
+            self.btn_auto_cash_out.setEnabled(True)
             self.txt_max_amount_to_bet.setEnabled(True)
             return
         self.main_window.show_message_box(
