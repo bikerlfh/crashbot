@@ -48,7 +48,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.btn_set_max_amount.setEnabled(False)
         self.btn_auto_cash_out.setEnabled(False)
         self.txt_max_amount_to_bet.setEnabled(False)
-        self.txt_max_amount_to_bet.setInputMask("9999999999")
+        self.txt_max_amount_to_bet.setInputMask("999999")
         # NOTE at this point the class should have been instantiated.
         self.ws_client = WebSocketClient()
 
@@ -122,9 +122,11 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     @QtCore.pyqtSlot(dict)
     def _on_receive_auto_play(self, data: dict):
         try:
+            self.auto_play = data.get("auto_play")
             self.btn_auto_bet.setText(
-                "AutoBet ON" if data.get("auto_play") else "AutoBet OFF"
+                "AutoBet ON" if self.auto_play else "AutoBet OFF"
             )
+            self.btn_auto_cash_out.setEnabled(self.auto_play)
         except Exception as e:
             logs_services.save_gui_log(
                 message=f"Error on autoplay: {e}", level="exception"

@@ -62,10 +62,10 @@ HomeBets: list[HomeBet] = [
     ),
     HomeBet(
         id=3,
-        name="One Win",
+        name="1 Win",
         min_bet=500,
         max_bet=500000,
-        url="https://1wslue.top/casino/",
+        url="https://1wsbbj.top/",
         game_page=AviatorOneWin,
     ),
     HomeBet(

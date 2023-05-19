@@ -53,17 +53,17 @@ class WebSocketClient(metaclass=Singleton):
             return
         func(**kwargs)
 
-    def on_close(self, **_kwargs):
+    def on_close(self, close_status_code, close_msg):
         GlobalVars.set_ws_client_backend_started(started=False)
         self.close()
         print("WS BACKEND :: Connection closed")
 
     def on_error(self, ws, error):
-        print("Error:", error)
+        print("Error WS Backend:", error)
 
     def on_open(self, ws, **_kwargs):
-        print("WS BACKEND :: Connection established")
         GlobalVars.set_ws_client_backend_started(started=True)
+        print("WS BACKEND :: Connection established")
 
     def run_forever(self, *_args, **_kwargs):
         websocket.enableTrace(False)

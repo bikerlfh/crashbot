@@ -18,7 +18,7 @@ class Bot(BotBase):
     """
 
     def set_max_amount_to_bet(self, amount: float):
-        # # SendEventToGUI.log.info("this bot not allowed to set max_amount_to_bet.")
+        # SendEventToGUI.log.info("this bot not allowed to set max_amount_to_bet.")
         pass
 
 
@@ -56,6 +56,9 @@ class BotStatic(BotBase):
         if balance > self.initial_balance:
             self.initial_balance = balance
         super().update_balance(balance)
+
+    def get_real_profit(self) -> float:
+        return self.balance - self._initial_balance
 
     def evaluate_bets(self, multiplier_result: float):
         total_amount = 0
@@ -104,9 +107,15 @@ class BotStatic(BotBase):
                 f"({possible_loss} >= {self.stop_loss}) ::"
                 f"new amount={amount}"
             )
-        # kelly_amount = game_utils.adaptive_kelly_formula(multiplier, probability, self.RISK_FACTOR, amount)
+        """
+        kelly_amount = game_utils.adaptive_kelly_formula(
+            multiplier, 
+            probability,
+            self.RISK_FACTOR, 
+            amount
+        )
+        """
         amount = round(max(amount, self.minimum_bet), 2)
-        SendEventToGUI.log.debug(f"BotStatic :: get_bet_recovery_amount {amount}")
         return amount
 
     def generate_recovery_bets(
@@ -236,12 +245,12 @@ class BotStatic(BotBase):
         if not prediction_data.in_category_percentage:
             SendEventToGUI.log.warning("Prediction value is not in category percentage")
             return []
-        """if prediction_data.prediction_value < self.MIN_MULTIPLIER_TO_BET:
+        if prediction_data.prediction_value < self.MIN_MULTIPLIER_TO_BET:
             SendEventToGUI.log.warning("Prediction value is too low")
             return []
         if prediction_data.probability < self.MIN_PROBABILITY_TO_BET:
             SendEventToGUI.log.debug("Probability is too low")
-            return []"""
+            return []
         # CATEGORY 1 not bet
         if prediction_data.prediction_round == 1:
             SendEventToGUI.log.debug("Prediction round is 1")
