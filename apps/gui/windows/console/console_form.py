@@ -52,7 +52,8 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         # NOTE at this point the class should have been instantiated.
         self.ws_client = WebSocketClient()
         self.HomeBets = [
-            home_bet for home_bet in HomeBets
+            home_bet
+            for home_bet in HomeBets
             if home_bet.id in GlobalVars.config.ALLOWED_HOME_BET_IDS
         ]
 
@@ -127,9 +128,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     def _on_receive_auto_play(self, data: dict):
         try:
             self.auto_play = data.get("auto_play")
-            self.btn_auto_bet.setText(
-                "AutoBet ON" if self.auto_play else "AutoBet OFF"
-            )
+            self.btn_auto_bet.setText("AutoBet ON" if self.auto_play else "AutoBet OFF")
             self.btn_auto_cash_out.setEnabled(self.auto_play)
         except Exception as e:
             logs_services.save_gui_log(

@@ -3,10 +3,10 @@ from PyQt6 import QtCore, QtWidgets
 
 # Internal
 from apps.constants import BotType, HomeBets
+from apps.globals import GlobalVars
 from apps.gui import services
 from apps.gui.windows.parameter.parameter_designer import ParameterDesigner
 from apps.utils.logs import services as logs_services
-from apps.globals import GlobalVars
 
 
 class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
@@ -20,7 +20,8 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         self.btn_start.clicked.connect(self.button_start_clicked_event)
         self.receive_start_bot_signal.connect(self._on_receive_start_bot)
         self.HomeBets = [
-            home_bet for home_bet in HomeBets
+            home_bet
+            for home_bet in HomeBets
             if home_bet.id in GlobalVars.config.ALLOWED_HOME_BET_IDS
         ]
         self.__fill_cmb_fields()

@@ -118,7 +118,7 @@ class MainForm(QMainWindow, MainDesigner):
             screen=self.login_screen,
             width=300,
             height=250,
-            title=f"{GlobalVars.APP_NAME} - Login"
+            title=f"{GlobalVars.APP_NAME} - Login",
         )
 
     @QtCore.pyqtSlot()
@@ -126,10 +126,7 @@ class MainForm(QMainWindow, MainDesigner):
         data = self.parameters_screen.get_values()
         self.console_screen.initialize(**data)
         self.__change_screen(
-            screen=self.console_screen,
-            width=897,
-            height=557,
-            title=GlobalVars.APP_NAME
+            screen=self.console_screen, width=897, height=557, title=GlobalVars.APP_NAME
         )
 
     def show_credential(self):

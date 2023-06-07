@@ -11,7 +11,6 @@ from apps.game.prediction_core import PredictionCore, PredictionModel
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.game_base import AbstractGameBase
-
 from apps.utils.local_storage import LocalStorage
 
 local_storage = LocalStorage()
@@ -142,7 +141,9 @@ class Game:
             )
             SendEventToGUI.log.debug(f"balance saved")
         except Exception as error:
-            SendEventToGUI.log.debug(f"Error in request_save_customer_balance :: bet: {error}")
+            SendEventToGUI.log.debug(
+                f"Error in request_save_customer_balance :: bet: {error}"
+            )
 
     def request_save_bets(self):
         """

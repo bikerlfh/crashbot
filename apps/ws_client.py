@@ -1,7 +1,6 @@
 # Standard Library
-import os
 import json
-import sys
+import os
 from dataclasses import dataclass
 
 # Libraries
@@ -41,7 +40,7 @@ class WebSocketClient(metaclass=Singleton):
     def validate_app_version(app_version: str, **_kwargs):
         if GlobalVars.APP_VERSION != app_version:
             print(f"Please update the app to version: {app_version}")
-            os._exit(0) # noqa
+            os._exit(0)  # noqa
 
     def set_home_bet(self, home_bet_id: int) -> None:
         message = SocketMessage(func="set_home_bet", data=dict(home_bet_id=home_bet_id))
@@ -67,7 +66,7 @@ class WebSocketClient(metaclass=Singleton):
 
     def on_error(self, ws, error):
         print("Error WS Backend:", error)
-        os._exit(0) # noqa
+        os._exit(0)  # noqa
 
     def on_open(self, ws, **_kwargs):
         GlobalVars.set_ws_client_backend_started(started=True)

@@ -3,9 +3,9 @@ from PyQt6 import QtWidgets
 
 # Internal
 from apps.constants import HomeBets
+from apps.globals import GlobalVars
 from apps.gui import services
 from apps.gui.windows.credential.credential_designer import CredentialDesigner
-from apps.globals import GlobalVars
 
 
 class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
@@ -23,7 +23,8 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
 
         self.home_bet_changed()
         self.HomeBets = [
-            home_bet for home_bet in HomeBets
+            home_bet
+            for home_bet in HomeBets
             if home_bet.id in GlobalVars.config.ALLOWED_HOME_BET_IDS
         ]
         self.__fill_cmb_fields()

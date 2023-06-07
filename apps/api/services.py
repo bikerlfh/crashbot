@@ -169,10 +169,7 @@ def get_customer_data() -> CustomerData:
 
 
 def update_customer_balance(
-    *,
-    customer_id: int,
-    home_bet_id: int,
-    balance: float
+    *, customer_id: int, home_bet_id: int, balance: float
 ) -> None:
     """
     update_balance
@@ -187,9 +184,7 @@ def update_customer_balance(
     )
 
 
-def create_bets(
-    *, home_bet_id: int, bets: list[BetData]
-) -> list[BetData]:
+def create_bets(*, home_bet_id: int, bets: list[BetData]) -> list[BetData]:
     """
     create_bets
     :param home_bet_id:
@@ -197,9 +192,7 @@ def create_bets(
     :return:
     """
     bot_connector = BotAPIConnector()
-    response = bot_connector.services.create_bet(
-        home_bet_id=home_bet_id, bets=bets
-    )
+    response = bot_connector.services.create_bet(home_bet_id=home_bet_id, bets=bets)
     bets = response.get("bets", [])
     data = [BetData(**bet) for bet in bets]
     return data
