@@ -51,6 +51,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.txt_max_amount_to_bet.setInputMask("999999")
         # NOTE at this point the class should have been instantiated.
         self.ws_client = WebSocketClient()
+        self.HomeBets = [
+            home_bet for home_bet in HomeBets
+            if home_bet.id in GlobalVars.config.ALLOWED_HOME_BET_IDS
+        ]
 
     def __add_item_to_list(self, item: QListWidgetItem):
         current_row = self.list_log.currentRow()
@@ -71,7 +75,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         auto_play: bool,
         **_kwargs,
     ):
-        self.home_bet = HomeBets[home_bet_index]
+        self.home_bet = self.HomeBets[home_bet_index]
         self.lbl_home_bet.setText(self.home_bet.name)
         self.lbl_bot_type.setText(f"Bot: {bot_type}")
         self.txt_max_amount_to_bet.setText(str(max_amount_to_bet))

@@ -18,17 +18,16 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         self.setupUi(self)
         self.main_window = main_window
         self.btn_start.clicked.connect(self.button_start_clicked_event)
-        self.__fill_cmb_fields()
         self.receive_start_bot_signal.connect(self._on_receive_start_bot)
+        self.HomeBets = [
+            home_bet for home_bet in HomeBets
+            if home_bet.id in GlobalVars.config.ALLOWED_HOME_BET_IDS
+        ]
+        self.__fill_cmb_fields()
 
     def __fill_cmb_fields(self):
         count_cmb_bot = self.cmb_home_bet.count()
-        allowed_home_bet_ids = GlobalVars.config.ALLOWED_HOME_BET_IDS
-        home_bets = [
-            home_bet for home_bet in HomeBets
-            if home_bet.id in allowed_home_bet_ids
-        ]
-        for key, val in enumerate(home_bets):
+        for key, val in enumerate(self.HomeBets):
             if key >= count_cmb_bot:
                 self.cmb_home_bet.addItem("")
             self.cmb_home_bet.setItemText(key, val.name)
@@ -49,7 +48,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             QtWidgets.QMessageBox.warning(self, "Error", "Select a home bet")
             return
 
-        home_bet = HomeBets[home_bet_index]
+        home_bet = self.HomeBets[home_bet_index]
         home_bet_id = home_bet.id
         return dict(
             bot_type=bot_type,
@@ -65,7 +64,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             return
         if self.chk_use_credentials.isChecked():
             home_bet_index = self.cmb_home_bet.currentIndex()
-            home_bet = HomeBets[home_bet_index]
+            home_bet = self.HomeBets[home_bet_index]
             credential = services.get_credentials_by_home_bet(home_bet=home_bet.name)
             data["username"] = credential.get("username")
             data["password"] = credential.get("password")

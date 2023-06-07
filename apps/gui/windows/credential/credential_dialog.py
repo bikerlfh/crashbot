@@ -5,6 +5,7 @@ from PyQt6 import QtWidgets
 from apps.constants import HomeBets
 from apps.gui import services
 from apps.gui.windows.credential.credential_designer import CredentialDesigner
+from apps.globals import GlobalVars
 
 
 class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
@@ -20,8 +21,12 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
         self.btn_remove.clicked.connect(self.btn_remove_clicked)
         self.btn_remove_all.clicked.connect(self.btn_remove_all_clicked)
 
-        self.__fill_cmb_fields()
         self.home_bet_changed()
+        self.HomeBets = [
+            home_bet for home_bet in HomeBets
+            if home_bet.id in GlobalVars.config.ALLOWED_HOME_BET_IDS
+        ]
+        self.__fill_cmb_fields()
 
     def showCredentials(self):
         self.tab_credentials.setCurrentIndex(0)
@@ -36,7 +41,7 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
 
     def __fill_cmb_fields(self):
         count_cmb_home_bet = self.cmb_home_bet.count()
-        for key, val in enumerate(HomeBets):
+        for key, val in enumerate(self.HomeBets):
             if key >= count_cmb_home_bet:
                 self.cmb_home_bet.addItem("")
             self.cmb_home_bet.setItemText(key, val.name)
