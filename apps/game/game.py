@@ -12,6 +12,10 @@ from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.game_base import AbstractGameBase
 
+from apps.utils.local_storage import LocalStorage
+
+local_storage = LocalStorage()
+
 
 class Game:
     MAX_MULTIPLIERS_TO_SAVE: int = 10
@@ -22,6 +26,7 @@ class Game:
     _prediction_model: PredictionModel
     initialized: bool = False
     # automatic betting
+    customer_id: int = 0
     bot: Bot | BotStatic
     home_bet: HomeBet
     initial_balance: float = 0
@@ -39,7 +44,7 @@ class Game:
         bot_type: BotType,
         use_bot_static: Optional[bool] = True,
     ):
-        # TODO: add correct customerId
+        self.customer_id = local_storage.get_customer_id()
         self.home_bet: home_bet = home_bet
         self.game_page = self.home_bet.get_game_page()
         self.minimum_bet: float = home_bet.min_bet
@@ -75,8 +80,9 @@ class Game:
             balance=self.initial_balance,
             multipliers=self.multipliers_to_save,
         )
-        self.request_save_multipliers()
         self.initialized = True
+        self.request_save_multipliers()
+        self.request_save_customer_balance()
         SendEventToGUI.log.success("Game initialized")
         SendEventToGUI.game_loaded(True)
 
@@ -123,6 +129,21 @@ class Game:
         except Exception as error:
             SendEventToGUI.log.debug(f"error in requestSaveMultipliers: {error}")
 
+    def request_save_customer_balance(self):
+        """
+        Save the customer's balance in the database
+        """
+        SendEventToGUI.log.debug("saving balance.....")
+        try:
+            api_services.update_customer_balance(
+                customer_id=self.customer_id,
+                home_bet_id=self.home_bet.id,
+                balance=round(self.balance, 2),
+            )
+            SendEventToGUI.log.debug(f"balance saved")
+        except Exception as error:
+            SendEventToGUI.log.debug(f"Error in request_save_customer_balance :: bet: {error}")
+
     def request_save_bets(self):
         """
         Save the bets in the database
@@ -143,7 +164,6 @@ class Game:
         try:
             api_services.create_bets(
                 home_bet_id=self.home_bet.id,
-                balance=round(self.balance, 2),
                 bets=bets_to_save,
             )
             SendEventToGUI.log.debug(f"bets saved")
@@ -171,7 +191,10 @@ class Game:
         """
         SendEventToGUI.log.info("waiting for the next game.....")
         await self.game_page.wait_next_game()
-        self.balance = await self.read_balance_to_aviator()
+        balance = await self.read_balance_to_aviator()
+        if balance != self.balance:
+            self.balance = balance
+            self.request_save_customer_balance()
         # TODO implement create manual bets
         self.bot.update_balance(self.balance)
         self.add_multiplier(self.game_page.multipliers[-1])

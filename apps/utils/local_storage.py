@@ -44,5 +44,6 @@ class LocalStorage(metaclass=Singleton):
     def set_customer_id(self, customer_id: int):
         self.set(LocalStorage.LocalStorageKeys.CUSTOMER_ID.value, customer_id)
 
-    def get_customer_id(self):
-        return self.get(LocalStorage.LocalStorageKeys.CUSTOMER_ID.value)
+    def get_customer_id(self) -> int:
+        customer_id = self.get(LocalStorage.LocalStorageKeys.CUSTOMER_ID.value)
+        return int(customer_id) if customer_id else None

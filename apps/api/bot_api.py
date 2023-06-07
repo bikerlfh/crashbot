@@ -260,12 +260,12 @@ class BotAPIServices:
         balance: int,
     ) -> Dict[str, Any]:
         try:
-            response = self.client.post(
+            response = self.client.patch(
                 service=self.UPDATE_BALANCE,
                 data=dict(
                     customer_id=customer_id,
                     home_bet_id=home_bet_id,
-                    balance=balance,
+                    amount=balance,
                 ),
             )
         except Exception as exc:
@@ -278,12 +278,10 @@ class BotAPIServices:
         self,
         *,
         home_bet_id: int,
-        balance: float,
         bets: list[BetData],
     ) -> Dict[str, Any]:
         data = dict(
             home_bet_id=home_bet_id,
-            balance_amount=balance,
             bets=[vars(bet) for bet in bets],
         )
         try:

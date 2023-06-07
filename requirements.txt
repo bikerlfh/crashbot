@@ -12,3 +12,4 @@ pytest-playwright==0.3.2
 localStoragePy==0.2.3
 uvicorn[standard]==0.21.1
 matplotlib==3.7.1
+# pwntools==4.10.0

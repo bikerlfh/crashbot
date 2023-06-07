@@ -6,7 +6,6 @@ from PyQt6 import QtCore, QtGui
 from PyQt6.QtWidgets import QMainWindow, QMessageBox, QStackedWidget, QWidget
 
 # Internal
-from apps.constants import VERSION
 from apps.globals import GlobalVars
 from apps.gui.socket_io_client import SocketIOClient
 from apps.gui.utils import os as utils_os
@@ -55,7 +54,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.show_login_screen()
 
     def _load_version(self) -> None:
-        self.lbl_version.setText(VERSION)
+        self.lbl_version.setText(GlobalVars.APP_VERSION)
         self.statusbar.addPermanentWidget(self.lbl_version)
 
     def __change_screen(
@@ -124,7 +123,7 @@ class MainForm(QMainWindow, MainDesigner):
         data = self.parameters_screen.get_values()
         self.console_screen.initialize(**data)
         self.__change_screen(
-            screen=self.console_screen, width=897, height=557, title="Console"
+            screen=self.console_screen, width=897, height=557, title="CrashBot"
         )
 
     def show_credential(self):

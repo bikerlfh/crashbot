@@ -10,8 +10,6 @@ from apps.scrappers.aviator.aviator_demo import AviatorDemo
 from apps.scrappers.aviator.aviator_one_win import AviatorOneWin
 from apps.scrappers.game_base import AbstractGameBase
 
-VERSION: str = "1.0.0"
-
 
 class WSEvent(str, Enum):
     VERIFY = "verify"

@@ -205,7 +205,6 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         if loaded:
             self.btn_auto_bet.setEnabled(True)
             self.btn_set_max_amount.setEnabled(True)
-            self.btn_auto_cash_out.setEnabled(True)
             self.txt_max_amount_to_bet.setEnabled(True)
             return
         self.main_window.show_message_box(

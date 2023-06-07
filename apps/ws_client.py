@@ -1,5 +1,7 @@
 # Standard Library
+import os
 import json
+import sys
 from dataclasses import dataclass
 
 # Libraries
@@ -22,8 +24,7 @@ class WebSocketClient(metaclass=Singleton):
     """
 
     def __init__(self):
-        self.url = GlobalVars.config.API_URL.replace("http", "ws")
-        self.url = f"{self.url}/bot/"
+        self.url = GlobalVars.config.WS_URL
         self.ws = websocket.WebSocketApp(
             self.url,
             on_message=self.on_message,
@@ -35,6 +36,12 @@ class WebSocketClient(metaclass=Singleton):
     @staticmethod
     def notify_allowed_to_save(allowed: bool, **_kwargs):
         GlobalVars.set_allowed_to_save_multipliers(allowed=allowed)
+
+    @staticmethod
+    def validate_app_version(app_version: str, **_kwargs):
+        if GlobalVars.APP_VERSION != app_version:
+            print(f"Please update the app to version: {app_version}")
+            os._exit(0) # noqa
 
     def set_home_bet(self, home_bet_id: int) -> None:
         message = SocketMessage(func="set_home_bet", data=dict(home_bet_id=home_bet_id))
@@ -53,13 +60,14 @@ class WebSocketClient(metaclass=Singleton):
             return
         func(**kwargs)
 
-    def on_close(self, close_status_code, close_msg):
+    def on_close(self, ws, error):
         GlobalVars.set_ws_client_backend_started(started=False)
         self.close()
         print("WS BACKEND :: Connection closed")
 
     def on_error(self, ws, error):
         print("Error WS Backend:", error)
+        os._exit(0) # noqa
 
     def on_open(self, ws, **_kwargs):
         GlobalVars.set_ws_client_backend_started(started=True)
