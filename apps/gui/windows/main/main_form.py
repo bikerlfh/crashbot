@@ -96,11 +96,6 @@ class MainForm(QMainWindow, MainDesigner):
     def _verify_token(self) -> None:
         self.socket.verify()
 
-    def show_login_screen(self):
-        self.__change_screen(
-            screen=self.login_screen, width=300, height=280, title="Login"
-        )
-
     @QtCore.pyqtSlot(str, str)
     def show_message_box(self, title: str, message: str):
         msg = QMessageBox()
@@ -115,7 +110,15 @@ class MainForm(QMainWindow, MainDesigner):
             screen=self.parameters_screen,
             width=412,
             height=291,
-            title="Parameters",
+            title=f"{GlobalVars.APP_NAME}",
+        )
+
+    def show_login_screen(self):
+        self.__change_screen(
+            screen=self.login_screen,
+            width=300,
+            height=250,
+            title=f"{GlobalVars.APP_NAME} - Login"
         )
 
     @QtCore.pyqtSlot()
@@ -123,7 +126,10 @@ class MainForm(QMainWindow, MainDesigner):
         data = self.parameters_screen.get_values()
         self.console_screen.initialize(**data)
         self.__change_screen(
-            screen=self.console_screen, width=897, height=557, title="CrashBot"
+            screen=self.console_screen,
+            width=897,
+            height=557,
+            title=GlobalVars.APP_NAME
         )
 
     def show_credential(self):

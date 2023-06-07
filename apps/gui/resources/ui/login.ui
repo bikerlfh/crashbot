@@ -41,7 +41,7 @@
     </font>
    </property>
    <property name="title">
-    <string>AviatorBot</string>
+    <string>CrashBot</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
