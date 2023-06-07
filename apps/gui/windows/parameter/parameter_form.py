@@ -24,7 +24,6 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
     def __fill_cmb_fields(self):
         count_cmb_bot = self.cmb_home_bet.count()
         allowed_home_bet_ids = GlobalVars.config.ALLOWED_HOME_BET_IDS
-        print("ALLOWED_HOME_BET_IDS", allowed_home_bet_ids)
         home_bets = [
             home_bet for home_bet in HomeBets
             if home_bet.id in allowed_home_bet_ids
