@@ -15,6 +15,7 @@ class Config(metaclass=Singleton):
         ALLOWED_LOG_CODES_TO_SHOW = "ALLOWED_LOG_CODES_TO_SHOW"
         MAX_AMOUNT_HOME_BET_PERCENTAGE = "MAX_AMOUNT_HOME_BET_PERCENTAGE"
         MAX_AMOUNT_BALANCE_PERCENTAGE = "MAX_AMOUNT_BALANCE_PERCENTAGE"
+        ALLOWED_HOME_BET_IDS = "ALLOWED_HOME_BET_IDS"
 
     def __init__(self):
         self.config_file = CONFIG_FILE_PATH
@@ -25,10 +26,11 @@ class Config(metaclass=Singleton):
             "success",
             "warning",
             "error",
-            "debug",
+            # "debug",
         ]
         self.MAX_AMOUNT_HOME_BET_PERCENTAGE = 0.5
         self.MAX_AMOUNT_BALANCE_PERCENTAGE = 0.005
+        self.ALLOWED_HOME_BET_IDS = [2, 3, 4]
         self.read_config()
 
     def __create_config(self):
@@ -58,6 +60,10 @@ class Config(metaclass=Singleton):
                         self.MAX_AMOUNT_HOME_BET_PERCENTAGE = float(value)
                     case self.ConfigVar.MAX_AMOUNT_BALANCE_PERCENTAGE:
                         self.MAX_AMOUNT_BALANCE_PERCENTAGE = float(value)
+                    case self.ConfigVar.ALLOWED_HOME_BET_IDS:
+                        self.ALLOWED_HOME_BET_IDS = [
+                            int(id.strip()) for id in value.split(",")
+                        ]
             return config
 
     def write_config(self):
@@ -65,12 +71,12 @@ class Config(metaclass=Singleton):
             file.write("# Default configuration\n")
             file.write(f"API_URL={self.API_URL}\n")
             file.write(f"WS_URL={self.WS_URL}\n")
-            file.write(
-                f'ALLOWED_LOG_CODES_TO_SHOW={",".join(self.ALLOWED_LOG_CODES_TO_SHOW)}\n'
-            )
-            file.write(
-                f"MAX_AMOUNT_HOME_BET_PERCENTAGE={self.MAX_AMOUNT_HOME_BET_PERCENTAGE}\n"
-            )
-            file.write(
-                f"MAX_AMOUNT_BALANCE_PERCENTAGE={self.MAX_AMOUNT_BALANCE_PERCENTAGE}\n"
-            )
+            # file.write(
+            #   f'ALLOWED_LOG_CODES_TO_SHOW={",".join(self.ALLOWED_LOG_CODES_TO_SHOW)}\n'
+            # )
+            # file.write(
+            #     f"MAX_AMOUNT_HOME_BET_PERCENTAGE={self.MAX_AMOUNT_HOME_BET_PERCENTAGE}\n"
+            # )
+            # file.write(
+            #     f"MAX_AMOUNT_BALANCE_PERCENTAGE={self.MAX_AMOUNT_BALANCE_PERCENTAGE}\n"
+            # )

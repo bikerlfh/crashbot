@@ -52,6 +52,8 @@ you can find the logs in the folder data/logs.db (sqlite3)
 
 
 # make executable
+
+you can use pyinstaller to generate the executable or https://pypi.org/project/pyarmor/ with obfuscation
 ```
 pyinstaller --onefile --icon=apps/gui/resources/icon/bot.ico crashbot.py
 ```

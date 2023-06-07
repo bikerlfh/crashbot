@@ -6,6 +6,7 @@ from apps.constants import BotType, HomeBets
 from apps.gui import services
 from apps.gui.windows.parameter.parameter_designer import ParameterDesigner
 from apps.utils.logs import services as logs_services
+from apps.globals import GlobalVars
 
 
 class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
@@ -22,7 +23,13 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
 
     def __fill_cmb_fields(self):
         count_cmb_bot = self.cmb_home_bet.count()
-        for key, val in enumerate(HomeBets):
+        allowed_home_bet_ids = GlobalVars.config.ALLOWED_HOME_BET_IDS
+        print("ALLOWED_HOME_BET_IDS", allowed_home_bet_ids)
+        home_bets = [
+            home_bet for home_bet in HomeBets
+            if home_bet.id in allowed_home_bet_ids
+        ]
+        for key, val in enumerate(home_bets):
             if key >= count_cmb_bot:
                 self.cmb_home_bet.addItem("")
             self.cmb_home_bet.setItemText(key, val.name)

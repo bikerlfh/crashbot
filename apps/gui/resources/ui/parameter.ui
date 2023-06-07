@@ -93,22 +93,7 @@
     </property>
     <item>
      <property name="text">
-      <string>Bet Play</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>One win</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
       <string>Demo</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Rivalo</string>
      </property>
     </item>
    </widget>
