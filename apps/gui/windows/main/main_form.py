@@ -106,6 +106,7 @@ class MainForm(QMainWindow, MainDesigner):
 
     @QtCore.pyqtSlot()
     def show_parameters_screen(self):
+        self.parameters_screen.initialize()
         self.__change_screen(
             screen=self.parameters_screen,
             width=412,

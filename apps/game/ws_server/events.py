@@ -2,7 +2,7 @@
 from socketio import AsyncServer
 
 # Internal
-from apps.constants import BotType, HomeBets, WSEvent
+from apps.constants import BotType, WSEvent
 from apps.game.game import Game
 from apps.game.ws_server import handlers
 from apps.game.ws_server.utils import make_error
@@ -73,7 +73,8 @@ async def start_bot_event(data: dict[str, any], sio: AsyncServer, sid: any) -> a
             room=sid,
         )
         return
-    home_bet = list(filter(lambda x: x.id == home_bet_id, HomeBets))
+    home_bets = GlobalVars.get_allowed_home_bets()
+    home_bet = list(filter(lambda x: x.id == home_bet_id, home_bets))
     if not home_bet:
         await sio.emit(
             WSEvent.START_BOT, data=make_error("invalid home_bet_id"), room=sid

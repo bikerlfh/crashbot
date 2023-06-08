@@ -10,6 +10,10 @@ local_storage = LocalStorage()
 
 def _get_customer_data() -> None:
     customer_data = api_services.get_customer_data()
+    home_bets = []
+    for home_bet in customer_data.home_bets:
+        home_bets.append(vars(home_bet))
+    local_storage.set_home_bets(home_bets=home_bets)
     local_storage.set_customer_id(customer_id=customer_data.customer_id)
 
 
@@ -17,6 +21,8 @@ def verify_token(token: Optional[str] = None) -> dict[str, any]:
     token = token or local_storage.get_token()
     if token:
         logged = api_services.request_token_verify(token=token)
+        if logged:
+            _get_customer_data()
         return dict(logged=logged)
     return dict(logged=False)
 

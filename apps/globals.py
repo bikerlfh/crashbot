@@ -31,6 +31,7 @@ class GlobalVars:
         AUTO_PLAY = "AUTO_PLAY"
         MAX_AMOUNT_TO_BET = "MAX_AMOUNT_TO_BET"
         ADD_LOG = "ADD_LOG"
+        ALLOWED_HOME_BETS = "ALLOWED_HOME_BETS"
         USERNAME = "USERNAME"
         PASSWORD = "PASSWORD"
         EMIT_TO_GUI = "EMIT_TO_GUI"
@@ -43,6 +44,7 @@ class GlobalVars:
         globals().setdefault(GlobalVars.VARS.AUTO_PLAY, False)
         globals().setdefault(GlobalVars.VARS.MAX_AMOUNT_TO_BET, 0)
         globals().setdefault(GlobalVars.VARS.ADD_LOG, None)
+        globals().setdefault(GlobalVars.VARS.ALLOWED_HOME_BETS, [])
         globals().setdefault(GlobalVars.VARS.USERNAME, None)
         globals().setdefault(GlobalVars.VARS.PASSWORD, None)
         globals().setdefault(GlobalVars.VARS.EMIT_TO_GUI, None)
@@ -94,6 +96,14 @@ class GlobalVars:
     @staticmethod
     def set_add_log_call_back(add_log: Callable) -> None:
         globals()[GlobalVars.VARS.ADD_LOG] = add_log
+
+    @staticmethod
+    def get_allowed_home_bets() -> list[object]:
+        return globals().get(GlobalVars.VARS.ALLOWED_HOME_BETS)
+
+    @staticmethod
+    def set_allowed_home_bets(allowed_home_bet: list[object]) -> None:
+        globals()[GlobalVars.VARS.ALLOWED_HOME_BETS] = allowed_home_bet
 
     @staticmethod
     def get_username() -> str:

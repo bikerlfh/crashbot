@@ -7,6 +7,10 @@ from apps.globals import GlobalVars
 from apps.gui import services
 from apps.gui.windows.parameter.parameter_designer import ParameterDesigner
 from apps.utils.logs import services as logs_services
+from apps.utils.local_storage import LocalStorage
+
+
+local_storage = LocalStorage()
 
 
 class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
@@ -19,11 +23,27 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         self.main_window = main_window
         self.btn_start.clicked.connect(self.button_start_clicked_event)
         self.receive_start_bot_signal.connect(self._on_receive_start_bot)
-        self.HomeBets = [
-            home_bet
-            for home_bet in HomeBets
-            if home_bet.id in GlobalVars.config.ALLOWED_HOME_BET_IDS
-        ]
+        self.HomeBets = HomeBets
+
+    def initialize(self):
+        """
+        invoke after get info of customer
+        :return:
+        """
+        home_bets_data = local_storage.get_home_bets()
+        if home_bets_data:
+            home_bets_ = []
+            for home_bet in home_bets_data:
+                home_bet_id = home_bet["id"]
+                home_bet_ = list(filter(lambda x: x.id == home_bet_id, HomeBets))
+                if home_bet_:
+                    home_bet_ = home_bet_[0]
+                    home_bet_.url = home_bet["url"]
+                    home_bets_.append(home_bet_)
+            GlobalVars.set_allowed_home_bets(home_bets_)
+            self.HomeBets = home_bets_
+        else:
+            GlobalVars.set_allowed_home_bets(HomeBets)
         self.__fill_cmb_fields()
 
     def __fill_cmb_fields(self):
