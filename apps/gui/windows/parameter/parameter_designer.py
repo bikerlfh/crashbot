@@ -81,15 +81,3 @@ class ParameterDesigner(object):
         self.chk_use_credentials.setText(
             _translate("Parameters", "Use saved credentials")
         )
-
-
-if __name__ == "__main__":
-    # Standard Library
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Parameters = QtWidgets.QWidget()
-    ui = Ui_Parameters()
-    ui.setupUi(Parameters)
-    Parameters.show()
-    sys.exit(app.exec())

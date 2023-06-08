@@ -329,7 +329,7 @@ class LoginDesigner(object):
         )
         self.btn_login.setPalette(palette)
         font = QtGui.QFont()
-        font.setFamily("Ubuntu")
+        font.setFamily("Arial")
         font.setPointSize(12)
         font.setBold(True)
         font.setUnderline(False)

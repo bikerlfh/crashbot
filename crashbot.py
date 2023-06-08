@@ -24,6 +24,7 @@ if __name__ == "__main__":
     )
     ws_server_thread.start()
     sleep_now(1)
+    print("connecting to server")
     ws_client_thread = Thread(
         target=ws_client.run_forever,
         args=(event,),

@@ -9,7 +9,7 @@ from apps.api.models import (
     BetData,
     Bot,
     CustomerData,
-    HomeBet,
+    HomeBetModel,
     MultiplierPositions,
     Positions,
     Prediction,
@@ -82,14 +82,14 @@ def request_token_verify(*, token: str) -> bool:
         return False
 
 
-def get_home_bets() -> list[HomeBet]:
+def get_home_bets() -> list[HomeBetModel]:
     """
     request_home_bet
     :return:
     """
     bot_connector = BotAPIConnector()
     home_bets = bot_connector.services.get_home_bet()
-    data = [HomeBet(**data) for data in home_bets]
+    data = [HomeBetModel(**data) for data in home_bets]
     return data
 
 
@@ -165,7 +165,11 @@ def get_multiplier_positions(*, home_bet_id: int) -> MultiplierPositions:
 def get_customer_data() -> CustomerData:
     bot_connector = BotAPIConnector()
     data = bot_connector.services.get_me_data()
-    return CustomerData(**data)
+    customer_data = CustomerData(
+        customer_id=data.get("customer_id"),
+        home_bets=[HomeBetModel(**home_bet) for home_bet in data.get("home_bets", [])],
+    )
+    return customer_data
 
 
 def update_customer_balance(

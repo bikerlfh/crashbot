@@ -7,7 +7,7 @@ from apps.constants import BetType
 
 
 @dataclass
-class HomeBet:
+class HomeBetModel:
     id: int
     name: str
     url: str
@@ -80,6 +80,7 @@ class Bot:
 @dataclass
 class CustomerData:
     customer_id: int
+    home_bets: list[HomeBetModel]
 
 
 @dataclass
