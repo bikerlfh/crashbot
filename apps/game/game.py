@@ -65,9 +65,22 @@ class Game:
         """
         SendEventToGUI.log.info("opening home bet.....")
         await self.game_page.open()
-        SendEventToGUI.log.debug("reading the player's balance.....")
+        SendEventToGUI.log.info("reading the player's balance.....")
         self.initial_balance = self.game_page.balance
         self.balance = self.initial_balance
+        last_balance = local_storage.get_last_initial_balance(
+            home_bet_id=self.home_bet.id
+        )
+        if last_balance and last_balance > self.initial_balance:
+            self.initial_balance = last_balance
+            SendEventToGUI.log.info(
+                f"Update the initial balance from "
+                f"local storage {self.initial_balance}"
+            )
+        else:
+            local_storage.set_last_initial_balance(
+                home_bet_id=self.home_bet.id, balance=self.initial_balance
+            )
         SendEventToGUI.balance(self.balance)
         SendEventToGUI.log.debug("loading the player.....")
         self.multipliers_to_save = self.game_page.multipliers

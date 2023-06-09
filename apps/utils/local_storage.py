@@ -15,6 +15,7 @@ class LocalStorage(metaclass=Singleton):
         REFRESH = "refresh"
         CUSTOMER_ID = "customer_id"
         HOME_BETS = "home_bets"
+        LAST_INITIAL_BALANCE = "last_initial_balance"
 
     def __init__(self):
         self.local_storage = localStoragePy("co.crashbot.local", "json")
@@ -67,3 +68,20 @@ class LocalStorage(metaclass=Singleton):
         if home_bets:
             home_bets = json.loads(home_bets)
         return home_bets if home_bets else []
+
+    def set_last_initial_balance(self, *, home_bet_id: int, balance: float):
+        data = self.get(LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value) or {}
+        data[str(home_bet_id)] = balance
+        self.set(
+            LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value, json.dumps(data)
+        )
+
+    def get_last_initial_balance(
+        self,
+        *,
+        home_bet_id: int,
+    ) -> float | None:
+        data = self.get(LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value)
+        data = json.loads(data) if data else {}
+        last_balance = data.get(str(home_bet_id), None)
+        return float(last_balance) if last_balance else None

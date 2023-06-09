@@ -6,9 +6,8 @@ from apps.constants import BotType, HomeBets
 from apps.globals import GlobalVars
 from apps.gui import services
 from apps.gui.windows.parameter.parameter_designer import ParameterDesigner
-from apps.utils.logs import services as logs_services
 from apps.utils.local_storage import LocalStorage
-
+from apps.utils.logs import services as logs_services
 
 local_storage = LocalStorage()
 
