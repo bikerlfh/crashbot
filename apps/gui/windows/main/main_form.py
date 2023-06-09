@@ -131,6 +131,7 @@ class MainForm(QMainWindow, MainDesigner):
         )
 
     def show_credential(self):
+        self.credential_screen.initialize()
         self.credential_screen.exec()
 
     def _add_action(self, title: str) -> QtGui.QAction:

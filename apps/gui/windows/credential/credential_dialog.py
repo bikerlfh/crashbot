@@ -12,19 +12,21 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
         super().__init__()
         self.credentials = []
         self.setupUi(self)
-        self.showCredentials()
+        self.show_credentials()
         self.btn_save.clicked.connect(self.btn_save_clicked)
         self.lst_credentials_home_bet.itemSelectionChanged.connect(
             self.home_bet_changed
         )
         self.btn_remove.clicked.connect(self.btn_remove_clicked)
         self.btn_remove_all.clicked.connect(self.btn_remove_all_clicked)
-
         self.home_bet_changed()
+        self.HomeBets = []
+
+    def initialize(self):
         self.HomeBets = GlobalVars.get_allowed_home_bets()
         self.__fill_cmb_fields()
 
-    def showCredentials(self):
+    def show_credentials(self):
         self.tab_credentials.setCurrentIndex(0)
         self.credentials = services.get_credentials()
         self.lst_credentials_home_bet.clear()
@@ -58,7 +60,7 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
         self.txt_username.setText("")
         self.txt_password.setText("")
         self.txt_username.setFocus()
-        self.showCredentials()
+        self.show_credentials()
 
     def btn_remove_clicked(self):
         items = self.lst_credentials_home_bet.selectedItems()
@@ -67,11 +69,11 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
         item = items[0]
         home_bet = item.text()
         services.remove_credentials(home_bet=home_bet)
-        self.showCredentials()
+        self.show_credentials()
 
     def btn_remove_all_clicked(self):
         services.remove_credentials()
-        self.showCredentials()
+        self.show_credentials()
 
     def home_bet_changed(self):
         items = self.lst_credentials_home_bet.selectedItems()
