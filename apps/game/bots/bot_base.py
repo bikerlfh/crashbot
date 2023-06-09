@@ -84,8 +84,8 @@ class BotBase:
         self.STOP_LOSS_PERCENTAGE = bot.stop_loss_percentage
         self.TAKE_PROFIT_PERCENTAGE = bot.take_profit_percentage
         self.STRATEGIES = bot.strategies
-        self.stop_loss = self.initial_balance * self.STOP_LOSS_PERCENTAGE
-        self.take_profit = self.initial_balance * self.TAKE_PROFIT_PERCENTAGE
+        self.stop_loss = round(self.initial_balance * self.STOP_LOSS_PERCENTAGE, 2)
+        self.take_profit = round(self.initial_balance * self.TAKE_PROFIT_PERCENTAGE, 2)
         SendEventToGUI.log.info("Bot initialized")
         SendEventToGUI.log.info(f"Bot type: {self.BOT_TYPE}")
         SendEventToGUI.log.info(f"Bot risk factor: {self.RISK_FACTOR}")
