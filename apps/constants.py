@@ -54,7 +54,7 @@ HomeBets: list[HomeBet] = [
         id=2,
         name="Bet Play",
         min_bet=100,
-        max_bet=50000,
+        max_bet=100000,
         url="https://betplay.com.co/slots",
         game_page=AviatorBetPlay,
     ),

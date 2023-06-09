@@ -38,6 +38,8 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
                 if home_bet_:
                     home_bet_ = home_bet_[0]
                     home_bet_.url = home_bet["url"]
+                    home_bet_.min_bet = home_bet["min_bet"]
+                    home_bet_.max_bet = home_bet["max_bet"]
                     home_bets_.append(home_bet_)
             GlobalVars.set_allowed_home_bets(home_bets_)
             self.HomeBets = home_bets_
