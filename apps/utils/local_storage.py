@@ -70,8 +70,9 @@ class LocalStorage(metaclass=Singleton):
         return home_bets if home_bets else []
 
     def set_last_initial_balance(self, *, home_bet_id: int, balance: float):
-        data = self.get(LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value) or {}
-        data[str(home_bet_id)] = balance
+        data = self.get(LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value)
+        data = json.loads(data) if data else {}
+        data[home_bet_id] = balance
         self.set(
             LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value, json.dumps(data)
         )

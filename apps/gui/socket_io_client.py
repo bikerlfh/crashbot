@@ -53,19 +53,19 @@ class SocketIOClient(QtCore.QThread):
         self.__sio.on(WSEvent.LOGIN, self.on_login or self._on_default)
         self.__sio.on(WSEvent.START_BOT, self.on_start_bot or self._on_default)
         self.__sio.on(WSEvent.AUTO_PLAY, self.on_auto_play or self._on_default)
-        self.__sio.on(WSEvent.CLOSE_GAME, self.on_close_game or self._on_default)
+        self.__sio.on(WSEvent.CLOSE_GAME, self.on_close_game or self._on_close_game)
         self.__sio.on(WSEvent.LOG, self.on_log or self._on_default)
         self.__sio.on(
             WSEvent.SET_MAX_AMOUNT_TO_BET,
-            self.on_set_max_amount_to_bet or self._on_default,
+            self.on_set_max_amount_to_bet or self._on_set_max_amount_to_bet,
         )
         self.__sio.on(
             WSEvent.UPDATE_BALANCE,
             self.on_update_balance or self._on_default,
         )
         self.__sio.on(WSEvent.GAME_LOADED, self.on_game_loaded or self._on_default)
-        self.__sio.on(WSEvent.ERROR, self.on_error or self._on_default)
-        self.__sio.on(WSEvent.EXCEPTION, self.on_exception or self._on_default)
+        self.__sio.on(WSEvent.ERROR, self.on_error or self._on_error)
+        self.__sio.on(WSEvent.EXCEPTION, self.on_exception or self._on_exception)
         self.__sio.on(
             WSEvent.ADD_MULTIPLIERS,
             self.on_add_multipliers or self._on_default,
@@ -81,10 +81,6 @@ class SocketIOClient(QtCore.QThread):
     def _on_disconnect(self) -> None:
         print("GUI :: disconnect from server")
         self.is_connected = False
-
-    @staticmethod
-    def _on_default(data: any) -> None:
-        print(f"WS callback not specify!!!: {data}")
 
     def run(self) -> None:
         self.__sio.connect(self.WS_SERVER_URL)
@@ -130,3 +126,27 @@ class SocketIOClient(QtCore.QThread):
 
     def close_game(self) -> None:
         self.__execute_event(WSEvent.CLOSE_GAME, {})
+
+    @staticmethod
+    def _on_default(data: any) -> None:
+        print(f"WS callback not specify!!!: {data}")
+
+    @staticmethod
+    def _on_close_game(data: any) -> None:
+        print(f"WS callback on_close_game!!!: {data}")
+
+    @staticmethod
+    def _on_set_max_amount_to_bet(data: any) -> None:
+        print(f"WS callback on_set_max_amount_to_bet!!!: {data}")
+
+    @staticmethod
+    def _on_error(data: any) -> None:
+        print(f"WS callback on_error!!!: {data}")
+
+    @staticmethod
+    def _on_exception(data: any) -> None:
+        print(f"WS callback on_exception!!!: {data}")
+
+
+
+
