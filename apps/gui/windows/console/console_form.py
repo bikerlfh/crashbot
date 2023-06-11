@@ -8,7 +8,10 @@ from apps.gui import services
 from apps.gui.graphs.bar_multipliers import BarMultiplier
 from apps.gui.windows.console.console_designer import ConsoleDesigner
 from apps.utils.logs import services as logs_services
+from apps.utils.local_storage import LocalStorage
 from apps.ws_client import WebSocketClient
+
+local_storage = LocalStorage()
 
 
 class ConsoleForm(QWidget, ConsoleDesigner):
@@ -76,7 +79,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.lbl_bot_type.setText(f"Bot: {bot_type}")
         self.txt_max_amount_to_bet.setText(str(max_amount_to_bet))
         self.btn_auto_bet.setText("AutoBet ON" if auto_play else "AutoBet OFF")
-        self.ws_client.set_home_bet(home_bet_id=self.home_bet.id)
+        self.ws_client.set_home_bet(
+            home_bet_id=self.home_bet.id,
+            customer_id=local_storage.get_customer_id(),
+        )
 
     def button_auto_bet_clicked_event(self):
         self.auto_play = not self.auto_play

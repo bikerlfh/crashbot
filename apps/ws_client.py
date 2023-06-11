@@ -9,6 +9,7 @@ import websocket
 # Internal
 from apps.globals import GlobalVars
 from apps.utils.patterns.singleton import Singleton
+from apps.utils.datetime import sleep_now
 
 
 @dataclass
@@ -32,18 +33,42 @@ class WebSocketClient(metaclass=Singleton):
             on_open=self.on_open,
         )
 
+    def _force_close(self):
+        self.ws.close()
+        sleep_now(1)
+        os.system("killall node")
+        os._exit(0)  # noqa
+
+    def error_event(self, ws_error_code: str, **_kwargs):
+        print(f"WS BACKEND :: ws_error_code:{ws_error_code}")
+        self._force_close()
+
     @staticmethod
     def notify_allowed_to_save(allowed: bool, **_kwargs):
         GlobalVars.set_allowed_to_save_multipliers(allowed=allowed)
 
-    @staticmethod
-    def validate_app_version(app_version: str, **_kwargs):
+    def validate_app_version(self, app_version: str, **_kwargs):
         if GlobalVars.APP_VERSION != app_version:
             print(f"Please update the app to version: {app_version}")
-            os._exit(0)  # noqa
+            self._force_close()
 
-    def set_home_bet(self, home_bet_id: int) -> None:
-        message = SocketMessage(func="set_home_bet", data=dict(home_bet_id=home_bet_id))
+    def user_already_connected(self, **_kwargs):
+        print("User already connected!!!!")
+        self._force_close()
+
+    def set_home_bet(
+        self,
+        *,
+        home_bet_id: int,
+        customer_id: int
+    ) -> None:
+        message = SocketMessage(
+            func="set_home_bet",
+            data=dict(
+                home_bet_id=home_bet_id,
+                customer_id=customer_id
+            )
+        )
         if self.ws.sock.connected:
             self.ws.send(json.dumps(vars(message)))
 
