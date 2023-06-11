@@ -59,7 +59,7 @@ class PredictionData:
 
     def print_data(self) -> None:
         SendEventToGUI.log.success(
-            f"prediction: {self.prediction_round}({self.prediction_value}) - "
+            f"prediction: {self.prediction_round} - "
             f"probability: {self.probability}"
         )
         SendEventToGUI.log.info(

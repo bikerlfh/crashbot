@@ -74,7 +74,7 @@ def predict_next_multiplier(
                 return i + 1
         return -1
 
-    if not last_multipliers:
+    if not last_multipliers or not data:
         return 0, 0
     data_ = data.all_time if use_all_time else data.today
     max_value = (0, 0)
