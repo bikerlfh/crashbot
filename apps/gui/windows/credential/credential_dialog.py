@@ -32,9 +32,8 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
         self.lst_credentials_home_bet.clear()
         if not self.credentials:
             return
-        for credential in self.credentials:
-            home_bet = credential["home_bet"]
-            item = QtWidgets.QListWidgetItem(home_bet)
+        for key, values in self.credentials.items():
+            item = QtWidgets.QListWidgetItem(key)
             self.lst_credentials_home_bet.addItem(item)
 
     def __fill_cmb_fields(self):
@@ -55,8 +54,11 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
             QtWidgets.QMessageBox.warning(self, "Error", "Enter username and password")
             return
 
-        credential = dict(home_bet=home_bet, username=username, password=password)
-        services.save_credentials(credential=credential)
+        services.save_credentials(
+            home_bet=home_bet,
+            username=username,
+            password=password
+        )
         self.txt_username.setText("")
         self.txt_password.setText("")
         self.txt_username.setFocus()

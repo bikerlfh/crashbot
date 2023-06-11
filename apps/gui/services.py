@@ -7,9 +7,12 @@ from PyQt6.QtWidgets import QListWidgetItem
 # Internal
 from apps.constants import HomeBet
 from apps.globals import GlobalVars
-from apps.gui.constants import CREDENTIALS_FILE_PATH, LOG_CODES
+from apps.gui.constants import LOG_CODES
 from apps.gui.utils.encrypt import Encrypt
 from apps.utils import csv
+from apps.utils.local_storage import LocalStorage
+
+local_storage = LocalStorage()
 
 
 def make_list_item(
@@ -88,58 +91,54 @@ def validate_max_amount_to_bet(
 
 def save_credentials(
     *,
-    credential: dict[str, any],
+    home_bet: str,
+    username: str,
+    password: str,
 ) -> None:
     """
     Save credentials
-    :param credential: credentials
+    :param home_bet: home_bet name
+    :param username: username
+    :param password: password
     :return: None
     """
-    file_name = CREDENTIALS_FILE_PATH
-    data = csv.read_data(file_name=file_name) or []
-    data = [item for item in data if item.get("home_bet") != credential.get("home_bet")]
-    credential["username"] = Encrypt().encrypt(credential["username"])
-    credential["password"] = Encrypt().encrypt(credential["password"])
-    data.append(credential)
-    csv.write_data_truncate(file_name=file_name, data=data)
+    username = Encrypt().encrypt(username)
+    password = Encrypt().encrypt(password)
+    local_storage.set_credentials(
+        home_bet=home_bet,
+        username=username,
+        password=password,
+    )
 
 
-def remove_credentials(*, home_bet: str = None) -> None:
+def remove_credentials(*, home_bet: Optional[str] = None) -> None:
     """
     Remove credentials
     :param home_bet: home bet
     :return: None
     """
-    file_name = CREDENTIALS_FILE_PATH
-    if home_bet is None:
-        csv.write_data_truncate(file_name=file_name, data=[])
-        return
-    data = csv.read_data(file_name=file_name) or []
-    data = [item for item in data if item.get("home_bet") != home_bet]
-    csv.write_data_truncate(file_name=file_name, data=data)
+    local_storage.remove_credentials(home_bet=home_bet)
 
 
-def get_credentials() -> list[dict[str, any]] | None:
+def get_credentials() -> dict[str, any] | None:
     """
     Get credentials
-    :return: list[dict]
+    :return: dict
     """
-    file_name = CREDENTIALS_FILE_PATH
-    data = csv.read_data(file_name=file_name)
-    return data
+    return local_storage.get_all_credentials()
 
 
 def get_credentials_by_home_bet(*, home_bet: str) -> dict[str, any]:
     """
     Get credentials
-    :param home_bet: home bet
+    :param home_bet: home bet name
     :return: dict
     """
     credentials = get_credentials()
     if not credentials:
         return {}
-    for credential in credentials:
-        if credential.get("home_bet") == home_bet:
+    for key, credential in credentials.items():
+        if key == home_bet:
             credential["username"] = Encrypt().decrypt(credential["username"])
             credential["password"] = Encrypt().decrypt(credential["password"])
             return credential

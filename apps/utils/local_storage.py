@@ -1,5 +1,6 @@
 # Standard Library
 import json
+from typing import Optional
 from enum import Enum
 
 # Libraries
@@ -16,6 +17,7 @@ class LocalStorage(metaclass=Singleton):
         CUSTOMER_ID = "customer_id"
         HOME_BETS = "home_bets"
         LAST_INITIAL_BALANCE = "last_initial_balance"
+        CREDENTIALS = "credentials"
 
     def __init__(self):
         self.local_storage = localStoragePy("co.crashbot.local", "json")
@@ -86,3 +88,37 @@ class LocalStorage(metaclass=Singleton):
         data = json.loads(data) if data else {}
         last_balance = data.get(str(home_bet_id), None)
         return float(last_balance) if last_balance else None
+
+    def set_credentials(
+        self,
+        *,
+        home_bet: str,
+        username: str,
+        password: str,
+    ):
+        data = self.get(LocalStorage.LocalStorageKeys.CREDENTIALS.value)
+        data = json.loads(data) if data else {}
+        data[home_bet] = dict(
+            username=username,
+            password=password
+        )
+        self.set(LocalStorage.LocalStorageKeys.CREDENTIALS.value, json.dumps(data))
+
+    def get_all_credentials(self) -> dict[str, any]:
+        data = self.get(LocalStorage.LocalStorageKeys.CREDENTIALS.value)
+        data = json.loads(data) if data else {}
+        return data
+
+    def get_credentials(self, *, home_bet: str) -> dict[str, any]:
+        data = self.get_all_credentials()
+        credentials = data.get(str(home_bet), None)
+        return credentials
+
+    def remove_credentials(self, *, home_bet: Optional[str] = None):
+        if not home_bet:
+            self.remove(LocalStorage.LocalStorageKeys.CREDENTIALS.value)
+            return
+        data = self.get(LocalStorage.LocalStorageKeys.CREDENTIALS.value)
+        data = json.loads(data) if data else {}
+        data.pop(str(home_bet), None)
+        self.set(LocalStorage.LocalStorageKeys.CREDENTIALS.value, json.dumps(data))

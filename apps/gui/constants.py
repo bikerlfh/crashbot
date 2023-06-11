@@ -1,7 +1,3 @@
-# Standard Library
-from enum import Enum
-from os import getenv
-
 # Libraries
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
@@ -28,6 +24,3 @@ LOG_CODES = {
         "background": QColor(Qt.GlobalColor.darkBlue),
     },
 }
-
-DATA_FILE_PATH = getenv("DATA_FILE_PATH", "data")
-CREDENTIALS_FILE_PATH = f"{DATA_FILE_PATH}/credentials.csv"
