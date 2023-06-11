@@ -11,7 +11,7 @@ from cryptography.fernet import Fernet
 from apps.utils.patterns.singleton import Singleton
 
 
-class Encrypt(metaclass=Singleton):
+class FernetEncrypt(metaclass=Singleton):
     KEY_ENCRYPTED: bytes
 
     def __init__(self):

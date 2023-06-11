@@ -8,8 +8,7 @@ from PyQt6.QtWidgets import QListWidgetItem
 from apps.constants import HomeBet
 from apps.globals import GlobalVars
 from apps.gui.constants import LOG_CODES
-from apps.gui.utils.encrypt import Encrypt
-from apps.utils import csv
+from apps.gui.utils.encrypt import FernetEncrypt
 from apps.utils.local_storage import LocalStorage
 
 local_storage = LocalStorage()
@@ -102,8 +101,9 @@ def save_credentials(
     :param password: password
     :return: None
     """
-    username = Encrypt().encrypt(username)
-    password = Encrypt().encrypt(password)
+    fernet = FernetEncrypt()
+    username = fernet.encrypt(username)
+    password = fernet.encrypt(password)
     local_storage.set_credentials(
         home_bet=home_bet,
         username=username,
@@ -137,9 +137,10 @@ def get_credentials_by_home_bet(*, home_bet: str) -> dict[str, any]:
     credentials = get_credentials()
     if not credentials:
         return {}
+    fernet = FernetEncrypt()
     for key, credential in credentials.items():
         if key == home_bet:
-            credential["username"] = Encrypt().decrypt(credential["username"])
-            credential["password"] = Encrypt().decrypt(credential["password"])
+            credential["username"] = fernet.decrypt(credential["username"])
+            credential["password"] = fernet.decrypt(credential["password"])
             return credential
     return {}
