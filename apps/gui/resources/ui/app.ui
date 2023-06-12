@@ -81,6 +81,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="action_signout"/>
     <addaction name="action_exit"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -137,6 +138,11 @@
   <action name="action_crendentials">
    <property name="text">
     <string>Crendentials</string>
+   </property>
+  </action>
+  <action name="action_signout">
+   <property name="text">
+    <string>Sign out</string>
    </property>
   </action>
  </widget>

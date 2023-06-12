@@ -16,12 +16,21 @@ class LoginForm(QtWidgets.QWidget, LoginDesigner):
         self.btn_login.setDisabled(False)
         self.receive_login_signal.connect(self._on_receive_login)
 
+    def disable_login(self, active: bool):
+        self.txt_username.setDisabled(active)
+        self.txt_password.setDisabled(active)
+        self.btn_login.setDisabled(active)
+
+    def clear(self):
+        self.txt_username.setText("")
+        self.txt_password.setText("")
+
     def button_login_clicked_event(self):
         self.main_window.socket.login(
             username=self.txt_username.text(),
             password=self.txt_password.text(),
         )
-        self.btn_login.setDisabled(True)
+        self.disable_login(True)
 
     def on_login(self, data: dict[str, any]) -> None:
         """
@@ -40,6 +49,6 @@ class LoginForm(QtWidgets.QWidget, LoginDesigner):
                 message="Invalid credentials",
                 # icon=QtWidgets.QMessageBox.Icon.Critical,
             )
-            self.btn_login.setDisabled(False)
+            self.disable_login(False)
             return
         self.main_window.show_parameters_screen()

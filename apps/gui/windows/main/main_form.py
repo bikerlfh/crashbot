@@ -14,6 +14,10 @@ from apps.gui.windows.credential.credential_dialog import CredentialDialog
 from apps.gui.windows.login.login_form import LoginForm
 from apps.gui.windows.main.main_designer import MainDesigner
 from apps.gui.windows.parameter.parameter_form import ParameterForm
+from apps.utils.local_storage import LocalStorage
+
+
+local_storage = LocalStorage()
 
 
 class MainForm(QMainWindow, MainDesigner):
@@ -52,6 +56,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.showMaximized()
         self.action_crendentials.triggered.connect(self.show_credential)
         self.action_exit.triggered.connect(self.closeEvent)
+        self.action_signout.triggered.connect(self._action_sign_out)
         self.show_login_screen()
 
     def _load_version(self) -> None:
@@ -87,6 +92,7 @@ class MainForm(QMainWindow, MainDesigner):
         """
         logged = data.get("logged", False)
         if not logged:
+            self.login_screen.disable_login(False)
             return
         QtCore.QMetaObject.invokeMethod(
             self,
@@ -96,6 +102,7 @@ class MainForm(QMainWindow, MainDesigner):
 
     def _verify_token(self) -> None:
         self.socket.verify()
+        self.login_screen.disable_login(True)
 
     @QtCore.pyqtSlot(str, str)
     def show_message_box(self, title: str, message: str):
@@ -156,6 +163,13 @@ class MainForm(QMainWindow, MainDesigner):
             self.allowed_logs.append(log_name.lower())
             return
         self.allowed_logs.remove(log_name.lower())
+
+    def _action_sign_out(self):
+        self.socket.close_game()
+        # self.socket.stop()
+        local_storage.remove_token()
+        self.show_login_screen()
+        self.login_screen.clear()
 
     def closeEvent(self, event) -> None:
         if self.socket and self.socket.is_connected:
