@@ -178,7 +178,7 @@ class BotStatic(BotBase):
         profit_percentage = self.get_profit_percent()
         if profit_percentage > 0 or self.is_bullish_game:
             SendEventToGUI.log.debug(
-                "generate_bets :: profit_percentage > 0.10 or is_bullish_game"
+                "generate_bets :: profit_percentage > 0 or is_bullish_game"
             )
             max_bet_kelly_amount = game_utils.adaptive_kelly_formula(
                 1.95,

@@ -20,6 +20,7 @@ class MainForm(QMainWindow, MainDesigner):
     def __init__(self) -> None:
         super().__init__()
         self.setupUi(self)
+        self.setWindowIcon(QtGui.QIcon('apps/gui/resources/images/icon.png'))
         self.__init_screen()
         self.allowed_logs = GlobalVars.config.ALLOWED_LOG_CODES_TO_SHOW
         self._generate_menu_logs()
