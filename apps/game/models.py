@@ -57,17 +57,20 @@ class PredictionData:
     in_category_percentage: bool
     in_average_prediction_of_model: bool
 
+    @staticmethod
+    def _show_percentage(value: float) -> str:
+        return f"{round(value * 100, 2)}%"
+
     def print_data(self) -> None:
         SendEventToGUI.log.success(
-            f"prediction: {self.prediction_round} - "
-            f"probability: {self.probability}"
+            f"{_('prediction')}: {self.prediction_round} - " # noqa
+            f"{_('probability')}: {self._show_percentage(self.probability)}" # noqa
         )
         SendEventToGUI.log.info(
-            f"CatPer: {self.category_percentage} - "
-            f"CatPerVal: {self.category_percentage_value_in_live} - "
-            f"AvgModel: {self.average_prediction_of_model}"
+            f"CatPer: {self._show_percentage(self.category_percentage)} - "
+            f"AvgModel: {self._show_percentage(self.average_prediction_of_model)}"
         )
         SendEventToGUI.log.debug(
-            f"InCatPer: {self.in_category_percentage} - "
-            f"InAvgModel: {self.in_average_prediction_of_model}"
+            f"InCatPer: {self._show_percentage(self.in_category_percentage)} - "
+            f"InAvgModel: {self._show_percentage(self.in_average_prediction_of_model)}"
         )

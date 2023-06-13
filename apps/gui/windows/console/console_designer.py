@@ -491,14 +491,13 @@ class ConsoleDesigner(object):
         QtCore.QMetaObject.connectSlotsByName(consoleForm)
 
     def retranslateUi(self, consoleForm):
-        _translate = QtCore.QCoreApplication.translate
-        self.btn_set_max_amount.setText(_translate("consoleForm", "Set Amount Bet"))
-        self.btn_auto_bet.setText(_translate("consoleForm", "AutoBet ON"))
-        self.label.setText(_translate("consoleForm", "Amount Bet"))
-        self.label_2.setText(_translate("consoleForm", "Balance:"))
-        self.lbl_balance.setText(_translate("consoleForm", "0"))
-        self.lbl_profit.setText(_translate("consoleForm", "0"))
-        self.label_4.setText(_translate("consoleForm", "Profit:"))
-        self.lbl_home_bet.setText(_translate("consoleForm", "Demo"))
-        self.lbl_bot_type.setText(_translate("consoleForm", "Bot: Aggressive"))
-        self.btn_auto_cash_out.setText(_translate("consoleForm", "Auto CashOut OFF"))
+        self.btn_set_max_amount.setText(_("Set Amount Bet")) # noqa
+        self.btn_auto_bet.setText(f"{_('AutoBet')} ON") # noqa
+        self.label.setText(_("Amount Bet")) # noqa
+        self.label_2.setText("Balance:") # noqa
+        self.lbl_balance.setText("0") # noqa
+        self.lbl_profit.setText("0") # noqa
+        self.label_4.setText("Profit:") # noqa
+        self.lbl_home_bet.setText("Demo") # noqa
+        self.lbl_bot_type.setText("Bot: Aggressive") # noqa
+        self.btn_auto_cash_out.setText(f"{_('Auto CashOut')} OFF") # noqa

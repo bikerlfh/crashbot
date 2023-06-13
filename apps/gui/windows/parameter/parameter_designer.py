@@ -69,15 +69,14 @@ class ParameterDesigner(object):
         QtCore.QMetaObject.connectSlotsByName(Parameters)
 
     def retranslateUi(self, Parameters):
-        _translate = QtCore.QCoreApplication.translate
-        Parameters.setWindowTitle(_translate("Parameters", "Parameters"))
-        self.label.setText(_translate("Parameters", "Home bet"))
-        self.cmb_home_bet.setItemText(0, _translate("Parameters", "Demo"))
-        self.label_2.setText(_translate("Parameters", "Bot type"))
-        self.cmb_bot_type.setItemText(0, _translate("Parameters", "Agressive"))
-        self.cmb_bot_type.setItemText(1, _translate("Parameters", "Tight"))
-        self.cmb_bot_type.setItemText(2, _translate("Parameters", "Loose"))
-        self.btn_start.setText(_translate("Parameters", "Start"))
+        Parameters.setWindowTitle(_("Parameters")) # noqa
+        self.label.setText(_("Home bet")) # noqa
+        self.cmb_home_bet.setItemText(0, "Demo") # noqa
+        self.label_2.setText(_("Bot type")) # noqa
+        self.cmb_bot_type.setItemText(0, "Agressive") # noqa
+        self.cmb_bot_type.setItemText(1, "Tight") # noqa
+        self.cmb_bot_type.setItemText(2, "Loose") # noqa
+        self.btn_start.setText(_("Start")) # noqa
         self.chk_use_credentials.setText(
-            _translate("Parameters", "Use saved credentials")
+            _("Use saved credentials") # noqa
         )

@@ -82,16 +82,15 @@ class MainDesigner(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.lbl_version.setText(_translate("MainWindow", "1.0.0"))
-        self.label.setText(_translate("MainWindow", "TextLabel"))
-        self.menu_file.setTitle(_translate("MainWindow", "File"))
-        self.menuView.setTitle(_translate("MainWindow", "View"))
-        self.menu_logs.setTitle(_translate("MainWindow", "Logs"))
-        self.menu_configuration.setTitle(_translate("MainWindow", "Configuration"))
-        self.action_exit.setText(_translate("MainWindow", "Exit"))
-        self.actionInfo.setText(_translate("MainWindow", "Info"))
-        self.actionDebug.setText(_translate("MainWindow", "Debug"))
-        self.action_crendentials.setText(_translate("MainWindow", "Crendentials"))
-        self.action_signout.setText(_translate("MainWindow", "Sign out"))
+        MainWindow.setWindowTitle("MainWindow")  # noqa
+        self.lbl_version.setText("1.0.0") # noqa
+        self.label.setText("TextLabel") # noqa
+        self.menu_file.setTitle(_("File")) # noqa
+        self.menuView.setTitle(_("View")) # noqa
+        self.menu_logs.setTitle(_("Logs")) # noqa
+        self.menu_configuration.setTitle(_("Configuration")) # noqa
+        self.action_exit.setText(_("Exit")) # noqa
+        self.actionInfo.setText(_("Info")) # noqa
+        self.actionDebug.setText(_("Debug")) # noqa
+        self.action_crendentials.setText(_("Crendentials")) # noqa
+        self.action_signout.setText(_("Sign out")) # noqa

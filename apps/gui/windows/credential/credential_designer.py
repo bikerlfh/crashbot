@@ -110,27 +110,26 @@ class CredentialDesigner(object):
         Credentials.setTabOrder(self.txt_password, self.btn_save)
 
     def retranslateUi(self, Credentials):
-        _translate = QtCore.QCoreApplication.translate
-        Credentials.setWindowTitle(_translate("Credentials", "Credentials"))
+        Credentials.setWindowTitle(_("Credentials")) # noqa
         __sortingEnabled = self.lst_credentials_home_bet.isSortingEnabled()
         self.lst_credentials_home_bet.setSortingEnabled(False)
         item = self.lst_credentials_home_bet.item(0)
-        item.setText(_translate("Credentials", "BetPlay"))
+        item.setText("BetPlay") # noqa
         item = self.lst_credentials_home_bet.item(1)
-        item.setText(_translate("Credentials", "Otro"))
+        item.setText("Otro") # noqa
         self.lst_credentials_home_bet.setSortingEnabled(__sortingEnabled)
-        self.btn_remove.setText(_translate("Credentials", "Remove"))
-        self.btn_remove_all.setText(_translate("Credentials", "Remove All"))
+        self.btn_remove.setText(_("Remove")) # noqa
+        self.btn_remove_all.setText(_("Remove All")) # noqa
         self.tab_credentials.setTabText(
             self.tab_credentials.indexOf(self.tab),
-            _translate("Credentials", "Saved Credentials"),
+            _("Saved Credentials"), # noqa
         )
-        self.label_4.setText(_translate("Credentials", "Password"))
-        self.label_3.setText(_translate("Credentials", "Username"))
-        self.cmb_home_bet.setItemText(0, _translate("Credentials", "Demo"))
-        self.btn_save.setText(_translate("Credentials", "Save"))
-        self.label.setText(_translate("Credentials", "Home bet"))
+        self.label_4.setText(_("Password")) # noqa
+        self.label_3.setText(_("Username")) # noqa
+        self.cmb_home_bet.setItemText(0, "Demo") # noqa
+        self.btn_save.setText(_("Save")) # noqa
+        self.label.setText(_("Home bet")) # noqa
         self.tab_credentials.setTabText(
             self.tab_credentials.indexOf(self.page_crendential),
-            _translate("Credentials", "Add Crendential"),
+            _("Add Crendential"), # noqa
         )

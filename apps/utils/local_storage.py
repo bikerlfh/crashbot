@@ -47,8 +47,10 @@ class LocalStorage(metaclass=Singleton):
         return self.get(LocalStorage.LocalStorageKeys.REFRESH.value)
 
     def remove_token(self):
-        self.remove(LocalStorage.LocalStorageKeys.TOKEN.value)
-        self.remove(LocalStorage.LocalStorageKeys.REFRESH.value)
+        if self.get_token():
+            self.remove(LocalStorage.LocalStorageKeys.TOKEN.value)
+        if self.get_refresh():
+            self.remove(LocalStorage.LocalStorageKeys.REFRESH.value)
 
     def set_customer_id(self, customer_id: int):
         self.set(LocalStorage.LocalStorageKeys.CUSTOMER_ID.value, customer_id)

@@ -21,7 +21,7 @@ class AviatorBetPlay(Aviator):
         username = GlobalVars.get_username()
         password = GlobalVars.get_password()
         if not username or not password:
-            SendEventToGUI.log.success("Please set username and password to login!")
+            SendEventToGUI.log.success(_("Please set username and password to login!")) # noqa
             return
         username_input = self._page.locator("input#userName")
         password_input = self._page.locator("input#password")

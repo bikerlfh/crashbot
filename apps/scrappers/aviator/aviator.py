@@ -21,7 +21,7 @@ class Aviator(AbstractGameBase, abc.ABC):
     async def _click(self, element: Locator):
         box = await element.bounding_box()
         if not box or not self._page:
-            SendEventToGUI.log.error("page :: box or page does't exists")
+            SendEventToGUI.log.error("page :: box or page does\'t exists")
             return
         await self._page.mouse.move(
             box["x"] + box["width"] / 2, box["y"] + box["height"] / 2, steps=50
@@ -75,7 +75,7 @@ class Aviator(AbstractGameBase, abc.ABC):
         # await self.read_game_limits()
         self._controls = BetControl(self._app_game)
         await self._controls.init()
-        SendEventToGUI.log.success("Aviator loaded")
+        SendEventToGUI.log.success(_("Aviator loaded")) # noqa
 
     async def close(self):
         if not self._page:
@@ -184,7 +184,7 @@ class Aviator(AbstractGameBase, abc.ABC):
         for i, bet in enumerate(bets):
             control = Control.Control1 if i == 0 else Control.Control2
             SendEventToGUI.log.info(
-                f"Sending bet to aviator {bet.amount} * "
+                f"{_('Sending bet to aviator')} {bet.amount} * " # noqa
                 f"{bet.multiplier} control: {control}"
             )
             await self._controls.bet(
@@ -232,7 +232,7 @@ class Aviator(AbstractGameBase, abc.ABC):
                 )
                 if last_multiplier_saved != last_multiplier:
                     self.multipliers.append(last_multiplier)
-                    SendEventToGUI.log.success(f"New Multiplier: {last_multiplier}")
+                    SendEventToGUI.log.success(f"{_('New Multiplier')}: {last_multiplier}") # noqa
                     self.multipliers = self.multipliers[1:]
                     return
                 sleep_now(0.2)

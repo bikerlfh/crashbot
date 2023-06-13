@@ -21,7 +21,7 @@ class AviatorOneWin(Aviator):
         password = globals().get("password")
 
         if not username or not password:
-            SendEventToGUI.log.warning("please set username and password to login!")
+            SendEventToGUI.log.warning(_("please set username and password to login!")) # noqa
             return
 
         user_name_input = self._page.locator("input[name='login']")

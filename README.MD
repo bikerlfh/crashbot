@@ -63,3 +63,9 @@ make generate-installer
 ```
 ### if you use pyenv install the version
 PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install 3.10.4
+
+
+# create language 
+pygettext -d base -o locales/base.po  .
+
+use poedit to translate the file base.po

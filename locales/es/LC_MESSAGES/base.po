@@ -1,0 +1,280 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2023-06-13 17:03-0500\n"
+"PO-Revision-Date: 2023-06-13 17:07-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 3.3.1\n"
+
+#: apps/game/bots/bot_base.py:89
+msgid "Bot initialized"
+msgstr "Bot inicializado"
+
+#: apps/game/bots/bot_base.py:90
+#: apps/gui/windows/parameter/parameter_designer.py:75
+msgid "Bot type"
+msgstr "Tipo de Bot"
+
+#: apps/game/bots/bot_base.py:91
+msgid "Bot risk factor"
+msgstr "Factor de riesgo del Bot"
+
+#: apps/game/bots/bot_base.py:93
+msgid "Bot min multiplier to bet"
+msgstr "Mínimo multiplicador para apostar"
+
+#: apps/game/bots/bot_base.py:96
+msgid "Bot min multiplier to recover losses"
+msgstr "Mínimo multiplicador para recuperar perdidas"
+
+#: apps/game/bots/bot_base.py:100
+msgid "Bot min category percentage to bet"
+msgstr "Mínimo porcentaje de la categoría para apostar"
+
+#: apps/game/bots/bot_base.py:104
+msgid "Bot min average prediction model in live to bet"
+msgstr "Bot min modelo de predicción media en vivo para apostar"
+
+#: apps/game/bots/bot_base.py:107
+msgid "Stop Loss"
+msgstr ""
+
+#: apps/game/bots/bot_base.py:108
+msgid "Take Profit"
+msgstr ""
+
+#: apps/game/bots/bot_base.py:109
+msgid "Bot strategies count"
+msgstr "Número de estrategias del Bot"
+
+#: apps/game/bots/bot_base.py:192
+msgid "Min bet amount"
+msgstr "Monto mínimo de apuesta"
+
+#: apps/game/bots/bot_base.py:193
+msgid "Max bet amount"
+msgstr "Monto máximo de apuesta"
+
+#: apps/game/bots/bot_base.py:402
+msgid "No strategy found for profit percentage"
+msgstr "No hay estrategias para el profit"
+
+#: apps/game/bots/bot_base.py:415 apps/game/bots/bots.py:238
+msgid "Stop loss reached"
+msgstr "Stop loss alcanzado"
+
+#: apps/game/bots/bot_base.py:419 apps/game/bots/bots.py:241
+msgid "Take profit reached"
+msgstr "Take profit alcanzado"
+
+#: apps/game/bots/bot_base.py:429 apps/game/bots/bots.py:247
+msgid "Prediction value is too low"
+msgstr "El valor de la predicción es muy baja"
+
+#: apps/game/bots/bot_base.py:433
+msgid "Probability is too low"
+msgstr "La probabilidad es muy baja"
+
+#: apps/game/bots/bots.py:133
+msgid "multiplier is less than min multiplier to recovery losses"
+msgstr "el multiplicador es inferior al multiplicador mínimo para recuperar las pérdidas"
+
+#: apps/game/bots/bots.py:136
+msgid "generating recovery bets"
+msgstr "generando las apuestas de recuperación"
+
+#: apps/game/bots/bots.py:232
+msgid "No strategy found for profit"
+msgstr "No se ha encontrado ninguna estrategia para obtener beneficios"
+
+#: apps/game/bots/bots.py:244
+msgid "Prediction value is not in category percentage"
+msgstr "El valor de la predicción no está en el porcentaje de la categoría"
+
+#: apps/game/game.py:66
+msgid "opening home bet"
+msgstr "abriendo casa de apuestas"
+
+#: apps/game/game.py:68
+msgid "reading the player's balance"
+msgstr "leyendo el balance del jugador"
+
+#: apps/game/game.py:98
+msgid "Game initialized"
+msgstr "Juego inicializado"
+
+#: apps/game/game.py:177
+msgid "saving bets"
+msgstr "guardando apuestas"
+
+#: apps/game/game.py:183
+msgid "bets saved"
+msgstr "apuestas guardadas"
+
+#: apps/game/game.py:185
+msgid "Error in requestSaveBets"
+msgstr "Error en requestSaveBets"
+
+#: apps/game/game.py:197
+msgid "Error in request_get_prediction"
+msgstr "Error en request_get_prediction"
+
+#: apps/game/game.py:206
+msgid "waiting for the next game"
+msgstr "esperando por el siguiente juego"
+
+#: apps/game/game.py:233
+msgid "The game is not initialized"
+msgstr "El juego no esta inicializado"
+
+#: apps/game/game.py:268
+msgid "No prediction found"
+msgstr "No se encontró predicción"
+
+#: apps/game/models.py:66
+msgid "prediction"
+msgstr "predicción"
+
+#: apps/game/models.py:67
+msgid "probability"
+msgstr "probabilidad"
+
+#: apps/gui/windows/console/console_designer.py:494
+msgid "Set Amount Bet"
+msgstr "Monto a apostar"
+
+#: apps/gui/windows/console/console_designer.py:495
+#: apps/gui/windows/console/console_form.py:81
+#: apps/gui/windows/console/console_form.py:132
+msgid "AutoBet"
+msgstr "Auto Apuesta"
+
+#: apps/gui/windows/console/console_designer.py:496
+msgid "Amount Bet"
+msgstr "Monto de apuesta"
+
+#: apps/gui/windows/console/console_designer.py:503
+msgid "Auto CashOut"
+msgstr "Retiro Automático"
+
+#: apps/gui/windows/credential/credential_designer.py:113
+msgid "Credentials"
+msgstr "Credenciales"
+
+#: apps/gui/windows/credential/credential_designer.py:121
+msgid "Remove"
+msgstr "Eliminar"
+
+#: apps/gui/windows/credential/credential_designer.py:122
+msgid "Remove All"
+msgstr "Eliminar todos"
+
+#: apps/gui/windows/credential/credential_designer.py:125
+msgid "Saved Credentials"
+msgstr "Guardar credenciales"
+
+#: apps/gui/windows/credential/credential_designer.py:127
+#: apps/gui/windows/login/login_designer.py:348
+msgid "Password"
+msgstr "Contraseña"
+
+#: apps/gui/windows/credential/credential_designer.py:128
+#: apps/gui/windows/login/login_designer.py:347
+msgid "Username"
+msgstr ""
+
+#: apps/gui/windows/credential/credential_designer.py:130
+msgid "Save"
+msgstr "Guardar"
+
+#: apps/gui/windows/credential/credential_designer.py:131
+#: apps/gui/windows/parameter/parameter_designer.py:73
+msgid "Home bet"
+msgstr "Casa de apuesta"
+
+#: apps/gui/windows/credential/credential_designer.py:134
+msgid "Add Crendential"
+msgstr "Agregar Credenciales"
+
+#: apps/gui/windows/login/login_designer.py:345
+#: apps/gui/windows/login/login_designer.py:349
+msgid "Login"
+msgstr ""
+
+#: apps/gui/windows/main/main_designer.py:88
+msgid "File"
+msgstr "Archivo"
+
+#: apps/gui/windows/main/main_designer.py:89
+msgid "View"
+msgstr "Vista"
+
+#: apps/gui/windows/main/main_designer.py:90
+msgid "Logs"
+msgstr ""
+
+#: apps/gui/windows/main/main_designer.py:91
+msgid "Configuration"
+msgstr "Configuración"
+
+#: apps/gui/windows/main/main_designer.py:92
+msgid "Exit"
+msgstr "Salir"
+
+#: apps/gui/windows/main/main_designer.py:93
+msgid "Info"
+msgstr ""
+
+#: apps/gui/windows/main/main_designer.py:94
+msgid "Debug"
+msgstr ""
+
+#: apps/gui/windows/main/main_designer.py:95
+msgid "Crendentials"
+msgstr "Credenciales"
+
+#: apps/gui/windows/main/main_designer.py:96
+msgid "Sign out"
+msgstr "Cerrar sesión"
+
+#: apps/gui/windows/parameter/parameter_designer.py:72
+msgid "Parameters"
+msgstr "Parámetros"
+
+#: apps/gui/windows/parameter/parameter_designer.py:79
+msgid "Start"
+msgstr ""
+
+#: apps/gui/windows/parameter/parameter_designer.py:81
+msgid "Use saved credentials"
+msgstr "Usar credenciales guardadas"
+
+#: apps/scrappers/aviator/aviator.py:78
+msgid "Aviator loaded"
+msgstr "Aviador cargado"
+
+#: apps/scrappers/aviator/aviator.py:187
+msgid "Sending bet to aviator"
+msgstr "Enviando apuesta a aviator"
+
+#: apps/scrappers/aviator/aviator.py:235
+msgid "New Multiplier"
+msgstr "Nuevo Multiplicador"
+
+#: apps/scrappers/aviator/aviator_bet_play.py:24
+msgid "Please set username and password to login!"
+msgstr "Por favor ingresa el username y la contraseña para hacer login!"
+
+#: apps/scrappers/aviator/aviator_one_win.py:24
+msgid "please set username and password to login!"
+msgstr "por favor ingresa el username y la contraseña para hacer login!"

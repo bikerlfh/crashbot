@@ -78,7 +78,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.lbl_home_bet.setText(self.home_bet.name)
         self.lbl_bot_type.setText(f"Bot: {bot_type}")
         self.txt_max_amount_to_bet.setText(str(max_amount_to_bet))
-        self.btn_auto_bet.setText("AutoBet ON" if auto_play else "AutoBet OFF")
+        self.btn_auto_bet.setText(
+            f"{_('AutoBet')} ON" # noqa
+            if auto_play else f"{_('AutoBet')} OFF" # noqa
+        )
         self.ws_client.set_home_bet(
             home_bet_id=self.home_bet.id,
             customer_id=local_storage.get_customer_id(),
@@ -92,7 +95,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         auto_cash_out = not GlobalVars.get_auto_cash_out()
         GlobalVars.set_auto_cash_out(auto_cash_out)
         self.btn_auto_cash_out.setText(
-            "Auto CashOut ON" if auto_cash_out else "Auto CashOut OFF"
+            f"{_('Auto CashOut')} ON" if auto_cash_out else f"{_('Auto CashOut')} OFF" # noqa
         )
 
     def button_set_max_amount_to_bet_clicked_event(self):
@@ -129,7 +132,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     def _on_receive_auto_play(self, data: dict):
         try:
             self.auto_play = data.get("auto_play")
-            self.btn_auto_bet.setText("AutoBet ON" if self.auto_play else "AutoBet OFF")
+            self.btn_auto_bet.setText(
+                f"{_('AutoBet')} ON" # noqa
+                if self.auto_play else f"{_('AutoBet')} OFF" # noqa
+            )
             self.btn_auto_cash_out.setEnabled(self.auto_play)
         except Exception as e:
             logs_services.save_gui_log(

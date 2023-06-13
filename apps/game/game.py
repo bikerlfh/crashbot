@@ -63,9 +63,9 @@ class Game:
         - init the websocket
         - Open the browser
         """
-        SendEventToGUI.log.info("opening home bet.....")
+        SendEventToGUI.log.info(_("opening home bet")) # noqa
         await self.game_page.open()
-        SendEventToGUI.log.info("reading the player's balance.....")
+        SendEventToGUI.log.info(_("reading the player's balance")) # noqa
         self.initial_balance = self.game_page.balance
         self.balance = self.initial_balance
         last_balance = local_storage.get_last_initial_balance(
@@ -73,16 +73,16 @@ class Game:
         )
         if last_balance and last_balance > self.initial_balance:
             self.initial_balance = last_balance
-            SendEventToGUI.log.info(
-                f"Update the initial balance from "
-                f"local storage {self.initial_balance}"
+            SendEventToGUI.log.debug(
+                f"Update the initial balance from"
+                f" local storage {self.initial_balance}"
             )
         else:
             local_storage.set_last_initial_balance(
                 home_bet_id=self.home_bet.id, balance=self.initial_balance
             )
         SendEventToGUI.balance(self.balance)
-        SendEventToGUI.log.debug("loading the player.....")
+        SendEventToGUI.log.debug("loading the player")
         self.multipliers_to_save = self.game_page.multipliers
         SendEventToGUI.send_multipliers(self.multipliers_to_save)
         self.multipliers = list(
@@ -95,7 +95,7 @@ class Game:
         self.initialized = True
         self.request_save_multipliers()
         self.request_save_customer_balance()
-        SendEventToGUI.log.success("Game initialized")
+        SendEventToGUI.log.success(_("Game initialized")) # noqa
         SendEventToGUI.game_loaded(True)
 
     async def close(self):
@@ -117,7 +117,7 @@ class Game:
             self.multiplier_positions = api_services.get_multiplier_positions(
                 home_bet_id=self.home_bet.id
             )
-            SendEventToGUI.log.debug(f"multiplier positions received")
+            SendEventToGUI.log.debug("multiplier positions received")
         except Exception as error:
             SendEventToGUI.log.debug(f"Error in requestMultiplierPositions: {error}")
 
@@ -136,7 +136,7 @@ class Game:
                 multipliers=self.multipliers_to_save,
             )
             self.multipliers_to_save = []
-            SendEventToGUI.log.debug(f"multipliers saved")
+            SendEventToGUI.log.debug("multipliers saved")
             self.request_multiplier_positions()
         except Exception as error:
             SendEventToGUI.log.debug(f"error in requestSaveMultipliers: {error}")
@@ -145,17 +145,17 @@ class Game:
         """
         Save the customer's balance in the database
         """
-        SendEventToGUI.log.debug("saving balance.....")
+        SendEventToGUI.log.debug("saving balance")
         try:
             api_services.update_customer_balance(
                 customer_id=self.customer_id,
                 home_bet_id=self.home_bet.id,
                 balance=round(self.balance, 2),
             )
-            SendEventToGUI.log.debug(f"balance saved")
+            SendEventToGUI.log.debug("balance saved")
         except Exception as error:
             SendEventToGUI.log.debug(
-                f"Error in request_save_customer_balance :: bet: {error}"
+                f"Error in request_save_customer_balance :: bet :: {error}"
             )
 
     def request_save_bets(self):
@@ -174,15 +174,15 @@ class Game:
             )
             for bet in self.bets
         ]
-        SendEventToGUI.log.debug("saving bets.....")
+        SendEventToGUI.log.debug(_("saving bets")) # noqa
         try:
             api_services.create_bets(
                 home_bet_id=self.home_bet.id,
                 bets=bets_to_save,
             )
-            SendEventToGUI.log.debug(f"bets saved")
+            SendEventToGUI.log.debug(_("bets saved")) # noqa
         except Exception as error:
-            SendEventToGUI.log.debug(f"Error in requestSaveBets :: bet: {error}")
+            SendEventToGUI.log.debug(f"{_('Error in requestSaveBets')} :: {error}") # noqa
 
     def request_get_prediction(self) -> Optional[PredictionCore]:
         """
@@ -194,7 +194,7 @@ class Game:
                 home_bet_id=self.home_bet.id, multipliers=multipliers
             )
         except Exception as e:
-            SendEventToGUI.log.debug(f"Error in request_get_prediction: {e}")
+            SendEventToGUI.log.debug(f"{_('Error in request_get_prediction')}: {e}") # noqa
             return None
         self._prediction_model.add_predictions(predictions)
         return self._prediction_model.get_best_prediction()
@@ -203,7 +203,7 @@ class Game:
         """
         Wait for the next game to start
         """
-        SendEventToGUI.log.info("waiting for the next game.....")
+        SendEventToGUI.log.info(_("waiting for the next game")) # noqa
         await self.game_page.wait_next_game()
         balance = await self.read_balance_to_aviator()
         if balance != self.balance:
@@ -230,7 +230,7 @@ class Game:
             self.get_next_bet()
             await self.send_bets_to_aviator()
             SendEventToGUI.log.info("***************************************")
-        SendEventToGUI.log.error("The game is not initialized")
+        SendEventToGUI.log.error(_("The game is not initialized")) # noqa
 
     def evaluate_bets(self, multiplier: float) -> None:
         """
@@ -265,7 +265,7 @@ class Game:
         self._prediction_model.evaluate_models(self.bot.MIN_AVERAGE_MODEL_PREDICTION)
         prediction = self.request_get_prediction()
         if prediction is None:
-            SendEventToGUI.log.warning("No prediction found")
+            SendEventToGUI.log.warning(_("No prediction found")) # noqa
             return []
         bets = self.bot.get_next_bet(
             prediction=prediction,

@@ -15,6 +15,7 @@ class Config(metaclass=Singleton):
         ALLOWED_LOG_CODES_TO_SHOW = "ALLOWED_LOG_CODES_TO_SHOW"
         MAX_AMOUNT_HOME_BET_PERCENTAGE = "MAX_AMOUNT_HOME_BET_PERCENTAGE"
         MAX_AMOUNT_BALANCE_PERCENTAGE = "MAX_AMOUNT_BALANCE_PERCENTAGE"
+        LANGUAGE = "LANGUAGE"
 
     def __init__(self):
         self.config_file = CONFIG_FILE_PATH
@@ -29,6 +30,8 @@ class Config(metaclass=Singleton):
         ]
         self.MAX_AMOUNT_HOME_BET_PERCENTAGE = 0.5
         self.MAX_AMOUNT_BALANCE_PERCENTAGE = 0.005
+        self.LANGUAGE = "en"
+        self._ALLOWED_LANGUAGES = ["en", "es"]
         self.read_config()
 
     def __create_config(self):
@@ -58,6 +61,10 @@ class Config(metaclass=Singleton):
                         self.MAX_AMOUNT_HOME_BET_PERCENTAGE = float(value)
                     case self.ConfigVar.MAX_AMOUNT_BALANCE_PERCENTAGE:
                         self.MAX_AMOUNT_BALANCE_PERCENTAGE = float(value)
+                    case self.ConfigVar.LANGUAGE:
+                        self.LANGUAGE = value
+                        if value not in self._ALLOWED_LANGUAGES:
+                            self.LANGUAGE = self._ALLOWED_LANGUAGES[0]
             return config
 
     def write_config(self):
@@ -65,6 +72,7 @@ class Config(metaclass=Singleton):
             file.write("# Default configuration\n")
             file.write(f"API_URL={self.API_URL}\n")
             file.write(f"WS_URL={self.WS_URL}\n")
+            file.write(f"LANGUAGE={self.LANGUAGE}\n")
             # file.write(
             #   f'ALLOWED_LOG_CODES_TO_SHOW={",".join(self.ALLOWED_LOG_CODES_TO_SHOW)}\n'
             # )

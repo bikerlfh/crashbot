@@ -86,25 +86,27 @@ class BotBase:
         self.STRATEGIES = bot.strategies
         self.stop_loss = round(self.initial_balance * self.STOP_LOSS_PERCENTAGE, 2)
         self.take_profit = round(self.initial_balance * self.TAKE_PROFIT_PERCENTAGE, 2)
-        SendEventToGUI.log.info("Bot initialized")
-        SendEventToGUI.log.info(f"Bot type: {self.BOT_TYPE}")
-        SendEventToGUI.log.info(f"Bot risk factor: {self.RISK_FACTOR}")
+        SendEventToGUI.log.info(_("Bot initialized")) # noqa
+        SendEventToGUI.log.info(f"{_('Bot type')}: {self.BOT_TYPE}") # noqa
+        SendEventToGUI.log.info(f"{_('Bot risk factor')}: {self.RISK_FACTOR}") # noqa
         SendEventToGUI.log.info(
-            f"Bot min multiplier to bet: {self.MIN_MULTIPLIER_TO_BET}"
+            f"{_('Bot min multiplier to bet')}: {self.MIN_MULTIPLIER_TO_BET}" # noqa
         )
         SendEventToGUI.log.info(
-            f"Bot min multiplier to recover losses: {self.MIN_MULTIPLIER_TO_RECOVER_LOSSES}"
+            f"{_('Bot min multiplier to recover losses')}: " # noqa
+            f"{self.MIN_MULTIPLIER_TO_RECOVER_LOSSES}"
         )
         SendEventToGUI.log.info(
-            f"Bot min category percentage to bet: {self.MIN_CATEGORY_PERCENTAGE_TO_BET}"
+            f"{_('Bot min category percentage to bet')}: " # noqa
+            f"{self.MIN_CATEGORY_PERCENTAGE_TO_BET}"
         )
         SendEventToGUI.log.info(
-            f"Bot min average prediction model in live to bet: "
+            f"{_('Bot min average prediction model in live to bet')}: " # noqa
             f"{self.MIN_AVERAGE_MODEL_PREDICTION}"
         )
-        SendEventToGUI.log.info(f"Stop Loss: {self.stop_loss}")
-        SendEventToGUI.log.info(f"Take Profit: {self.take_profit}")
-        SendEventToGUI.log.debug(f"Bot strategies count: {len(self.STRATEGIES)}")
+        SendEventToGUI.log.info(f"{_('Stop Loss')}: {self.stop_loss}") # noqa
+        SendEventToGUI.log.info(f"{_('Take Profit')}: {self.take_profit}") # noqa
+        SendEventToGUI.log.debug(f"{_('Bot strategies count')}: {len(self.STRATEGIES)}") # noqa
 
     def validate_bet_amount(self, amount: float) -> float:
         # if amount < minimumBet, set amount = minimumBet
@@ -187,8 +189,8 @@ class BotBase:
         total = self._max_amount_to_bet + self._min_amount_to_bet
         if total < amount:
             self._max_amount_to_bet += amount - total
-        SendEventToGUI.log.success(f"Min bet amount: {self._min_amount_to_bet}")
-        SendEventToGUI.log.success(f"Max bet amount: {self._max_amount_to_bet}")
+        SendEventToGUI.log.success(f"{_('Min bet amount')}: {self._min_amount_to_bet}") # noqa
+        SendEventToGUI.log.success(f"{_('Max bet amount')}: {self._max_amount_to_bet}") # noqa
 
     def evaluate_bets(self, multiplier_result: float):
         total_amount = 0
@@ -397,7 +399,7 @@ class BotBase:
         strategy = self.get_strategy(number_of_bet)
         if not strategy:
             SendEventToGUI.log.warning(
-                f"No strategy found for profit percentage: "
+                f"{_('No strategy found for profit percentage')}: " # noqa
                 f"{self.get_profit_percent()}"
             )
             return []
@@ -410,11 +412,11 @@ class BotBase:
         SendEventToGUI.log.debug(f"profit: {profit}")
         prediction_data.print_data()
         if self.in_stop_loss():
-            SendEventToGUI.log.warning("Stop loss reached")
+            SendEventToGUI.log.warning(_("Stop loss reached")) # noqa
             return []
 
         if self.in_take_profit():
-            SendEventToGUI.log.success("Take profit reached")
+            SendEventToGUI.log.success(_("Take profit reached")) # noqa
             return []
 
         if not prediction_data.in_category_percentage:
@@ -424,11 +426,11 @@ class BotBase:
             return []
 
         if prediction_data.prediction_value < self.MIN_MULTIPLIER_TO_BET:
-            SendEventToGUI.log.warning("Prediction value is too low")
+            SendEventToGUI.log.warning(_("Prediction value is too low")) # noqa
             return []
 
         if prediction_data.probability < self.MIN_PROBABILITY_TO_BET:
-            SendEventToGUI.log.debug("Probability is too low")
+            SendEventToGUI.log.debug(_("Probability is too low")) # noqa
             return []
 
         # CATEGORY 1

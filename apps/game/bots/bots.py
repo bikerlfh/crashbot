@@ -130,11 +130,10 @@ class BotStatic(BotBase):
         """
         if multiplier < self.MIN_MULTIPLIER_TO_RECOVER_LOSSES:
             SendEventToGUI.log.warning(
-                f"multiplier is less than "
-                f"{self.MIN_MULTIPLIER_TO_RECOVER_LOSSES}, no recovery bets"
+                _("multiplier is less than min multiplier to recovery losses") # noqa
             )
             return []
-        SendEventToGUI.log.debug("generating recovery bets")
+        SendEventToGUI.log.debug(_("generating recovery bets")) # noqa
         bets = []
         amount = self.get_bet_recovery_amount(multiplier, probability, strategy)
         amount = self.validate_bet_amount(amount)
@@ -230,23 +229,22 @@ class BotStatic(BotBase):
         strategy = self.get_strategy(number_of_bet)
         if not strategy:
             SendEventToGUI.log.warning(
-                f"No strategy found for profit "
-                f"percentage: {self.get_profit_percent()}"
+                f"{_('No strategy found for profit')} {profit}" # noqa
             )
             return []
         SendEventToGUI.log.debug(f"profit: {profit}")
         prediction_data.print_data()
         if self.in_stop_loss():
-            SendEventToGUI.log.warning("Stop loss reached")
+            SendEventToGUI.log.warning(_("Stop loss reached")) # noqa
             return []
         if self.in_take_profit():
-            SendEventToGUI.log.success("Take profit reached")
+            SendEventToGUI.log.success(_("Take profit reached")) # noqa
             return []
         if not prediction_data.in_category_percentage:
-            SendEventToGUI.log.warning("Prediction value is not in category percentage")
+            SendEventToGUI.log.warning(_("Prediction value is not in category percentage")) # noqa
             return []
         if prediction_data.prediction_value < self.MIN_MULTIPLIER_TO_BET:
-            SendEventToGUI.log.warning("Prediction value is too low")
+            SendEventToGUI.log.warning(_("Prediction value is too low")) # noqa
             return []
         if prediction_data.probability < self.MIN_PROBABILITY_TO_BET:
             SendEventToGUI.log.debug("Probability is too low")

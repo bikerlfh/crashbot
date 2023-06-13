@@ -342,9 +342,8 @@ class LoginDesigner(object):
         QtCore.QMetaObject.connectSlotsByName(Login)
 
     def retranslateUi(self, Login):
-        _translate = QtCore.QCoreApplication.translate
-        Login.setWindowTitle(_translate("Login", "Login"))
-        self.groupBox.setTitle(_translate("Login", "CrashBot"))
-        self.label.setText(_translate("Login", "Username"))
-        self.label_2.setText(_translate("Login", "Password"))
-        self.btn_login.setText(_translate("Login", "Login"))
+        Login.setWindowTitle(_("Login")) # noqa
+        self.groupBox.setTitle("CrashBot") # noqa
+        self.label.setText(_("Username")) # noqa
+        self.label_2.setText(_("Password")) # noqa
+        self.btn_login.setText(_("Login")) # noqa
