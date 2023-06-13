@@ -100,7 +100,7 @@ class BotBase:
             f"{_('Bot min category percentage to bet')}: " # noqa
             f"{self.MIN_CATEGORY_PERCENTAGE_TO_BET}"
         )
-        SendEventToGUI.log.info(
+        SendEventToGUI.log.debug(
             f"{_('Bot min average prediction model in live to bet')}: " # noqa
             f"{self.MIN_AVERAGE_MODEL_PREDICTION}"
         )
