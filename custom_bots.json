@@ -1,0 +1,15 @@
+[
+    {
+        "name": "CustomBot",
+        "bot_type": "aggressive",
+        "risk_factor": 0.1,
+        "min_multiplier_to_bet": 1.2,
+        "min_multiplier_to_recover_losses": 1.95,
+        "min_probability_to_bet": 0.5,
+        "min_category_percentage_to_bet": 0.5,
+        "max_recovery_percentage_on_max_bet": 0.5,
+        "min_average_model_prediction": 0.5,
+        "stop_loss_percentage": 0.9,
+        "take_profit_percentage": 0.5
+    }
+]

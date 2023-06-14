@@ -5,6 +5,7 @@ import gettext
 
 # Internal
 # from pwn import log, listen
+from apps import custom_bots
 from apps.game.ws_server import server as game_server
 from apps.globals import GlobalVars
 from apps.gui import app as gui_app
@@ -22,6 +23,8 @@ if __name__ == "__main__":
         languages=[GlobalVars.config.LANGUAGE]
     )
     lang.install()
+    custom_bots = custom_bots.read_custom_bots()
+    GlobalVars.set_custom_bots(custom_bots)
     ws_client = WebSocketClient()
     event = Event()
     ws_server_thread = Thread(

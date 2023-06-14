@@ -41,7 +41,7 @@ msgid "Bot min category percentage to bet"
 msgstr ""
 
 #: ./apps/game/bots/bot_base.py:104
-msgid "Bot min average prediction model in live to bet"
+msgid "Bot min average model prediction"
 msgstr ""
 
 #: ./apps/game/bots/bot_base.py:107

@@ -2,8 +2,9 @@
 from typing import List, Optional
 
 # Internal
+from apps.globals import GlobalVars
 from apps.api import services as api_services
-from apps.api.models import BotStrategy, MultiplierPositions
+from apps.api.models import BotStrategy, MultiplierPositions, Bot
 from apps.constants import BotType
 from apps.game import utils as game_utils
 from apps.game.models import Bet, PredictionData
@@ -59,6 +60,7 @@ class BotBase:
         maximum_bet: float = 0,
         amount_multiple: Optional[float] = None,
     ):
+        self._custom_bot = GlobalVars.get_custom_bot_selected()
         self.BOT_TYPE = bot_type
         self.minimum_bet = minimum_bet
         self.maximum_bet = maximum_bet
@@ -72,8 +74,11 @@ class BotBase:
         if len(bot_data) == 0:
             SendEventToGUI.exception("No bot data found")
             raise ValueError("No bot data found")
-
         bot = bot_data[0]
+        if self._custom_bot:
+            self._custom_bot.strategies = bot.strategies
+            bot = self._custom_bot
+        SendEventToGUI.log.info(f"Bot {bot.name} loaded")
         self.MIN_CATEGORY_PERCENTAGE_TO_BET = bot.min_category_percentage_to_bet
         self.MIN_AVERAGE_MODEL_PREDICTION = bot.min_average_model_prediction
         self.RISK_FACTOR = bot.risk_factor
@@ -87,7 +92,7 @@ class BotBase:
         self.stop_loss = round(self.initial_balance * self.STOP_LOSS_PERCENTAGE, 2)
         self.take_profit = round(self.initial_balance * self.TAKE_PROFIT_PERCENTAGE, 2)
         SendEventToGUI.log.info(_("Bot initialized")) # noqa
-        SendEventToGUI.log.info(f"{_('Bot type')}: {self.BOT_TYPE}") # noqa
+        SendEventToGUI.log.info(f"{_('Bot type')}: {self.BOT_TYPE.value}") # noqa
         SendEventToGUI.log.info(f"{_('Bot risk factor')}: {self.RISK_FACTOR}") # noqa
         SendEventToGUI.log.info(
             f"{_('Bot min multiplier to bet')}: {self.MIN_MULTIPLIER_TO_BET}" # noqa
@@ -101,7 +106,7 @@ class BotBase:
             f"{self.MIN_CATEGORY_PERCENTAGE_TO_BET}"
         )
         SendEventToGUI.log.debug(
-            f"{_('Bot min average prediction model in live to bet')}: " # noqa
+            f"{_('Bot min average model prediction')}: " # noqa
             f"{self.MIN_AVERAGE_MODEL_PREDICTION}"
         )
         SendEventToGUI.log.info(f"{_('Stop Loss')}: {self.stop_loss}") # noqa

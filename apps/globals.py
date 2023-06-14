@@ -38,6 +38,8 @@ class GlobalVars:
         AUTO_CASH_OUT = "AUTO_CASH_OUT"
         ALLOWED_TO_SAVE_MULTIPLIERS = "ALLOWED_TO_SAVE_MULTIPLIERS"
         WS_CLIENT_BACKEND_STARTED = "WS_CLIENT_BACKEND_STARTED"
+        CUSTOM_BOTS = "CUSTOM_BOTS"
+        CUSTOM_BOT_SELECTED = "CUSTOM_BOT_SELECTED"
 
     @staticmethod
     def init() -> None:
@@ -51,6 +53,8 @@ class GlobalVars:
         globals().setdefault(GlobalVars.VARS.AUTO_CASH_OUT, False)
         globals().setdefault(GlobalVars.VARS.WS_CLIENT_BACKEND_STARTED, False)
         globals().setdefault(GlobalVars.VARS.ALLOWED_TO_SAVE_MULTIPLIERS, False)
+        globals().setdefault(GlobalVars.VARS.CUSTOM_BOTS, [])
+        globals().setdefault(GlobalVars.VARS.CUSTOM_BOT_SELECTED, None)
         GlobalVars.init_config()
 
     @classmethod
@@ -148,6 +152,22 @@ class GlobalVars:
     @classmethod
     def set_ws_client_backend_started(cls, started: bool) -> None:
         globals()[GlobalVars.VARS.WS_CLIENT_BACKEND_STARTED] = started
+
+    @classmethod
+    def get_custom_bots(cls) -> list[object]:
+        return globals().get(GlobalVars.VARS.CUSTOM_BOTS)
+
+    @classmethod
+    def set_custom_bots(cls, custom_bots: list[object]) -> None:
+        globals()[GlobalVars.VARS.CUSTOM_BOTS] = custom_bots
+
+    @classmethod
+    def get_custom_bot_selected(cls) -> object:
+        return globals().get(GlobalVars.VARS.CUSTOM_BOT_SELECTED)
+
+    @classmethod
+    def set_custom_bot_selected(cls, custom_bot_selected: object) -> None:
+        globals()[GlobalVars.VARS.CUSTOM_BOT_SELECTED] = custom_bot_selected
 
     @classmethod
     def set_io(cls, sio: AsyncServer) -> None:

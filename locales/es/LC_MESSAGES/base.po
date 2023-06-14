@@ -42,8 +42,8 @@ msgid "Bot min category percentage to bet"
 msgstr "Mínimo porcentaje de la categoría para apostar"
 
 #: apps/game/bots/bot_base.py:104
-msgid "Bot min average prediction model in live to bet"
-msgstr "Bot min modelo de predicción media en vivo para apostar"
+msgid "Bot min average model prediction"
+msgstr "Mínimo porcentaje de la predicción del modelo"
 
 #: apps/game/bots/bot_base.py:107
 msgid "Stop Loss"

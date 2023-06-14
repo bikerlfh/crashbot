@@ -55,13 +55,23 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             self.cmb_home_bet.setItemText(key, val.name)
         count_cmb_bot = self.cmb_bot_type.count()
         bot_type = BotType.to_list()
+        custom_bots = GlobalVars.get_custom_bots()
+        if custom_bots:
+            bot_type.extend([bot.name for bot in custom_bots]) # noqa
         for i in range(len(bot_type)):
             if i >= count_cmb_bot:
                 self.cmb_bot_type.addItem("")
-            self.cmb_bot_type.setItemText(i, bot_type[i].title())
+            self.cmb_bot_type.setItemText(i, bot_type[i])
 
     def get_values(self) -> dict[str, any] | None:
-        bot_type = self.cmb_bot_type.currentText().lower()
+        bot_types = BotType.to_list()
+        bot_type = self.cmb_bot_type.currentText()
+        if bot_type not in bot_types:
+            custom_bot = list(filter(
+                lambda x: x.name == bot_type, GlobalVars.get_custom_bots())
+            )[0]
+            GlobalVars.set_custom_bot_selected(custom_bot)
+            bot_type = custom_bot.bot_type # noqa
         home_bet_index = self.cmb_home_bet.currentIndex()
         if not bot_type:
             QtWidgets.QMessageBox.warning(self, "Error", "Select a bot type")

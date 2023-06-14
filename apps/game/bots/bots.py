@@ -227,11 +227,11 @@ class BotStatic(BotBase):
         prediction_data = self.get_prediction_data(prediction)
         number_of_bet = self.get_number_of_bets()
         strategy = self.get_strategy(number_of_bet)
-        if not strategy:
-            SendEventToGUI.log.warning(
-                f"{_('No strategy found for profit')} {profit}" # noqa
-            )
-            return []
+        # if not strategy:
+        #     SendEventToGUI.log.warning(
+        #         f"{_('No strategy found for profit')} {profit}" # noqa
+        #     )
+        #     return []
         SendEventToGUI.log.debug(f"profit: {profit}")
         prediction_data.print_data()
         if self.in_stop_loss():
