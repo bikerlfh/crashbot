@@ -60,6 +60,7 @@ def get_range_amount_to_bet(
         min_bet = min(min_bet, balance)
         max_balance = balance * GlobalVars.config.MAX_AMOUNT_BALANCE_PERCENTAGE
         max_bet = min(max_bet, max_balance)
+        max_bet = max(max_bet, min_bet)
     return min_bet, max_bet
 
 

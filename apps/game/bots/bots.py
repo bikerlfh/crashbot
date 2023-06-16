@@ -151,6 +151,11 @@ class BotStatic(BotBase):
         """
         self.bets = []
         profit = self.get_profit()
+        second_multiplier = 2
+        min_multiplier, max_multiplier = self.predict_next_multiplier()
+        SendEventToGUI.log.debug(
+            f"second multiplier**: {min_multiplier} - {max_multiplier}"
+        )
         category_percentage = prediction_data.category_percentage
         SendEventToGUI.log.debug(f"Amount Lost: {self.amounts_lost}")
         if profit < 0 and abs(profit) >= self.minimum_bet:
@@ -164,16 +169,11 @@ class BotStatic(BotBase):
         # to category 2
         # if the profit is greater than 10% of the initial balance
         # get the possible next second multiplier
-        second_multiplier = 2
-        min_multiplier, max_multiplier = self.predict_next_multiplier()
         if min_multiplier > second_multiplier:
             second_multiplier = game_utils.generate_random_multiplier(
                 min_multiplier, max_multiplier
             )
-            SendEventToGUI.log.debug(
-                f"generate_bets :: second multiplier ({second_multiplier})"
-                f"{min_multiplier} - {max_multiplier} "
-            )
+            SendEventToGUI.log.debug(f"Second multiplier: {second_multiplier}")
         profit_percentage = self.get_profit_percent()
         if profit_percentage > 0 or self.is_bullish_game:
             SendEventToGUI.log.debug(

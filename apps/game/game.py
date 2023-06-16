@@ -275,6 +275,6 @@ class Game:
             self.bets = bets
         elif bets:
             SendEventToGUI.log.debug(
-                f"possible bets: " f"{[str(vars(bet)) for bet in bets]}"
+                f"possible bets: " f"{[dict(multiplier=bet.multiplier, amount=bet.amount) for bet in bets]}"
             )
         return self.bets
