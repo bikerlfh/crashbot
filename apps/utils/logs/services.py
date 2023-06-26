@@ -29,7 +29,9 @@ def save_gui_log(
     log_handler = LogsDBHandler()
     timestamp = timestamp or datetime.now()
     caller_frame = inspect.stack()[1]
-    path = f"{caller_frame.filename}::{caller_frame.function}::{caller_frame.lineno}"
+    path = f"{caller_frame.filename}::" \
+           f"{caller_frame.function}::" \
+           f"{caller_frame.lineno}"
     log_handler.insert_log(
         message=message, level=level, app="GUI", timestamp=timestamp, path=path
     )

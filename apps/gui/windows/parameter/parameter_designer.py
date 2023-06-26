@@ -32,7 +32,9 @@ class ParameterDesigner(object):
         self.cmb_home_bet.setGeometry(QtCore.QRect(20, 50, 351, 30))
         self.cmb_home_bet.setMinimumSize(QtCore.QSize(0, 30))
         self.cmb_home_bet.setMaximumSize(QtCore.QSize(16777215, 30))
-        self.cmb_home_bet.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
+        self.cmb_home_bet.setLayoutDirection(
+            QtCore.Qt.LayoutDirection.LeftToRight
+        )
         self.cmb_home_bet.setObjectName("cmb_home_bet")
         self.cmb_home_bet.addItem("")
         self.label_2 = QtWidgets.QLabel(parent=self.groupBox)
@@ -69,14 +71,12 @@ class ParameterDesigner(object):
         QtCore.QMetaObject.connectSlotsByName(Parameters)
 
     def retranslateUi(self, Parameters):
-        Parameters.setWindowTitle(_("Parameters")) # noqa
-        self.label.setText(_("Home bet")) # noqa
-        self.cmb_home_bet.setItemText(0, "Demo") # noqa
-        self.label_2.setText(_("Bot type")) # noqa
-        self.cmb_bot_type.setItemText(0, "Agressive") # noqa
-        self.cmb_bot_type.setItemText(1, "Tight") # noqa
-        self.cmb_bot_type.setItemText(2, "Loose") # noqa
-        self.btn_start.setText(_("Start")) # noqa
-        self.chk_use_credentials.setText(
-            _("Use saved credentials") # noqa
-        )
+        Parameters.setWindowTitle(_("Parameters"))  # noqa
+        self.label.setText(_("Home bet"))  # noqa
+        self.cmb_home_bet.setItemText(0, "Demo")  # noqa
+        self.label_2.setText(_("Bot type"))  # noqa
+        self.cmb_bot_type.setItemText(0, "Agressive")  # noqa
+        self.cmb_bot_type.setItemText(1, "Tight")  # noqa
+        self.cmb_bot_type.setItemText(2, "Loose")  # noqa
+        self.btn_start.setText(_("Start"))  # noqa
+        self.chk_use_credentials.setText(_("Use saved credentials"))  # noqa

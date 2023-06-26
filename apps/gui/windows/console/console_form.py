@@ -7,8 +7,8 @@ from apps.globals import GlobalVars
 from apps.gui import services
 from apps.gui.graphs.bar_multipliers import BarMultiplier
 from apps.gui.windows.console.console_designer import ConsoleDesigner
-from apps.utils.logs import services as logs_services
 from apps.utils.local_storage import LocalStorage
+from apps.utils.logs import services as logs_services
 from apps.ws_client import WebSocketClient
 
 local_storage = LocalStorage()
@@ -36,11 +36,17 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.auto_play = False
         self.main_window = main_window
         self.btn_auto_bet.clicked.connect(self.button_auto_bet_clicked_event)
-        self.btn_auto_cash_out.clicked.connect(self.button_auto_cash_out_clicked_event)
+        self.btn_auto_cash_out.clicked.connect(
+            self.button_auto_cash_out_clicked_event
+        )
         self.btn_set_max_amount.clicked.connect(
             self.button_set_max_amount_to_bet_clicked_event
         )
-        self.bar_multiplier = BarMultiplier(self.gbox_graph, [], 30)
+        self.bar_multiplier = BarMultiplier(
+            self.gbox_graph,
+            [],
+            GlobalVars.config.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH,
+        )
         self.receive_log_signal.connect(self._on_receive_log)
         self.receive_multipliers_signal.connect(self._on_receive_multipliers)
         self.receive_balance_signal.connect(self._on_receive_balance)
@@ -59,7 +65,9 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         # add new item to the top
         self.list_log.insertItem(0, item)
         if current_row:
-            current_row = current_row + 1 if current_row < self.MAX_LOGS_ITEMS else 1
+            current_row = (
+                current_row + 1 if current_row < self.MAX_LOGS_ITEMS else 1
+            )
             self.list_log.setCurrentRow(current_row)
         if self.list_log.count() >= self.MAX_LOGS_ITEMS:
             self.list_log.takeItem(self.MAX_LOGS_ITEMS - 1)
@@ -76,17 +84,18 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         home_bets = GlobalVars.get_allowed_home_bets()
         custom_bot = GlobalVars.get_custom_bot_selected()
         self.home_bet = home_bets[home_bet_index]
-        self.lbl_home_bet.setText(self.home_bet.name) # noqa
+        self.lbl_home_bet.setText(self.home_bet.name)  # noqa
         self.lbl_bot_type.setText(f"Bot: {bot_type}")
         if custom_bot:
-            self.lbl_bot_type.setText(f"Bot: {custom_bot.name}") # noqa
+            self.lbl_bot_type.setText(f"Bot: {custom_bot.name}")  # noqa
         self.txt_max_amount_to_bet.setText(str(max_amount_to_bet))
         self.btn_auto_bet.setText(
-            f"{_('AutoBet')} ON" # noqa
-            if auto_play else f"{_('AutoBet')} OFF" # noqa
+            f"{_('AutoBet')} ON"  # noqa
+            if auto_play
+            else f"{_('AutoBet')} OFF"  # noqa
         )
         self.ws_client.set_home_bet(
-            home_bet_id=self.home_bet.id, # noqa
+            home_bet_id=self.home_bet.id,  # noqa
             customer_id=local_storage.get_customer_id(),
         )
 
@@ -98,7 +107,9 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         auto_cash_out = not GlobalVars.get_auto_cash_out()
         GlobalVars.set_auto_cash_out(auto_cash_out)
         self.btn_auto_cash_out.setText(
-            f"{_('Auto CashOut')} ON" if auto_cash_out else f"{_('Auto CashOut')} OFF" # noqa
+            f"{_('Auto CashOut')} ON" # noqa
+            if auto_cash_out
+            else f"{_('Auto CashOut')} OFF" # noqa
         )
 
     def button_set_max_amount_to_bet_clicked_event(self):
@@ -136,8 +147,9 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         try:
             self.auto_play = data.get("auto_play")
             self.btn_auto_bet.setText(
-                f"{_('AutoBet')} ON" # noqa
-                if self.auto_play else f"{_('AutoBet')} OFF" # noqa
+                f"{_('AutoBet')} ON"  # noqa
+                if self.auto_play
+                else f"{_('AutoBet')} OFF"  # noqa
             )
             self.btn_auto_cash_out.setEnabled(self.auto_play)
         except Exception as e:
@@ -184,7 +196,9 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             if list_item:
                 self.__add_item_to_list(list_item)
         except Exception as e:
-            logs_services.save_gui_log(message=f"Error on log: {e}", level="exception")
+            logs_services.save_gui_log(
+                message=f"Error on log: {e}", level="exception"
+            )
 
     def on_add_multipliers(self, data):
         """

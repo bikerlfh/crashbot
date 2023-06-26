@@ -35,7 +35,9 @@ class Bet:
         return f"{self.amount} * {self.multiplier}"
 
     def __generate_external_id(self):
-        return "".join(random.choices(string.ascii_uppercase + string.digits, k=16))
+        return "".join(
+            random.choices(string.ascii_uppercase + string.digits, k=16)
+        )
 
     def evaluate(self, multiplier_result: float):
         self.multiplier_result = multiplier_result
@@ -63,12 +65,12 @@ class PredictionData:
 
     def print_data(self) -> None:
         SendEventToGUI.log.success(
-            f"{_('prediction')}: {self.prediction_round} - " # noqa
-            f"{_('probability')}: {self._show_percentage(self.probability)}" # noqa
+            f"{_('prediction')}: {self.prediction_round} - "  # noqa
+            f"{_('probability')}: {self._show_percentage(self.probability)}"  # noqa
         )
         SendEventToGUI.log.info(
             f"CatPer: {self._show_percentage(self.category_percentage)} - "
-            f"AvgModel: {self._show_percentage(self.average_prediction_of_model)}"
+            f"AvgModel: {self._show_percentage(self.average_prediction_of_model)}" # noqa
         )
         SendEventToGUI.log.debug(
             f"InCatPer: {self.in_category_percentage} - "

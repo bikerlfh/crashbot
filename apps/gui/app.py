@@ -13,7 +13,7 @@ def run_gui():
     app = QApplication(sys.argv)
     qdarktheme.setup_theme("dark")
     try:
-        window = MainForm()
+        window = MainForm()  # NOQA
         sys.exit(app.exec())
     except Exception as e:
         print("EXCEPTION RUNNING GUI: ", e)

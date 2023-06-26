@@ -34,7 +34,9 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             home_bets_ = []
             for home_bet in home_bets_data:
                 home_bet_id = home_bet["id"]
-                home_bet_ = list(filter(lambda x: x.id == home_bet_id, HomeBets))
+                home_bet_ = list(
+                    filter(lambda x: x.id == home_bet_id, HomeBets)
+                )
                 if home_bet_:
                     home_bet_ = home_bet_[0]
                     home_bet_.url = home_bet["url"]
@@ -57,7 +59,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         bot_type = BotType.to_list()
         custom_bots = GlobalVars.get_custom_bots()
         if custom_bots:
-            bot_type.extend([bot.name for bot in custom_bots]) # noqa
+            bot_type.extend([bot.name for bot in custom_bots])  # noqa
         for i in range(len(bot_type)):
             if i >= count_cmb_bot:
                 self.cmb_bot_type.addItem("")
@@ -67,11 +69,13 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         bot_types = BotType.to_list()
         bot_type = self.cmb_bot_type.currentText()
         if bot_type not in bot_types:
-            custom_bot = list(filter(
-                lambda x: x.name == bot_type, GlobalVars.get_custom_bots())
+            custom_bot = list(
+                filter(
+                    lambda x: x.name == bot_type, GlobalVars.get_custom_bots()
+                )
             )[0]
             GlobalVars.set_custom_bot_selected(custom_bot)
-            bot_type = custom_bot.bot_type # noqa
+            bot_type = custom_bot.bot_type  # noqa
         home_bet_index = self.cmb_home_bet.currentIndex()
         if not bot_type:
             QtWidgets.QMessageBox.warning(self, "Error", "Select a bot type")
@@ -97,7 +101,9 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         if self.chk_use_credentials.isChecked():
             home_bet_index = self.cmb_home_bet.currentIndex()
             home_bet = self.HomeBets[home_bet_index]
-            credential = services.get_credentials_by_home_bet(home_bet=home_bet.name)
+            credential = services.get_credentials_by_home_bet(
+                home_bet=home_bet.name
+            )
             data["username"] = credential.get("username")
             data["password"] = credential.get("password")
         self.main_window.socket.start_bot(

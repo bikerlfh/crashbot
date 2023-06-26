@@ -35,12 +35,16 @@ class BetControl(AbstractControlBase):
         self.was_load = False
 
     async def init(self):
-        await self.aviator_page.locator("app-bet-control").first.wait_for(timeout=15000)
+        await self.aviator_page.locator("app-bet-control").first.wait_for(
+            timeout=15000
+        )
         bet_controls = self.aviator_page.locator("app-bet-control")
         # validating if the game has 2 controls
         count_controls = await bet_controls.count()
         if count_controls == 1:
-            await bet_controls.first.locator("sec-hand-btn.add.btn").first.click()
+            await bet_controls.first.locator(
+                "sec-hand-btn.add.btn"
+            ).first.click()
         self._bet_control_1 = bet_controls.first
         self._bet_control_2 = bet_controls.last
 
@@ -75,8 +79,6 @@ class BetControl(AbstractControlBase):
 
         await self._auto_switcher_button_1.click(delay=self._random_delay())
         await self._auto_switcher_button_2.click(delay=self._random_delay())
-        # await self._auto_cash_out_switcher_1.click(delay=self._random_delay())
-        # await self._auto_cash_out_switcher_2.click(delay=self._random_delay())
 
         cash_out_spinner_1 = self._bet_control_1.locator(
             ".cashout-spinner-wrapper"
@@ -85,8 +87,12 @@ class BetControl(AbstractControlBase):
             ".cashout-spinner-wrapper"
         ).first
 
-        self._auto_cash_out_multiplier_1 = cash_out_spinner_1.locator("input").first
-        self._auto_cash_out_multiplier_2 = cash_out_spinner_2.locator("input").first
+        self._auto_cash_out_multiplier_1 = cash_out_spinner_1.locator(
+            "input"
+        ).first
+        self._auto_cash_out_multiplier_2 = cash_out_spinner_2.locator(
+            "input"
+        ).first
 
         # bet_buttons = self.aviator_page.locator("button.bet")
         # bet_buttons = self.aviator_page.locator("button.btn-success.bet")
@@ -110,7 +116,12 @@ class BetControl(AbstractControlBase):
         if not auto_cash_out_multiplier:
             raise Exception("buttons null autoCashOutMultiplier")
         is_switcher_enabled = await auto_cash_out_multiplier.is_enabled()
-        if enabled and not is_switcher_enabled or not enabled and is_switcher_enabled:
+        if (
+            enabled
+            and not is_switcher_enabled
+            or not enabled
+            and is_switcher_enabled
+        ):
             await auto_cash_out_switcher.click(delay=self._random_delay())
         if not enabled:
             return
@@ -192,7 +203,9 @@ class BetControl(AbstractControlBase):
             f"button.{self.BTN_BET_DANGER_SELECTOR}"
         )
         bet_control = (
-            self._bet_control_1 if control == Control.Control1 else self._bet_control_2
+            self._bet_control_1
+            if control == Control.Control1
+            else self._bet_control_2
         )
         while True:
             await bet_control.locator(selector_).wait_for(timeout=5000)
@@ -202,13 +215,13 @@ class BetControl(AbstractControlBase):
                 continue
             status_ = await get_status_of_btn(btn_)
             match status_:
-                case -2:
+                case -2: # noqa
                     SendEventToGUI.log.debug(
                         f"wait_manual_cash_out :: button not found :: "
                         f"control {control.value}"
                     )
                     return
-                case -1:
+                case -1:  # noqa
                     # bet button without bet
                     SendEventToGUI.log.debug(
                         f"wait_manual_cash_out :: bet button without bet :: "
@@ -225,7 +238,9 @@ class BetControl(AbstractControlBase):
         multiplier_ = 0
         while multiplier_ < multiplier:
             # cash_out button
-            value_ = float((await btn_.text_content(timeout=2000)).split(" ")[-2])
+            value_ = float(
+                (await btn_.text_content(timeout=2000)).split(" ")[-2]
+            )
             multiplier_ = round(value_ / amount, 2)
             if multiplier_ == 1 and started is True:
                 break

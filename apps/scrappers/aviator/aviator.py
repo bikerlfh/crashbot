@@ -21,7 +21,7 @@ class Aviator(AbstractGameBase, abc.ABC):
     async def _click(self, element: Locator):
         box = await element.bounding_box()
         if not box or not self._page:
-            SendEventToGUI.log.error("page :: box or page does\'t exists")
+            SendEventToGUI.log.error("page :: box or page does't exists")
             return
         await self._page.mouse.move(
             box["x"] + box["width"] / 2, box["y"] + box["height"] / 2, steps=50
@@ -43,9 +43,13 @@ class Aviator(AbstractGameBase, abc.ABC):
         _app_game = None
         while True:
             try:
-                await self._page.locator("app-game").first.wait_for(timeout=50000)
+                await self._page.locator("app-game").first.wait_for(
+                    timeout=50000
+                )
                 _app_game = self._page.locator("app-game").first
-                await _app_game.locator(".result-history").wait_for(timeout=50000)
+                await _app_game.locator(".result-history").wait_for(
+                    timeout=50000
+                )
                 return _app_game
             except Exception as e:
                 if isinstance(e, TimeoutError):
@@ -75,7 +79,7 @@ class Aviator(AbstractGameBase, abc.ABC):
         # await self.read_game_limits()
         self._controls = BetControl(self._app_game)
         await self._controls.init()
-        SendEventToGUI.log.success(_("Aviator loaded")) # noqa
+        SendEventToGUI.log.success(_("Aviator loaded"))  # noqa
 
     async def close(self):
         if not self._page:
@@ -118,8 +122,12 @@ class Aviator(AbstractGameBase, abc.ABC):
         await menu_limits.click()
         await self._page.wait_for_timeout(400)
         limits = await self._page.locator("app-game-limits ul>li>span").all()
-        self.minimum_bet = float((await limits[0].text_content()).split(" ")[0] or "0")
-        self.maximum_bet = float((await limits[1].text_content()).split(" ")[0] or "0")
+        self.minimum_bet = float(
+            (await limits[0].text_content()).split(" ")[0] or "0"
+        )
+        self.maximum_bet = float(
+            (await limits[1].text_content()).split(" ")[0] or "0"
+        )
         self.maximum_win_for_one_bet = float(
             (await limits[2].text_content()).split(" ")[0] or "0"
         )
@@ -127,7 +135,9 @@ class Aviator(AbstractGameBase, abc.ABC):
         await button_close.click()
         SendEventToGUI.log.debug(f"minimumBet: {self.minimum_bet}")
         SendEventToGUI.log.debug(f"maximumBet: {self.maximum_bet}")
-        SendEventToGUI.log.debug(f"maximumWinForOneBet: {self.maximum_win_for_one_bet}")
+        SendEventToGUI.log.debug(
+            f"maximumWinForOneBet: {self.maximum_win_for_one_bet}"
+        )
 
     async def read_balance(self) -> Union[float, None]:
         if self._app_game is None:
@@ -155,7 +165,8 @@ class Aviator(AbstractGameBase, abc.ABC):
             SendEventToGUI.exception(
                 {
                     "location": "AviatorPage",
-                    "message": "readMultipliers :: the page or the history game not exists",
+                    "message": "readMultipliers :: the page or "
+                               "the history game not exists",
                 }
             )
             raise Exception(
@@ -171,7 +182,9 @@ class Aviator(AbstractGameBase, abc.ABC):
                 self.multipliers.append(self._format_multiplier(multiplier))
         await self._page.wait_for_timeout(2000)
 
-    async def bet(self, *, bets: list[Bet], use_auto_cash_out: Optional[bool] = True):
+    async def bet(
+        self, *, bets: list[Bet], use_auto_cash_out: Optional[bool] = True
+    ):
         if self._controls is None:
             SendEventToGUI.exception(
                 {
@@ -184,7 +197,7 @@ class Aviator(AbstractGameBase, abc.ABC):
         for i, bet in enumerate(bets):
             control = Control.Control1 if i == 0 else Control.Control2
             SendEventToGUI.log.info(
-                f"{_('Sending bet to aviator')} {bet.amount} * " # noqa
+                f"{_('Sending bet to aviator')} {bet.amount} * "  # noqa
                 f"{bet.multiplier} control: {control}"
             )
             await self._controls.bet(
@@ -224,7 +237,9 @@ class Aviator(AbstractGameBase, abc.ABC):
                 locator = self._history_game.locator(
                     "app-bubble-multiplier",
                 ).first
-                last_multiplier_content = await locator.text_content(timeout=1000)
+                last_multiplier_content = await locator.text_content(
+                    timeout=1000
+                )
                 last_multiplier = (
                     self._format_multiplier(last_multiplier_content)
                     if last_multiplier_content
@@ -232,7 +247,9 @@ class Aviator(AbstractGameBase, abc.ABC):
                 )
                 if last_multiplier_saved != last_multiplier:
                     self.multipliers.append(last_multiplier)
-                    SendEventToGUI.log.success(f"{_('New Multiplier')}: {last_multiplier}") # noqa
+                    SendEventToGUI.log.success(
+                        f"{_('New Multiplier')}: {last_multiplier}"  # noqa
+                    )
                     self.multipliers = self.multipliers[1:]
                     return
                 sleep_now(0.2)

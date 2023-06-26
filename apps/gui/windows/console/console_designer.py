@@ -355,7 +355,9 @@ class ConsoleDesigner(object):
         )
         consoleForm.setPalette(palette)
         consoleForm.setWindowTitle("Form")
-        consoleForm.setInputMethodHints(QtCore.Qt.InputMethodHint.ImhPreferNumbers)
+        consoleForm.setInputMethodHints(
+            QtCore.Qt.InputMethodHint.ImhPreferNumbers
+        )
         self.btn_set_max_amount = QtWidgets.QPushButton(parent=consoleForm)
         self.btn_set_max_amount.setGeometry(QtCore.QRect(19, 350, 211, 41))
         font = QtGui.QFont()
@@ -491,13 +493,13 @@ class ConsoleDesigner(object):
         QtCore.QMetaObject.connectSlotsByName(consoleForm)
 
     def retranslateUi(self, consoleForm):
-        self.btn_set_max_amount.setText(_("Set Amount Bet")) # noqa
-        self.btn_auto_bet.setText(f"{_('AutoBet')} ON") # noqa
-        self.label.setText(_("Amount Bet")) # noqa
-        self.label_2.setText("Balance:") # noqa
-        self.lbl_balance.setText("0") # noqa
-        self.lbl_profit.setText("0") # noqa
-        self.label_4.setText("Profit:") # noqa
-        self.lbl_home_bet.setText("Demo") # noqa
-        self.lbl_bot_type.setText("Bot: Aggressive") # noqa
-        self.btn_auto_cash_out.setText(f"{_('Auto CashOut')} OFF") # noqa
+        self.btn_set_max_amount.setText(_("Set Amount Bet"))  # noqa
+        self.btn_auto_bet.setText(f"{_('AutoBet')} ON")  # noqa
+        self.label.setText(_("Amount Bet"))  # noqa
+        self.label_2.setText("Balance:")  # noqa
+        self.lbl_balance.setText("0")  # noqa
+        self.lbl_profit.setText("0")  # noqa
+        self.label_4.setText("Profit:")  # noqa
+        self.lbl_home_bet.setText("Demo")  # noqa
+        self.lbl_bot_type.setText("Bot: Aggressive")  # noqa
+        self.btn_auto_cash_out.setText(f"{_('Auto CashOut')} OFF")  # noqa

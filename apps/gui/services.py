@@ -25,7 +25,9 @@ def make_list_item(
     :param allowed_codes: allowed codes
     :return: QListWidgetItem
     """
-    allowed_codes = allowed_codes or GlobalVars.config.ALLOWED_LOG_CODES_TO_SHOW
+    allowed_codes = (
+        allowed_codes or GlobalVars.config.ALLOWED_LOG_CODES_TO_SHOW
+    )
     code = data.get("code", None)
     if code not in allowed_codes:
         return

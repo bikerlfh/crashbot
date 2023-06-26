@@ -24,9 +24,11 @@ def format_number_to_multiple(num: float, multiple: float) -> float:
 
 def kelly_formula(b: float, p: float, capital: float) -> float:
     """
-    The Kelly formula is a formula used to determine the optimal fraction of one's capital to bet on a given bet.
+    The Kelly formula is a formula used to determine the
+    optimal fraction of one's capital to bet on a given bet.
     The formula is: f* = (bp - q) / b
-    :param b: is the ratio of net gains to net losses (i.e., net gains per unit bet),
+    :param b: is the ratio of net gains to net losses
+        (i.e., net gains per unit bet),
     :param p: is the probability of winning the bet, and
     :param q: is the probability of losing the bet (q = 1 - p).
     :param capital: is the amount of money you have to bet.
@@ -36,11 +38,15 @@ def kelly_formula(b: float, p: float, capital: float) -> float:
     return round(capital * f, 2)
 
 
-def adaptive_kelly_formula(b: float, p: float, R: float, capital: float) -> float:
+def adaptive_kelly_formula(
+    b: float, p: float, R: float, capital: float
+) -> float:
     """
-    The Adaptive Kelly formula is a formula used to determine the optimal fraction of one's capital to bet on a given bet.
+    The Adaptive Kelly formula is a formula used to determine
+    the optimal fraction of one's capital to bet on a given bet.
     The formula is: f* = (bp - q) / b * (1 + R)
-    :param b: is the ratio of net gains to net losses (i.e., net gains per unit bet),
+    :param b: is the ratio of net gains to net losses
+        (i.e., net gains per unit bet),
     :param p: is the probability of winning the bet, and
     :param q: is the probability of losing the bet (q = 1 - p).
     :param R: is a risk factor that varies with the volatility of the market,

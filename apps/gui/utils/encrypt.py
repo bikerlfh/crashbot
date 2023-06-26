@@ -1,13 +1,11 @@
 # Standard Library
-import os
+import base64
 
 # Libraries
-import base64
 import machineid
 from cryptography.fernet import Fernet
 
 # Internal
-# from apps.gui.constants import DATA_FILE_PATH
 from apps.utils.patterns.singleton import Singleton
 
 

@@ -54,62 +54,86 @@ class LoginDesigner(object):
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Active, QtGui.QPalette.ColorRole.WindowText, brush
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.WindowText,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(26, 95, 180))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Active, QtGui.QPalette.ColorRole.Button, brush
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.Button,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Active, QtGui.QPalette.ColorRole.Light, brush
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.Light,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Active, QtGui.QPalette.ColorRole.Midlight, brush
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.Midlight,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(127, 127, 127))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Active, QtGui.QPalette.ColorRole.Dark, brush
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.Dark,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(170, 170, 170))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Active, QtGui.QPalette.ColorRole.Mid, brush
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.Mid,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Active, QtGui.QPalette.ColorRole.Text, brush
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.Text,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Active, QtGui.QPalette.ColorRole.BrightText, brush
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.BrightText,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Active, QtGui.QPalette.ColorRole.ButtonText, brush
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.ButtonText,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Active, QtGui.QPalette.ColorRole.Base, brush
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.Base,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Active, QtGui.QPalette.ColorRole.Window, brush
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.Window,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Active, QtGui.QPalette.ColorRole.Shadow, brush
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.Shadow,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
@@ -149,32 +173,44 @@ class LoginDesigner(object):
         brush = QtGui.QBrush(QtGui.QColor(26, 95, 180))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Inactive, QtGui.QPalette.ColorRole.Button, brush
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.Button,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Inactive, QtGui.QPalette.ColorRole.Light, brush
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.Light,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Inactive, QtGui.QPalette.ColorRole.Midlight, brush
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.Midlight,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(127, 127, 127))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Inactive, QtGui.QPalette.ColorRole.Dark, brush
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.Dark,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(170, 170, 170))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Inactive, QtGui.QPalette.ColorRole.Mid, brush
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.Mid,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Inactive, QtGui.QPalette.ColorRole.Text, brush
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.Text,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
@@ -193,17 +229,23 @@ class LoginDesigner(object):
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Inactive, QtGui.QPalette.ColorRole.Base, brush
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.Base,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Inactive, QtGui.QPalette.ColorRole.Window, brush
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.Window,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Inactive, QtGui.QPalette.ColorRole.Shadow, brush
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.Shadow,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
@@ -243,32 +285,44 @@ class LoginDesigner(object):
         brush = QtGui.QBrush(QtGui.QColor(26, 95, 180))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Disabled, QtGui.QPalette.ColorRole.Button, brush
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.Button,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Disabled, QtGui.QPalette.ColorRole.Light, brush
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.Light,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Disabled, QtGui.QPalette.ColorRole.Midlight, brush
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.Midlight,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(127, 127, 127))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Disabled, QtGui.QPalette.ColorRole.Dark, brush
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.Dark,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(170, 170, 170))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Disabled, QtGui.QPalette.ColorRole.Mid, brush
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.Mid,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(127, 127, 127))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Disabled, QtGui.QPalette.ColorRole.Text, brush
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.Text,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
@@ -287,17 +341,23 @@ class LoginDesigner(object):
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Disabled, QtGui.QPalette.ColorRole.Base, brush
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.Base,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Disabled, QtGui.QPalette.ColorRole.Window, brush
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.Window,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
-            QtGui.QPalette.ColorGroup.Disabled, QtGui.QPalette.ColorRole.Shadow, brush
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.Shadow,
+            brush,
         )
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
@@ -342,8 +402,8 @@ class LoginDesigner(object):
         QtCore.QMetaObject.connectSlotsByName(Login)
 
     def retranslateUi(self, Login):
-        Login.setWindowTitle(_("Login")) # noqa
-        self.groupBox.setTitle("CrashBot") # noqa
-        self.label.setText(_("Username")) # noqa
-        self.label_2.setText(_("Password")) # noqa
-        self.btn_login.setText(_("Login")) # noqa
+        Login.setWindowTitle(_("Login"))  # noqa
+        self.groupBox.setTitle("CrashBot")  # noqa
+        self.label.setText(_("Username"))  # noqa
+        self.label_2.setText(_("Password"))  # noqa
+        self.btn_login.setText(_("Login"))  # noqa

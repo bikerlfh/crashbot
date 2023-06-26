@@ -8,8 +8,8 @@ import websocket
 
 # Internal
 from apps.globals import GlobalVars
-from apps.utils.patterns.singleton import Singleton
 from apps.utils.datetime import sleep_now
+from apps.utils.patterns.singleton import Singleton
 
 
 @dataclass
@@ -56,18 +56,10 @@ class WebSocketClient(metaclass=Singleton):
         print("User already connected!!!!")
         self._force_close()
 
-    def set_home_bet(
-        self,
-        *,
-        home_bet_id: int,
-        customer_id: int
-    ) -> None:
+    def set_home_bet(self, *, home_bet_id: int, customer_id: int) -> None:
         message = SocketMessage(
             func="set_home_bet",
-            data=dict(
-                home_bet_id=home_bet_id,
-                customer_id=customer_id
-            )
+            data=dict(home_bet_id=home_bet_id, customer_id=customer_id),
         )
         if self.ws.sock.connected:
             self.ws.send(json.dumps(vars(message)))

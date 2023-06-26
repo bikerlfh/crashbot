@@ -57,10 +57,13 @@ async def close_game_event(**_kwargs) -> dict[str, any]:
         return dict(closed=True)
     await game.close()
     GlobalVars.set_game(None)
+    local_storage.remove_last_initial_balance(home_bet_id=game.home_bet.id)
     return dict(closed=True)
 
 
-async def start_bot_event(data: dict[str, any], sio: AsyncServer, sid: any) -> any:
+async def start_bot_event(
+    data: dict[str, any], sio: AsyncServer, sid: any
+) -> any:
     GlobalVars.set_io(sio)
     bot_type = data.get("bot_type")
     home_bet_id = data.get("home_bet_id")
@@ -97,6 +100,9 @@ async def start_bot_event(data: dict[str, any], sio: AsyncServer, sid: any) -> a
     except Exception as e:
         await game.close()
         GlobalVars.set_game(None)
+        local_storage.set_last_initial_balance(
+            home_bet_id=game.home_bet.id, balance=game.initial_balance
+        )
         SendEventToGUI.exception(
             dict(
                 exception=str(e),

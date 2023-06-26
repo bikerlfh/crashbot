@@ -1,7 +1,5 @@
 # Standard Library
-import copy
 import logging
-from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional, Union
 
 # Libraries
@@ -9,9 +7,6 @@ import requests
 
 # Current Folder
 from .response import Response
-
-# from utils.core.sensible import obfuscate_sensible_data
-
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +24,9 @@ class RESTClient:
     VERIFY = True
     auth = {}
 
-    def __init__(self, *, api_url: str, headers: Optional[Dict[str, Any]] = None):
+    def __init__(
+        self, *, api_url: str, headers: Optional[Dict[str, Any]] = None
+    ):
         self.api_url = api_url
         if headers:
             self.headers = headers
@@ -127,80 +124,30 @@ class RESTClient:
         service: str,
         data: Optional[Union[List, Dict[str, Any]]] = None,
         kwargs: Optional[Dict[str, Any]] = dict,
-        sensible_keys: Optional[List[str]] = (),
+        sensible_keys: Optional[List[str]] = (), # noqa
     ) -> Response:
         data = data or {}
         service_name = f"{self.api_url}/{service}"
-        try:
-            func_params = {"method": method, "service": service}
-            logger.info(f"_send_request :: start :: {func_params}")
-            data = data or {}
-            url = service_name
-            args = {
-                "url": url,
-                "headers": self.headers,
-                "timeout": self.TIMEOUT,
-                "verify": self.VERIFY,
-                "auth": self.auth,
-            }
 
-            if data:
-                args.update(json=data)
+        func_params = {"method": method, "service": service}
+        logger.info(f"_send_request :: start :: {func_params}")
+        data = data or {}
+        url = service_name
+        args = {
+            "url": url,
+            "headers": self.headers,
+            "timeout": self.TIMEOUT,
+            "verify": self.VERIFY,
+            "auth": self.auth,
+        }
 
-            if kwargs:
-                args.update(**kwargs)
-            response = method(**args)
-            msg = f"response :: status {response.status_code}"
-            logger.info(msg)
-            response = Response(response)
-        except Exception as exc:
-            error = str(exc)
-            # self._log(
-            #     http_method=method.__name__,
-            #     request_data=data,
-            #     service_name=service_name,
-            #     error=error,
-            #     sensible_keys=sensible_keys
-            # )
-            raise
+        if data:
+            args.update(json=data)
 
-        # self._log(
-        #     http_method=method.__name__,
-        #     request_data=data,
-        #     response_data=response.body,
-        #     service_name=service_name,
-        #     status_code=response.status,
-        #     sensible_keys=sensible_keys
-        # )
+        if kwargs:
+            args.update(**kwargs)
+        response = method(**args)
+        msg = f"response :: status {response.status_code}"
+        logger.info(msg)
+        response = Response(response)
         return response
-
-    """def _log(
-        self,
-        *,
-        http_method: str,
-        request_data: Dict[str, Any],
-        service_name: str,
-        status_code: Optional[int] = None,
-        response_data: Optional[Dict[str, Any]] = None,
-        error: Optional[str] = None,
-        sensible_keys: Optional[List[str]] = ()
-    ) -> None:
-        timestamp = datetime.utcnow()
-        request_data_cp = copy.deepcopy(request_data)
-        response_data_cp = copy.deepcopy(response_data)
-        obfuscate_sensible_data(
-            sensible_keys=sensible_keys, data=request_data_cp
-        )
-        obfuscate_sensible_data(
-            sensible_keys=sensible_keys, data=response_data_cp
-        )
-        integration_log = EgressAPILog(
-            http_method=http_method,
-            service_name=service_name,
-            timestamp=timestamp,
-            request_data=request_data_cp,
-            response_data=response_data_cp,
-            status_code=status_code,
-            error=error
-        )
-        integration_log.save()"""

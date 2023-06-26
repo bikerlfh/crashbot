@@ -2,13 +2,13 @@
 from typing import List, Optional
 
 # Internal
-from apps.globals import GlobalVars
 from apps.api import services as api_services
-from apps.api.models import BotStrategy, MultiplierPositions, Bot
+from apps.api.models import BotStrategy, MultiplierPositions
 from apps.constants import BotType
 from apps.game import utils as game_utils
 from apps.game.models import Bet, PredictionData
 from apps.game.prediction_core import PredictionCore
+from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
 from apps.utils import graphs as utils_graphs
 
@@ -79,39 +79,57 @@ class BotBase:
             self._custom_bot.strategies = bot.strategies
             bot = self._custom_bot
         SendEventToGUI.log.info(f"Bot {bot.name} loaded")
-        self.MIN_CATEGORY_PERCENTAGE_TO_BET = bot.min_category_percentage_to_bet
+        self.MIN_CATEGORY_PERCENTAGE_TO_BET = (
+            bot.min_category_percentage_to_bet
+        )
         self.MIN_AVERAGE_MODEL_PREDICTION = bot.min_average_model_prediction
         self.RISK_FACTOR = bot.risk_factor
         self.MIN_MULTIPLIER_TO_BET = bot.min_multiplier_to_bet
-        self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = bot.min_multiplier_to_recover_losses
+        self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = (
+            bot.min_multiplier_to_recover_losses
+        )
         self.MIN_PROBABILITY_TO_BET = bot.min_probability_to_bet
-        self.MAX_RECOVERY_PERCENTAGE_ON_MAX_BET = bot.max_recovery_percentage_on_max_bet
+        self.MAX_RECOVERY_PERCENTAGE_ON_MAX_BET = (
+            bot.max_recovery_percentage_on_max_bet
+        )
         self.STOP_LOSS_PERCENTAGE = bot.stop_loss_percentage
         self.TAKE_PROFIT_PERCENTAGE = bot.take_profit_percentage
         self.STRATEGIES = bot.strategies
-        self.stop_loss = round(self.initial_balance * self.STOP_LOSS_PERCENTAGE, 2)
-        self.take_profit = round(self.initial_balance * self.TAKE_PROFIT_PERCENTAGE, 2)
-        SendEventToGUI.log.info(_("Bot initialized")) # noqa
-        SendEventToGUI.log.info(f"{_('Bot type')}: {self.BOT_TYPE.value}") # noqa
-        SendEventToGUI.log.info(f"{_('Bot risk factor')}: {self.RISK_FACTOR}") # noqa
+        self.stop_loss = round(
+            self.initial_balance * self.STOP_LOSS_PERCENTAGE, 2
+        )
+        self.take_profit = round(
+            self.initial_balance * self.TAKE_PROFIT_PERCENTAGE, 2
+        )
+        SendEventToGUI.log.info(_("Bot initialized"))  # noqa
         SendEventToGUI.log.info(
-            f"{_('Bot min multiplier to bet')}: {self.MIN_MULTIPLIER_TO_BET}" # noqa
+            f"{_('Bot type')}: {self.BOT_TYPE.value}"  # noqa
+        )  # noqa
+        SendEventToGUI.log.info(
+            f"{_('Bot risk factor')}: {self.RISK_FACTOR}"  # noqa
         )
         SendEventToGUI.log.info(
-            f"{_('Bot min multiplier to recover losses')}: " # noqa
+            f"{_('Bot min multiplier to bet')}: {self.MIN_MULTIPLIER_TO_BET}"  # noqa
+        )
+        SendEventToGUI.log.info(
+            f"{_('Bot min multiplier to recover losses')}: "  # noqa
             f"{self.MIN_MULTIPLIER_TO_RECOVER_LOSSES}"
         )
         SendEventToGUI.log.info(
-            f"{_('Bot min category percentage to bet')}: " # noqa
+            f"{_('Bot min category percentage to bet')}: "  # noqa
             f"{self.MIN_CATEGORY_PERCENTAGE_TO_BET}"
         )
         SendEventToGUI.log.debug(
-            f"{_('Bot min average model prediction')}: " # noqa
+            f"{_('Bot min average model prediction')}: "  # noqa
             f"{self.MIN_AVERAGE_MODEL_PREDICTION}"
         )
-        SendEventToGUI.log.info(f"{_('Stop Loss')}: {self.stop_loss}") # noqa
-        SendEventToGUI.log.info(f"{_('Take Profit')}: {self.take_profit}") # noqa
-        SendEventToGUI.log.debug(f"{_('Bot strategies count')}: {len(self.STRATEGIES)}") # noqa
+        SendEventToGUI.log.info(f"{_('Stop Loss')}: {self.stop_loss}")  # noqa
+        SendEventToGUI.log.info(
+            f"{_('Take Profit')}: {self.take_profit}"  # noqa
+        )
+        SendEventToGUI.log.debug(
+            f"{_('Bot strategies count')}: {len(self.STRATEGIES)}"  # noqa
+        )
 
     def validate_bet_amount(self, amount: float) -> float:
         # if amount < minimumBet, set amount = minimumBet
@@ -130,7 +148,8 @@ class BotBase:
         strategies = [
             s
             for s in self.STRATEGIES
-            if number_of_bets >= s.number_of_bets and profit >= s.profit_percentage
+            if number_of_bets >= s.number_of_bets
+            and profit >= s.profit_percentage
         ]
         return strategies[-1] if len(strategies) > 0 else None
 
@@ -158,8 +177,12 @@ class BotBase:
         self.amounts_lost = []
 
     def determine_bullish_game(self) -> bool:
-        y_coordinates = utils_graphs.convert_multipliers_to_coordinate(self.multipliers)
-        slope, _ = utils_graphs.calculate_slope_linear_regression(y_coordinates)
+        y_coordinates = utils_graphs.convert_multipliers_to_coordinate(
+            self.multipliers
+        )
+        slope, _ = utils_graphs.calculate_slope_linear_regression(
+            y_coordinates
+        )
         return slope >= self.MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME
 
     def get_last_lost_amount(self) -> float:
@@ -194,8 +217,12 @@ class BotBase:
         total = self._max_amount_to_bet + self._min_amount_to_bet
         if total < amount:
             self._max_amount_to_bet += amount - total
-        SendEventToGUI.log.success(f"{_('Min bet amount')}: {self._min_amount_to_bet}") # noqa
-        SendEventToGUI.log.success(f"{_('Max bet amount')}: {self._max_amount_to_bet}") # noqa
+        SendEventToGUI.log.success(
+            f"{_('Min bet amount')}: {self._min_amount_to_bet}"  # noqa
+        )
+        SendEventToGUI.log.success(
+            f"{_('Max bet amount')}: {self._max_amount_to_bet}"  # noqa
+        )
 
     def evaluate_bets(self, multiplier_result: float):
         total_amount = 0
@@ -234,7 +261,9 @@ class BotBase:
         self.balance = balance
         SendEventToGUI.balance(self.balance)
 
-    def get_prediction_data(self, prediction: PredictionCore) -> PredictionData:
+    def get_prediction_data(
+        self, prediction: PredictionCore
+    ) -> PredictionData:
         category_percentage = prediction.get_category_percentage()
         category_percentage_value_in_live = (
             prediction.get_category_percentage_value_in_live()
@@ -251,7 +280,7 @@ class BotBase:
             prediction_round=prediction.get_prediction_round_value(),
             probability=prediction.get_probability_value(),
             category_percentage=category_percentage,
-            category_percentage_value_in_live=category_percentage_value_in_live,
+            category_percentage_value_in_live=category_percentage_value_in_live, # noqa
             average_prediction_of_model=average_predictions_of_model,
             in_category_percentage=in_category_percentage,
             in_average_prediction_of_model=in_average_prediction_of_model,
@@ -274,7 +303,9 @@ class BotBase:
         return min_, multiplier
 
     @staticmethod
-    def calculate_recovery_amount(amount_lost: float, multiplier: float) -> float:
+    def calculate_recovery_amount(
+        amount_lost: float, multiplier: float
+    ) -> float:
         """
         * calculate the amount to recover the losses
         * @param {number} profit the profit of bot
@@ -293,7 +324,9 @@ class BotBase:
         """
         profit = self.get_profit()
         min_bet = self.balance * strategy.min_amount_percentage_to_bet
-        amount_to_recover_losses = self.calculate_recovery_amount(profit, multiplier)
+        amount_to_recover_losses = self.calculate_recovery_amount(
+            profit, multiplier
+        )
         # calculate the amount to bet to recover last amount loss
         last_amount_loss = self.calculate_recovery_amount(
             self.get_last_lost_amount(), multiplier
@@ -302,7 +335,9 @@ class BotBase:
         max_recovery_amount = (
             self.maximum_bet * self.MAX_RECOVERY_PERCENTAGE_ON_MAX_BET
         )  # 50% of maximum bet (this can be a parameter of the bot)
-        amount = min(amount_to_recover_losses, max_recovery_amount, self.balance)
+        amount = min(
+            amount_to_recover_losses, max_recovery_amount, self.balance
+        )
         amount = last_amount_loss if amount >= max_recovery_amount else amount
         kelly_amount = game_utils.adaptive_kelly_formula(
             multiplier, probability, self.RISK_FACTOR, amount
@@ -317,7 +352,9 @@ class BotBase:
         if profit >= 0 or multiplier < self.MIN_MULTIPLIER_TO_RECOVER_LOSSES:
             return []
 
-        amount = self.get_bet_recovery_amount(multiplier, probability, strategy)
+        amount = self.get_bet_recovery_amount(
+            multiplier, probability, strategy
+        )
         amount = self.validate_bet_amount(amount)
         if multiplier >= 2:
             amount = round(amount / 1.5, 0)
@@ -381,8 +418,10 @@ class BotBase:
             self.bets.append(Bet(amount, prediction_value))
         else:
             # to categorize 2 and 3
-            amount = self.calculate_amount_bet(1.95, category_percentage, strategy)
-            self.bets.append(Bet(amount, 1.95))
+            amount = self.calculate_amount_bet(
+                self.MIN_MULTIPLIER_TO_BET, category_percentage, strategy
+            )
+            self.bets.append(Bet(amount, self.MIN_MULTIPLIER_TO_BET))
             multiplier = game_utils.generate_random_multiplier(2, 3)
             amount_2 = self.calculate_amount_bet(
                 multiplier, category_percentage, strategy, amount
@@ -404,7 +443,7 @@ class BotBase:
         strategy = self.get_strategy(number_of_bet)
         if not strategy:
             SendEventToGUI.log.warning(
-                f"{_('No strategy found for profit percentage')}: " # noqa
+                f"{_('No strategy found for profit percentage')}: "  # noqa
                 f"{self.get_profit_percent()}"
             )
             return []
@@ -417,11 +456,11 @@ class BotBase:
         SendEventToGUI.log.debug(f"profit: {profit}")
         prediction_data.print_data()
         if self.in_stop_loss():
-            SendEventToGUI.log.warning(_("Stop loss reached")) # noqa
+            SendEventToGUI.log.warning(_("Stop loss reached"))  # noqa
             return []
 
         if self.in_take_profit():
-            SendEventToGUI.log.success(_("Take profit reached")) # noqa
+            SendEventToGUI.log.success(_("Take profit reached"))  # noqa
             return []
 
         if not prediction_data.in_category_percentage:
@@ -431,11 +470,13 @@ class BotBase:
             return []
 
         if prediction_data.prediction_value < self.MIN_MULTIPLIER_TO_BET:
-            SendEventToGUI.log.warning(_("Prediction value is too low")) # noqa
+            SendEventToGUI.log.warning(
+                _("Prediction value is too low")  # noqa
+            )
             return []
 
         if prediction_data.probability < self.MIN_PROBABILITY_TO_BET:
-            SendEventToGUI.log.debug(_("Probability is too low")) # noqa
+            SendEventToGUI.log.debug(_("Probability is too low"))  # noqa
             return []
 
         # CATEGORY 1

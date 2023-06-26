@@ -16,7 +16,6 @@ from apps.gui.windows.main.main_designer import MainDesigner
 from apps.gui.windows.parameter.parameter_form import ParameterForm
 from apps.utils.local_storage import LocalStorage
 
-
 local_storage = LocalStorage()
 
 
@@ -24,7 +23,7 @@ class MainForm(QMainWindow, MainDesigner):
     def __init__(self) -> None:
         super().__init__()
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon('crashbot-icon.ico'))
+        self.setWindowIcon(QtGui.QIcon("crashbot-icon.ico"))
         self.__init_screen()
         self.allowed_logs = GlobalVars.config.ALLOWED_LOG_CODES_TO_SHOW
         self._generate_menu_logs()
@@ -64,7 +63,12 @@ class MainForm(QMainWindow, MainDesigner):
         self.statusbar.addPermanentWidget(self.lbl_version)
 
     def __change_screen(
-        self, *, screen: QWidget, width: int, height: int, title: Optional[str] = None
+        self,
+        *,
+        screen: QWidget,
+        width: int,
+        height: int,
+        title: Optional[str] = None,
     ) -> None:
         if title:
             self.setWindowTitle(title)
@@ -135,7 +139,10 @@ class MainForm(QMainWindow, MainDesigner):
         data = self.parameters_screen.get_values()
         self.console_screen.initialize(**data)
         self.__change_screen(
-            screen=self.console_screen, width=897, height=557, title=GlobalVars.APP_NAME
+            screen=self.console_screen,
+            width=897,
+            height=557,
+            title=GlobalVars.APP_NAME,
         )
 
     def show_credential(self):

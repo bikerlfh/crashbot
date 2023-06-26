@@ -4,7 +4,7 @@ PyQt6-sip==13.5.0
 pyqtdarktheme==2.1.0
 # python-engineio==4.4.0
 python-socketio==5.8.0
-requests==2.28.2
+requests==2.31.0
 urllib3==1.26.15
 websocket-client==1.5.1
 cryptography

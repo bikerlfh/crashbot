@@ -1,7 +1,7 @@
 # Standard Library
 import json
-from typing import Optional
 from enum import Enum
+from typing import Optional
 
 # Libraries
 from localStoragePy import localStoragePy
@@ -60,7 +60,10 @@ class LocalStorage(metaclass=Singleton):
         return int(customer_id) if customer_id else None
 
     def set_home_bets(self, home_bets: list[dict[str, any]]):
-        self.set(LocalStorage.LocalStorageKeys.HOME_BETS.value, json.dumps(home_bets))
+        self.set(
+            LocalStorage.LocalStorageKeys.HOME_BETS.value,
+            json.dumps(home_bets),
+        )
 
     def get_home_bets(self) -> list[dict[str, any]]:
         """
@@ -78,11 +81,14 @@ class LocalStorage(metaclass=Singleton):
         return home_bets if home_bets else []
 
     def set_last_initial_balance(self, *, home_bet_id: int, balance: float):
-        data = self.get(LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value)
+        data = self.get(
+            LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value
+        )
         data = json.loads(data) if data else {}
         data[home_bet_id] = balance
         self.set(
-            LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value, json.dumps(data)
+            LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value,
+            json.dumps(data),
         )
 
     def get_last_initial_balance(
@@ -90,10 +96,25 @@ class LocalStorage(metaclass=Singleton):
         *,
         home_bet_id: int,
     ) -> float | None:
-        data = self.get(LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value)
+        data = self.get(
+            LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value
+        )
         data = json.loads(data) if data else {}
         last_balance = data.get(str(home_bet_id), None)
         return float(last_balance) if last_balance else None
+
+    def remove_last_initial_balance(
+        self, *, home_bet_id: Optional[int] = None
+    ):
+        data = self.get(
+            LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value
+        )
+        data = json.loads(data) if data else {}
+        data.pop(str(home_bet_id), None)
+        self.set(
+            LocalStorage.LocalStorageKeys.LAST_INITIAL_BALANCE.value,
+            json.dumps(data),
+        )
 
     def set_credentials(
         self,
@@ -104,11 +125,10 @@ class LocalStorage(metaclass=Singleton):
     ):
         data = self.get(LocalStorage.LocalStorageKeys.CREDENTIALS.value)
         data = json.loads(data) if data else {}
-        data[home_bet] = dict(
-            username=username,
-            password=password
+        data[home_bet] = dict(username=username, password=password)
+        self.set(
+            LocalStorage.LocalStorageKeys.CREDENTIALS.value, json.dumps(data)
         )
-        self.set(LocalStorage.LocalStorageKeys.CREDENTIALS.value, json.dumps(data))
 
     def get_all_credentials(self) -> dict[str, any]:
         data = self.get(LocalStorage.LocalStorageKeys.CREDENTIALS.value)
@@ -127,4 +147,6 @@ class LocalStorage(metaclass=Singleton):
         data = self.get(LocalStorage.LocalStorageKeys.CREDENTIALS.value)
         data = json.loads(data) if data else {}
         data.pop(str(home_bet), None)
-        self.set(LocalStorage.LocalStorageKeys.CREDENTIALS.value, json.dumps(data))
+        self.set(
+            LocalStorage.LocalStorageKeys.CREDENTIALS.value, json.dumps(data)
+        )

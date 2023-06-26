@@ -34,14 +34,13 @@ class PredictionCore:
         self.probability_values.append(probability)
         self.average_predictions_of_model = average_predictions
         if self.category_percentages[prediction_round] is None:
-            self.category_percentages[prediction_round] = category_percentage  # NOQA
+            self.category_percentages[
+                prediction_round
+            ] = category_percentage  # NOQA
         if self.category_percentages_values_in_live[prediction_round] is None:
             self.category_percentages_values_in_live[
                 prediction_round
             ] = category_percentage  # NOQA
-        # sendEventToGUI.log.debug("---------------------- PredictionCore: addPrediction ----------------------")
-        # sendEventToGUI.log.debug(f"Model ID: {self.id}")
-        # sendEventToGUI.log.debug(f"Added prediction: {prediction}({prediction_round}) - probability: {probability}")
 
     def add_multiplier_result(self, multiplier: float):
         self.multiplier_results.append(multiplier)
@@ -49,11 +48,6 @@ class PredictionCore:
         self.calculate_category_percentages()
 
     def calculate_category_percentages(self):
-        # send_event_to_gui.log.debug("------------- PredictionCore: calculateCategoryPercentages -------------")
-        # send_event_to_gui.log.debug(f"Model ID: {self.id}")
-        # send_event_to_gui.log.debug(f"Prediction Rounds: {self.prediction_rounds}")
-        # send_event_to_gui.log.debug(f"Prediction Values: {self.prediction_values}")
-        # send_event_to_gui.log.debug(f"Multiplier Results: {self.multiplier_results}")
         for i in range(1, 3):
             count_i = 0
             count = 0
@@ -64,22 +58,21 @@ class PredictionCore:
                 if value_round == i:
                     count_i += 1
                     round_multiplier = round(self.multiplier_results[j], 0)
-                    round_multiplier = 2 if round_multiplier >= 2 else round_multiplier
+                    round_multiplier = (
+                        2 if round_multiplier >= 2 else round_multiplier
+                    )
                     if value_round == round_multiplier:
                         count += 1
                     if value <= self.multiplier_results[j]:
                         count_values += 1
             if count == 0 or count_i == 0:
                 continue
-            self.category_percentages[i] = round(count / count_i, 2)  # NOQA
-            self.category_percentages_values_in_live[i] = round(
-                count_values / count_i, 2
-            )  # NOQA
-            # send_event_to_gui.log.debug(f"Category {i}: {self.category_percentages[i]}")
-            # send_event_to_gui.log.debug(f"Category {i} Values: {self.category_percentages_values_in_live[i]}")
+            self.category_percentages[i] = round(count / count_i, 2)    # noqa
+            self.category_percentages_values_in_live[i] = round(  # noqa
+                count_values / count_i, 2  # noqa
+            )   # noqa
 
     def calculate_average_model_prediction(self):
-        # send_event_to_gui.log.debug("------------- PredictionCore: calculateAverageModelPrediction -------------")
         correct_values_count = 0
         for i in range(len(self.multiplier_results)):
             round_multiplier = round(self.multiplier_results[i], 0)
@@ -89,12 +82,6 @@ class PredictionCore:
         self.average_predictions_of_model = round(
             correct_values_count / len(self.multiplier_results), 2
         )
-        # send_event_to_gui.log.debug(f"Model ID: {self.id}")
-        # send_event_to_gui.log.debug(f"Prediction Rounds: {self.prediction_rounds}")
-        # send_event_to_gui.log.debug(f"Multiplier Results: {self.multiplier_results}")
-        # send_event_to_gui.log.debug(f"Correct Values: {correct_values_count}")
-        # send_event_to_gui.log.debug(f"Count Multiplier Results: {len(self.multiplier_results)}")
-        # send_event_to_gui.log.debug(f"Average Predictions: {self.average_predictions_of_model})")
 
     def get_prediction_value(self) -> int:
         return self.prediction_values[-1]
@@ -106,7 +93,9 @@ class PredictionCore:
         return self.probability_values[-1]
 
     def get_category_percentage(self) -> float:
-        return self.category_percentages.get(self.get_prediction_round_value(), 0)
+        return self.category_percentages.get(
+            self.get_prediction_round_value(), 0
+        )
 
     def get_category_percentage_value_in_live(self) -> float:
         return self.category_percentages_values_in_live.get(
@@ -130,12 +119,14 @@ class PredictionModel:
         return PredictionModel.__instance
 
     def add_predictions(self, predictions: list[Prediction]):
-        # send_event_to_gui.log.debug("----------------- PredictionModel: addPredictions ------------------")
-        # send_event_to_gui.log.debug(f"Count Predictions: {len(self.predictions)}")
         new_predictions = []
         for prediction in predictions:
             prediction_ = next(
-                (item for item in self.predictions if item.id == prediction.id),
+                (
+                    item
+                    for item in self.predictions
+                    if item.id == prediction.id
+                ),
                 None,
             )
             if not prediction_:
@@ -143,7 +134,6 @@ class PredictionModel:
                     id=prediction.id,
                     average_predictions=prediction.average_predictions,
                 )
-                # send_event_to_gui.log.debug(f"New PredictionCore: {prediction.id}")
             prediction_.add_prediction(
                 prediction.prediction,
                 prediction.prediction_round,
@@ -153,24 +143,22 @@ class PredictionModel:
             )
             new_predictions.append(prediction_)
         self.predictions = new_predictions
-        # send_event_to_gui.log.debug(f"Next Count Predictions: {len(self.predictions)}")
-        # self.predictions = [obj for obj in self.predictions if obj.id in [item.id for item in predictions]]
 
     def add_multiplier_result(self, multiplier: float):
         for prediction in self.predictions:
-            if len(prediction.multiplier_results) < len(prediction.prediction_rounds):
+            if len(prediction.multiplier_results) < len(
+                prediction.prediction_rounds
+            ):
                 prediction.add_multiplier_result(multiplier)
 
     def evaluate_models(self, min_bot_average_prediction_model: float):
-        # send_event_to_gui.log.debug("----------------- PredictionModel: evaluateModels ------------------")
-        # send_event_to_gui.log.debug(f"Count Prediction: {len(self.predictions)}")
         self.predictions = [
             p
             for p in self.predictions
-            if p.average_predictions_of_model > min_bot_average_prediction_model
+            if p.average_predictions_of_model
+            > min_bot_average_prediction_model
             or len(p.multiplier_results) < self.MAX_RESULTS_TO_EVALUATE
         ]
-        # send_event_to_gui.log.debug(f"Next Count Prediction: {len(self.predictions)}")
 
     def get_best_prediction(self) -> PredictionCore | None:
         if not self.predictions:
@@ -182,6 +170,4 @@ class PredictionModel:
                 > best_prediction.average_predictions_of_model
             ):
                 best_prediction = pre
-        # send_event_to_gui.log.debug("----------------- PredictionModel: getBestPrediction ------------------")
-        # send_event_to_gui.log.debug(f"Model ID: {best_prediction.id}")
         return best_prediction

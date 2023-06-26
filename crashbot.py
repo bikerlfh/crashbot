@@ -1,7 +1,7 @@
 # Standard Library
+import gettext
 import logging
 from threading import Event, Thread
-import gettext
 
 # Internal
 # from pwn import log, listen
@@ -18,9 +18,7 @@ logger = logging.getLogger(__name__)
 if __name__ == "__main__":
     GlobalVars.init()
     lang = gettext.translation(
-        'base',
-        localedir='locales',
-        languages=[GlobalVars.config.LANGUAGE]
+        "base", localedir="locales", languages=[GlobalVars.config.LANGUAGE]
     )
     lang.install()
     custom_bots = custom_bots.read_custom_bots()

@@ -43,7 +43,9 @@ def login(username: str, password: str) -> dict[str, any]:
             return dict(logged=True)
     if not username or not password:
         return dict(logged=False)
-    token, refresh = api_services.request_login(username=username, password=password)
+    token, refresh = api_services.request_login(
+        username=username, password=password
+    )
     if not token or not refresh:
         return dict(logged=False)
     local_storage.set_token(token)

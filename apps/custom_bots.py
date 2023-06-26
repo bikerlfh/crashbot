@@ -1,8 +1,11 @@
 """
 this file contains the logic to load custom bots
 """
-import os
+# Standard Library
 import json
+import os
+
+# Internal
 from apps.api.models import Bot
 from apps.constants import BotType
 
@@ -40,7 +43,7 @@ def read_custom_bots() -> list[Bot]:
         "max_recovery_percentage_on_max_bet",
         "min_average_model_prediction",
         "stop_loss_percentage",
-        "take_profit_percentage"
+        "take_profit_percentage",
     ]
     if not all(set(item.keys()) == set(required_keys) for item in data):
         print("custom bots: invalid keys")
@@ -95,11 +98,19 @@ def read_custom_bots() -> list[Bot]:
                 bot_type=item["bot_type"],
                 risk_factor=item["risk_factor"],
                 min_multiplier_to_bet=item["min_multiplier_to_bet"],
-                min_multiplier_to_recover_losses=item["min_multiplier_to_recover_losses"],
+                min_multiplier_to_recover_losses=item[
+                    "min_multiplier_to_recover_losses"
+                ],
                 min_probability_to_bet=item["min_probability_to_bet"],
-                min_category_percentage_to_bet=item["min_category_percentage_to_bet"],
-                max_recovery_percentage_on_max_bet=item["max_recovery_percentage_on_max_bet"],
-                min_average_model_prediction=item["min_average_model_prediction"],
+                min_category_percentage_to_bet=item[
+                    "min_category_percentage_to_bet"
+                ],
+                max_recovery_percentage_on_max_bet=item[
+                    "max_recovery_percentage_on_max_bet"
+                ],
+                min_average_model_prediction=item[
+                    "min_average_model_prediction"
+                ],
                 stop_loss_percentage=item["stop_loss_percentage"],
                 take_profit_percentage=item["take_profit_percentage"],
                 strategies=[],

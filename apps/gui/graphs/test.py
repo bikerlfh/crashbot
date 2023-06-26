@@ -2,7 +2,7 @@
 import sys
 
 # Libraries
-import numpy as np
+# import numpy as np
 import qdarktheme
 from bar_multipliers import BarMultiplier
 from PyQt6 import QtCore

@@ -52,7 +52,9 @@ class GlobalVars:
         globals().setdefault(GlobalVars.VARS.EMIT_TO_GUI, None)
         globals().setdefault(GlobalVars.VARS.AUTO_CASH_OUT, False)
         globals().setdefault(GlobalVars.VARS.WS_CLIENT_BACKEND_STARTED, False)
-        globals().setdefault(GlobalVars.VARS.ALLOWED_TO_SAVE_MULTIPLIERS, False)
+        globals().setdefault(
+            GlobalVars.VARS.ALLOWED_TO_SAVE_MULTIPLIERS, False
+        )
         globals().setdefault(GlobalVars.VARS.CUSTOM_BOTS, [])
         globals().setdefault(GlobalVars.VARS.CUSTOM_BOT_SELECTED, None)
         GlobalVars.init_config()
