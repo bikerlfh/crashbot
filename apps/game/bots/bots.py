@@ -264,11 +264,6 @@ class BotStatic(BotBase):
                 _("Prediction value is not in category percentage") # noqa
             )
             return []
-        if prediction_data.prediction_value < self.MIN_MULTIPLIER_TO_BET:
-            SendEventToGUI.log.warning(
-                _("Prediction value is too low") # noqa
-            )
-            return []
         if prediction_data.probability < self.MIN_PROBABILITY_TO_BET:
             SendEventToGUI.log.debug("Probability is too low")
             return []
