@@ -10,6 +10,35 @@ from apps.api.models import Bot
 from apps.constants import BotType
 
 
+def _validate_conditions(conditions: list[dict]) -> bool:
+    invalid_values = False
+    i = 1
+    for condition in conditions:
+        if not isinstance(condition, dict):
+            return False
+        fields_ = ["id", "condition_on", "condition_on_value", "condition_action", "action_value"]
+
+        if not all(key in condition for key in fields_):
+            invalid_values = True
+        if not isinstance(condition["id"], int):
+            print(f"{i} :: invalid id for condition")
+            invalid_values = True
+        if not isinstance(condition["condition_on"], str):
+            print(f"{i} :: invalid condition_on for condition")
+            invalid_values = True
+        if not isinstance(condition["condition_on_value"], (int, float)):
+            print(f"{i} :: invalid condition_on_value for condition")
+            invalid_values = True
+        if not isinstance(condition["condition_action"], str):
+            print(f"{i} :: invalid condition_action for condition")
+            invalid_values = True
+        if not isinstance(condition["action_value"], (int, float)):
+            print(f"{i} :: invalid action_value for condition")
+            invalid_values = True
+        i += 1
+    return invalid_values
+
+
 def read_custom_bots() -> list[Bot]:
     """
     read custom bots from file
@@ -44,6 +73,7 @@ def read_custom_bots() -> list[Bot]:
         "min_average_model_prediction",
         "stop_loss_percentage",
         "take_profit_percentage",
+        "conditions"
     ]
     if not all(set(item.keys()) == set(required_keys) for item in data):
         print("custom bots: invalid keys")
@@ -84,7 +114,11 @@ def read_custom_bots() -> list[Bot]:
         if not isinstance(item["take_profit_percentage"], float):
             print("custom bots: invalid take_profit_percentage")
             invalid_values = True
-        if invalid_values:
+        if not isinstance(item["conditions"], list):
+            print("custom bots: invalid conditions")
+            invalid_values = True
+        invalid_conditions = _validate_conditions(item["conditions"])
+        if invalid_values or invalid_conditions:
             return []
 
     # create custom bots
@@ -113,8 +147,9 @@ def read_custom_bots() -> list[Bot]:
                 ],
                 stop_loss_percentage=item["stop_loss_percentage"],
                 take_profit_percentage=item["take_profit_percentage"],
-                strategies=[],
+                conditions=item["conditions"]
             )
         )
         i -= 1
+    print(f"{len(custom_bots)} custom bots loaded")
     return custom_bots

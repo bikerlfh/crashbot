@@ -3,13 +3,63 @@
         "name": "CustomBot",
         "bot_type": "aggressive",
         "risk_factor": 0.1,
-        "min_multiplier_to_bet": 1.95,
-        "min_multiplier_to_recover_losses": 2.75,
+        "min_multiplier_to_bet": 2.0,
+        "min_multiplier_to_recover_losses": 2.0,
         "min_probability_to_bet": 0.5,
         "min_category_percentage_to_bet": 0.5,
         "max_recovery_percentage_on_max_bet": 0.5,
-        "min_average_model_prediction": 0.5,
-        "stop_loss_percentage": 0.9,
-        "take_profit_percentage": 0.5
+        "min_average_model_prediction": 0.1,
+        "stop_loss_percentage": 0.5,
+        "take_profit_percentage": 0.5,
+        "conditions": [
+            {
+                "id": 1,
+                "condition_on": "every_loss",
+                "condition_on_value": 1.0,
+                "condition_action": "reset_bet_amount",
+                "action_value": 0.0,
+                "others": null
+            },
+            {
+                "id": 2,
+                "condition_on": "every_loss",
+                "condition_on_value": 1.0,
+                "condition_action": "update_multiplier",
+                "action_value": 2.0,
+                "others": null
+            },
+            {
+                "id": 3,
+                "condition_on": "streak_losses",
+                "condition_on_value": 5.0,
+                "condition_action": "update_multiplier",
+                "action_value": 2.7,
+                "others": null
+            },
+            {
+                "id": 4,
+                "condition_on": "streak_losses",
+                "condition_on_value": 8.0,
+                "condition_action": "update_multiplier",
+                "action_value": 3.2,
+                "others": null
+            },
+            {
+                "id": 5,
+                "condition_on": "every_win",
+                "condition_on_value": 1.0,
+                "condition_action": "reset_multiplier",
+                "action_value": 0.0,
+                "others": null
+            },
+            {
+                "id": 6,
+                "condition_on": "streak_wins",
+                "condition_on_value": 5.0,
+                "condition_action": "increase_bet_amount",
+                "action_value": 0.33,
+                "others": null
+            }
+        ]
     }
 ]

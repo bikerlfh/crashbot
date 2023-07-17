@@ -3,8 +3,9 @@ from typing import List, Optional
 
 # Internal
 from apps.api import services as api_services
-from apps.api.models import BotStrategy, MultiplierPositions
+from apps.api.models import MultiplierPositions
 from apps.constants import BotType
+from apps.game.bots.helpers import BotConditionHelper
 from apps.game import utils as game_utils
 from apps.game.models import Bet, PredictionData
 from apps.game.prediction_core import PredictionCore
@@ -32,11 +33,12 @@ class BotBase:
 
     # minimum value to determine if the game is bullish or bearish
     MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME = 0.31
+    # if True, the bot will ignore the model PROBABILITY_TO_BET and MIN_AVERAGE_MODEL_PREDICTION
+    IGNORE_MODEL = False
     is_bullish_game: bool = False
 
     MAX_MULTIPLIERS_IN_MEMORY: int = 50
 
-    STRATEGIES: List[BotStrategy] = []
     amount_multiple: Optional[float] = None
     initial_balance: float = 0
     balance: float = 0
@@ -52,6 +54,7 @@ class BotBase:
     _min_amount_to_bet: float = 0
 
     multiplier_positions: MultiplierPositions = None
+    bot_condition_helper: BotConditionHelper = None
 
     def __init__(
         self,
@@ -76,8 +79,13 @@ class BotBase:
             raise ValueError("No bot data found")
         bot = bot_data[0]
         if self._custom_bot:
-            self._custom_bot.strategies = bot.strategies
             bot = self._custom_bot
+        # initialize the conditions
+        self.bot_condition_helper = BotConditionHelper(
+            bot_conditions=bot.conditions,
+            min_multiplier_to_bet=bot.min_multiplier_to_bet,
+            min_multiplier_to_recover_losses=bot.min_multiplier_to_recover_losses,
+        )
         SendEventToGUI.log.info(f"Bot {bot.name} loaded")
         self.MIN_CATEGORY_PERCENTAGE_TO_BET = (
             bot.min_category_percentage_to_bet
@@ -94,7 +102,6 @@ class BotBase:
         )
         self.STOP_LOSS_PERCENTAGE = bot.stop_loss_percentage
         self.TAKE_PROFIT_PERCENTAGE = bot.take_profit_percentage
-        self.STRATEGIES = bot.strategies
         self.stop_loss = round(
             self.initial_balance * self.STOP_LOSS_PERCENTAGE, 2
         )
@@ -128,7 +135,7 @@ class BotBase:
             f"{_('Take Profit')}: {self.take_profit}"  # noqa
         )
         SendEventToGUI.log.debug(
-            f"{_('Bot strategies count')}: {len(self.STRATEGIES)}"  # noqa
+            f"{_('Bot conditions count')}: {len(self.bot_condition_helper.bot_conditions)}"  # noqa
         )
 
     def validate_bet_amount(self, amount: float) -> float:
@@ -142,16 +149,6 @@ class BotBase:
                 amount, self.amount_multiple
             )
         return final_amount
-
-    def get_strategy(self, number_of_bets: int) -> Optional[BotStrategy]:
-        profit = self.get_profit_percent()
-        strategies = [
-            s
-            for s in self.STRATEGIES
-            if number_of_bets >= s.number_of_bets
-            and profit >= s.profit_percentage
-        ]
-        return strategies[-1] if len(strategies) > 0 else None
 
     def add_multiplier(self, multiplier: float):
         self.multipliers.append(multiplier)
@@ -198,7 +195,22 @@ class BotBase:
             return 0
         return max(self.amounts_lost)
 
-    def set_max_amount_to_bet(self, amount: float):
+    def set_max_amount_to_bet(
+        self,
+        *,
+        amount: float,
+        user_change: bool = False
+    ):
+        """
+        Set the max amount to bet
+        :param amount: amount to bet
+        :param user_change: if the user changed the amount
+        :return: None
+        """
+        self.bot_condition_helper.set_bet_amount(
+            bet_amount=amount,
+            user_change=user_change
+        )
         self._max_amount_to_bet = round(amount * 0.7, 0)
         if self._max_amount_to_bet > self.balance:
             SendEventToGUI.log.debug(
@@ -224,17 +236,42 @@ class BotBase:
             f"{_('Max bet amount')}: {self._max_amount_to_bet}"  # noqa
         )
 
+    def _execute_conditions(self, result_last_game: bool):
+        """
+        Evaluate the conditions to bet
+        :param result_last_game: True if the last game was a win
+        :return: None
+        """
+        bet_amount, multiplier, self.IGNORE_MODEL = (
+            self.bot_condition_helper.evaluate_conditions(
+                result_last_game=result_last_game,
+                profit=self.get_profit()
+            )
+        )
+        self.set_max_amount_to_bet(amount=bet_amount)
+        if result_last_game:
+            self.MIN_MULTIPLIER_TO_BET = multiplier
+        else:
+            self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = multiplier
+        SendEventToGUI.log.debug(f"evaluate_conditions :: bet_amount {bet_amount}")
+        SendEventToGUI.log.debug(f"evaluate_conditions :: multiplier {multiplier}")
+
     def evaluate_bets(self, multiplier_result: float):
         total_amount = 0
+        result_last_game = False
         for bet in self.bets:
-            bet_profit = bet.evaluate(multiplier_result)
-            if bet_profit < 0:
+            profit = bet.evaluate(multiplier_result)
+            if profit < 0:
                 self.add_loss(bet.amount)
             else:
-                total_amount += bet_profit
-        self.bets = []
+                total_amount += profit
         if total_amount > 0:
+            result_last_game = True
             self.remove_loss(total_amount)
+        self.bets = []
+        self._execute_conditions(
+            result_last_game=result_last_game
+        )
 
     def get_number_of_bets(self):
         """
@@ -315,7 +352,7 @@ class BotBase:
         return abs(amount_lost) / (multiplier - 1)
 
     def get_bet_recovery_amount(
-        self, multiplier: float, probability: float, strategy: BotStrategy
+        self, multiplier: float, probability: float
     ) -> float:
         """
         * adjust the bet recovery amount
@@ -323,7 +360,6 @@ class BotBase:
         * @param {number} multiplier the multiplier
         """
         profit = self.get_profit()
-        min_bet = self.balance * strategy.min_amount_percentage_to_bet
         amount_to_recover_losses = self.calculate_recovery_amount(
             profit, multiplier
         )
@@ -342,10 +378,10 @@ class BotBase:
         kelly_amount = game_utils.adaptive_kelly_formula(
             multiplier, probability, self.RISK_FACTOR, amount
         )
-        return max(amount, kelly_amount, min_bet)
+        return max(amount, kelly_amount)
 
     def generate_recovery_bets(
-        self, multiplier: float, probability: float, strategy: BotStrategy
+        self, multiplier: float, probability: float
     ) -> List[Bet]:
         bets: List[Bet] = []
         profit = self.get_profit()
@@ -353,7 +389,7 @@ class BotBase:
             return []
 
         amount = self.get_bet_recovery_amount(
-            multiplier, probability, strategy
+            multiplier, probability
         )
         amount = self.validate_bet_amount(amount)
         if multiplier >= 2:
@@ -370,64 +406,73 @@ class BotBase:
 
         return [b for b in bets if b.amount > 0]
 
-    def calculate_amount_bet(
-        self,
-        multiplier: float,
-        probability: float,
-        strategy: BotStrategy,
-        used_amount: Optional[float] = None,
-    ) -> float:
-        used_amount = used_amount or 0
-        profit = self.get_profit()
-        balance = self.initial_balance - used_amount
-        if balance <= 0:
-            return 0
-        min_bet = balance * strategy.min_amount_percentage_to_bet
-        # the balance is too high
-        if min_bet > self.maximum_bet:
-            min_bet = self.maximum_bet * 0.2
-        if used_amount == 0:
-            amount = min_bet + profit * strategy.profit_percentage_to_bet
-        else:
-            amount = used_amount / 3
-        amount = game_utils.adaptive_kelly_formula(
-            multiplier, probability, self.RISK_FACTOR, amount
-        )
-        if amount > 0:
-            amount = self.validate_bet_amount(amount)
-        return amount
-
     def generate_bets(
-        self, prediction_data: PredictionData, strategy: BotStrategy
-    ) -> List[Bet]:
+        self, prediction_data: PredictionData
+    ) -> list[Bet]:
+        """
+        Generate bets.
+        :param prediction_data: The prediction data.
+        :return: The bets.
+        """
         self.bets = []
         profit = self.get_profit()
+        second_multiplier = 2
+        min_multiplier, max_multiplier = self.predict_next_multiplier()
+        SendEventToGUI.log.debug(
+            f"second multiplier**: {min_multiplier} - {max_multiplier}"
+        )
         category_percentage = prediction_data.category_percentage
-        prediction_round = prediction_data.prediction_round
-        prediction_value = prediction_data.prediction_value
-        if profit < 0:
-            multiplier = prediction_round if prediction_round == 1 else 2
+        SendEventToGUI.log.debug(f"Amount Lost: {self.amounts_lost}")
+        if profit < 0 and abs(profit) >= self.minimum_bet:
+            # always the multiplier to recover losses is 1.95
             self.bets = self.generate_recovery_bets(
-                multiplier, category_percentage, strategy
+                self.MIN_MULTIPLIER_TO_RECOVER_LOSSES,
+                category_percentage,
             )
             return self.bets
-        if prediction_round == 1:
-            amount = self.calculate_amount_bet(
-                prediction_value, category_percentage, strategy
+        # to category 2
+        # if the profit is greater than 10% of the initial balance
+        # get the possible next second multiplier
+        if min_multiplier > second_multiplier:
+            second_multiplier = game_utils.generate_random_multiplier(
+                min_multiplier, max_multiplier
             )
-            self.bets.append(Bet(amount, prediction_value))
+            SendEventToGUI.log.debug(f"Second multiplier: {second_multiplier}")
+        profit_percentage = self.get_profit_percent()
+        if profit_percentage > 0 or self.is_bullish_game:
+            SendEventToGUI.log.debug(
+                "generate_bets :: profit_percentage > 0 or is_bullish_game"
+            )
+            max_bet_kelly_amount = game_utils.adaptive_kelly_formula(
+                self.MIN_MULTIPLIER_TO_BET,
+                category_percentage,
+                self.RISK_FACTOR,
+                self._max_amount_to_bet,
+            )
+            min_bet_kelly_amount = game_utils.adaptive_kelly_formula(
+                second_multiplier,
+                category_percentage,
+                self.RISK_FACTOR,
+                self._min_amount_to_bet,
+            )
+            self.bets.append(
+                Bet(
+                    max(max_bet_kelly_amount, self._max_amount_to_bet),
+                    self.MIN_MULTIPLIER_TO_BET,
+                )
+            )
+            self.bets.append(
+                Bet(
+                    max(min_bet_kelly_amount, self._min_amount_to_bet),
+                    second_multiplier,
+                )
+            )
         else:
-            # to categorize 2 and 3
-            amount = self.calculate_amount_bet(
-                self.MIN_MULTIPLIER_TO_BET, category_percentage, strategy
+            self.bets.append(
+                Bet(self._max_amount_to_bet, self.MIN_MULTIPLIER_TO_BET)
             )
-            self.bets.append(Bet(amount, self.MIN_MULTIPLIER_TO_BET))
-            multiplier = game_utils.generate_random_multiplier(2, 3)
-            amount_2 = self.calculate_amount_bet(
-                multiplier, category_percentage, strategy, amount
-            )
-            self.bets.append(Bet(amount_2, multiplier))
-        self.bets = [bet for bet in self.bets if bet.amount > 0]
+            self.bets.append(Bet(self._min_amount_to_bet, second_multiplier))
+        self.bets = list(filter(lambda b: b.amount > 0, self.bets))
         return self.bets
 
     def get_next_bet(
@@ -439,15 +484,6 @@ class BotBase:
         if prediction is None:
             return []
         self.multiplier_positions = multiplier_positions
-        number_of_bet = self.get_number_of_bets()
-        strategy = self.get_strategy(number_of_bet)
-        if not strategy:
-            SendEventToGUI.log.warning(
-                f"{_('No strategy found for profit percentage')}: "  # noqa
-                f"{self.get_profit_percent()}"
-            )
-            return []
-
         profit = self.get_profit()
         if profit >= 0:
             self.reset_losses()
@@ -462,18 +498,17 @@ class BotBase:
         if self.in_take_profit():
             SendEventToGUI.log.success(_("Take profit reached"))  # noqa
             return []
+        if not self.IGNORE_MODEL:
+            if not prediction_data.in_category_percentage:
+                return []
 
-        if not prediction_data.in_category_percentage:
-            return []
-
-        if not prediction_data.in_average_prediction_of_model:
-            return []
-        if prediction_data.probability < self.MIN_PROBABILITY_TO_BET:
-            SendEventToGUI.log.debug(_("Probability is too low"))  # noqa
-            return []
-
+            if not prediction_data.in_average_prediction_of_model:
+                return []
+            if prediction_data.probability < self.MIN_PROBABILITY_TO_BET:
+                SendEventToGUI.log.debug(_("Probability is too low"))  # noqa
+                return []
         # CATEGORY 1
         if prediction_data.prediction_round == 1:
-            return self.generate_bets(prediction_data, strategy)
+            return self.generate_bets(prediction_data)
         # CATEGORY 2 and 3
-        return self.generate_bets(prediction_data, strategy)
+        return self.generate_bets(prediction_data)

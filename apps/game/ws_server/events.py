@@ -46,7 +46,10 @@ def set_max_amount_to_bet_event(data: dict[str, any]) -> dict[str, any]:
     if not game:
         return make_error("game is not running")
     max_amount_to_bet = GlobalVars.get_max_amount_to_bet()
-    game.bot.set_max_amount_to_bet(max_amount_to_bet)
+    game.bot.set_max_amount_to_bet(
+        amount=max_amount_to_bet,
+        user_change=True
+    )
     data = dict(max_amount_to_bet=max_amount_to_bet)
     return data
 

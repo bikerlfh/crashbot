@@ -36,11 +36,12 @@ class BetData:
 
 
 @dataclass
-class BotStrategy:
-    number_of_bets: int
-    profit_percentage: float
-    min_amount_percentage_to_bet: float
-    profit_percentage_to_bet: float
+class BotCondition:
+    id: int
+    condition_on: str
+    condition_on_value: float
+    condition_action: str
+    action_value: float
     others: dict
 
 
@@ -59,7 +60,7 @@ class Bot:
         min_average_model_prediction: float,
         stop_loss_percentage: float,
         take_profit_percentage: float,
-        strategies: list[dict[str, any]],
+        conditions: list[dict[str, any]],
         **__kwargs,
     ):
         self.id = id
@@ -78,7 +79,7 @@ class Bot:
         self.min_average_model_prediction = min_average_model_prediction
         self.stop_loss_percentage = stop_loss_percentage
         self.take_profit_percentage = take_profit_percentage
-        self.strategies = [BotStrategy(**strategy) for strategy in strategies]
+        self.conditions = [BotCondition(**condition) for condition in conditions]
 
 
 @dataclass
