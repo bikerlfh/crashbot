@@ -52,3 +52,4 @@ class LoginForm(QtWidgets.QWidget, LoginDesigner):
             self.disable_login(False)
             return
         self.main_window.show_parameters_screen()
+        self.disable_login(False)
