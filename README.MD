@@ -53,7 +53,7 @@ you can find the logs in the folder data/logs.db (sqlite3)
 
 # make executable
 
-you can use pyinstaller to generate the executable or https://pypi.org/project/pyarmor/ with obfuscation
+you can use pyinstaller to generate the executable or https://pypi.org/project/pyarmor/ with obfuscation (use https://github.com/dashingsoft/pyarmor-webui)
 ```
 pyinstaller --onefile --icon=crashbot-icon.ico crashbot.py
 ```

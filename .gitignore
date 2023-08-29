@@ -8,6 +8,7 @@ node_modules/
 dist/
 data/
 build/
+.venv/
 
 
 # Compiled Java class files
@@ -15,6 +16,7 @@ build/
 *.spec
 *.class
 .ipynb_checkpoints
+.python-version
 
 # Compiled Python bytecode
 *.py[cod]
