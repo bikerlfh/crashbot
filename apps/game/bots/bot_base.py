@@ -196,10 +196,7 @@ class BotBase:
         return max(self.amounts_lost)
 
     def set_max_amount_to_bet(
-        self,
-        *,
-        amount: float,
-        user_change: bool = False
+        self, *, amount: float, user_change: bool = False
     ):
         """
         Set the max amount to bet
@@ -208,8 +205,7 @@ class BotBase:
         :return: None
         """
         self.bot_condition_helper.set_bet_amount(
-            bet_amount=amount,
-            user_change=user_change
+            bet_amount=amount, user_change=user_change
         )
         self._max_amount_to_bet = round(amount * 0.7, 0)
         if self._max_amount_to_bet > self.balance:
@@ -242,19 +238,24 @@ class BotBase:
         :param result_last_game: True if the last game was a win
         :return: None
         """
-        bet_amount, multiplier, self.IGNORE_MODEL = (
-            self.bot_condition_helper.evaluate_conditions(
-                result_last_game=result_last_game,
-                profit=self.get_profit()
-            )
+        (
+            bet_amount,
+            multiplier,
+            self.IGNORE_MODEL,
+        ) = self.bot_condition_helper.evaluate_conditions(
+            result_last_game=result_last_game, profit=self.get_profit()
         )
         self.set_max_amount_to_bet(amount=bet_amount)
         if result_last_game:
             self.MIN_MULTIPLIER_TO_BET = multiplier
         else:
             self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = multiplier
-        SendEventToGUI.log.debug(f"evaluate_conditions :: bet_amount {bet_amount}")
-        SendEventToGUI.log.debug(f"evaluate_conditions :: multiplier {multiplier}")
+        SendEventToGUI.log.debug(
+            f"evaluate_conditions :: bet_amount {bet_amount}"
+        )
+        SendEventToGUI.log.debug(
+            f"evaluate_conditions :: multiplier {multiplier}"
+        )
 
     def evaluate_bets(self, multiplier_result: float):
         total_amount = 0
@@ -269,9 +270,7 @@ class BotBase:
             result_last_game = True
             self.remove_loss(total_amount)
         self.bets = []
-        self._execute_conditions(
-            result_last_game=result_last_game
-        )
+        self._execute_conditions(result_last_game=result_last_game)
 
     def get_number_of_bets(self):
         """
@@ -317,7 +316,7 @@ class BotBase:
             prediction_round=prediction.get_prediction_round_value(),
             probability=prediction.get_probability_value(),
             category_percentage=category_percentage,
-            category_percentage_value_in_live=category_percentage_value_in_live, # noqa
+            category_percentage_value_in_live=category_percentage_value_in_live,  # noqa
             average_prediction_of_model=average_predictions_of_model,
             in_category_percentage=in_category_percentage,
             in_average_prediction_of_model=in_average_prediction_of_model,
@@ -388,9 +387,7 @@ class BotBase:
         if profit >= 0 or multiplier < self.MIN_MULTIPLIER_TO_RECOVER_LOSSES:
             return []
 
-        amount = self.get_bet_recovery_amount(
-            multiplier, probability
-        )
+        amount = self.get_bet_recovery_amount(multiplier, probability)
         amount = self.validate_bet_amount(amount)
         if multiplier >= 2:
             amount = round(amount / 1.5, 0)
@@ -406,9 +403,7 @@ class BotBase:
 
         return [b for b in bets if b.amount > 0]
 
-    def generate_bets(
-        self, prediction_data: PredictionData
-    ) -> list[Bet]:
+    def generate_bets(self, prediction_data: PredictionData) -> list[Bet]:
         """
         Generate bets.
         :param prediction_data: The prediction data.
@@ -449,11 +444,17 @@ class BotBase:
                 self.RISK_FACTOR,
                 self._max_amount_to_bet,
             )
+            max_bet_kelly_amount = game_utils.format_number_to_multiple(
+                max_bet_kelly_amount, self.amount_multiple
+            )
             min_bet_kelly_amount = game_utils.adaptive_kelly_formula(
                 second_multiplier,
                 category_percentage,
                 self.RISK_FACTOR,
                 self._min_amount_to_bet,
+            )
+            min_bet_kelly_amount = game_utils.format_number_to_multiple(
+                min_bet_kelly_amount, self.amount_multiple
             )
             self.bets.append(
                 Bet(

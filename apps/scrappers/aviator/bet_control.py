@@ -215,7 +215,7 @@ class BetControl(AbstractControlBase):
                 continue
             status_ = await get_status_of_btn(btn_)
             match status_:
-                case -2: # noqa
+                case -2:  # noqa
                     SendEventToGUI.log.debug(
                         f"wait_manual_cash_out :: button not found :: "
                         f"control {control.value}"

@@ -16,7 +16,13 @@ def _validate_conditions(conditions: list[dict]) -> bool:
     for condition in conditions:
         if not isinstance(condition, dict):
             return False
-        fields_ = ["id", "condition_on", "condition_on_value", "condition_action", "action_value"]
+        fields_ = [
+            "id",
+            "condition_on",
+            "condition_on_value",
+            "condition_action",
+            "action_value",
+        ]
 
         if not all(key in condition for key in fields_):
             invalid_values = True
@@ -73,7 +79,7 @@ def read_custom_bots() -> list[Bot]:
         "min_average_model_prediction",
         "stop_loss_percentage",
         "take_profit_percentage",
-        "conditions"
+        "conditions",
     ]
     if not all(set(item.keys()) == set(required_keys) for item in data):
         print("custom bots: invalid keys")
@@ -147,7 +153,7 @@ def read_custom_bots() -> list[Bot]:
                 ],
                 stop_loss_percentage=item["stop_loss_percentage"],
                 take_profit_percentage=item["take_profit_percentage"],
-                conditions=item["conditions"]
+                conditions=item["conditions"],
             )
         )
         i -= 1

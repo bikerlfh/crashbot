@@ -67,10 +67,10 @@ class PredictionCore:
                         count_values += 1
             if count == 0 or count_i == 0:
                 continue
-            self.category_percentages[i] = round(count / count_i, 2)    # noqa
+            self.category_percentages[i] = round(count / count_i, 2)  # noqa
             self.category_percentages_values_in_live[i] = round(  # noqa
                 count_values / count_i, 2  # noqa
-            )   # noqa
+            )  # noqa
 
     def calculate_average_model_prediction(self):
         correct_values_count = 0

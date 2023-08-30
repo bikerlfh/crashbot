@@ -107,9 +107,9 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         auto_cash_out = not GlobalVars.get_auto_cash_out()
         GlobalVars.set_auto_cash_out(auto_cash_out)
         self.btn_auto_cash_out.setText(
-            f"{_('Auto CashOut')} ON" # noqa
+            f"{_('Auto CashOut')} ON"  # noqa
             if auto_cash_out
-            else f"{_('Auto CashOut')} OFF" # noqa
+            else f"{_('Auto CashOut')} OFF"  # noqa
         )
 
     def button_set_max_amount_to_bet_clicked_event(self):

@@ -56,6 +56,7 @@ HomeBets: list[HomeBet] = [
         max_bet=100000,
         url="https://betplay.com.co/slots",
         game_page=AviatorBetPlay,
+        amount_multiple=100,
     ),
     HomeBet(
         id=3,
@@ -64,6 +65,7 @@ HomeBets: list[HomeBet] = [
         max_bet=500000,
         url="https://1wsbbj.top/",
         game_page=AviatorOneWin,
+        amount_multiple=100,
     ),
     HomeBet(
         id=4,
@@ -72,6 +74,7 @@ HomeBets: list[HomeBet] = [
         max_bet=500000,
         url="https://www.rivalo.co",
         game_page=AviatorOneWin,
+        amount_multiple=100,
     ),
 ]
 

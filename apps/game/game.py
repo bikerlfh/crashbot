@@ -49,10 +49,18 @@ class Game:
         self.minimum_bet: float = home_bet.min_bet
         self.maximum_bet: float = home_bet.max_bet
         if not use_bot_static:
-            self.bot: Bot = Bot(bot_type, self.minimum_bet, self.maximum_bet)
+            self.bot: Bot = Bot(
+                bot_type,
+                self.minimum_bet,
+                self.maximum_bet,
+                home_bet.amount_multiple,
+            )
         else:
             self.bot: BotStatic = BotStatic(
-                bot_type, self.minimum_bet, self.maximum_bet
+                bot_type,
+                self.minimum_bet,
+                self.maximum_bet,
+                amount_multiple=home_bet.amount_multiple,
             )
         self.maximum_win_for_one_bet: float = self.maximum_bet * 100
         self._prediction_model: PredictionModel = (
@@ -185,7 +193,7 @@ class Game:
             SendEventToGUI.log.debug(_("bets saved"))  # noqa
         except Exception as error:
             SendEventToGUI.log.debug(
-                f"{_('Error in requestSaveBets')} :: {error}" # noqa
+                f"{_('Error in requestSaveBets')} :: {error}"  # noqa
             )
 
     def request_get_prediction(self) -> Optional[PredictionCore]:
@@ -199,7 +207,7 @@ class Game:
             )
         except Exception as e:
             SendEventToGUI.log.debug(
-                f"{_('Error in request_get_prediction')}: {e}" # noqa
+                f"{_('Error in request_get_prediction')}: {e}"  # noqa
             )
             return None
         self._prediction_model.add_predictions(predictions)
@@ -286,8 +294,5 @@ class Game:
                 dict(multiplier=bet.multiplier, amount=bet.amount)
                 for bet in bets
             ]
-            SendEventToGUI.log.debug(
-                f"possible bets: "
-                f"{_possible_bets}"
-            )
+            SendEventToGUI.log.debug(f"possible bets: " f"{_possible_bets}")
         return self.bets

@@ -38,9 +38,11 @@ class LogsDBHandler(SQLiteEngine, metaclass=Singleton):
         if not timestamp:
             timestamp = datetime.now()
         timestamp = timestamp.strftime(self.TIMESTAMP_FORMAT)
-        sql_ = "INSERT INTO Logs " \
-               "(message, level, app, path, timestamp) " \
-               "VALUES (?, ?, ?, ?, ?)"
+        sql_ = (
+            "INSERT INTO Logs "
+            "(message, level, app, path, timestamp) "
+            "VALUES (?, ?, ?, ?, ?)"
+        )
         self.execute(sql_, (message, level, app, path, timestamp))
         self.commit()
 

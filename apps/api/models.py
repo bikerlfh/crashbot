@@ -79,7 +79,9 @@ class Bot:
         self.min_average_model_prediction = min_average_model_prediction
         self.stop_loss_percentage = stop_loss_percentage
         self.take_profit_percentage = take_profit_percentage
-        self.conditions = [BotCondition(**condition) for condition in conditions]
+        self.conditions = [
+            BotCondition(**condition) for condition in conditions
+        ]
 
 
 @dataclass

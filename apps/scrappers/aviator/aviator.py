@@ -166,7 +166,7 @@ class Aviator(AbstractGameBase, abc.ABC):
                 {
                     "location": "AviatorPage",
                     "message": "readMultipliers :: the page or "
-                               "the history game not exists",
+                    "the history game not exists",
                 }
             )
             raise Exception(

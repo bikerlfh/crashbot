@@ -70,7 +70,7 @@ class PredictionData:
         )
         SendEventToGUI.log.info(
             f"CatPer: {self._show_percentage(self.category_percentage)} - "
-            f"AvgModel: {self._show_percentage(self.average_prediction_of_model)}" # noqa
+            f"AvgModel: {self._show_percentage(self.average_prediction_of_model)}"  # noqa
         )
         SendEventToGUI.log.debug(
             f"InCatPer: {self.in_category_percentage} - "

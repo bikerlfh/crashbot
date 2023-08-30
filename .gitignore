@@ -9,7 +9,8 @@ dist/
 data/
 build/
 .venv/
-
+.pyarmor/
+.pytest_cache/
 
 # Compiled Java class files
 *.ini

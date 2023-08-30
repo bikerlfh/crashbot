@@ -20,10 +20,7 @@ class Bot(BotBase):
     """
 
     def set_max_amount_to_bet(
-        self,
-        *,
-        amount: float,
-        user_change: bool = False
+        self, *, amount: float, user_change: bool = False
     ):
         pass
 
@@ -62,8 +59,7 @@ class BotStatic(BotBase):
         super().initialize(balance=balance, multipliers=multipliers)
         self._initial_balance = balance
         self.set_max_amount_to_bet(
-            amount=GlobalVars.get_max_amount_to_bet(),
-            user_change=True
+            amount=GlobalVars.get_max_amount_to_bet(), user_change=True
         )
 
     def update_balance(self, balance: float):
@@ -147,23 +143,19 @@ class BotStatic(BotBase):
         """
         if multiplier < self.MIN_MULTIPLIER_TO_RECOVER_LOSSES:
             SendEventToGUI.log.warning(
-                _( # noqa
+                _(  # noqa
                     "multiplier is less than min multiplier to recovery losses"
                 )
             )
             return []
         SendEventToGUI.log.debug(_("generating recovery bets"))  # noqa
         bets = []
-        amount = self.get_bet_recovery_amount(
-            multiplier, probability
-        )
+        amount = self.get_bet_recovery_amount(multiplier, probability)
         amount = self.validate_bet_amount(amount)
         bets.append(Bet(amount, multiplier))
         return list(filter(lambda b: b.amount > 0, bets))
 
-    def generate_bets(
-        self, prediction_data: PredictionData
-    ) -> list[Bet]:
+    def generate_bets(self, prediction_data: PredictionData) -> list[Bet]:
         """
         Generate bets.
         :param prediction_data: The prediction data.
@@ -260,7 +252,7 @@ class BotStatic(BotBase):
         if not self.IGNORE_MODEL:
             if not prediction_data.in_category_percentage:
                 SendEventToGUI.log.warning(
-                    _("Prediction value is not in category percentage") # noqa
+                    _("Prediction value is not in category percentage")  # noqa
                 )
                 return []
             if prediction_data.probability < self.MIN_PROBABILITY_TO_BET:

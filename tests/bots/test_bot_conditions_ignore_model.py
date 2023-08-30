@@ -5,7 +5,6 @@ from apps.game.bots.helpers import BotConditionHelper
 
 
 class TestBotConditionsIgnoreModel:
-
     @pytest.fixture(autouse=True)
     def setup_method(self):
         self.conditions = [
@@ -48,7 +47,7 @@ class TestBotConditionsIgnoreModel:
                 condition_action=ConditionAction.IGNORE_MODEL,
                 action_value=0.0,
                 others={},
-            )
+            ),
         ]
 
     def test_ignore_model(self):

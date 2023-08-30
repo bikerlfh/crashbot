@@ -5,7 +5,6 @@ from apps.game.bots.helpers import BotConditionHelper
 
 
 class TestBotConditionsAggressive:
-
     @pytest.fixture(autouse=True)
     def setup_method(self):
         self.conditions = [
@@ -56,7 +55,7 @@ class TestBotConditionsAggressive:
                 condition_action=ConditionAction.INCREASE_BET_AMOUNT,
                 action_value=0.33,
                 others={},
-            )
+            ),
         ]
 
     def test_win_last_game(self):

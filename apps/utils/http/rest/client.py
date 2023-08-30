@@ -124,7 +124,7 @@ class RESTClient:
         service: str,
         data: Optional[Union[List, Dict[str, Any]]] = None,
         kwargs: Optional[Dict[str, Any]] = dict,
-        sensible_keys: Optional[List[str]] = (), # noqa
+        sensible_keys: Optional[List[str]] = (),  # noqa
     ) -> Response:
         data = data or {}
         service_name = f"{self.api_url}/{service}"
