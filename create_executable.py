@@ -1,6 +1,9 @@
+# Standard Library
 import os
-from apps.gui.utils import os as utils_os
 import platform
+
+# Internal
+from apps.gui.utils import os as utils_os
 
 
 def main():

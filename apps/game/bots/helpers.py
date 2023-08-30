@@ -1,5 +1,6 @@
+# Internal
 from apps.api.models import BotCondition
-from apps.game.bots.constants import ConditionON, ConditionAction
+from apps.game.bots.constants import ConditionAction, ConditionON
 
 
 class BotConditionHelper:
@@ -165,7 +166,8 @@ class BotConditionHelper:
     ) -> tuple[float, float, bool]:
         """
         Evaluate the conditions and return the new bet amount and multiplier
-        :param result_last_game: True if the last game was a win, False if it was a loss
+        :param result_last_game: True if the last game was a win,
+            False if it was a loss
         :param profit: profit of the last game
         :return: tuple(bet_amount, multiplier, ignore_model)
         """

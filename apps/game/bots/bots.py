@@ -6,7 +6,6 @@ from apps.api.models import MultiplierPositions
 from apps.constants import BotType
 from apps.game import utils as game_utils
 from apps.game.bots.bot_base import BotBase
-from apps.game.bots.helpers import BotConditionHelper
 from apps.game.models import Bet, PredictionData
 from apps.game.prediction_core import PredictionCore
 from apps.globals import GlobalVars

@@ -5,8 +5,8 @@ from typing import List, Optional
 from apps.api import services as api_services
 from apps.api.models import MultiplierPositions
 from apps.constants import BotType
-from apps.game.bots.helpers import BotConditionHelper
 from apps.game import utils as game_utils
+from apps.game.bots.helpers import BotConditionHelper
 from apps.game.models import Bet, PredictionData
 from apps.game.prediction_core import PredictionCore
 from apps.globals import GlobalVars
@@ -33,7 +33,8 @@ class BotBase:
 
     # minimum value to determine if the game is bullish or bearish
     MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME = 0.31
-    # if True, the bot will ignore the model PROBABILITY_TO_BET and MIN_AVERAGE_MODEL_PREDICTION
+    # if True, the bot will ignore the model
+    # PROBABILITY_TO_BET and MIN_AVERAGE_MODEL_PREDICTION
     IGNORE_MODEL = False
     is_bullish_game: bool = False
 
@@ -84,7 +85,7 @@ class BotBase:
         self.bot_condition_helper = BotConditionHelper(
             bot_conditions=bot.conditions,
             min_multiplier_to_bet=bot.min_multiplier_to_bet,
-            min_multiplier_to_recover_losses=bot.min_multiplier_to_recover_losses,
+            min_multiplier_to_recover_losses=bot.min_multiplier_to_recover_losses, # noqa
         )
         SendEventToGUI.log.info(f"Bot {bot.name} loaded")
         self.MIN_CATEGORY_PERCENTAGE_TO_BET = (

@@ -1,6 +1,9 @@
+# Libraries
 import pytest
+
+# Internal
 from apps.api.models import BotCondition
-from apps.game.bots.constants import ConditionON, ConditionAction
+from apps.game.bots.constants import ConditionAction, ConditionON
 from apps.game.bots.helpers import BotConditionHelper
 
 
