@@ -1,0 +1,7 @@
+# Default configuration
+API_URL=http://probetsai.com
+WS_URL=ws://probetsai.com:5000/ws/bot/
+MAX_AMOUNT_HOME_BET_PERCENTAGE=0.5
+MAX_AMOUNT_BALANCE_PERCENTAGE=0.005
+# ALLOWED_LANGUAGES (es, en)
+LANGUAGE=en

@@ -1,32 +1,56 @@
 # Standard Library
 import os
 import platform
+import shutil
 
 # Internal
 from apps.gui.utils import os as utils_os
 
 
+
 def main():
-    print(f"generating executable for crashbot ({platform.system()})")
-    # coping the requirements.txt file to the dist directory
-    os.system("pip install --upgrade pip")
-    os.system("pip install -r requirements_installer.txt")
-    if utils_os.is_windows():
-        # install playwright chromium
-        os.system("$Env:PLAYWRIGHT_BROWSERS_PATH=0")
-    else:
-        os.system("export PLAYWRIGHT_BROWSERS_PATH=0")
-    os.system("python -m playwright install chromium")
+    is_windows = utils_os.is_windows()
+    print(f"**************generating executable for crashbot ({platform.system()})**************")
+    try:
+        import pyarmor # noqa
+    except ImportError:
+        os.system("pip install --upgrade pip")
+        os.system("pip install -r requirements_installer.txt")
+        if is_windows:
+            # install playwright chromium
+            os.system("$Env:PLAYWRIGHT_BROWSERS_PATH=0")
+        else:
+            os.system("export PLAYWRIGHT_BROWSERS_PATH=0")
+        os.system("python -m playwright install chromium")
+    file_name = "crashbot.exe" if is_windows else "crashbot"
+    #  question input one_file
+    q_one_file = input("Do you want to generate a one file executable? (default true) (y/n): ")
+    _one_file = q_one_file.lower() != "n"
     # use pyarmor to obfuscate the code and one file
-    # os.system("pyinstaller -F crashbot.py")
-    os.system("pyinstaller --onefile --icon=crashbot-icon.ico crashbot.py")
-    os.system("pyarmor gen -O obfdist --pack dist/crashbot crashbot.py")
-    # os.system('pyarmor pack -e " --onefile" crashbot.py')
-    os.system("cp -r locales dist/locales")
-    os.system("cp conf.ini dist/conf.ini")
-    os.system("cp custom_bots.json dist/custom_bots.json")
-    os.system("cp crashbot-icon.ico dist/crashbot-icon.ico")
-    print("finished")
+    if os.path.exists("conf._ini"):
+        shutil.copy("conf._ini", "conf.ini")
+    if _one_file:
+        print("**************generating one file executable**************")
+        os.system(f"pyinstaller --onefile --icon=crashbot-icon.ico crashbot.py")
+        if not os.path.exists("dist/locales"):
+            shutil.copytree("locales", "dist/locales")
+        if os.path.exists("conf.ini"):
+            shutil.copy("conf.ini", "dist/conf.ini")
+        shutil.copy("custom_bots.json", "dist/custom_bots.json")
+        shutil.copy("crashbot-icon.ico", "dist/crashbot-icon.ico")
+    else:
+        file_name = f"crashbot/{file_name}"
+        print("**************generating executable**************")
+        os.system(
+            f"pyinstaller --icon=crashbot-icon.ico \
+            --add-data \"custom_bots.json{os.pathsep}.\" \
+            --add-data \"locales{os.pathsep}locales\" \
+            --add-data \"license.txt{os.pathsep}.\" \
+            --add-data \"conf.ini{os.pathsep}.\" \
+            --add-data \"crashbot-icon.ico{os.pathsep}.\" crashbot.py"
+        )
+    os.system(f"pyarmor gen -O obfdist --pack dist/{file_name} -r crashbot.py apps")
+    print("FINISHED!")
 
 
 if __name__ == "__main__":

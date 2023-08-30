@@ -1,0 +1,25 @@
+Software License for Crashbot
+Terms and Conditions
+By downloading, installing, or using any part of the "Crashbot" software, you agree to the terms and conditions of this License.
+
+1. Copyright
+The "Crashbot" software is the property of Probets and is protected by copyright laws. All rights are reserved.
+
+2. License to Use
+You are granted a non-exclusive license to use "Crashbot" subject to the terms and conditions set forth herein.
+
+3. Limitation of Liability
+UNDER NO CIRCUMSTANCES SHALL THE CREATORS, DISTRIBUTORS, OR COPYRIGHT HOLDERS OF "CRASHBOT" BE LIABLE FOR ANY DAMAGES OF ANY KIND, INCLUDING, BUT NOT LIMITED TO, DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE SOFTWARE.
+
+4. Disclaimer of Warranty
+"Crashbot" is provided "AS IS" without any warranty of any kind, either express or implied, including but not limited to warranties of merchantability or fitness for a particular purpose.
+
+5. User Responsibility
+The user assumes all responsibility for their use of the "Crashbot" software. The user must ensure that their use of "Crashbot" complies with all applicable local, state, national, and international laws and regulations.
+
+6. Modifications and Termination of License
+The copyright holders of "Crashbot" reserve the right to modify this License or terminate it at any time. Continued use of "Crashbot" following such changes constitutes your acceptance of the new terms.
+
+7. Governing Law
+This License shall be governed by and interpreted in accordance with the laws of the State of [Your State or Country].
+
