@@ -2,11 +2,23 @@
 import os
 import platform
 import shutil
-
+import zipfile
 # Internal
 from apps.gui.utils import os as utils_os
 
 
+
+def _zipdir(dir_path, zip_path):
+    print("**************zipping executable**************")
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+        for file_name in os.listdir(dir_path):
+            if ".zip" in file_name:
+                continue
+            if os.path.isdir(os.path.join(dir_path, file_name)):
+                zipf.write(os.path.join(dir_path, file_name)+"/", f"crashbot/{file_name}/")
+                continue
+            zipf.write(os.path.join(dir_path, file_name), f"crashbot/{file_name}/")
+        zipf.setpassword(b"crashbot")
 
 def main():
     is_windows = utils_os.is_windows()
