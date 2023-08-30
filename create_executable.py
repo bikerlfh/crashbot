@@ -7,8 +7,7 @@ import zipfile
 from apps.gui.utils import os as utils_os
 
 
-
-def _zipdir(dir_path, zip_path):
+def _zipdir(dir_path: str, zip_path: str):
     print("**************zipping executable**************")
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
         for file_name in os.listdir(dir_path):
@@ -18,7 +17,7 @@ def _zipdir(dir_path, zip_path):
                 zipf.write(os.path.join(dir_path, file_name)+"/", f"crashbot/{file_name}/")
                 continue
             zipf.write(os.path.join(dir_path, file_name), f"crashbot/{file_name}/")
-        zipf.setpassword(b"crashbot")
+
 
 def main():
     is_windows = utils_os.is_windows()
@@ -38,16 +37,16 @@ def main():
     #  question input one_file
     q_one_file = input("Do you want to generate a one file executable? (default true) (y/n): ")
     _one_file = q_one_file.lower() != "n"
+    # remove dist folder
+    shutil.rmtree("dist", ignore_errors=True)
     # use pyarmor to obfuscate the code and one file
     if os.path.exists("conf._ini"):
         shutil.copy("conf._ini", "conf.ini")
     if _one_file:
         print("**************generating one file executable**************")
         os.system(f"pyinstaller --onefile --icon=crashbot-icon.ico crashbot.py")
-        if not os.path.exists("dist/locales"):
-            shutil.copytree("locales", "dist/locales")
-        if os.path.exists("conf.ini"):
-            shutil.copy("conf.ini", "dist/conf.ini")
+        shutil.copytree("locales", "dist/locales")
+        shutil.copy("conf.ini", "dist/conf.ini")
         shutil.copy("custom_bots.json", "dist/custom_bots.json")
         shutil.copy("crashbot-icon.ico", "dist/crashbot-icon.ico")
     else:
