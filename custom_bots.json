@@ -31,21 +31,45 @@
             {
                 "id": 3,
                 "condition_on": "streak_losses",
-                "condition_on_value": 5.0,
+                "condition_on_value": 4.0,
                 "condition_action": "update_multiplier",
-                "action_value": 2.7,
+                "action_value": 2.4,
                 "others": null
             },
             {
                 "id": 4,
                 "condition_on": "streak_losses",
-                "condition_on_value": 8.0,
+                "condition_on_value": 7.0,
                 "condition_action": "update_multiplier",
-                "action_value": 3.2,
+                "action_value": 2.6,
                 "others": null
             },
             {
                 "id": 5,
+                "condition_on": "streak_losses",
+                "condition_on_value": 6.0,
+                "condition_action": "update_multiplier",
+                "action_value": 2.5,
+                "others": null
+            },
+            {
+                "id": 6,
+                "condition_on": "streak_losses",
+                "condition_on_value": 8.0,
+                "condition_action": "update_multiplier",
+                "action_value": 2.8,
+                "others": null
+            },
+            {
+                "id": 7,
+                "condition_on": "streak_losses",
+                "condition_on_value": 10.0,
+                "condition_action": "update_multiplier",
+                "action_value": 3.0,
+                "others": null
+            },
+            {
+                "id": 8,
                 "condition_on": "every_win",
                 "condition_on_value": 1.0,
                 "condition_action": "reset_multiplier",
@@ -53,7 +77,7 @@
                 "others": null
             },
             {
-                "id": 6,
+                "id": 9,
                 "condition_on": "streak_wins",
                 "condition_on_value": 5.0,
                 "condition_action": "increase_bet_amount",

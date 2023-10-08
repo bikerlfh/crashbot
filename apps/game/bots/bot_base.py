@@ -146,7 +146,7 @@ class BotBase:
         final_amount = min(final_amount, self.maximum_bet, self.balance)
         final_amount = round(final_amount, 0)
         if self.amount_multiple:
-            final_amount = game_utils.format_number_to_multiple(
+            final_amount = game_utils.round_number_to(
                 amount, self.amount_multiple
             )
         return final_amount
@@ -217,10 +217,10 @@ class BotBase:
             self._max_amount_to_bet = 0
         self._min_amount_to_bet = round(self._max_amount_to_bet * 0.3, 0)
         if self.amount_multiple:
-            self._max_amount_to_bet = game_utils.format_number_to_multiple(
+            self._max_amount_to_bet = game_utils.round_number_to(
                 self._max_amount_to_bet, self.amount_multiple
             )
-            self._min_amount_to_bet = game_utils.format_number_to_multiple(
+            self._min_amount_to_bet = game_utils.round_number_to(
                 self._min_amount_to_bet, self.amount_multiple
             )
         total = self._max_amount_to_bet + self._min_amount_to_bet
@@ -393,7 +393,7 @@ class BotBase:
         if multiplier >= 2:
             amount = round(amount / 1.5, 0)
             if self.amount_multiple:
-                amount = game_utils.format_number_to_multiple(
+                amount = game_utils.round_number_to(
                     amount, self.amount_multiple
                 )
             multiplier1 = round((multiplier / 2) * 1.5, 2)
@@ -445,7 +445,7 @@ class BotBase:
                 self.RISK_FACTOR,
                 self._max_amount_to_bet,
             )
-            max_bet_kelly_amount = game_utils.format_number_to_multiple(
+            max_bet_kelly_amount = game_utils.round_number_to(
                 max_bet_kelly_amount, self.amount_multiple
             )
             min_bet_kelly_amount = game_utils.adaptive_kelly_formula(
@@ -454,7 +454,7 @@ class BotBase:
                 self.RISK_FACTOR,
                 self._min_amount_to_bet,
             )
-            min_bet_kelly_amount = game_utils.format_number_to_multiple(
+            min_bet_kelly_amount = game_utils.round_number_to(
                 min_bet_kelly_amount, self.amount_multiple
             )
             self.bets.append(

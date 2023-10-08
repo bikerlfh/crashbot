@@ -13,7 +13,7 @@ def generate_random_multiplier(min_: float, max_: float) -> float:
     return value
 
 
-def format_number_to_multiple(num: float, multiple: float) -> float:
+def round_number_to(num: float, multiple: float) -> float:
     """
     :param num: is the number to format
     :param multiple: is the multiple to format the number
