@@ -100,7 +100,7 @@ class BarMultiplier(QVBoxLayout):
         support = []
         resistance = []
         for index in range(window, len(prices) - window):
-            price_range = prices[index - window: index + window + 1]
+            price_range = prices[index - window : index + window + 1]
             max_price = max(price_range)
             min_price = min(price_range)
             if prices[index] == max_price:
@@ -113,7 +113,7 @@ class BarMultiplier(QVBoxLayout):
         if not multipliers:
             return
         if len(multipliers) > self.max_multipliers:
-            multipliers = multipliers[-self.max_multipliers:]
+            multipliers = multipliers[-self.max_multipliers :]
         self.bar_heights = self.__get_bar_height(multipliers)
         self.bar_colors = self.__get_bar_color(multipliers)
         self.x_data = [i + 1 for i in range(len(self.bar_heights))]

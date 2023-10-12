@@ -7,7 +7,7 @@ from typing import Optional
 from apps.scrappers.aviator.aviator_bet_play import AviatorBetPlay
 from apps.scrappers.aviator.aviator_demo import AviatorDemo
 from apps.scrappers.aviator.aviator_one_win import AviatorOneWin
-from apps.scrappers.game_base import AbstractGameBase
+from apps.scrappers.game_base import AbstractCrashGameBase
 
 
 class WSEvent(str, Enum):
@@ -33,10 +33,10 @@ class HomeBet:
     min_bet: float
     max_bet: float
     url: str
-    game_page: AbstractGameBase.__class__
+    game_page: AbstractCrashGameBase.__class__
     amount_multiple: Optional[float] = None
 
-    def get_game_page(self) -> AbstractGameBase:
+    def get_game_page(self) -> AbstractCrashGameBase:
         return self.game_page(self.url)
 
 

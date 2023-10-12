@@ -2,6 +2,7 @@
 from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.aviator.aviator import Aviator
 from apps.utils.datetime import sleep_now
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 
 class AviatorOneWin(Aviator):
@@ -58,7 +59,7 @@ class AviatorOneWin(Aviator):
                 )
                 return self._app_game
             except Exception as e:
-                if isinstance(e, TimeoutError):
+                if isinstance(e, PlaywrightTimeoutError):
                     continue
                 raise e
 

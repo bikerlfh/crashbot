@@ -43,6 +43,7 @@ class BotCondition:
     condition_action: str
     action_value: float
     others: dict
+    condition_on_value_2: Optional[float] = None
 
 
 class Bot:
