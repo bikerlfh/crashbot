@@ -122,7 +122,7 @@ class BetControl(AbstractControlBase):
             or not enabled
             and is_switcher_enabled
         ):
-            await auto_cash_out_switcher.click(delay=self._random_delay())
+            await auto_cash_out_switcher.click(delay=self._random_delay(1000))
         if not enabled:
             return
         value = round(
@@ -131,7 +131,7 @@ class BetControl(AbstractControlBase):
         if value != multiplier:
             await auto_cash_out_multiplier.fill("", timeout=1000)
             await auto_cash_out_multiplier.type(
-                str(multiplier), delay=self._random_delay()
+                str(multiplier), delay=self._random_delay(500)
             )
 
     async def update_amount(self, *, amount: float, control: Control):
@@ -145,7 +145,7 @@ class BetControl(AbstractControlBase):
         value = round(float(await input_element.input_value(timeout=1000)), 0)
         if value != amount:
             await input_element.fill("", timeout=1000)
-            await input_element.type(str(amount), delay=100)
+            await input_element.type(str(amount), delay=self._random_delay(500))
         # self.aviator_page.wait_for_timeout(500)
 
     async def bet(

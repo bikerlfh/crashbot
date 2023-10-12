@@ -24,8 +24,8 @@ class Control(Enum):
 
 class AbstractControlBase(abc.ABC):
     @staticmethod
-    def _random_delay() -> int:
-        return random.randint(15, 50)
+    def _random_delay(max_microseconds: Optional[int] = 50) -> int:
+        return random.randint(15, max_microseconds)
 
     @abc.abstractmethod
     async def init(self):

@@ -231,12 +231,13 @@ class BaseBot(abc.ABC):
         total = self._max_amount_to_bet + self._min_amount_to_bet
         if total < amount:
             self._max_amount_to_bet += amount - total
-        SendEventToGUI.log.success(
-            f"{_('Min bet amount')}: {self._min_amount_to_bet}"  # noqa
-        )
-        SendEventToGUI.log.success(
-            f"{_('Max bet amount')}: {self._max_amount_to_bet}"  # noqa
-        )
+        if user_change:
+            SendEventToGUI.log.success(
+                f"{_('Min bet amount')}: {self._min_amount_to_bet}"  # noqa
+            )
+            SendEventToGUI.log.success(
+                f"{_('Max bet amount')}: {self._max_amount_to_bet}"  # noqa
+            )
 
     def _execute_conditions(
         self, *, result_last_game: bool, multiplier_result: float
@@ -262,10 +263,7 @@ class BaseBot(abc.ABC):
         else:
             self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = multiplier
         SendEventToGUI.log.debug(
-            f"evaluate_conditions :: bet_amount {bet_amount}"
-        )
-        SendEventToGUI.log.debug(
-            f"evaluate_conditions :: multiplier {multiplier}"
+            f"evaluate_conditions :: bet_amount {bet_amount} multiplier {multiplier}"
         )
 
     def evaluate_bets(self, multiplier_result: float):
