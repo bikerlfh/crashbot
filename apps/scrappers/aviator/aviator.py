@@ -4,8 +4,9 @@ import asyncio
 from typing import Optional, Union
 
 # Libraries
-from playwright.async_api import Locator, async_playwright
+from playwright.async_api import Locator
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
+from playwright.async_api import async_playwright
 
 # Internal
 from apps.game.models import Bet

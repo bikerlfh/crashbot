@@ -38,8 +38,9 @@ def _validate_conditions(conditions: list[dict]) -> bool:
             invalid_values = True
         if "condition_on_value_2" in condition:
             condition_on_value_2 = condition["condition_on_value_2"]
-            if (condition_on_value_2 is not None and
-                    not isinstance(condition_on_value_2, (int, float))):
+            if condition_on_value_2 is not None and not isinstance(
+                condition_on_value_2, (int, float)
+            ):
                 print(f"{i} :: invalid condition_on_value_2 for condition")
                 invalid_values = True
         if not isinstance(condition["condition_action"], str):

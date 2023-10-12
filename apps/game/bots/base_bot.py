@@ -263,7 +263,8 @@ class BaseBot(abc.ABC):
         else:
             self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = multiplier
         SendEventToGUI.log.debug(
-            f"evaluate_conditions :: bet_amount {bet_amount} multiplier {multiplier}"
+            f"evaluate_conditions :: bet_amount "
+            f"{bet_amount} multiplier {multiplier}"
         )
 
     def evaluate_bets(self, multiplier_result: float):
@@ -281,7 +282,7 @@ class BaseBot(abc.ABC):
         self.bets = []
         self._execute_conditions(
             result_last_game=result_last_game,
-            multiplier_result=multiplier_result
+            multiplier_result=multiplier_result,
         )
 
     def get_number_of_bets(self):

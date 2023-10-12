@@ -1,2 +1,3 @@
-from apps.game.games.strategy_game import StrategyGame  # noqa
+# Internal
 from apps.game.games.ai_game import AIGame  # noqa
+from apps.game.games.strategy_game import StrategyGame  # noqa

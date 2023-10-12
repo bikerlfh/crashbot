@@ -28,9 +28,12 @@ def _zipdir(dir_path: str, zip_path: str):
 def main():
     is_windows = utils_os.is_windows()
     print(
-        f"**************generating executable for crashbot ({platform.system()})**************"
+        f"**************"
+        f"generating executable for crashbot "
+        f"({platform.system()})**************"
     )
     try:
+        # Libraries
         import pyarmor  # noqa
     except ImportError:
         os.system("pip install --upgrade pip")
@@ -54,9 +57,7 @@ def main():
         shutil.copy("conf._ini", "conf.ini")
     if _one_file:
         print("**************generating one file executable**************")
-        os.system(
-            f"pyinstaller --onefile --icon=crashbot-icon.ico crashbot.py"
-        )
+        os.system("pyinstaller --onefile --icon=crashbot-icon.ico crashbot.py")
         shutil.copytree("locales", "dist/locales")
         shutil.copy("conf.ini", "dist/conf.ini")
         shutil.copy("custom_bots.json", "dist/custom_bots.json")

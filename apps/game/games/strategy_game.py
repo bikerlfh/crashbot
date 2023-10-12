@@ -1,13 +1,12 @@
-from apps.game.models import Bet
-from apps.utils.local_storage import LocalStorage
-from apps.game.models import Bet, Multiplier
-
-from apps.game.games.base_game import BaseGame
+# Internal
+from apps.constants import BotType
 from apps.game.bots.bot_strategy import StrategyBot
+from apps.game.games.base_game import BaseGame
+from apps.game.games.constants import GameType
+from apps.game.models import Bet, Multiplier
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
-from apps.constants import BotType
-from apps.game.games.constants import GameType
+from apps.utils.local_storage import LocalStorage
 
 local_storage = LocalStorage()
 
@@ -38,6 +37,19 @@ class StrategyGame(BaseGame, configuration=GameType.STRATEGY.value):
         # remove the first multiplier
         self.multipliers = self.multipliers[1:]
         SendEventToGUI.send_multipliers([multiplier])
+
+    async def wait_next_game(self):
+        """
+        Wait for the next game to start
+        override the base method to not save customer balance
+        """
+        SendEventToGUI.log.info(_("waiting for the next game"))  # noqa
+        await self.game_page.wait_next_game()
+        self.balance = await self.read_balance_to_aviator()
+        # TODO implement create manual bets
+        self.bot.update_balance(self.balance)
+        self.add_multiplier(self.game_page.multipliers[-1])
+        self.bets = []
 
     def get_next_bet(self) -> list[Bet]:
         bets = self.bot.get_next_bet(

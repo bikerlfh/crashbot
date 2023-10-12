@@ -1,8 +1,10 @@
+# Libraries
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
+
 # Internal
 from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.aviator.aviator import Aviator
 from apps.utils.datetime import sleep_now
-from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 
 class AviatorOneWin(Aviator):

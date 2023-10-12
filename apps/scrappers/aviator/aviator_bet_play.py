@@ -1,8 +1,10 @@
+# Libraries
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
+
 # Internal
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.aviator.aviator import Aviator
-from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 
 class AviatorBetPlay(Aviator):

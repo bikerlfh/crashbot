@@ -5,14 +5,13 @@ from typing import Optional
 from apps.api import services as api_services
 from apps.constants import BotType, HomeBet
 from apps.game.bots.bot_ai import AIBot
-
+from apps.game.games.base_game import BaseGame
+from apps.game.games.constants import GameType
 from apps.game.models import Bet
 from apps.game.prediction_core import PredictionCore, PredictionModel
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
 from apps.utils.local_storage import LocalStorage
-from apps.game.games.base_game import BaseGame
-from apps.game.games.constants import GameType
 
 local_storage = LocalStorage()
 

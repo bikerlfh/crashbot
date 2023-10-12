@@ -145,7 +145,9 @@ class BetControl(AbstractControlBase):
         value = round(float(await input_element.input_value(timeout=1000)), 0)
         if value != amount:
             await input_element.fill("", timeout=1000)
-            await input_element.type(str(amount), delay=self._random_delay(500))
+            await input_element.type(
+                str(amount), delay=self._random_delay(500)
+            )
         # self.aviator_page.wait_for_timeout(500)
 
     async def bet(

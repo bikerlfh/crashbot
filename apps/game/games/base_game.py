@@ -1,3 +1,4 @@
+# Standard Library
 import abc
 
 # Internal
@@ -5,7 +6,6 @@ from apps.api import services as api_services
 from apps.api.models import BetData, MultiplierPositions
 from apps.constants import BotType, HomeBet
 from apps.game.bots.base_bot import BaseBot
-
 from apps.game.models import Bet, Multiplier
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
