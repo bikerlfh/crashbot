@@ -69,3 +69,4 @@ PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install 3.10.4
 pygettext -d base -o locales/base.po  .
 
 use poedit to translate the file base.po
+(https://phrase.com/blog/posts/translate-python-gnu-gettext/)

@@ -5,14 +5,14 @@ from typing import Optional
 from apps.api.models import MultiplierPositions
 from apps.constants import BotType
 from apps.game import utils as game_utils
-from apps.game.bots.base_bot import BaseBot
+from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, PredictionData
 from apps.game.prediction_core import PredictionCore
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
 
 
-class StrategyBot(BaseBot):
+class BotStrategy(BotBase):
     """
     NOTE: don't use this directly
     The BotAI class is a class used to determine
@@ -164,6 +164,8 @@ class StrategyBot(BaseBot):
         self.bets.append(
             Bet(self._max_amount_to_bet, self.MIN_MULTIPLIER_TO_BET)
         )
+        if second_multiplier == self.MIN_MULTIPLIER_TO_BET:
+            second_multiplier += 0.2
         self.bets.append(Bet(self._min_amount_to_bet, second_multiplier))
         self.bets = list(filter(lambda b: b.amount > 0, self.bets))
         return self.bets

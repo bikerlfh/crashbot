@@ -1,8 +1,8 @@
 # Internal
 from apps.constants import BotType
-from apps.game.bots.bot_strategy import StrategyBot
-from apps.game.games.base_game import BaseGame
+from apps.game.bots.bot_strategy import BotStrategy
 from apps.game.games.constants import GameType
+from apps.game.games.game_base import GameBase
 from apps.game.models import Bet, Multiplier
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
@@ -11,14 +11,14 @@ from apps.utils.local_storage import LocalStorage
 local_storage = LocalStorage()
 
 
-class StrategyGame(BaseGame, configuration=GameType.STRATEGY.value):
-    bot: StrategyBot
+class GameStrategy(GameBase, configuration=GameType.STRATEGY.value):
+    bot: BotStrategy
     """
     This game no uses the AI. Only use strategy to bet.
     """
 
     def _initialize_bot(self, *, bot_type: BotType):
-        self.bot = StrategyBot(
+        self.bot = BotStrategy(
             bot_type=bot_type,
             minimum_bet=self.minimum_bet,
             maximum_bet=self.maximum_bet,

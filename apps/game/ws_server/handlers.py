@@ -3,6 +3,7 @@ from typing import Optional
 
 # Internal
 from apps.api import services as api_services
+from apps.globals import GlobalVars
 from apps.utils.local_storage import LocalStorage
 
 local_storage = LocalStorage()
@@ -13,6 +14,7 @@ def _get_customer_data() -> None:
     home_bets = []
     for home_bet in customer_data.home_bets:
         home_bets.append(vars(home_bet))
+    GlobalVars.set_plan_with_ai(customer_data.plan.with_ai)
     local_storage.set_home_bets(home_bets=home_bets)
     local_storage.set_customer_id(customer_id=customer_data.customer_id)
 

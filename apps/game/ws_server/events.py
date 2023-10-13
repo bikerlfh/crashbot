@@ -3,8 +3,8 @@ from socketio import AsyncServer
 
 # Internal
 from apps.constants import BotType, WSEvent
-from apps.game.games.base_game import BaseGame
 from apps.game.games.constants import GameType
+from apps.game.games.game_base import GameBase
 from apps.game.ws_server import handlers
 from apps.game.ws_server.utils import make_error
 from apps.globals import GlobalVars
@@ -70,6 +70,7 @@ async def start_bot_event(
     home_bet_id = data.get("home_bet_id")
     username = data.get("username")
     password = data.get("password")
+    use_game_ai = data.get("use_game_ai", False)
     if not bot_type or not home_bet_id:
         await sio.emit(
             WSEvent.START_BOT,
@@ -92,8 +93,11 @@ async def start_bot_event(
     if game:
         return make_error("game is already running")
 
-    game = BaseGame(
-        configuration=GameType.STRATEGY.value,
+    game_type = GameType.STRATEGY.value
+    if use_game_ai:
+        game_type = GameType.AI.value
+    game = GameBase(
+        configuration=game_type,
         home_bet=home_bet,
         bot_type=bot_type,
     )

@@ -200,7 +200,7 @@ class Aviator(AbstractCrashGameBase, abc.ABC):
             control = Control.Control1 if i == 0 else Control.Control2
             SendEventToGUI.log.info(
                 f"{_('Sending bet to aviator')} {bet.amount} * "  # noqa
-                f"{bet.multiplier} control: {control}"
+                f"{bet.multiplier} control: {control.value}"
             )
             await self._controls.bet(
                 amount=bet.amount,

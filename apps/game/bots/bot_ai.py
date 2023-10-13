@@ -5,14 +5,14 @@ from typing import Optional
 from apps.api.models import MultiplierPositions
 from apps.constants import BotType
 from apps.game import utils as game_utils
-from apps.game.bots.base_bot import BaseBot
+from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, PredictionData
 from apps.game.prediction_core import PredictionCore
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
 
 
-class AIBot(BaseBot):
+class BotAI(BotBase):
     """
     The BotAI class is a class used to determine
     the optimal fraction of one's capital to bet on a given bet.
@@ -162,6 +162,8 @@ class AIBot(BaseBot):
                 min_multiplier, max_multiplier
             )
             SendEventToGUI.log.debug(f"Second multiplier: {second_multiplier}")
+        if second_multiplier == self.MIN_MULTIPLIER_TO_BET:
+            second_multiplier += 0.2
         profit_percentage = self.get_profit_percent()
         if profit_percentage > 0 or self.is_bullish_game:
             SendEventToGUI.log.debug(

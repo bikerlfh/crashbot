@@ -4,9 +4,9 @@ from typing import Optional
 # Internal
 from apps.api import services as api_services
 from apps.constants import BotType, HomeBet
-from apps.game.bots.bot_ai import AIBot
-from apps.game.games.base_game import BaseGame
+from apps.game.bots.bot_ai import BotAI
 from apps.game.games.constants import GameType
+from apps.game.games.game_base import GameBase
 from apps.game.models import Bet
 from apps.game.prediction_core import PredictionCore, PredictionModel
 from apps.globals import GlobalVars
@@ -16,7 +16,7 @@ from apps.utils.local_storage import LocalStorage
 local_storage = LocalStorage()
 
 
-class AIGame(BaseGame, configuration=GameType.AI.value):
+class GameAI(GameBase, configuration=GameType.AI.value):
     """
     this game uses the AI model from backend
     """
@@ -36,7 +36,7 @@ class AIGame(BaseGame, configuration=GameType.AI.value):
         )
 
     def _initialize_bot(self, *, bot_type: BotType):
-        self.bot = AIBot(
+        self.bot = BotAI(
             bot_type=bot_type,
             minimum_bet=self.minimum_bet,
             maximum_bet=self.maximum_bet,

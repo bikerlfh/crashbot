@@ -1,5 +1,6 @@
 # Standard Library
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional
 
 # Internal
@@ -86,9 +87,19 @@ class Bot:
 
 
 @dataclass
+class PlanData:
+    name: str
+    with_ai: bool
+    start_dt: datetime
+    end_dt: datetime
+    is_active: bool
+
+
+@dataclass
 class CustomerData:
     customer_id: int
     home_bets: list[HomeBetModel]
+    plan: PlanData
 
 
 @dataclass

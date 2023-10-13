@@ -15,7 +15,7 @@ from apps.gui.gui_events import SendEventToGUI
 from apps.utils import graphs as utils_graphs
 
 
-class BaseBot(abc.ABC):
+class BotBase(abc.ABC):
     """
     NOTE: don't use this directly
     The BotBase has the logic for all bots

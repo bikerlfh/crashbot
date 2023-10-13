@@ -38,12 +38,12 @@ class ParameterDesigner(object):
         self.cmb_home_bet.setObjectName("cmb_home_bet")
         self.cmb_home_bet.addItem("")
         self.label_2 = QtWidgets.QLabel(parent=self.groupBox)
-        self.label_2.setGeometry(QtCore.QRect(20, 100, 341, 22))
+        self.label_2.setGeometry(QtCore.QRect(20, 90, 341, 22))
         self.label_2.setMinimumSize(QtCore.QSize(0, 22))
         self.label_2.setMaximumSize(QtCore.QSize(16777215, 22))
         self.label_2.setObjectName("label_2")
         self.cmb_bot_type = QtWidgets.QComboBox(parent=self.groupBox)
-        self.cmb_bot_type.setGeometry(QtCore.QRect(20, 130, 351, 30))
+        self.cmb_bot_type.setGeometry(QtCore.QRect(20, 120, 351, 30))
         self.cmb_bot_type.setMinimumSize(QtCore.QSize(0, 30))
         self.cmb_bot_type.setMaximumSize(QtCore.QSize(16777215, 30))
         self.cmb_bot_type.setObjectName("cmb_bot_type")
@@ -59,13 +59,22 @@ class ParameterDesigner(object):
         )
         self.btn_start.setObjectName("btn_start")
         self.chk_use_credentials = QtWidgets.QCheckBox(parent=self.groupBox)
-        self.chk_use_credentials.setGeometry(QtCore.QRect(20, 170, 341, 30))
+        self.chk_use_credentials.setGeometry(QtCore.QRect(20, 180, 341, 30))
         self.chk_use_credentials.setMinimumSize(QtCore.QSize(0, 30))
         self.chk_use_credentials.setMaximumSize(QtCore.QSize(16777215, 30))
         self.chk_use_credentials.setToolTipDuration(3)
         self.chk_use_credentials.setIconSize(QtCore.QSize(20, 20))
         self.chk_use_credentials.setChecked(True)
         self.chk_use_credentials.setObjectName("chk_use_credentials")
+        self.chk_use_ai = QtWidgets.QCheckBox(parent=self.groupBox)
+        self.chk_use_ai.setEnabled(False)
+        self.chk_use_ai.setGeometry(QtCore.QRect(20, 160, 341, 30))
+        self.chk_use_ai.setMinimumSize(QtCore.QSize(0, 30))
+        self.chk_use_ai.setMaximumSize(QtCore.QSize(16777215, 30))
+        self.chk_use_ai.setToolTipDuration(3)
+        self.chk_use_ai.setIconSize(QtCore.QSize(20, 20))
+        self.chk_use_ai.setChecked(False)
+        self.chk_use_ai.setObjectName("chk_use_ai")
 
         self.retranslateUi(Parameters)
         QtCore.QMetaObject.connectSlotsByName(Parameters)
@@ -80,3 +89,4 @@ class ParameterDesigner(object):
         self.cmb_bot_type.setItemText(2, "Loose")  # noqa
         self.btn_start.setText(_("Start"))  # noqa
         self.chk_use_credentials.setText(_("Use saved credentials"))  # noqa
+        self.chk_use_ai.setText(_("Use AI"))  # noqa

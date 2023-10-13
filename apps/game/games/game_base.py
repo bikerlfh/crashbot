@@ -5,7 +5,7 @@ import abc
 from apps.api import services as api_services
 from apps.api.models import BetData, MultiplierPositions
 from apps.constants import BotType, HomeBet
-from apps.game.bots.base_bot import BaseBot
+from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, Multiplier
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
@@ -16,7 +16,7 @@ from apps.utils.patterns.factory import ConfigurationFactory
 local_storage = LocalStorage()
 
 
-class BaseGame(abc.ABC, ConfigurationFactory):
+class GameBase(abc.ABC, ConfigurationFactory):
     """
     To implement a new Game you need to create
     a new class with a configuration.
@@ -32,7 +32,7 @@ class BaseGame(abc.ABC, ConfigurationFactory):
     initialized: bool = False
     # automatic betting
     customer_id: int = 0
-    bot: BaseBot
+    bot: BotBase
     home_bet: HomeBet
     initial_balance: float = 0
     balance: float = 0

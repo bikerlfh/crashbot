@@ -11,6 +11,7 @@ from apps.api.models import (
     CustomerData,
     HomeBetModel,
     MultiplierPositions,
+    PlanData,
     Positions,
     Prediction,
 )
@@ -178,6 +179,7 @@ def get_customer_data() -> CustomerData:
         home_bets=[
             HomeBetModel(**home_bet) for home_bet in data.get("home_bets", [])
         ],
+        plan=PlanData(**data.get("plan")),
     )
     return customer_data
 

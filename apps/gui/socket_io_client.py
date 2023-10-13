@@ -109,6 +109,7 @@ class SocketIOClient(QtCore.QThread):
         home_bet_id: int,
         max_amount_to_bet: float,
         auto_play: bool,
+        use_game_ai: bool,
         username: Optional[str] = None,
         password: Optional[str] = None,
     ) -> None:
@@ -117,6 +118,7 @@ class SocketIOClient(QtCore.QThread):
             home_bet_id=home_bet_id,
             max_amount_to_bet=max_amount_to_bet,
             auto_play=auto_play,
+            use_game_ai=use_game_ai,
             username=username,
             password=password,
         )
