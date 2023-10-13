@@ -1,3 +1,6 @@
+# Libraries
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
+
 # Internal
 from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.aviator.aviator import Aviator
@@ -58,7 +61,7 @@ class AviatorOneWin(Aviator):
                 )
                 return self._app_game
             except Exception as e:
-                if isinstance(e, TimeoutError):
+                if isinstance(e, PlaywrightTimeoutError):
                     continue
                 raise e
 

@@ -20,6 +20,7 @@ def _validate_conditions(conditions: list[dict]) -> bool:
             "id",
             "condition_on",
             "condition_on_value",
+            # "condition_on_value_2",
             "condition_action",
             "action_value",
         ]
@@ -35,6 +36,13 @@ def _validate_conditions(conditions: list[dict]) -> bool:
         if not isinstance(condition["condition_on_value"], (int, float)):
             print(f"{i} :: invalid condition_on_value for condition")
             invalid_values = True
+        if "condition_on_value_2" in condition:
+            condition_on_value_2 = condition["condition_on_value_2"]
+            if condition_on_value_2 is not None and not isinstance(
+                condition_on_value_2, (int, float)
+            ):
+                print(f"{i} :: invalid condition_on_value_2 for condition")
+                invalid_values = True
         if not isinstance(condition["condition_action"], str):
             print(f"{i} :: invalid condition_action for condition")
             invalid_values = True

@@ -17,10 +17,13 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     GlobalVars.init()
-    lang = gettext.translation(
-        "base", localedir="locales", languages=[GlobalVars.config.LANGUAGE]
-    )
-    lang.install()
+    try:
+        lang = gettext.translation(
+            "base", localedir="locales", languages=[GlobalVars.config.LANGUAGE]
+        )
+        lang.install()
+    except Exception as exc:
+        logger.error(f"error loading language: {exc}")
     custom_bots = custom_bots.read_custom_bots()
     GlobalVars.set_custom_bots(custom_bots)
     ws_client = WebSocketClient()

@@ -1,32 +1,38 @@
 # Standard Library
-from typing import Optional
+import abc
 
 # Internal
 from apps.api import services as api_services
 from apps.api.models import BetData, MultiplierPositions
 from apps.constants import BotType, HomeBet
-from apps.game.bots.bots import Bot, BotStatic
+from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, Multiplier
-from apps.game.prediction_core import PredictionCore, PredictionModel
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
-from apps.scrappers.game_base import AbstractGameBase
+from apps.scrappers.game_base import AbstractCrashGameBase
 from apps.utils.local_storage import LocalStorage
+from apps.utils.patterns.factory import ConfigurationFactory
 
 local_storage = LocalStorage()
 
 
-class Game:
+class GameBase(abc.ABC, ConfigurationFactory):
+    """
+    To implement a new Game you need to create
+    a new class with a configuration.
+    The new class needs be imported in the
+    file apps/game/games/__init__.py
+    """
+
     MAX_MULTIPLIERS_TO_SAVE: int = 10
-    game_page: AbstractGameBase
+    game_page: AbstractCrashGameBase
     minimum_bet: float = 0
     maximum_bet: float = 0
     maximum_win_for_one_bet: float = 0
-    _prediction_model: PredictionModel
     initialized: bool = False
     # automatic betting
     customer_id: int = 0
-    bot: Bot | BotStatic
+    bot: BotBase
     home_bet: HomeBet
     initial_balance: float = 0
     balance: float = 0
@@ -41,31 +47,20 @@ class Game:
         *,
         home_bet: HomeBet,
         bot_type: BotType,
-        use_bot_static: Optional[bool] = True,
+        **kwargs,
     ):
         self.customer_id = local_storage.get_customer_id()
         self.home_bet: home_bet = home_bet
         self.game_page = self.home_bet.get_game_page()
         self.minimum_bet: float = home_bet.min_bet
         self.maximum_bet: float = home_bet.max_bet
-        if not use_bot_static:
-            self.bot: Bot = Bot(
-                bot_type,
-                self.minimum_bet,
-                self.maximum_bet,
-                home_bet.amount_multiple,
-            )
-        else:
-            self.bot: BotStatic = BotStatic(
-                bot_type,
-                self.minimum_bet,
-                self.maximum_bet,
-                amount_multiple=home_bet.amount_multiple,
-            )
+
+        self._initialize_bot(bot_type=bot_type)
         self.maximum_win_for_one_bet: float = self.maximum_bet * 100
-        self._prediction_model: PredictionModel = (
-            PredictionModel.get_instance()
-        )
+
+    @abc.abstractmethod
+    def _initialize_bot(self, *, bot_type: BotType):
+        ...
 
     async def initialize(self):
         """
@@ -196,23 +191,6 @@ class Game:
                 f"{_('Error in requestSaveBets')} :: {error}"  # noqa
             )
 
-    def request_get_prediction(self) -> Optional[PredictionCore]:
-        """
-        Get the prediction from the database
-        """
-        multipliers = [item.multiplier for item in self.multipliers]
-        try:
-            predictions = api_services.request_prediction(
-                home_bet_id=self.home_bet.id, multipliers=multipliers
-            )
-        except Exception as e:
-            SendEventToGUI.log.debug(
-                f"{_('Error in request_get_prediction')}: {e}"  # noqa
-            )
-            return None
-        self._prediction_model.add_predictions(predictions)
-        return self._prediction_model.get_best_prediction()
-
     async def wait_next_game(self):
         """
         Wait for the next game to start
@@ -238,14 +216,6 @@ class Game:
             bets=self.bets, use_auto_cash_out=GlobalVars.get_auto_cash_out()
         )
 
-    async def play(self):
-        while self.initialized:
-            await self.wait_next_game()
-            self.get_next_bet()
-            await self.send_bets_to_aviator()
-            SendEventToGUI.log.info("***************************************")
-        SendEventToGUI.log.error(_("The game is not initialized"))  # noqa
-
     def evaluate_bets(self, multiplier: float) -> None:
         """
         Evaluate the bets and update the balance
@@ -261,7 +231,6 @@ class Game:
         """
         Add a new multiplier and update the multipliers
         """
-        self._prediction_model.add_multiplier_result(multiplier)
         self.evaluate_bets(multiplier)
         self.multipliers.append(Multiplier(multiplier))
         self.bot.add_multiplier(multiplier)
@@ -272,27 +241,14 @@ class Game:
         self.multipliers = self.multipliers[1:]
         SendEventToGUI.send_multipliers([multiplier])
 
+    async def play(self):
+        while self.initialized:
+            await self.wait_next_game()
+            self.get_next_bet()
+            await self.send_bets_to_aviator()
+            SendEventToGUI.log.info("***************************************")
+        SendEventToGUI.log.error(_("The game is not initialized"))  # noqa
+
+    @abc.abstractmethod
     def get_next_bet(self) -> list[Bet]:
-        """
-        Get the next bet from the prediction
-        """
-        self._prediction_model.evaluate_models(
-            self.bot.MIN_AVERAGE_MODEL_PREDICTION
-        )
-        prediction = self.request_get_prediction()
-        if prediction is None:
-            SendEventToGUI.log.warning(_("No prediction found"))  # noqa
-            return []
-        bets = self.bot.get_next_bet(
-            prediction=prediction,
-            multiplier_positions=self.multiplier_positions,
-        )
-        if GlobalVars.get_auto_play():
-            self.bets = bets
-        elif bets:
-            _possible_bets = [
-                dict(multiplier=bet.multiplier, amount=bet.amount)
-                for bet in bets
-            ]
-            SendEventToGUI.log.debug(f"possible bets: " f"{_possible_bets}")
-        return self.bets
+        ...

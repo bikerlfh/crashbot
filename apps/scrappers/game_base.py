@@ -24,8 +24,8 @@ class Control(Enum):
 
 class AbstractControlBase(abc.ABC):
     @staticmethod
-    def _random_delay() -> int:
-        return random.randint(15, 50)
+    def _random_delay(max_microseconds: Optional[int] = 50) -> int:
+        return random.randint(15, max_microseconds)
 
     @abc.abstractmethod
     async def init(self):
@@ -63,7 +63,7 @@ class AbstractControlBase(abc.ABC):
         ...
 
 
-class AbstractGameBase(abc.ABC):
+class AbstractCrashGameBase(abc.ABC):
     def __init__(self, url: str):
         self.playwright: Union[sync_playwright, None] = None
         self._browser: Union[Browser, None] = None

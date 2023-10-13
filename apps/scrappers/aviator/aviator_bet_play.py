@@ -1,3 +1,6 @@
+# Libraries
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
+
 # Internal
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
@@ -61,7 +64,7 @@ class AviatorBetPlay(Aviator):
                 )
                 return self._app_game
             except Exception as e:
-                if isinstance(e, TimeoutError):
+                if isinstance(e, PlaywrightTimeoutError):
                     SendEventToGUI.log.debug("_get_app_game :: timeout")
                     continue
                 SendEventToGUI.log.debug(

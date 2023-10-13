@@ -1,3 +1,6 @@
+# Standard Library
+from typing import Optional
+
 # Internal
 from apps.api.models import BotCondition
 from apps.game.bots.constants import ConditionAction, ConditionON
@@ -7,6 +10,8 @@ class BotConditionHelper:
     _priority_conditions = [
         ConditionON.PROFIT_LESS_THAN,
         ConditionON.PROFIT_GREATER_THAN,
+        ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
+        ConditionON.STREAK_N_MULTIPLIER_GREATER_THAN,
         ConditionON.EVERY_WIN,
         ConditionON.EVERY_LOSS,
         ConditionON.STREAK_WINS,
@@ -19,6 +24,7 @@ class BotConditionHelper:
         bot_conditions: list[BotCondition],
         min_multiplier_to_bet: float,
         min_multiplier_to_recover_losses: float,
+        multipliers: list[float],
     ):
         self.bot_conditions = bot_conditions
         # valid conditions of the round
@@ -27,6 +33,7 @@ class BotConditionHelper:
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = (
             min_multiplier_to_recover_losses
         )
+        self.multipliers = multipliers
         self.current_multiplier = min_multiplier_to_bet
         self.initial_bet_amount = 0.0
         self.current_bet_amount = 0.0
@@ -59,6 +66,19 @@ class BotConditionHelper:
                 break
         return streak
 
+    def calculate_multiplier_streak(
+        self, *, multiplier: float, count_multipliers: float, is_less: bool
+    ) -> bool:
+        streak = 0
+        for value in reversed(self.multipliers):
+            if (is_less and value < multiplier) or (
+                not is_less and value > multiplier
+            ):
+                streak += 1
+            else:
+                break
+        return streak >= count_multipliers
+
     def _check_conditions(self) -> list[BotCondition]:
         """
         Check if the conditions are valid
@@ -89,12 +109,13 @@ class BotConditionHelper:
         for condition in self.bot_conditions:
             condition_on = ConditionON(condition.condition_on)
             condition_on_value = condition.condition_on_value
+            condition_on_value_2 = condition.condition_on_value_2
             match condition_on:
                 case ConditionON.EVERY_WIN:
-                    if self.last_games[-1]:
+                    if self.last_games and self.last_games[-1]:
                         _add_valid_condition(condition)
                 case ConditionON.EVERY_LOSS:
-                    if not self.last_games[-1]:
+                    if self.last_games and not self.last_games[-1]:
                         _add_valid_condition(condition)
                 case ConditionON.STREAK_WINS:
                     if self.calculate_streak(True) >= int(condition_on_value):
@@ -107,6 +128,22 @@ class BotConditionHelper:
                         _add_valid_condition(condition)
                 case ConditionON.PROFIT_LESS_THAN:
                     if self.profit < condition_on_value:
+                        _add_valid_condition(condition)
+                case ConditionON.STREAK_N_MULTIPLIER_LESS_THAN:
+                    in_streak = self.calculate_multiplier_streak(
+                        multiplier=condition_on_value_2,
+                        count_multipliers=condition_on_value,
+                        is_less=True,
+                    )
+                    if in_streak:
+                        _add_valid_condition(condition)
+                case ConditionON.STREAK_N_MULTIPLIER_GREATER_THAN:
+                    in_streak = self.calculate_multiplier_streak(
+                        multiplier=condition_on_value_2,
+                        count_multipliers=condition_on_value,
+                        is_less=False,
+                    )
+                    if in_streak:
                         _add_valid_condition(condition)
 
         _conditions = sorted(
@@ -161,42 +198,51 @@ class BotConditionHelper:
     def evaluate_conditions(
         self,
         *,
-        result_last_game: bool,
+        multiplier_result: float,
         profit: float,
+        result_last_game: Optional[bool] = None,
     ) -> tuple[float, float, bool]:
         """
         Evaluate the conditions and return the new bet amount and multiplier
         :param result_last_game: True if the last game was a win,
             False if it was a loss
+        :param multiplier_result: multiplier of the last game
         :param profit: profit of the last game
         :return: tuple(bet_amount, multiplier, ignore_model)
         """
-        self.add_last_game(result_last_game)
+        self.multipliers.append(multiplier_result)
+        if result_last_game is not None:
+            self.add_last_game(result_last_game)
         self.profit = profit
         self.valid_conditions = self._check_conditions()
         ignore_model = False
         for condition in self.valid_conditions:
             condition_action = condition.condition_action
             action_value = condition.action_value
-            if condition_action == ConditionAction.INCREASE_BET_AMOUNT:
-                self.current_bet_amount += (
-                    self.current_bet_amount * action_value
-                )
-            elif condition_action == ConditionAction.DECREASE_BET_AMOUNT:
-                self.current_bet_amount -= (
-                    self.current_bet_amount * action_value
-                )
-            elif condition_action == ConditionAction.RESET_BET_AMOUNT:
-                self.current_bet_amount = self.initial_bet_amount
-            elif condition_action == ConditionAction.UPDATE_MULTIPLIER:
-                self.current_multiplier = action_value
-            elif condition_action == ConditionAction.RESET_MULTIPLIER:
-                if result_last_game:
-                    self.current_multiplier = self.MIN_MULTIPLIER_TO_BET
-                else:
-                    self.current_multiplier = (
-                        self.MIN_MULTIPLIER_TO_RECOVER_LOSSES
+            match condition_action:
+                case ConditionAction.INCREASE_BET_AMOUNT:
+                    self.current_bet_amount += (
+                        self.current_bet_amount * action_value
                     )
-            elif condition_action == ConditionAction.IGNORE_MODEL:
-                ignore_model = bool(action_value)
+                case ConditionAction.DECREASE_BET_AMOUNT:
+                    self.current_bet_amount -= (
+                        self.current_bet_amount * action_value
+                    )
+                case ConditionAction.RESET_BET_AMOUNT:
+                    self.current_bet_amount = self.initial_bet_amount
+                case ConditionAction.UPDATE_MULTIPLIER:
+                    self.current_multiplier = action_value
+                case ConditionAction.RESET_MULTIPLIER:
+                    if result_last_game:
+                        self.current_multiplier = self.MIN_MULTIPLIER_TO_BET
+                    else:
+                        self.current_multiplier = (
+                            self.MIN_MULTIPLIER_TO_RECOVER_LOSSES
+                        )
+                case ConditionAction.IGNORE_MODEL:
+                    ignore_model = bool(action_value)
+                case ConditionAction.MAKE_BET:
+                    _make_bet = bool(action_value)
+                    if not _make_bet:
+                        return 0.0, 0.0, ignore_model
         return self.current_bet_amount, self.current_multiplier, ignore_model

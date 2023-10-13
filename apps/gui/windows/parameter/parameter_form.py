@@ -19,6 +19,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         super().__init__()
         self.values = None
         self.setupUi(self)
+        self.chk_use_ai.setVisible(False)
         self.main_window = main_window
         self.btn_start.clicked.connect(self.button_start_clicked_event)
         self.receive_start_bot_signal.connect(self._on_receive_start_bot)
@@ -47,6 +48,9 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             self.HomeBets = home_bets_
         else:
             GlobalVars.set_allowed_home_bets(HomeBets)
+        if GlobalVars.get_plan_with_ai():
+            self.chk_use_ai.setVisible(True)
+            self.chk_use_ai.setEnabled(True)
         self.__fill_cmb_fields()
 
     def __fill_cmb_fields(self):
@@ -98,6 +102,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         data = self.get_values()
         if not data:
             return
+        use_game_ai = self.chk_use_ai.isChecked()
         if self.chk_use_credentials.isChecked():
             home_bet_index = self.cmb_home_bet.currentIndex()
             home_bet = self.HomeBets[home_bet_index]
@@ -111,6 +116,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             home_bet_id=data.get("home_bet_id"),
             max_amount_to_bet=data.get("max_amount_to_bet"),
             auto_play=data.get("auto_play", False),
+            use_game_ai=use_game_ai,
             username=data.get("username"),
             password=data.get("password"),
         )

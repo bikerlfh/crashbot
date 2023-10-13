@@ -258,6 +258,10 @@ msgstr ""
 msgid "Use saved credentials"
 msgstr ""
 
+#: ./apps/gui/windows/parameter/parameter_designer.py:82
+msgid "Use AI"
+msgstr ""
+
 #: ./apps/scrappers/aviator/aviator.py:78
 msgid "Aviator loaded"
 msgstr ""

@@ -1,4 +1,5 @@
 # Standard Library
+import abc
 from typing import List, Optional
 
 # Internal
@@ -14,8 +15,9 @@ from apps.gui.gui_events import SendEventToGUI
 from apps.utils import graphs as utils_graphs
 
 
-class BotBase:
+class BotBase(abc.ABC):
     """
+    NOTE: don't use this directly
     The BotBase has the logic for all bots
     """
 
@@ -59,10 +61,12 @@ class BotBase:
 
     def __init__(
         self,
+        *,
         bot_type: BotType,
         minimum_bet: float = 0,
         maximum_bet: float = 0,
         amount_multiple: Optional[float] = None,
+        **kwargs,
     ):
         self._custom_bot = GlobalVars.get_custom_bot_selected()
         self.BOT_TYPE = bot_type
@@ -85,7 +89,8 @@ class BotBase:
         self.bot_condition_helper = BotConditionHelper(
             bot_conditions=bot.conditions,
             min_multiplier_to_bet=bot.min_multiplier_to_bet,
-            min_multiplier_to_recover_losses=bot.min_multiplier_to_recover_losses, # noqa
+            min_multiplier_to_recover_losses=bot.min_multiplier_to_recover_losses,  # noqa
+            multipliers=multipliers,
         )
         SendEventToGUI.log.info(f"Bot {bot.name} loaded")
         self.MIN_CATEGORY_PERCENTAGE_TO_BET = (
@@ -226,17 +231,21 @@ class BotBase:
         total = self._max_amount_to_bet + self._min_amount_to_bet
         if total < amount:
             self._max_amount_to_bet += amount - total
-        SendEventToGUI.log.success(
-            f"{_('Min bet amount')}: {self._min_amount_to_bet}"  # noqa
-        )
-        SendEventToGUI.log.success(
-            f"{_('Max bet amount')}: {self._max_amount_to_bet}"  # noqa
-        )
+        if user_change:
+            SendEventToGUI.log.success(
+                f"{_('Min bet amount')}: {self._min_amount_to_bet}"  # noqa
+            )
+            SendEventToGUI.log.success(
+                f"{_('Max bet amount')}: {self._max_amount_to_bet}"  # noqa
+            )
 
-    def _execute_conditions(self, result_last_game: bool):
+    def _execute_conditions(
+        self, *, result_last_game: bool, multiplier_result: float
+    ):  # noqa
         """
         Evaluate the conditions to bet
         :param result_last_game: True if the last game was a win
+        :param multiplier_result: the multiplier result
         :return: None
         """
         (
@@ -244,7 +253,9 @@ class BotBase:
             multiplier,
             self.IGNORE_MODEL,
         ) = self.bot_condition_helper.evaluate_conditions(
-            result_last_game=result_last_game, profit=self.get_profit()
+            result_last_game=result_last_game,
+            multiplier_result=multiplier_result,
+            profit=self.get_profit(),
         )
         self.set_max_amount_to_bet(amount=bet_amount)
         if result_last_game:
@@ -252,10 +263,8 @@ class BotBase:
         else:
             self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = multiplier
         SendEventToGUI.log.debug(
-            f"evaluate_conditions :: bet_amount {bet_amount}"
-        )
-        SendEventToGUI.log.debug(
-            f"evaluate_conditions :: multiplier {multiplier}"
+            f"evaluate_conditions :: bet_amount "
+            f"{bet_amount} multiplier {multiplier}"
         )
 
     def evaluate_bets(self, multiplier_result: float):
@@ -271,7 +280,10 @@ class BotBase:
             result_last_game = True
             self.remove_loss(total_amount)
         self.bets = []
-        self._execute_conditions(result_last_game=result_last_game)
+        self._execute_conditions(
+            result_last_game=result_last_game,
+            multiplier_result=multiplier_result,
+        )
 
     def get_number_of_bets(self):
         """
@@ -351,166 +363,39 @@ class BotBase:
         """
         return abs(amount_lost) / (multiplier - 1)
 
+    @abc.abstractmethod
     def get_bet_recovery_amount(
-        self, multiplier: float, probability: float
+        self, multiplier: float, probability: Optional[float] = None
     ) -> float:
         """
         * adjust the bet recovery amount
         * @param {number} amount the amount to recover the losses
         * @param {number} multiplier the multiplier
         """
-        profit = self.get_profit()
-        amount_to_recover_losses = self.calculate_recovery_amount(
-            profit, multiplier
-        )
-        # calculate the amount to bet to recover last amount loss
-        last_amount_loss = self.calculate_recovery_amount(
-            self.get_last_lost_amount(), multiplier
-        )
-        # calculates the maximum amount allowed to recover in a single bet
-        max_recovery_amount = (
-            self.maximum_bet * self.MAX_RECOVERY_PERCENTAGE_ON_MAX_BET
-        )  # 50% of maximum bet (this can be a parameter of the bot)
-        amount = min(
-            amount_to_recover_losses, max_recovery_amount, self.balance
-        )
-        amount = last_amount_loss if amount >= max_recovery_amount else amount
-        kelly_amount = game_utils.adaptive_kelly_formula(
-            multiplier, probability, self.RISK_FACTOR, amount
-        )
-        return max(amount, kelly_amount)
+        ...
 
+    @abc.abstractmethod
     def generate_recovery_bets(
-        self, multiplier: float, probability: float
+        self, multiplier: float, probability: Optional[float] = None
     ) -> List[Bet]:
-        bets: List[Bet] = []
-        profit = self.get_profit()
-        if profit >= 0 or multiplier < self.MIN_MULTIPLIER_TO_RECOVER_LOSSES:
-            return []
+        ...
 
-        amount = self.get_bet_recovery_amount(multiplier, probability)
-        amount = self.validate_bet_amount(amount)
-        if multiplier >= 2:
-            amount = round(amount / 1.5, 0)
-            if self.amount_multiple:
-                amount = game_utils.round_number_to(
-                    amount, self.amount_multiple
-                )
-            multiplier1 = round((multiplier / 2) * 1.5, 2)
-            bets.append(Bet(amount, multiplier1))
-            bets.append(Bet(amount, multiplier1))
-        else:
-            bets.append(Bet(amount, multiplier))
-
-        return [b for b in bets if b.amount > 0]
-
-    def generate_bets(self, prediction_data: PredictionData) -> list[Bet]:
+    @abc.abstractmethod
+    def generate_bets(
+        self, prediction_data: Optional[PredictionData] = None
+    ) -> list[Bet]:
         """
         Generate bets.
         :param prediction_data: The prediction data.
         :return: The bets.
         """
-        self.bets = []
-        profit = self.get_profit()
-        second_multiplier = 2
-        min_multiplier, max_multiplier = self.predict_next_multiplier()
-        SendEventToGUI.log.debug(
-            f"second multiplier**: {min_multiplier} - {max_multiplier}"
-        )
-        category_percentage = prediction_data.category_percentage
-        SendEventToGUI.log.debug(f"Amount Lost: {self.amounts_lost}")
-        if profit < 0 and abs(profit) >= self.minimum_bet:
-            # always the multiplier to recover losses is 1.95
-            self.bets = self.generate_recovery_bets(
-                self.MIN_MULTIPLIER_TO_RECOVER_LOSSES,
-                category_percentage,
-            )
-            return self.bets
-        # to category 2
-        # if the profit is greater than 10% of the initial balance
-        # get the possible next second multiplier
-        if min_multiplier > second_multiplier:
-            second_multiplier = game_utils.generate_random_multiplier(
-                min_multiplier, max_multiplier
-            )
-            SendEventToGUI.log.debug(f"Second multiplier: {second_multiplier}")
-        profit_percentage = self.get_profit_percent()
-        if profit_percentage > 0 or self.is_bullish_game:
-            SendEventToGUI.log.debug(
-                "generate_bets :: profit_percentage > 0 or is_bullish_game"
-            )
-            max_bet_kelly_amount = game_utils.adaptive_kelly_formula(
-                self.MIN_MULTIPLIER_TO_BET,
-                category_percentage,
-                self.RISK_FACTOR,
-                self._max_amount_to_bet,
-            )
-            max_bet_kelly_amount = game_utils.round_number_to(
-                max_bet_kelly_amount, self.amount_multiple
-            )
-            min_bet_kelly_amount = game_utils.adaptive_kelly_formula(
-                second_multiplier,
-                category_percentage,
-                self.RISK_FACTOR,
-                self._min_amount_to_bet,
-            )
-            min_bet_kelly_amount = game_utils.round_number_to(
-                min_bet_kelly_amount, self.amount_multiple
-            )
-            self.bets.append(
-                Bet(
-                    max(max_bet_kelly_amount, self._max_amount_to_bet),
-                    self.MIN_MULTIPLIER_TO_BET,
-                )
-            )
-            self.bets.append(
-                Bet(
-                    max(min_bet_kelly_amount, self._min_amount_to_bet),
-                    second_multiplier,
-                )
-            )
-        else:
-            self.bets.append(
-                Bet(self._max_amount_to_bet, self.MIN_MULTIPLIER_TO_BET)
-            )
-            self.bets.append(Bet(self._min_amount_to_bet, second_multiplier))
-        self.bets = list(filter(lambda b: b.amount > 0, self.bets))
-        return self.bets
+        ...
 
+    @abc.abstractmethod
     def get_next_bet(
         self,
         *,
-        prediction: PredictionCore,
+        prediction: Optional[PredictionCore] = None,
         multiplier_positions: Optional[MultiplierPositions] = None,
     ) -> list[Bet]:
-        if prediction is None:
-            return []
-        self.multiplier_positions = multiplier_positions
-        profit = self.get_profit()
-        if profit >= 0:
-            self.reset_losses()
-
-        prediction_data = self.get_prediction_data(prediction)
-        SendEventToGUI.log.debug(f"profit: {profit}")
-        prediction_data.print_data()
-        if self.in_stop_loss():
-            SendEventToGUI.log.warning(_("Stop loss reached"))  # noqa
-            return []
-
-        if self.in_take_profit():
-            SendEventToGUI.log.success(_("Take profit reached"))  # noqa
-            return []
-        if not self.IGNORE_MODEL:
-            if not prediction_data.in_category_percentage:
-                return []
-
-            if not prediction_data.in_average_prediction_of_model:
-                return []
-            if prediction_data.probability < self.MIN_PROBABILITY_TO_BET:
-                SendEventToGUI.log.debug(_("Probability is too low"))  # noqa
-                return []
-        # CATEGORY 1
-        if prediction_data.prediction_round == 1:
-            return self.generate_bets(prediction_data)
-        # CATEGORY 2 and 3
-        return self.generate_bets(prediction_data)
+        ...

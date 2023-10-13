@@ -58,6 +58,7 @@ class TestBotConditionsIgnoreModel:
             bot_conditions=self.conditions,
             min_multiplier_to_bet=2,
             min_multiplier_to_recover_losses=2,
+            multipliers=[1.0, 1.5, 2.0, 2.5],
         )
         helper.set_bet_amount(bet_amount=2000, user_change=True)
         helper.current_bet_amount = 5000
@@ -66,6 +67,7 @@ class TestBotConditionsIgnoreModel:
         bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
             result_last_game=False,
             profit=0.01,
+            multiplier_result=2.5,
         )
         assert bet_amount == 2000
         assert multiplier == 2.5
@@ -76,6 +78,7 @@ class TestBotConditionsIgnoreModel:
             bot_conditions=self.conditions,
             min_multiplier_to_bet=2,
             min_multiplier_to_recover_losses=2,
+            multipliers=[1.0, 1.5, 2.0, 2.5],
         )
         helper.set_bet_amount(bet_amount=2000, user_change=True)
         helper.current_bet_amount = 5000
@@ -84,6 +87,7 @@ class TestBotConditionsIgnoreModel:
         bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
             result_last_game=True,
             profit=0.01,
+            multiplier_result=2.5,
         )
         assert bet_amount == 5000
         assert multiplier == 2

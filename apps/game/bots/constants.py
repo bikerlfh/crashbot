@@ -8,6 +8,8 @@ class ConditionON(str, Enum):
     EVERY_LOSS = "every_loss"
     STREAK_WINS = "streak_wins"
     STREAK_LOSSES = "streak_losses"
+    STREAK_N_MULTIPLIER_LESS_THAN = "streak_n_multiplier_less_than"
+    STREAK_N_MULTIPLIER_GREATER_THAN = "streak_multiplier_greater_than"
     # values are percentage
     PROFIT_GREATER_THAN = "profit_greater_than"
     PROFIT_LESS_THAN = "profit_less_than"
@@ -23,3 +25,9 @@ class ConditionAction(str, Enum):
     RESET_MULTIPLIER = "reset_multiplier"
     # values are boolean
     IGNORE_MODEL = "ignore_model"
+    MAKE_BET = "make_bet"
+
+
+class BotInternalType(str, Enum):
+    BOT_AI = "bot_ai"
+    BOT_NO_AI = "bot_no_ai"

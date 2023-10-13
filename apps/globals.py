@@ -40,6 +40,7 @@ class GlobalVars:
         WS_CLIENT_BACKEND_STARTED = "WS_CLIENT_BACKEND_STARTED"
         CUSTOM_BOTS = "CUSTOM_BOTS"
         CUSTOM_BOT_SELECTED = "CUSTOM_BOT_SELECTED"
+        PLAN_WITH_AI = "PLAN_WITH_AI"
 
     @staticmethod
     def init() -> None:
@@ -57,6 +58,7 @@ class GlobalVars:
         )
         globals().setdefault(GlobalVars.VARS.CUSTOM_BOTS, [])
         globals().setdefault(GlobalVars.VARS.CUSTOM_BOT_SELECTED, None)
+        globals().setdefault(GlobalVars.VARS.PLAN_WITH_AI, False)
         GlobalVars.init_config()
 
     @classmethod
@@ -170,6 +172,14 @@ class GlobalVars:
     @classmethod
     def set_custom_bot_selected(cls, custom_bot_selected: object) -> None:
         globals()[GlobalVars.VARS.CUSTOM_BOT_SELECTED] = custom_bot_selected
+
+    @classmethod
+    def get_plan_with_ai(cls) -> bool:
+        return globals().get(GlobalVars.VARS.PLAN_WITH_AI)
+
+    @classmethod
+    def set_plan_with_ai(cls, plan_with_ai: bool) -> None:
+        globals()[GlobalVars.VARS.PLAN_WITH_AI] = plan_with_ai
 
     @classmethod
     def set_io(cls, sio: AsyncServer) -> None:

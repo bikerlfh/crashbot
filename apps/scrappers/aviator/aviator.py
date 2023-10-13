@@ -4,17 +4,19 @@ import asyncio
 from typing import Optional, Union
 
 # Libraries
-from playwright.async_api import Locator, async_playwright
+from playwright.async_api import Locator
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
+from playwright.async_api import async_playwright
 
 # Internal
 from apps.game.models import Bet
 from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.aviator.bet_control import BetControl
-from apps.scrappers.game_base import AbstractGameBase, Control
+from apps.scrappers.game_base import AbstractCrashGameBase, Control
 from apps.utils.datetime import sleep_now
 
 
-class Aviator(AbstractGameBase, abc.ABC):
+class Aviator(AbstractCrashGameBase, abc.ABC):
     def __init__(self, url: str):
         super().__init__(url)
 
@@ -52,7 +54,7 @@ class Aviator(AbstractGameBase, abc.ABC):
                 )
                 return _app_game
             except Exception as e:
-                if isinstance(e, TimeoutError):
+                if isinstance(e, PlaywrightTimeoutError):
                     SendEventToGUI.log.debug("get app game :: timeout")
                     continue
                 SendEventToGUI.exception(
@@ -198,7 +200,7 @@ class Aviator(AbstractGameBase, abc.ABC):
             control = Control.Control1 if i == 0 else Control.Control2
             SendEventToGUI.log.info(
                 f"{_('Sending bet to aviator')} {bet.amount} * "  # noqa
-                f"{bet.multiplier} control: {control}"
+                f"{bet.multiplier} control: {control.value}"
             )
             await self._controls.bet(
                 amount=bet.amount,
@@ -254,7 +256,7 @@ class Aviator(AbstractGameBase, abc.ABC):
                     return
                 sleep_now(0.2)
             except Exception as e:
-                if isinstance(e, TimeoutError):
+                if isinstance(e, PlaywrightTimeoutError):
                     SendEventToGUI.log.debug("wait_next_game :: timeout")
                     continue
                 SendEventToGUI.exception(
