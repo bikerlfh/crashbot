@@ -82,8 +82,8 @@ class BotConditionHelper:
                 not is_less and value > multiplier
             ):
                 streak += 1
-            else:
-                break
+                continue
+            break
         return streak >= count_multipliers
 
     def _check_conditions(self) -> list[BotCondition]:

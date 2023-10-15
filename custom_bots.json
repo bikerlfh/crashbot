@@ -1,6 +1,6 @@
 [
     {
-        "name": "CustomBot",
+        "name": "CustomAggressiveBot",
         "bot_type": "aggressive",
         "risk_factor": 0.1,
         "min_multiplier_to_bet": 2.0,
@@ -51,7 +51,7 @@
             {
                 "id": 5,
                 "condition_on": "streak_losses",
-                "condition_on_value": 3.0,
+                "condition_on_value": 2.0,
                 "condition_on_value_2": null,
                 "condition_action": "update_multiplier",
                 "action_value": 1.65,
@@ -60,10 +60,19 @@
             {
                 "id": 4,
                 "condition_on": "streak_losses",
+                "condition_on_value": 3.0,
+                "condition_on_value_2": null,
+                "condition_action": "update_multiplier",
+                "action_value": 1.8,
+                "others": null
+            },
+            {
+                "id": 5,
+                "condition_on": "streak_losses",
                 "condition_on_value": 4.0,
                 "condition_on_value_2": null,
                 "condition_action": "update_multiplier",
-                "action_value": 1.75,
+                "action_value": 1.94,
                 "others": null
             },
             {
@@ -109,6 +118,15 @@
                 "condition_on_value_2": 10.0,
                 "condition_action": "update_multiplier",
                 "action_value": 10.0,
+                "others": null
+            },
+            {
+                "id": 11,
+                "condition_on": "streak_multiplier_greater_than",
+                "condition_on_value": 5.0,
+                "condition_on_value_2": 1.99,
+                "condition_action": "make_bet",
+                "action_value": 0,
                 "others": null
             }
         ]
