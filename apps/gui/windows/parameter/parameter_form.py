@@ -63,7 +63,9 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         bot_type = BotType.to_list()
         custom_bots = GlobalVars.get_custom_bots()
         if custom_bots:
-            bot_type.extend([bot.name for bot in custom_bots])  # noqa
+            # bot_type.extend([bot.name for bot in custom_bots])  # noqa
+            for i in range(len(custom_bots)):
+                bot_type.insert(i, custom_bots[i].name)  # noqa
         for i in range(len(bot_type)):
             if i >= count_cmb_bot:
                 self.cmb_bot_type.addItem("")

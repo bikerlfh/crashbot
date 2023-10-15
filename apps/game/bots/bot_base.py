@@ -43,7 +43,11 @@ class BotBase(abc.ABC):
     MAX_MULTIPLIERS_IN_MEMORY: int = 50
 
     amount_multiple: Optional[float] = None
+    # real initial balance
     initial_balance: float = 0
+    # balance of last game with positive profit
+    last_balance: float = 0
+    # actual balance
     balance: float = 0
     stop_loss: float = 0
     take_profit: float = 0
@@ -76,6 +80,7 @@ class BotBase(abc.ABC):
 
     def initialize(self, *, balance: float, multipliers: list[float]):
         self.initial_balance = balance
+        self.last_balance = balance
         self.balance = balance
         self.multipliers = multipliers
         bot_data = api_services.get_bots(bot_type=self.BOT_TYPE.value)
@@ -142,6 +147,9 @@ class BotBase(abc.ABC):
         )
         SendEventToGUI.log.debug(
             f"{_('Bot conditions count')}: {len(self.bot_condition_helper.bot_conditions)}"  # noqa
+        )
+        self.set_max_amount_to_bet(
+            amount=GlobalVars.get_max_amount_to_bet(), user_change=True
         )
 
     def validate_bet_amount(self, amount: float) -> float:
@@ -255,7 +263,7 @@ class BotBase(abc.ABC):
         ) = self.bot_condition_helper.evaluate_conditions(
             result_last_game=result_last_game,
             multiplier_result=multiplier_result,
-            profit=self.get_profit(),
+            profit=self.profit_last_balance,
         )
         self.set_max_amount_to_bet(amount=bet_amount)
         if result_last_game:
@@ -292,21 +300,37 @@ class BotBase(abc.ABC):
         """
         return int(self.balance // self.maximum_bet)
 
-    def get_profit(self):
+    @property
+    def profit(self) -> float:
         return round(self.balance - self.initial_balance, 2)
 
-    def get_profit_percent(self):
-        return self.get_profit() / self.initial_balance
+    @property
+    def profit_percent(self) -> float:
+        return self.profit / self.initial_balance
+
+    @property
+    def profit_last_balance(self) -> float:
+        return round(self.balance - self.last_balance, 2)
+
+    @property
+    def profit_percent_last_balance(self) -> float:
+        return self.profit_last_balance / self.last_balance
 
     def in_stop_loss(self) -> bool:
-        profit = self.get_profit()
+        profit = self.profit
         return profit < 0 and abs(profit) >= self.stop_loss
 
     def in_take_profit(self) -> bool:
-        profit = self.get_profit()
-        return profit >= self.take_profit
+        return self.profit >= self.take_profit
 
     def update_balance(self, balance: float):
+        """
+        update balance and last_balance to maximize the profit
+        :param balance: new balance
+        :return:
+        """
+        if balance > self.last_balance:
+            self.last_balance = balance
         self.balance = balance
         SendEventToGUI.balance(self.balance)
 

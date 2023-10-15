@@ -13,6 +13,8 @@ class AviatorDemo(Aviator):
 
         await self._page.get_by_role("button", name="Play Demo").click()
         await self._page.get_by_role("button", name="Yes I’m over 18").click()
-        await self._page.wait_for_timeout(2000)
         pages = self._context.pages
+        while len(pages) < 2:
+            await self._page.wait_for_timeout(2000)
+            pages = self._context.pages
         self._page = pages[1]
