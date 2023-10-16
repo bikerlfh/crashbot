@@ -53,13 +53,11 @@ def main():
     # remove dist folder
     shutil.rmtree("dist", ignore_errors=True)
     # use pyarmor to obfuscate the code and one file
-    if os.path.exists("conf._ini"):
-        shutil.copy("conf._ini", "conf.ini")
     if _one_file:
         print("**************generating one file executable**************")
         os.system("pyinstaller --onefile --icon=crashbot-icon.ico crashbot.py")
         shutil.copytree("locales", "dist/locales")
-        shutil.copy("conf.ini", "dist/conf.ini")
+        shutil.copy("conf._ini", "dist/conf.ini")
         shutil.copy("custom_bots.json", "dist/custom_bots.json")
         shutil.copy("crashbot-icon.ico", "dist/crashbot-icon.ico")
     else:
