@@ -24,6 +24,7 @@ class LoginForm(QtWidgets.QWidget, LoginDesigner):
     def clear(self):
         self.txt_username.setText("")
         self.txt_password.setText("")
+        self.disable_login(False)
 
     def button_login_clicked_event(self):
         self.main_window.socket.login(

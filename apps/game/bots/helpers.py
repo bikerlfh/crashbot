@@ -27,6 +27,13 @@ class BotConditionHelper:
         multipliers: list[float],
     ):
         self.bot_conditions = bot_conditions
+        self.bot_conditions = sorted(
+            self.bot_conditions,
+            key=lambda x: (
+                x.condition_on_value,
+                x.condition_on_value_2 if x.condition_on_value_2 else 0.0,
+            ),
+        )
         # valid conditions of the round
         self.valid_conditions: list[BotCondition] = []
         self.MIN_MULTIPLIER_TO_BET = min_multiplier_to_bet
@@ -75,8 +82,8 @@ class BotConditionHelper:
                 not is_less and value > multiplier
             ):
                 streak += 1
-            else:
-                break
+                continue
+            break
         return streak >= count_multipliers
 
     def _check_conditions(self) -> list[BotCondition]:
@@ -94,15 +101,34 @@ class BotConditionHelper:
                     _conditions,
                 )
                 for _condition in filter_conditions:
-                    is_value_less = (
-                        _condition.condition_on_value
-                        < condition.condition_on_value
-                    )
                     is_same_action = (
                         _condition.condition_action
-                        == condition.condition_action
+                        == new_condition.condition_action
                     )
-                    if is_value_less and is_same_action:
+                    if (
+                        new_condition.condition_on_value_2 is not None
+                        and _condition.condition_on_value_2 is not None
+                    ):
+                        is_same_value = (
+                            _condition.condition_on_value
+                            == new_condition.condition_on_value
+                        )
+                        is_value_2_less = (
+                            _condition.condition_on_value_2
+                            < new_condition.condition_on_value_2
+                        )
+                        if (
+                            is_same_action
+                            and is_same_value
+                            and is_value_2_less
+                        ):
+                            _conditions.remove(_condition)
+                            continue
+                    is_value_less = (
+                        _condition.condition_on_value
+                        < new_condition.condition_on_value
+                    )
+                    if is_same_action and is_value_less:
                         _conditions.remove(_condition)
             _conditions.append(new_condition)
 
@@ -145,7 +171,6 @@ class BotConditionHelper:
                     )
                     if in_streak:
                         _add_valid_condition(condition)
-
         _conditions = sorted(
             _conditions,
             key=lambda x: self._priority_conditions.index(

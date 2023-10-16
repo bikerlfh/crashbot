@@ -138,7 +138,7 @@ def request_prediction(
     return data
 
 
-def get_bots(bot_type: str) -> list[Bot]:
+def get_bots(*, bot_type: Optional[str] = None) -> list[Bot]:
     """
     get_bot
     :param bot_type:

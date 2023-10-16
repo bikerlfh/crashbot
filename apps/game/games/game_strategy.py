@@ -1,5 +1,4 @@
 # Internal
-from apps.constants import BotType
 from apps.game.bots.bot_strategy import BotStrategy
 from apps.game.games.constants import GameType
 from apps.game.games.game_base import GameBase
@@ -17,9 +16,9 @@ class GameStrategy(GameBase, configuration=GameType.STRATEGY.value):
     This game no uses the AI. Only use strategy to bet.
     """
 
-    def _initialize_bot(self, *, bot_type: BotType):
+    def _initialize_bot(self, *, bot_name: str):
         self.bot = BotStrategy(
-            bot_type=bot_type,
+            bot_name=bot_name,
             minimum_bet=self.minimum_bet,
             maximum_bet=self.maximum_bet,
             amount_multiple=self.home_bet.amount_multiple,

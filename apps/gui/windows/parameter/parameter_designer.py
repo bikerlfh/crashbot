@@ -48,8 +48,6 @@ class ParameterDesigner(object):
         self.cmb_bot_type.setMaximumSize(QtCore.QSize(16777215, 30))
         self.cmb_bot_type.setObjectName("cmb_bot_type")
         self.cmb_bot_type.addItem("")
-        self.cmb_bot_type.addItem("")
-        self.cmb_bot_type.addItem("")
         self.btn_start = QtWidgets.QPushButton(parent=self.groupBox)
         self.btn_start.setGeometry(QtCore.QRect(20, 210, 351, 41))
         self.btn_start.setMinimumSize(QtCore.QSize(0, 30))
@@ -85,8 +83,6 @@ class ParameterDesigner(object):
         self.cmb_home_bet.setItemText(0, "Demo")  # noqa
         self.label_2.setText(_("Bot type"))  # noqa
         self.cmb_bot_type.setItemText(0, "Agressive")  # noqa
-        self.cmb_bot_type.setItemText(1, "Tight")  # noqa
-        self.cmb_bot_type.setItemText(2, "Loose")  # noqa
         self.btn_start.setText(_("Start"))  # noqa
         self.chk_use_credentials.setText(_("Use saved credentials"))  # noqa
         self.chk_use_ai.setText(_("Use AI"))  # noqa

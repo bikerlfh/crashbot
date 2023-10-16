@@ -76,18 +76,15 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self,
         *,
         home_bet_index: int,
-        bot_type: str,
+        bot_name: str,
         max_amount_to_bet: str,
         auto_play: bool,
         **_kwargs,
     ):
         home_bets = GlobalVars.get_allowed_home_bets()
-        custom_bot = GlobalVars.get_custom_bot_selected()
         self.home_bet = home_bets[home_bet_index]
         self.lbl_home_bet.setText(self.home_bet.name)  # noqa
-        self.lbl_bot_type.setText(f"Bot: {bot_type}")
-        if custom_bot:
-            self.lbl_bot_type.setText(f"Bot: {custom_bot.name}")  # noqa
+        self.lbl_bot_type.setText(bot_name)
         self.txt_max_amount_to_bet.setText(str(max_amount_to_bet))
         self.btn_auto_bet.setText(
             f"{_('AutoBet')} ON"  # noqa

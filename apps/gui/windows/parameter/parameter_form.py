@@ -2,7 +2,7 @@
 from PyQt6 import QtCore, QtWidgets
 
 # Internal
-from apps.constants import BotType, HomeBets
+from apps.constants import HomeBets
 from apps.globals import GlobalVars
 from apps.gui import services
 from apps.gui.windows.parameter.parameter_designer import ParameterDesigner
@@ -60,29 +60,17 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
                 self.cmb_home_bet.addItem("")
             self.cmb_home_bet.setItemText(key, val.name)
         count_cmb_bot = self.cmb_bot_type.count()
-        bot_type = BotType.to_list()
-        custom_bots = GlobalVars.get_custom_bots()
-        if custom_bots:
-            bot_type.extend([bot.name for bot in custom_bots])  # noqa
-        for i in range(len(bot_type)):
+        bots = GlobalVars.get_bots()
+        for i in range(len(bots)):
             if i >= count_cmb_bot:
                 self.cmb_bot_type.addItem("")
-            self.cmb_bot_type.setItemText(i, bot_type[i])
+            self.cmb_bot_type.setItemText(i, bots[i].name)  # noqa
 
     def get_values(self) -> dict[str, any] | None:
-        bot_types = BotType.to_list()
-        bot_type = self.cmb_bot_type.currentText()
-        if bot_type not in bot_types:
-            custom_bot = list(
-                filter(
-                    lambda x: x.name == bot_type, GlobalVars.get_custom_bots()
-                )
-            )[0]
-            GlobalVars.set_custom_bot_selected(custom_bot)
-            bot_type = custom_bot.bot_type  # noqa
+        bot_name = self.cmb_bot_type.currentText()
         home_bet_index = self.cmb_home_bet.currentIndex()
-        if not bot_type:
-            QtWidgets.QMessageBox.warning(self, "Error", "Select a bot type")
+        if not bot_name:
+            QtWidgets.QMessageBox.warning(self, "Error", "Select a bot")
             return
         if home_bet_index < 0:
             QtWidgets.QMessageBox.warning(self, "Error", "Select a home bet")
@@ -91,7 +79,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         home_bet = self.HomeBets[home_bet_index]
         home_bet_id = home_bet.id
         return dict(
-            bot_type=bot_type,
+            bot_name=bot_name,
             home_bet_index=home_bet_index,
             home_bet_id=home_bet_id,
             max_amount_to_bet=0,
@@ -112,7 +100,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             data["username"] = credential.get("username")
             data["password"] = credential.get("password")
         self.main_window.socket.start_bot(
-            bot_type=data.get("bot_type"),
+            bot_name=data.get("bot_name"),
             home_bet_id=data.get("home_bet_id"),
             max_amount_to_bet=data.get("max_amount_to_bet"),
             auto_play=data.get("auto_play", False),

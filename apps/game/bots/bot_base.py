@@ -3,9 +3,7 @@ import abc
 from typing import List, Optional
 
 # Internal
-from apps.api import services as api_services
 from apps.api.models import MultiplierPositions
-from apps.constants import BotType
 from apps.game import utils as game_utils
 from apps.game.bots.helpers import BotConditionHelper
 from apps.game.models import Bet, PredictionData
@@ -21,7 +19,7 @@ class BotBase(abc.ABC):
     The BotBase has the logic for all bots
     """
 
-    BOT_TYPE: BotType = BotType.LOOSE
+    BOT_NAME: str
     RISK_FACTOR: float = 0.1  # 0.1 = 10%
     MIN_MULTIPLIER_TO_BET: float = 1.5
     MIN_MULTIPLIER_TO_RECOVER_LOSSES: float = 2.0
@@ -43,7 +41,11 @@ class BotBase(abc.ABC):
     MAX_MULTIPLIERS_IN_MEMORY: int = 50
 
     amount_multiple: Optional[float] = None
+    # real initial balance
     initial_balance: float = 0
+    # balance of last game with positive profit
+    last_balance: float = 0
+    # actual balance
     balance: float = 0
     stop_loss: float = 0
     take_profit: float = 0
@@ -62,29 +64,27 @@ class BotBase(abc.ABC):
     def __init__(
         self,
         *,
-        bot_type: BotType,
+        bot_name: str,
         minimum_bet: float = 0,
         maximum_bet: float = 0,
         amount_multiple: Optional[float] = None,
         **kwargs,
     ):
-        self._custom_bot = GlobalVars.get_custom_bot_selected()
-        self.BOT_TYPE = bot_type
+        self.BOT_NAME = bot_name
         self.minimum_bet = minimum_bet
         self.maximum_bet = maximum_bet
         self.amount_multiple = amount_multiple
 
     def initialize(self, *, balance: float, multipliers: list[float]):
         self.initial_balance = balance
+        self.last_balance = balance
         self.balance = balance
         self.multipliers = multipliers
-        bot_data = api_services.get_bots(bot_type=self.BOT_TYPE.value)
-        if len(bot_data) == 0:
+        bots = GlobalVars.get_bots()
+        bot = next(filter(lambda x: x.name == self.BOT_NAME, bots), None)
+        if not bot:
             SendEventToGUI.exception("No bot data found")
             raise ValueError("No bot data found")
-        bot = bot_data[0]
-        if self._custom_bot:
-            bot = self._custom_bot
         # initialize the conditions
         self.bot_condition_helper = BotConditionHelper(
             bot_conditions=bot.conditions,
@@ -115,9 +115,7 @@ class BotBase(abc.ABC):
             self.initial_balance * self.TAKE_PROFIT_PERCENTAGE, 2
         )
         SendEventToGUI.log.info(_("Bot initialized"))  # noqa
-        SendEventToGUI.log.info(
-            f"{_('Bot type')}: {self.BOT_TYPE.value}"  # noqa
-        )  # noqa
+        SendEventToGUI.log.info(f"{_('Bot')}: {self.BOT_NAME}")  # noqa  # noqa
         SendEventToGUI.log.info(
             f"{_('Bot risk factor')}: {self.RISK_FACTOR}"  # noqa
         )
@@ -142,6 +140,9 @@ class BotBase(abc.ABC):
         )
         SendEventToGUI.log.debug(
             f"{_('Bot conditions count')}: {len(self.bot_condition_helper.bot_conditions)}"  # noqa
+        )
+        self.set_max_amount_to_bet(
+            amount=GlobalVars.get_max_amount_to_bet(), user_change=True
         )
 
     def validate_bet_amount(self, amount: float) -> float:
@@ -255,7 +256,7 @@ class BotBase(abc.ABC):
         ) = self.bot_condition_helper.evaluate_conditions(
             result_last_game=result_last_game,
             multiplier_result=multiplier_result,
-            profit=self.get_profit(),
+            profit=self.profit_last_balance,
         )
         self.set_max_amount_to_bet(amount=bet_amount)
         if result_last_game:
@@ -279,6 +280,8 @@ class BotBase(abc.ABC):
         if total_amount > 0:
             result_last_game = True
             self.remove_loss(total_amount)
+        if not self.bets:
+            result_last_game = None
         self.bets = []
         self._execute_conditions(
             result_last_game=result_last_game,
@@ -292,21 +295,37 @@ class BotBase(abc.ABC):
         """
         return int(self.balance // self.maximum_bet)
 
-    def get_profit(self):
+    @property
+    def profit(self) -> float:
         return round(self.balance - self.initial_balance, 2)
 
-    def get_profit_percent(self):
-        return self.get_profit() / self.initial_balance
+    @property
+    def profit_percent(self) -> float:
+        return self.profit / self.initial_balance
+
+    @property
+    def profit_last_balance(self) -> float:
+        return round(self.balance - self.last_balance, 2)
+
+    @property
+    def profit_percent_last_balance(self) -> float:
+        return self.profit_last_balance / self.last_balance
 
     def in_stop_loss(self) -> bool:
-        profit = self.get_profit()
+        profit = self.profit
         return profit < 0 and abs(profit) >= self.stop_loss
 
     def in_take_profit(self) -> bool:
-        profit = self.get_profit()
-        return profit >= self.take_profit
+        return self.profit >= self.take_profit
 
     def update_balance(self, balance: float):
+        """
+        update balance and last_balance to maximize the profit
+        :param balance: new balance
+        :return:
+        """
+        if balance > self.last_balance:
+            self.last_balance = balance
         self.balance = balance
         SendEventToGUI.balance(self.balance)
 

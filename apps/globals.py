@@ -5,6 +5,7 @@ use globals().setdefault('auto_play', False) to set value
 """
 # Standard Library
 import asyncio
+import copy
 import logging
 from enum import Enum
 from threading import Event
@@ -38,8 +39,7 @@ class GlobalVars:
         AUTO_CASH_OUT = "AUTO_CASH_OUT"
         ALLOWED_TO_SAVE_MULTIPLIERS = "ALLOWED_TO_SAVE_MULTIPLIERS"
         WS_CLIENT_BACKEND_STARTED = "WS_CLIENT_BACKEND_STARTED"
-        CUSTOM_BOTS = "CUSTOM_BOTS"
-        CUSTOM_BOT_SELECTED = "CUSTOM_BOT_SELECTED"
+        BOTS = "BOTS"
         PLAN_WITH_AI = "PLAN_WITH_AI"
 
     @staticmethod
@@ -56,8 +56,7 @@ class GlobalVars:
         globals().setdefault(
             GlobalVars.VARS.ALLOWED_TO_SAVE_MULTIPLIERS, False
         )
-        globals().setdefault(GlobalVars.VARS.CUSTOM_BOTS, [])
-        globals().setdefault(GlobalVars.VARS.CUSTOM_BOT_SELECTED, None)
+        globals().setdefault(GlobalVars.VARS.BOTS, [])
         globals().setdefault(GlobalVars.VARS.PLAN_WITH_AI, False)
         GlobalVars.init_config()
 
@@ -158,20 +157,14 @@ class GlobalVars:
         globals()[GlobalVars.VARS.WS_CLIENT_BACKEND_STARTED] = started
 
     @classmethod
-    def get_custom_bots(cls) -> list[object]:
-        return globals().get(GlobalVars.VARS.CUSTOM_BOTS)
+    def get_bots(cls) -> list[object]:
+        return globals().get(GlobalVars.VARS.BOTS)
 
     @classmethod
-    def set_custom_bots(cls, custom_bots: list[object]) -> None:
-        globals()[GlobalVars.VARS.CUSTOM_BOTS] = custom_bots
-
-    @classmethod
-    def get_custom_bot_selected(cls) -> object:
-        return globals().get(GlobalVars.VARS.CUSTOM_BOT_SELECTED)
-
-    @classmethod
-    def set_custom_bot_selected(cls, custom_bot_selected: object) -> None:
-        globals()[GlobalVars.VARS.CUSTOM_BOT_SELECTED] = custom_bot_selected
+    def set_bots(cls, bots: list[object]) -> None:
+        _bots = copy.copy(cls.get_bots())
+        _bots.extend(bots)
+        globals()[GlobalVars.VARS.BOTS] = _bots
 
     @classmethod
     def get_plan_with_ai(cls) -> bool:

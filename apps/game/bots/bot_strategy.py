@@ -3,12 +3,10 @@ from typing import Optional
 
 # Internal
 from apps.api.models import MultiplierPositions
-from apps.constants import BotType
 from apps.game import utils as game_utils
 from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, PredictionData
 from apps.game.prediction_core import PredictionCore
-from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
 
 
@@ -27,44 +25,8 @@ class BotStrategy(BotBase):
     amount of bet / 3 example: max bet = 300, min bet = 300/3 = 100.
     """
 
-    def __init__(
-        self,
-        *,
-        bot_type: BotType,
-        minimum_bet: float = 0,
-        maximum_bet: float = 0,
-        amount_multiple: float = None,
-        **kwargs,
-    ):
-        """
-        @param bot_type: BotType bot type
-        @param minimum_bet: float minimum bet allowed by home bet
-        @param maximum_bet: float maximum bet allowed by home bet
-        @param amount_multiple: float
-        """
-        super().__init__(
-            bot_type=bot_type,
-            minimum_bet=minimum_bet,
-            maximum_bet=maximum_bet,
-            amount_multiple=amount_multiple,
-            **kwargs,
-        )
-        self._initial_balance = 0
-
-    def initialize(self, *, balance: float, multipliers: list[float]):
-        super().initialize(balance=balance, multipliers=multipliers)
-        self._initial_balance = balance
-        self.set_max_amount_to_bet(
-            amount=GlobalVars.get_max_amount_to_bet(), user_change=True
-        )
-
-    def update_balance(self, balance: float):
-        if balance > self.initial_balance:
-            self.initial_balance = balance
-        super().update_balance(balance)
-
     def get_real_profit(self) -> float:
-        return self.balance - self._initial_balance
+        return self.balance - self.initial_balance
 
     def get_bet_recovery_amount(
         self, multiplier: float, probability: Optional[float] = None
@@ -75,7 +37,7 @@ class BotStrategy(BotBase):
         :param probability: The probability.
         :return: The bet recovery amount.
         """
-        profit = self.get_profit()
+        profit = self.profit_last_balance
         # NOTE: no use minBet by strategy
         # min_bet = self.balance * strategy.min_amount_percentage_to_bet
         amount_to_recover_losses = self.calculate_recovery_amount(
@@ -140,7 +102,7 @@ class BotStrategy(BotBase):
         :return: The bets.
         """
         self.bets = []
-        profit = self.get_profit()
+        profit = self.profit_last_balance
         second_multiplier = 2
         min_multiplier, max_multiplier = self.predict_next_multiplier()
         SendEventToGUI.log.debug(
@@ -183,7 +145,7 @@ class BotStrategy(BotBase):
         :return: The next bet.
         """
         self.multiplier_positions = multiplier_positions
-        profit = self.get_profit()
+        profit = self.profit_last_balance
         if profit >= 0:
             self.reset_losses()
         if self.in_stop_loss():

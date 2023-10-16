@@ -219,10 +219,13 @@ class BotAPIServices:
         self.validate_response(response=response)
         return response.body
 
-    def get_bots(self, *, bot_type: str) -> Dict[str, Any]:
+    def get_bots(self, *, bot_type: Optional[str] = None) -> Dict[str, Any]:
         try:
+            service = self.GET_BOTS
+            if bot_type is not None:
+                service = f"{service}?bot_type={bot_type}"
             response = self.client.get(
-                service=f"{self.GET_BOTS}?bot_type={bot_type}",
+                service=service,
             )
         except Exception as exc:
             logger.exception(f"BotAPIServices :: get_bots :: {exc}")

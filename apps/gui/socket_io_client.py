@@ -105,7 +105,7 @@ class SocketIOClient(QtCore.QThread):
     def start_bot(
         self,
         *,
-        bot_type: str,
+        bot_name: str,
         home_bet_id: int,
         max_amount_to_bet: float,
         auto_play: bool,
@@ -114,7 +114,7 @@ class SocketIOClient(QtCore.QThread):
         password: Optional[str] = None,
     ) -> None:
         data = dict(
-            bot_type=bot_type,
+            bot_name=bot_name,
             home_bet_id=home_bet_id,
             max_amount_to_bet=max_amount_to_bet,
             auto_play=auto_play,
