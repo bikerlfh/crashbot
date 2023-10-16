@@ -2,7 +2,7 @@
 from socketio import AsyncServer
 
 # Internal
-from apps.constants import BotType, WSEvent
+from apps.constants import WSEvent
 from apps.game.games.constants import GameType
 from apps.game.games.game_base import GameBase
 from apps.game.ws_server import handlers
@@ -66,15 +66,15 @@ async def start_bot_event(
     data: dict[str, any], sio: AsyncServer, sid: any
 ) -> any:
     GlobalVars.set_io(sio)
-    bot_type = data.get("bot_type")
+    bot_name = data.get("bot_name")
     home_bet_id = data.get("home_bet_id")
     username = data.get("username")
     password = data.get("password")
     use_game_ai = data.get("use_game_ai", False)
-    if not bot_type or not home_bet_id:
+    if not bot_name or not home_bet_id:
         await sio.emit(
             WSEvent.START_BOT,
-            data=make_error("bot_type and home_bet_id are required"),
+            data=make_error("bot_name and home_bet_id are required"),
             room=sid,
         )
         return
@@ -86,7 +86,6 @@ async def start_bot_event(
         )
         return
     home_bet = home_bet[0]
-    bot_type = BotType(bot_type)
     GlobalVars.set_username(username)
     GlobalVars.set_password(password)
     game = GlobalVars.get_game()
@@ -99,7 +98,7 @@ async def start_bot_event(
     game = GameBase(
         configuration=game_type,
         home_bet=home_bet,
-        bot_type=bot_type,
+        bot_name=bot_name,
     )
     GlobalVars.set_game(game)
     await sio.emit(WSEvent.START_BOT, data=dict(started=True), room=sid)

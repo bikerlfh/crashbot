@@ -25,7 +25,7 @@ if __name__ == "__main__":
     except Exception as exc:
         logger.error(f"error loading language: {exc}")
     custom_bots = custom_bots.read_custom_bots()
-    GlobalVars.set_custom_bots(custom_bots)
+    GlobalVars.set_bots(custom_bots)
     ws_client = WebSocketClient()
     event = Event()
     ws_server_thread = Thread(

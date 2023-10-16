@@ -22,8 +22,8 @@ class Config(metaclass=Singleton):
 
     def __init__(self):
         self.config_file = CONFIG_FILE_PATH
-        self.API_URL = "http://127.0.0.1:8000"
-        self.WS_URL = "ws://127.0.0.1:8000"
+        self.API_URL = "http://probetsai.com"
+        self.WS_URL = "ws://probetsai.com:5000/ws/bot/"
         self.ALLOWED_LOG_CODES_TO_SHOW = [
             "info",
             "success",
@@ -76,8 +76,8 @@ class Config(metaclass=Singleton):
     def write_config(self):
         with open(self.config_file, "w") as file:
             file.write("# Default configuration\n")
-            file.write(f"API_URL={self.API_URL}\n")
-            file.write(f"WS_URL={self.WS_URL}\n")
+            # file.write(f"API_URL={self.API_URL}\n")
+            # file.write(f"WS_URL={self.WS_URL}\n")
             file.write(f"LANGUAGE={self.LANGUAGE}\n")
             file.write(
                 f"NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH="

@@ -4,7 +4,7 @@ import abc
 # Internal
 from apps.api import services as api_services
 from apps.api.models import BetData, MultiplierPositions
-from apps.constants import BotType, HomeBet
+from apps.constants import HomeBet
 from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, Multiplier
 from apps.globals import GlobalVars
@@ -46,7 +46,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
         self,
         *,
         home_bet: HomeBet,
-        bot_type: BotType,
+        bot_name: str,
         **kwargs,
     ):
         self.customer_id = local_storage.get_customer_id()
@@ -55,11 +55,11 @@ class GameBase(abc.ABC, ConfigurationFactory):
         self.minimum_bet: float = home_bet.min_bet
         self.maximum_bet: float = home_bet.max_bet
 
-        self._initialize_bot(bot_type=bot_type)
+        self._initialize_bot(bot_name=bot_name)
         self.maximum_win_for_one_bet: float = self.maximum_bet * 100
 
     @abc.abstractmethod
-    def _initialize_bot(self, *, bot_type: BotType):
+    def _initialize_bot(self, *, bot_name: str):
         ...
 
     async def initialize(self):
@@ -220,8 +220,6 @@ class GameBase(abc.ABC, ConfigurationFactory):
         """
         Evaluate the bets and update the balance
         """
-        if not self.bets:
-            return
         for bet in self.bets:
             profit = bet.evaluate(multiplier)
             self.balance += profit

@@ -3,7 +3,7 @@ from typing import Optional
 
 # Internal
 from apps.api import services as api_services
-from apps.constants import BotType, HomeBet
+from apps.constants import HomeBet
 from apps.game.bots.bot_ai import BotAI
 from apps.game.games.constants import GameType
 from apps.game.games.game_base import GameBase
@@ -27,17 +27,17 @@ class GameAI(GameBase, configuration=GameType.AI.value):
         self,
         *,
         home_bet: HomeBet,
-        bot_type: BotType,
+        bot_name: str,
         **kwargs,
     ):
-        super().__init__(home_bet=home_bet, bot_type=bot_type)
+        super().__init__(home_bet=home_bet, bot_name=bot_name)
         self._prediction_model: PredictionModel = (
             PredictionModel.get_instance()
         )
 
-    def _initialize_bot(self, *, bot_type: BotType):
+    def _initialize_bot(self, *, bot_name: str):
         self.bot = BotAI(
-            bot_type=bot_type,
+            bot_name=bot_name,
             minimum_bet=self.minimum_bet,
             maximum_bet=self.maximum_bet,
             amount_multiple=self.home_bet.amount_multiple,

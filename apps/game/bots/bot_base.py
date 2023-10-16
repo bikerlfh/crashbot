@@ -3,9 +3,7 @@ import abc
 from typing import List, Optional
 
 # Internal
-from apps.api import services as api_services
 from apps.api.models import MultiplierPositions
-from apps.constants import BotType
 from apps.game import utils as game_utils
 from apps.game.bots.helpers import BotConditionHelper
 from apps.game.models import Bet, PredictionData
@@ -21,7 +19,7 @@ class BotBase(abc.ABC):
     The BotBase has the logic for all bots
     """
 
-    BOT_TYPE: BotType = BotType.LOOSE
+    BOT_NAME: str
     RISK_FACTOR: float = 0.1  # 0.1 = 10%
     MIN_MULTIPLIER_TO_BET: float = 1.5
     MIN_MULTIPLIER_TO_RECOVER_LOSSES: float = 2.0
@@ -66,14 +64,13 @@ class BotBase(abc.ABC):
     def __init__(
         self,
         *,
-        bot_type: BotType,
+        bot_name: str,
         minimum_bet: float = 0,
         maximum_bet: float = 0,
         amount_multiple: Optional[float] = None,
         **kwargs,
     ):
-        self._custom_bot = GlobalVars.get_custom_bot_selected()
-        self.BOT_TYPE = bot_type
+        self.BOT_NAME = bot_name
         self.minimum_bet = minimum_bet
         self.maximum_bet = maximum_bet
         self.amount_multiple = amount_multiple
@@ -83,13 +80,11 @@ class BotBase(abc.ABC):
         self.last_balance = balance
         self.balance = balance
         self.multipliers = multipliers
-        bot_data = api_services.get_bots(bot_type=self.BOT_TYPE.value)
-        if len(bot_data) == 0:
+        bots = GlobalVars.get_bots()
+        bot = next(filter(lambda x: x.name == self.BOT_NAME, bots), None)
+        if not bot:
             SendEventToGUI.exception("No bot data found")
             raise ValueError("No bot data found")
-        bot = bot_data[0]
-        if self._custom_bot:
-            bot = self._custom_bot
         # initialize the conditions
         self.bot_condition_helper = BotConditionHelper(
             bot_conditions=bot.conditions,
@@ -120,9 +115,7 @@ class BotBase(abc.ABC):
             self.initial_balance * self.TAKE_PROFIT_PERCENTAGE, 2
         )
         SendEventToGUI.log.info(_("Bot initialized"))  # noqa
-        SendEventToGUI.log.info(
-            f"{_('Bot type')}: {self.BOT_TYPE.value}"  # noqa
-        )  # noqa
+        SendEventToGUI.log.info(f"{_('Bot')}: {self.BOT_NAME}")  # noqa  # noqa
         SendEventToGUI.log.info(
             f"{_('Bot risk factor')}: {self.RISK_FACTOR}"  # noqa
         )
@@ -287,6 +280,8 @@ class BotBase(abc.ABC):
         if total_amount > 0:
             result_last_game = True
             self.remove_loss(total_amount)
+        if not self.bets:
+            result_last_game = None
         self.bets = []
         self._execute_conditions(
             result_last_game=result_last_game,

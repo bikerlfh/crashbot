@@ -15,6 +15,8 @@ def _get_customer_data() -> None:
     for home_bet in customer_data.home_bets:
         home_bets.append(vars(home_bet))
     GlobalVars.set_plan_with_ai(customer_data.plan.with_ai)
+    bots = api_services.get_bots()
+    GlobalVars.set_bots(bots=bots)
     local_storage.set_home_bets(home_bets=home_bets)
     local_storage.set_customer_id(customer_id=customer_data.customer_id)
 
