@@ -22,7 +22,7 @@ class Config(metaclass=Singleton):
 
     def __init__(self):
         self.config_file = CONFIG_FILE_PATH
-        self.API_URL = "http://probetsai.com"
+        self.API_URL = "https://probetsai.com"
         self.WS_URL = "ws://probetsai.com:5000/ws/bot/"
         self.ALLOWED_LOG_CODES_TO_SHOW = [
             "info",

@@ -3,7 +3,7 @@ import abc
 from typing import List, Optional
 
 # Internal
-from apps.api.models import MultiplierPositions
+from apps.api.models import Bot, MultiplierPositions
 from apps.game import utils as game_utils
 from apps.game.bots.helpers import BotConditionHelper
 from apps.game.models import Bet, PredictionData
@@ -59,6 +59,7 @@ class BotBase(abc.ABC):
     _min_amount_to_bet: float = 0
 
     multiplier_positions: MultiplierPositions = None
+    bot: Bot = None
     bot_condition_helper: BotConditionHelper = None
 
     def __init__(
@@ -80,34 +81,38 @@ class BotBase(abc.ABC):
         self.last_balance = balance
         self.balance = balance
         self.multipliers = multipliers
-        bots = GlobalVars.get_bots()
-        bot = next(filter(lambda x: x.name == self.BOT_NAME, bots), None)
-        if not bot:
+        self.bot = next(
+            filter(lambda x: x.name == self.BOT_NAME, GlobalVars.get_bots()),
+            None,
+        )
+        if not self.bot:
             SendEventToGUI.exception("No bot data found")
             raise ValueError("No bot data found")
         # initialize the conditions
         self.bot_condition_helper = BotConditionHelper(
-            bot_conditions=bot.conditions,
-            min_multiplier_to_bet=bot.min_multiplier_to_bet,
-            min_multiplier_to_recover_losses=bot.min_multiplier_to_recover_losses,  # noqa
+            bot_conditions=self.bot.conditions,
+            min_multiplier_to_bet=self.bot.min_multiplier_to_bet,
+            min_multiplier_to_recover_losses=self.bot.min_multiplier_to_recover_losses,  # noqa
             multipliers=multipliers,
         )
-        SendEventToGUI.log.info(f"Bot {bot.name} loaded")
+        SendEventToGUI.log.info(f"Bot {self.bot.name} loaded")
         self.MIN_CATEGORY_PERCENTAGE_TO_BET = (
-            bot.min_category_percentage_to_bet
+            self.bot.min_category_percentage_to_bet
         )
-        self.MIN_AVERAGE_MODEL_PREDICTION = bot.min_average_model_prediction
-        self.RISK_FACTOR = bot.risk_factor
-        self.MIN_MULTIPLIER_TO_BET = bot.min_multiplier_to_bet
+        self.MIN_AVERAGE_MODEL_PREDICTION = (
+            self.bot.min_average_model_prediction
+        )
+        self.RISK_FACTOR = self.bot.risk_factor
+        self.MIN_MULTIPLIER_TO_BET = self.bot.min_multiplier_to_bet
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = (
-            bot.min_multiplier_to_recover_losses
+            self.bot.min_multiplier_to_recover_losses
         )
-        self.MIN_PROBABILITY_TO_BET = bot.min_probability_to_bet
+        self.MIN_PROBABILITY_TO_BET = self.bot.min_probability_to_bet
         self.MAX_RECOVERY_PERCENTAGE_ON_MAX_BET = (
-            bot.max_recovery_percentage_on_max_bet
+            self.bot.max_recovery_percentage_on_max_bet
         )
-        self.STOP_LOSS_PERCENTAGE = bot.stop_loss_percentage
-        self.TAKE_PROFIT_PERCENTAGE = bot.take_profit_percentage
+        self.STOP_LOSS_PERCENTAGE = self.bot.stop_loss_percentage
+        self.TAKE_PROFIT_PERCENTAGE = self.bot.take_profit_percentage
         self.stop_loss = round(
             self.initial_balance * self.STOP_LOSS_PERCENTAGE, 2
         )
@@ -241,7 +246,7 @@ class BotBase(abc.ABC):
             )
 
     def _execute_conditions(
-        self, *, result_last_game: bool, multiplier_result: float
+        self, *, result_last_game: bool = None, multiplier_result: float
     ):  # noqa
         """
         Evaluate the conditions to bet
@@ -249,6 +254,7 @@ class BotBase(abc.ABC):
         :param multiplier_result: the multiplier result
         :return: None
         """
+        profit = self.profit_last_balance
         (
             bet_amount,
             multiplier,
@@ -256,13 +262,15 @@ class BotBase(abc.ABC):
         ) = self.bot_condition_helper.evaluate_conditions(
             result_last_game=result_last_game,
             multiplier_result=multiplier_result,
-            profit=self.profit_last_balance,
+            profit=profit,
         )
         self.set_max_amount_to_bet(amount=bet_amount)
-        if result_last_game:
-            self.MIN_MULTIPLIER_TO_BET = multiplier
-        else:
-            self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = multiplier
+        self.MIN_MULTIPLIER_TO_BET = multiplier
+        self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = multiplier
+        # if result_last_game:
+        #     self.MIN_MULTIPLIER_TO_BET = multiplier
+        # else:
+        #     self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = multiplier
         SendEventToGUI.log.debug(
             f"evaluate_conditions :: bet_amount "
             f"{bet_amount} multiplier {multiplier}"
