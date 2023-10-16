@@ -1,4 +1,5 @@
 # Standard Library
+import copy
 from typing import Optional
 
 # Internal
@@ -36,12 +37,12 @@ class BotConditionHelper:
         )
         # valid conditions of the round
         self.valid_conditions: list[BotCondition] = []
-        self.MIN_MULTIPLIER_TO_BET = min_multiplier_to_bet
-        self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = (
+        self.MIN_MULTIPLIER_TO_BET = copy.copy(min_multiplier_to_bet)
+        self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = copy.copy(
             min_multiplier_to_recover_losses
         )
-        self.multipliers = multipliers
-        self.current_multiplier = min_multiplier_to_bet
+        self.multipliers = copy.copy(multipliers)
+        self.current_multiplier = copy.copy(min_multiplier_to_bet)
         self.initial_bet_amount = 0.0
         self.current_bet_amount = 0.0
         self.profit = 0.0
@@ -54,8 +55,9 @@ class BotConditionHelper:
         :param user_change: if the user change the bet amount
         :return: None
         """
-        if user_change:
-            self.initial_bet_amount = bet_amount
+        if not user_change:
+            return
+        self.initial_bet_amount = bet_amount
         self.current_bet_amount = bet_amount
 
     def add_last_game(self, last_game: bool):
@@ -258,7 +260,7 @@ class BotConditionHelper:
                 case ConditionAction.UPDATE_MULTIPLIER:
                     self.current_multiplier = action_value
                 case ConditionAction.RESET_MULTIPLIER:
-                    if result_last_game:
+                    if self.profit >= 0:
                         self.current_multiplier = self.MIN_MULTIPLIER_TO_BET
                     else:
                         self.current_multiplier = (

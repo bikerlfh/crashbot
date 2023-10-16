@@ -1,16 +1,16 @@
 [
     {
-        "name": "CustomAggressiveBot",
+        "name": "MyAggressiveBot",
         "bot_type": "aggressive",
         "risk_factor": 0.1,
-        "min_multiplier_to_bet": 2.0,
+        "min_multiplier_to_bet": 1.95,
         "min_multiplier_to_recover_losses": 2.0,
         "min_probability_to_bet": 0.5,
         "min_category_percentage_to_bet": 0.5,
         "max_recovery_percentage_on_max_bet": 1.0,
         "min_average_model_prediction": 0.1,
-        "stop_loss_percentage": 0.5,
-        "take_profit_percentage": 0.5,
+        "stop_loss_percentage": 1.0,
+        "take_profit_percentage": 3.0,
         "conditions": [
             {
                 "id": 1,
@@ -45,7 +45,7 @@
                 "condition_on_value": 1.0,
                 "condition_on_value_2": null,
                 "condition_action": "update_multiplier",
-                "action_value": 1.50,
+                "action_value": 1.5,
                 "others": null
             },
             {
@@ -58,25 +58,25 @@
                 "others": null
             },
             {
-                "id": 4,
+                "id": 6,
                 "condition_on": "streak_losses",
                 "condition_on_value": 3.0,
                 "condition_on_value_2": null,
                 "condition_action": "update_multiplier",
-                "action_value": 1.8,
+                "action_value": 1.75,
                 "others": null
             },
             {
-                "id": 5,
+                "id": 7,
                 "condition_on": "streak_losses",
                 "condition_on_value": 4.0,
                 "condition_on_value_2": null,
                 "condition_action": "update_multiplier",
-                "action_value": 1.94,
+                "action_value": 1.95,
                 "others": null
             },
             {
-                "id": 6,
+                "id": 8,
                 "condition_on": "streak_losses",
                 "condition_on_value": 5.0,
                 "condition_on_value_2": null,
@@ -85,25 +85,25 @@
                 "others": null
             },
             {
-                "id": 7,
+                "id": 9,
                 "condition_on": "streak_losses",
-                "condition_on_value": 7.0,
+                "condition_on_value": 6.0,
                 "condition_on_value_2": null,
                 "condition_action": "update_multiplier",
                 "action_value": 2.3,
                 "others": null
             },
             {
-                "id": 8,
+                "id": 10,
                 "condition_on": "streak_losses",
-                "condition_on_value": 9.0,
+                "condition_on_value": 7.0,
                 "condition_on_value_2": null,
                 "condition_action": "update_multiplier",
-                "action_value": 3.0,
+                "action_value": 2.80,
                 "others": null
             },
             {
-                "id": 9,
+                "id": 11,
                 "condition_on": "streak_wins",
                 "condition_on_value": 5.0,
                 "condition_on_value_2": null,
@@ -112,21 +112,12 @@
                 "others": null
             },
             {
-                "id": 10,
+                "id": 12,
                 "condition_on": "streak_n_multiplier_less_than",
                 "condition_on_value": 19.0,
                 "condition_on_value_2": 10.0,
                 "condition_action": "update_multiplier",
                 "action_value": 10.0,
-                "others": null
-            },
-            {
-                "id": 11,
-                "condition_on": "streak_multiplier_greater_than",
-                "condition_on_value": 5.0,
-                "condition_on_value_2": 1.99,
-                "condition_action": "make_bet",
-                "action_value": 0,
                 "others": null
             }
         ]

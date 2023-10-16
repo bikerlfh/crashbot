@@ -86,6 +86,11 @@ class BotStrategy(BotBase):
                 )
             )
             return []
+        if self.MIN_MULTIPLIER_TO_RECOVER_LOSSES == 0:
+            SendEventToGUI.log.debug(
+                _("min multiplier to recovery losses is 0")  # noqa
+            )
+            return []
         SendEventToGUI.log.debug(_("generating recovery bets"))  # noqa
         bets = []
         amount = self.get_bet_recovery_amount(multiplier)
