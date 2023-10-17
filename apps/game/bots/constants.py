@@ -26,8 +26,3 @@ class ConditionAction(str, Enum):
     # values are boolean
     IGNORE_MODEL = "ignore_model"
     MAKE_BET = "make_bet"
-
-
-class BotInternalType(str, Enum):
-    BOT_AI = "bot_ai"
-    BOT_NO_AI = "bot_no_ai"

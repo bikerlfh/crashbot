@@ -38,6 +38,8 @@ class BotBase(abc.ABC):
     IGNORE_MODEL = False
     is_bullish_game: bool = False
 
+    auto_play: bool = False
+
     MAX_MULTIPLIERS_IN_MEMORY: int = 50
 
     amount_multiple: Optional[float] = None
@@ -278,18 +280,26 @@ class BotBase(abc.ABC):
 
     def evaluate_bets(self, multiplier_result: float):
         total_amount = 0
-        result_last_game = False
-        for bet in self.bets:
-            profit = bet.evaluate(multiplier_result)
+        result_last_game = None
+        if not self.auto_play:
+            profit = self.profit_last_balance
+            profit += sum(self.amounts_lost)
             if profit < 0:
-                self.add_loss(bet.amount)
-            else:
-                total_amount += profit
-        if total_amount > 0:
-            result_last_game = True
-            self.remove_loss(total_amount)
-        if not self.bets:
-            result_last_game = None
+                result_last_game = False
+                self.add_loss(abs(profit))
+            elif profit > 0:
+                result_last_game = True
+                self.remove_loss(profit)
+        else:
+            for bet in self.bets:
+                profit = bet.evaluate(multiplier_result)
+                if profit < 0:
+                    self.add_loss(bet.amount)
+                else:
+                    total_amount += profit
+            if total_amount > 0:
+                self.remove_loss(total_amount)
+            result_last_game = total_amount > 0
         self.bets = []
         self._execute_conditions(
             result_last_game=result_last_game,
@@ -424,5 +434,6 @@ class BotBase(abc.ABC):
         *,
         prediction: Optional[PredictionCore] = None,
         multiplier_positions: Optional[MultiplierPositions] = None,
+        auto_play: Optional[bool] = False,
     ) -> list[Bet]:
         ...
