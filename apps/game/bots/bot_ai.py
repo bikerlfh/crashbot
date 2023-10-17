@@ -36,7 +36,7 @@ class BotAI(BotBase):
         :param probability: The probability.
         :return: The bet recovery amount.
         """
-        profit = self.profi
+        profit = self.profit
         # NOTE: no use minBet by strategy
         # min_bet = self.balance * strategy.min_amount_percentage_to_bet
         amount_to_recover_losses = self.calculate_recovery_amount(

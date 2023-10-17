@@ -57,6 +57,17 @@ def adaptive_kelly_formula(
     return round(capital * f, 2)
 
 
+def get_last_position_multiplier(
+    *, multiplier: int, last_multipliers: list[float]
+) -> int:
+    multi = copy.copy(last_multipliers)
+    multi.reverse()
+    for i in range(len(multi)):
+        if multi[i] >= multiplier:
+            return i + 1
+    return -1
+
+
 def predict_next_multiplier(
     *,
     data: MultiplierPositions,
@@ -72,13 +83,13 @@ def predict_next_multiplier(
     :return: tuple(next_value, percentage)
     """
 
-    def _get_last_position_multiplier(multiplier_: int) -> int:
-        multi = copy.copy(last_multipliers)
-        multi.reverse()
-        for i in range(len(multi)):
-            if multi[i] >= multiplier_:
-                return i + 1
-        return -1
+    # def _get_last_position_multiplier(multiplier_: int) -> int:
+    #     multi = copy.copy(last_multipliers)
+    #     multi.reverse()
+    #     for i in range(len(multi)):
+    #         if multi[i] >= multiplier_:
+    #             return i + 1
+    #     return -1
 
     if not last_multipliers or not data:
         return 0, 0
@@ -89,7 +100,9 @@ def predict_next_multiplier(
         multiplier = int(key)
         if multiplier < 2:
             continue
-        index_ = _get_last_position_multiplier(multiplier)
+        index_ = get_last_position_multiplier(
+            multiplier=multiplier, last_multipliers=last_multipliers
+        )
         if index_ < 0:
             continue
         count = int(values.count)

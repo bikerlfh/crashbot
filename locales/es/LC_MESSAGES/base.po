@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2023-06-13 17:03-0500\n"
-"PO-Revision-Date: 2023-06-13 17:07-0500\n"
+"PO-Revision-Date: 2023-10-17 16:31-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.4\n"
 
 #: apps/game/bots/bot_base.py:89
 msgid "Bot initialized"
@@ -259,7 +259,7 @@ msgstr ""
 msgid "Use saved credentials"
 msgstr "Usar credenciales guardadas"
 
-#: ./apps/gui/windows/parameter/parameter_designer.py:82
+#: apps/gui/windows/parameter/parameter_designer.py:82
 msgid "Use AI"
 msgstr "Usar IA"
 
@@ -282,3 +282,12 @@ msgstr "Por favor ingresa el username y la contraseña para hacer login!"
 #: apps/scrappers/aviator/aviator_one_win.py:24
 msgid "please set username and password to login!"
 msgstr "por favor ingresa el username y la contraseña para hacer login!"
+
+msgid "Multiplicator trend"
+msgstr "Tendencia del multiplicador"
+
+msgid "Trend"
+msgstr "Tendencia"
+
+msgid "log messages"
+msgstr "log mensajes"

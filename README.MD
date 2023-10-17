@@ -33,6 +33,24 @@ sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-
 pip install -r requirements.txt
 ```
 
+### INSTALL DESIGNER UI IN WINDOWS
+
+https://www.pythontutorial.net/pyqt/qt-designer/
+
+Install PyQt6 and its tools
+First, execute the following command to install pyqt6 package in the pyqt6-env virtual environment:
+```
+pip install pyqt6
+```
+Second, install the pyqt6-tools package that contains the Qt Designer and other related tools:
+```
+pip install pyqt6-tools
+```
+The pyqt-tools package will install the Qt Designer in the following location:
+```
+D:\pyqt6\pyqt6-env\Lib\site-packages\qt6_applications\Qt\bin\designer.exe
+```
+
 # CONFIG FILE (conf.ini)
 
 * API_URL: url api
@@ -66,7 +84,16 @@ PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install 3.10.4
 
 
 # create language 
-pygettext -d base -o locales/base.po  .
 
-use poedit to translate the file base.po
+Install gettext
+```
+pip install python-gettext
+```
+```
+pygettext -d base -o locales/base.po  .
+```
+
+use poedit to translate the file base.po (https://poedit.net/)
+
+
 (https://phrase.com/blog/posts/translate-python-gnu-gettext/)

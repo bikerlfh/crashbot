@@ -388,6 +388,21 @@ class BotBase(abc.ABC):
         min_ = round(multiplier * (1 - percentage), 2)
         return min_, multiplier
 
+    def show_last_position_of_multipliers(self) -> None:
+        multipliers = GlobalVars.config.MULTIPLIERS_TO_SHOW_LAST_POSITION
+        if not multipliers:
+            return
+        len_multipliers = len(self.multipliers)
+        SendEventToGUI.log.info("*****************************************")
+        for multiplier in reversed(multipliers):
+            position = game_utils.get_last_position_multiplier(
+                multiplier=multiplier, last_multipliers=self.multipliers
+            )
+            if position < 0:
+                position = f"> {len_multipliers}"
+            SendEventToGUI.log.info(f"\t{multiplier}:{position}")
+        SendEventToGUI.log.info("********* Multipliers Positions *********")
+
     @staticmethod
     def calculate_recovery_amount(
         amount_lost: float, multiplier: float
