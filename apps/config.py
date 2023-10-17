@@ -18,6 +18,7 @@ class Config(metaclass=Singleton):
         NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH = (
             "NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH"
         )
+        MULTIPLIERS_TO_SHOW_LAST_POSITION = "MULTIPLIERS_TO_SHOW_LAST_POSITION"
         LANGUAGE = "LANGUAGE"
 
     def __init__(self):
@@ -34,6 +35,7 @@ class Config(metaclass=Singleton):
         self.MAX_AMOUNT_HOME_BET_PERCENTAGE = 0.5
         self.MAX_AMOUNT_BALANCE_PERCENTAGE = 0.005
         self.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH = 30
+        self.MULTIPLIERS_TO_SHOW_LAST_POSITION = []
         self.LANGUAGE = "en"
         self._ALLOWED_LANGUAGES = ["en", "es"]
         self.read_config()
@@ -67,6 +69,10 @@ class Config(metaclass=Singleton):
                         self.MAX_AMOUNT_BALANCE_PERCENTAGE = float(value)
                     case self.ConfigVar.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH:
                         self.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH = int(value)
+                    case self.ConfigVar.MULTIPLIERS_TO_SHOW_LAST_POSITION:
+                        self.MULTIPLIERS_TO_SHOW_LAST_POSITION = [
+                            int(i) for i in value.split(",")
+                        ]
                     case self.ConfigVar.LANGUAGE:
                         self.LANGUAGE = value
                         if value not in self._ALLOWED_LANGUAGES:

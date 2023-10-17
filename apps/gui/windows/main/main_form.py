@@ -141,7 +141,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.__change_screen(
             screen=self.console_screen,
             width=897,
-            height=557,
+            height=587,
             title=GlobalVars.APP_NAME,
         )
 

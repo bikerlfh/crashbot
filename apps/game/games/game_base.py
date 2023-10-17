@@ -98,6 +98,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
         self.request_save_customer_balance()
         SendEventToGUI.log.success(_("Game initialized"))  # noqa
         SendEventToGUI.game_loaded(True)
+        self.bot.show_last_position_of_multipliers()
 
     async def close(self):
         await self.game_page.close()
@@ -245,6 +246,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
             self.get_next_bet()
             await self.send_bets_to_aviator()
             SendEventToGUI.log.info("***************************************")
+            self.bot.show_last_position_of_multipliers()
         SendEventToGUI.log.error(_("The game is not initialized"))  # noqa
 
     @abc.abstractmethod
