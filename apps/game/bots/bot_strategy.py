@@ -13,7 +13,7 @@ from apps.gui.gui_events import SendEventToGUI
 class BotStrategy(BotBase):
     """
     NOTE: don't use this directly
-    The BotAI class is a class used to determine
+    The BotStrategy class is a class used to determine
     the optimal fraction of one's capital to bet on a given bet.
     This Bot is used to bet in the game, it's necessary
     that the customer select the two amount to bet (max and min).
@@ -142,13 +142,16 @@ class BotStrategy(BotBase):
         *,
         prediction: Optional[PredictionCore] = None,
         multiplier_positions: Optional[MultiplierPositions] = None,
+        auto_play: Optional[bool] = False,
     ) -> list[Bet]:
         """
         Get the next bet.
         :param prediction: The prediction core.
         :param multiplier_positions: The multiplier positions.
+        :param auto_play: The auto bet.
         :return: The next bet.
         """
+        self.auto_play = auto_play
         self.multiplier_positions = multiplier_positions
         profit = self.profit_last_balance
         if profit >= 0:

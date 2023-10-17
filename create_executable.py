@@ -40,6 +40,7 @@ def main():
         os.system("pip install -r requirements_installer.txt")
         if is_windows:
             # install playwright chromium
+            # https://playwright.dev/python/docs/browsers#install-browsers
             os.system("$Env:PLAYWRIGHT_BROWSERS_PATH=0")
         else:
             os.system("export PLAYWRIGHT_BROWSERS_PATH=0")
@@ -68,9 +69,9 @@ def main():
             --add-data "custom_bots.json{os.pathsep}." \
             --add-data "locales{os.pathsep}locales" \
             --add-data "license.txt{os.pathsep}." \
-            --add-data "conf.ini{os.pathsep}." \
             --add-data "crashbot-icon.ico{os.pathsep}." crashbot.py'
         )
+        shutil.copy("conf._ini", "dist/crashbot/conf.ini")
     os.system(
         f"pyarmor gen -O obfdist --pack dist/{file_name} -r crashbot.py apps"
     )

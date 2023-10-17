@@ -51,15 +51,18 @@ class GameStrategy(GameBase, configuration=GameType.STRATEGY.value):
         self.bets = []
 
     def get_next_bet(self) -> list[Bet]:
+        auto_play = GlobalVars.get_auto_play()
         bets = self.bot.get_next_bet(
             multiplier_positions=self.multiplier_positions,
+            auto_play=auto_play,
         )
-        if GlobalVars.get_auto_play():
+        if auto_play:
             self.bets = bets
         elif bets:
             _possible_bets = [
-                dict(multiplier=bet.multiplier, amount=bet.amount)
+                dict(amount=bet.amount, multiplier=bet.multiplier)
                 for bet in bets
             ]
-            SendEventToGUI.log.debug(f"possible bets: " f"{_possible_bets}")
+            for bet in reversed(_possible_bets):
+                SendEventToGUI.log.debug(f"possible bet: {bet}")
         return self.bets
