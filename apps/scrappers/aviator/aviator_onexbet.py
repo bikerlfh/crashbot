@@ -8,7 +8,7 @@ from apps.scrappers.aviator.aviator import Aviator
 from apps.utils.datetime import sleep_now
 
 
-class AviatorOneWin(Aviator):
+class AviatorOneXBet(Aviator):
     def __init__(self, url: str):
         super().__init__(url)
         self._frame = None
@@ -17,7 +17,7 @@ class AviatorOneWin(Aviator):
         if not self._page:
             raise Exception("_login :: page is null")
 
-        page_login_button = self._page.locator("button.login")
+        page_login_button = self._page.locator(".login-btn")
         await self._click(page_login_button)
         sleep_now(1)
 
@@ -25,20 +25,21 @@ class AviatorOneWin(Aviator):
         password = GlobalVars.get_password()
 
         if not username or not password:
+            print(f"username: {username}, password: {password}")
             SendEventToGUI.log.warning(
                 _("please set username and password to login!")  # noqa
             )
             return
 
-        user_name_input = self._page.locator("input[name='login']")
-        password_input = self._page.locator("input[name='password']")
+        user_name_input = self._page.locator("input[name='auth_id_email']")
+        password_input = self._page.locator("input[id='auth-form-password']")
 
         await user_name_input.type(username, delay=100)
         await password_input.type(password, delay=100)
         await self._page.wait_for_timeout(1000)
 
         login_button_2 = self._page.locator(
-            "button.modal-button[type='submit']"
+            "button.auth-button[type='button']"
         )
         await self._click(login_button_2)
         await self._page.wait_for_timeout(2000)
@@ -47,15 +48,17 @@ class AviatorOneWin(Aviator):
         if not self._page:
             raise Exception("_getAppGame :: page is null")
 
-        await self._page.wait_for_url(
-            "**/casino/play/spribe_aviator**", timeout=50000
-        )
+        await self._page.wait_for_url("**/slots**", timeout=50000)
 
         while True:
             try:
-                self._frame = self._page.locator(
-                    ".CasinoGamePromoted_game_vXIG_"
-                ).frame_locator("[src^=https]")
+                self._frame = (
+                    self._page.locator(".slots-place__place")
+                    .frame_locator(
+                        "[src^='https://launch.spribegaming.com/aviator']"
+                    )
+                    .first
+                )
                 self._app_game = self._frame.locator("app-game").first
                 await self._app_game.locator(".result-history").wait_for(
                     timeout=5000
