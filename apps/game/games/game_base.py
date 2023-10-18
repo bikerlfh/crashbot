@@ -245,7 +245,9 @@ class GameBase(abc.ABC, ConfigurationFactory):
             await self.wait_next_game()
             self.get_next_bet()
             await self.send_bets_to_aviator()
-            SendEventToGUI.log.info("***************************************")
+            SendEventToGUI.log.info(
+                "*****************************************"
+            )
             self.bot.show_last_position_of_multipliers()
         SendEventToGUI.log.error(_("The game is not initialized"))  # noqa
 

@@ -393,7 +393,6 @@ class BotBase(abc.ABC):
         if not multipliers:
             return
         len_multipliers = len(self.multipliers)
-        SendEventToGUI.log.info("*****************************************")
         for multiplier in reversed(multipliers):
             position = game_utils.get_last_position_multiplier(
                 multiplier=multiplier, last_multipliers=self.multipliers
