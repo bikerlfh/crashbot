@@ -92,5 +92,5 @@ class GameAI(GameBase, configuration=GameType.AI.value):
                 for bet in bets
             ]
             for bet in reversed(_possible_bets):
-                SendEventToGUI.log.debug(f"possible bet: {bet}")
+                SendEventToGUI.log.info(f"possible bet: {bet}")
         return self.bets

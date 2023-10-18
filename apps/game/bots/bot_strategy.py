@@ -63,8 +63,8 @@ class BotStrategy(BotBase):
             amount = min(round(amount * 0.5, 2), last_amount_loss)
             SendEventToGUI.log.debug(
                 f"get_bet_recovery_amount ::"
-                f"possible_loss >= self.stop_loss"
-                f"({possible_loss} >= {self.stop_loss}) ::"
+                f"possible_loss ({possible_loss}) >= "
+                f"self.stop_loss ({self.stop_loss})"
                 f"new amount={amount}"
             )
         amount = round(max(amount, self.minimum_bet), 2)
@@ -110,24 +110,22 @@ class BotStrategy(BotBase):
         profit = self.profit_last_balance
         second_multiplier = 2
         min_multiplier, max_multiplier = self.predict_next_multiplier()
-        SendEventToGUI.log.debug(
-            f"second multiplier**: {min_multiplier} - {max_multiplier}"
-        )
-        SendEventToGUI.log.debug(f"Amount Lost: {self.amounts_lost}")
+        if self.amounts_lost:
+            SendEventToGUI.log.debug(f"Amount Lost: {self.amounts_lost}")
         if profit < 0 and abs(profit) >= self.minimum_bet:
-            # always the multiplier to recover losses is 1.95
             self.bets = self.generate_recovery_bets(
                 self.MIN_MULTIPLIER_TO_RECOVER_LOSSES
             )
             return self.bets
-        # to category 2
-        # if the profit is greater than 10% of the initial balance
         # get the possible next second multiplier
         if min_multiplier > second_multiplier:
             second_multiplier = game_utils.generate_random_multiplier(
                 min_multiplier, max_multiplier
             )
-            SendEventToGUI.log.debug(f"Second multiplier: {second_multiplier}")
+            SendEventToGUI.log.debug(
+                f"second multiplier: {min_multiplier} - "
+                f"{max_multiplier} = {second_multiplier}"
+            )
         self.bets.append(
             Bet(self._max_amount_to_bet, self.MIN_MULTIPLIER_TO_BET)
         )
