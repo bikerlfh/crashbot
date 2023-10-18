@@ -119,7 +119,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
             self.multiplier_positions = api_services.get_multiplier_positions(
                 home_bet_id=self.home_bet.id
             )
-            SendEventToGUI.log.debug("multiplier positions received")
+            # SendEventToGUI.log.debug("multiplier positions received")
         except Exception as error:
             SendEventToGUI.log.debug(
                 f"Error in requestMultiplierPositions: {error}"
@@ -140,7 +140,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
                 multipliers=self.multipliers_to_save,
             )
             self.multipliers_to_save = []
-            SendEventToGUI.log.debug("multipliers saved")
+            # SendEventToGUI.log.debug("multipliers saved")
             self.request_multiplier_positions()
         except Exception as error:
             SendEventToGUI.log.debug(
@@ -151,14 +151,14 @@ class GameBase(abc.ABC, ConfigurationFactory):
         """
         Save the customer's balance in the database
         """
-        SendEventToGUI.log.debug("saving balance")
+        # SendEventToGUI.log.debug("saving balance")
         try:
             api_services.update_customer_balance(
                 customer_id=self.customer_id,
                 home_bet_id=self.home_bet.id,
                 balance=round(self.balance, 2),
             )
-            SendEventToGUI.log.debug("balance saved")
+            # SendEventToGUI.log.debug("balance saved")
         except Exception as error:
             SendEventToGUI.log.debug(
                 f"Error in request_save_customer_balance :: bet :: {error}"
@@ -180,13 +180,13 @@ class GameBase(abc.ABC, ConfigurationFactory):
             )
             for bet in self.bets
         ]
-        SendEventToGUI.log.debug(_("saving bets"))  # noqa
+        # SendEventToGUI.log.debug(_("saving bets"))  # noqa
         try:
             api_services.create_bets(
                 home_bet_id=self.home_bet.id,
                 bets=bets_to_save,
             )
-            SendEventToGUI.log.debug(_("bets saved"))  # noqa
+            # SendEventToGUI.log.debug(_("bets saved"))  # noqa
         except Exception as error:
             SendEventToGUI.log.debug(
                 f"{_('Error in requestSaveBets')} :: {error}"  # noqa
