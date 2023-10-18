@@ -526,7 +526,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -548,7 +548,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -567,7 +567,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -586,7 +586,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
      <kerning>true</kerning>
     </font>
@@ -606,7 +606,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -625,7 +625,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -644,7 +644,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -677,6 +677,11 @@
      <height>16</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
@@ -689,6 +694,11 @@
      <width>241</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
