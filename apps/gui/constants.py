@@ -1,0 +1,26 @@
+# Libraries
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor
+
+LOG_CODES = {
+    "info": {
+        "foreground": None,
+        "background": None,
+    },
+    "success": {
+        "foreground": QColor(Qt.GlobalColor.green),
+        "background": None,
+    },
+    "warning": {
+        "foreground": QColor(Qt.GlobalColor.yellow),
+        # "background": QColor(Qt.GlobalColor.yellow),
+    },
+    "error": {
+        "foreground": QColor(Qt.GlobalColor.red),
+        # "background": QColor(Qt.GlobalColor.red),
+    },
+    "debug": {
+        "foreground": QColor(Qt.GlobalColor.white),
+        "background": QColor(Qt.GlobalColor.darkBlue),
+    },
+}

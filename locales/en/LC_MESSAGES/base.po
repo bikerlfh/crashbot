@@ -1,0 +1,284 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2023-06-13 17:03-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: ./apps/game/bots/bot_base.py:89
+msgid "Bot initialized"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:90
+#: ./apps/gui/windows/parameter/parameter_designer.py:75
+msgid "Bot type"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:91
+msgid "Bot risk factor"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:93
+msgid "Bot min multiplier to bet"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:96
+msgid "Bot min multiplier to recover losses"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:100
+msgid "Bot min category percentage to bet"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:104
+msgid "Bot min average model prediction"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:107
+msgid "Stop Loss"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:108
+msgid "Take Profit"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:109
+msgid "Bot strategies count"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:192
+msgid "Min bet amount"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:193
+msgid "Max bet amount"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:402
+msgid "No strategy found for profit percentage"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:415 ./apps/game/bots/bots.py:238
+msgid "Stop loss reached"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:419 ./apps/game/bots/bots.py:241
+msgid "Take profit reached"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:429 ./apps/game/bots/bots.py:247
+msgid "Prediction value is too low"
+msgstr ""
+
+#: ./apps/game/bots/bot_base.py:433
+msgid "Probability is too low"
+msgstr ""
+
+#: ./apps/game/bots/bots.py:133
+msgid "multiplier is less than min multiplier to recovery losses"
+msgstr ""
+
+#: ./apps/game/bots/bots.py:136
+msgid "generating recovery bets"
+msgstr ""
+
+#: ./apps/game/bots/bots.py:232
+msgid "No strategy found for profit"
+msgstr ""
+
+#: ./apps/game/bots/bots.py:244
+msgid "Prediction value is not in category percentage"
+msgstr ""
+
+#: ./apps/game/game.py:66
+msgid "opening home bet"
+msgstr ""
+
+#: ./apps/game/game.py:68
+msgid "reading the player's balance"
+msgstr ""
+
+#: ./apps/game/game.py:98
+msgid "Game initialized"
+msgstr ""
+
+#: ./apps/game/game.py:177
+msgid "saving bets"
+msgstr ""
+
+#: ./apps/game/game.py:183
+msgid "bets saved"
+msgstr ""
+
+#: ./apps/game/game.py:185
+msgid "Error in requestSaveBets"
+msgstr ""
+
+#: ./apps/game/game.py:197
+msgid "Error in request_get_prediction"
+msgstr ""
+
+#: ./apps/game/game.py:206
+msgid "waiting for the next game"
+msgstr ""
+
+#: ./apps/game/game.py:233
+msgid "The game is not initialized"
+msgstr ""
+
+#: ./apps/game/game.py:268
+msgid "No prediction found"
+msgstr ""
+
+#: ./apps/game/models.py:66
+msgid "prediction"
+msgstr ""
+
+#: ./apps/game/models.py:67
+msgid "probability"
+msgstr ""
+
+#: ./apps/gui/windows/console/console_designer.py:494
+msgid "Set Amount Bet"
+msgstr ""
+
+#: ./apps/gui/windows/console/console_designer.py:495
+#: ./apps/gui/windows/console/console_form.py:81
+#: ./apps/gui/windows/console/console_form.py:132
+msgid "AutoBet"
+msgstr ""
+
+#: ./apps/gui/windows/console/console_designer.py:496
+msgid "Amount Bet"
+msgstr ""
+
+#: ./apps/gui/windows/console/console_designer.py:503
+msgid "Auto CashOut"
+msgstr ""
+
+#: ./apps/gui/windows/credential/credential_designer.py:113
+msgid "Credentials"
+msgstr ""
+
+#: ./apps/gui/windows/credential/credential_designer.py:121
+msgid "Remove"
+msgstr ""
+
+#: ./apps/gui/windows/credential/credential_designer.py:122
+msgid "Remove All"
+msgstr ""
+
+#: ./apps/gui/windows/credential/credential_designer.py:125
+msgid "Saved Credentials"
+msgstr ""
+
+#: ./apps/gui/windows/credential/credential_designer.py:127
+#: ./apps/gui/windows/login/login_designer.py:348
+msgid "Password"
+msgstr ""
+
+#: ./apps/gui/windows/credential/credential_designer.py:128
+#: ./apps/gui/windows/login/login_designer.py:347
+msgid "Username"
+msgstr ""
+
+#: ./apps/gui/windows/credential/credential_designer.py:130
+msgid "Save"
+msgstr ""
+
+#: ./apps/gui/windows/credential/credential_designer.py:131
+#: ./apps/gui/windows/parameter/parameter_designer.py:73
+msgid "Home bet"
+msgstr ""
+
+#: ./apps/gui/windows/credential/credential_designer.py:134
+msgid "Add Crendential"
+msgstr ""
+
+#: ./apps/gui/windows/login/login_designer.py:345
+#: ./apps/gui/windows/login/login_designer.py:349
+msgid "Login"
+msgstr ""
+
+#: ./apps/gui/windows/main/main_designer.py:88
+msgid "File"
+msgstr ""
+
+#: ./apps/gui/windows/main/main_designer.py:89
+msgid "View"
+msgstr ""
+
+#: ./apps/gui/windows/main/main_designer.py:90
+msgid "Logs"
+msgstr ""
+
+#: ./apps/gui/windows/main/main_designer.py:91
+msgid "Configuration"
+msgstr ""
+
+#: ./apps/gui/windows/main/main_designer.py:92
+msgid "Exit"
+msgstr ""
+
+#: ./apps/gui/windows/main/main_designer.py:93
+msgid "Info"
+msgstr ""
+
+#: ./apps/gui/windows/main/main_designer.py:94
+msgid "Debug"
+msgstr ""
+
+#: ./apps/gui/windows/main/main_designer.py:95
+msgid "Crendentials"
+msgstr ""
+
+#: ./apps/gui/windows/main/main_designer.py:96
+msgid "Sign out"
+msgstr ""
+
+#: ./apps/gui/windows/parameter/parameter_designer.py:72
+msgid "Parameters"
+msgstr ""
+
+#: ./apps/gui/windows/parameter/parameter_designer.py:79
+msgid "Start"
+msgstr ""
+
+#: ./apps/gui/windows/parameter/parameter_designer.py:81
+msgid "Use saved credentials"
+msgstr ""
+
+#: ./apps/gui/windows/parameter/parameter_designer.py:82
+msgid "Use AI"
+msgstr ""
+
+#: ./apps/scrappers/aviator/aviator.py:78
+msgid "Aviator loaded"
+msgstr ""
+
+#: ./apps/scrappers/aviator/aviator.py:187
+msgid "Sending bet to aviator"
+msgstr ""
+
+#: ./apps/scrappers/aviator/aviator.py:235
+msgid "New Multiplier"
+msgstr ""
+
+#: ./apps/scrappers/aviator/aviator_bet_play.py:24
+msgid "Please set username and password to login!"
+msgstr ""
+
+#: ./apps/scrappers/aviator/aviator_one_win.py:24
+msgid "please set username and password to login!"
+msgstr ""
+

@@ -1,0 +1,156 @@
+# Standard Library
+from typing import Callable, Optional
+
+# Libraries
+import socketio
+from PyQt6 import QtCore
+
+# Internal
+from apps.constants import WSEvent
+from apps.game.ws_server.constants import WS_SERVER_HOST, WS_SERVER_PORT
+
+
+class SocketIOClient(QtCore.QThread):
+    def __init__(
+        self,
+        *,
+        on_verify: Optional[Callable] = None,
+        on_login: Optional[Callable] = None,
+        on_start_bot: Optional[Callable] = None,
+        on_auto_play: Optional[Callable] = None,
+        on_close_game: Optional[Callable] = None,
+        on_set_max_amount_to_bet: Optional[Callable] = None,
+        on_log: Optional[Callable] = None,
+        on_update_balance: Optional[Callable] = None,
+        on_game_loaded: Optional[Callable] = None,
+        on_error: Optional[Callable] = None,
+        on_exception: Optional[Callable] = None,
+        on_add_multipliers: Optional[Callable] = None,
+    ):
+        super().__init__()
+        self.WS_SERVER_URL = f"http://{WS_SERVER_HOST}:{WS_SERVER_PORT}"
+        self.on_verify = on_verify
+        self.on_login = on_login
+        self.on_start_bot = on_start_bot
+        self.on_auto_play = on_auto_play
+        self.on_close_game = on_close_game
+        self.on_set_max_amount_to_bet = on_set_max_amount_to_bet
+        self.on_log = on_log
+        self.on_update_balance = on_update_balance
+        self.on_game_loaded = on_game_loaded
+        self.on_error = on_error
+        self.on_exception = on_exception
+        self.on_add_multipliers = on_add_multipliers
+        self.__sio = socketio.Client()
+        self.__assign_events()
+        self.is_connected = False
+
+    def __assign_events(self) -> None:
+        # Define WSEvents
+        self.__sio.on("connect", self._on_connect)
+        self.__sio.on("disconnect", self._on_disconnect)
+        self.__sio.on(WSEvent.VERIFY, self.on_verify or self._on_default)
+        self.__sio.on(WSEvent.LOGIN, self.on_login or self._on_default)
+        self.__sio.on(WSEvent.START_BOT, self.on_start_bot or self._on_default)
+        self.__sio.on(WSEvent.AUTO_PLAY, self.on_auto_play or self._on_default)
+        self.__sio.on(
+            WSEvent.CLOSE_GAME, self.on_close_game or self._on_close_game
+        )
+        self.__sio.on(WSEvent.LOG, self.on_log or self._on_default)
+        self.__sio.on(
+            WSEvent.SET_MAX_AMOUNT_TO_BET,
+            self.on_set_max_amount_to_bet or self._on_set_max_amount_to_bet,
+        )
+        self.__sio.on(
+            WSEvent.UPDATE_BALANCE,
+            self.on_update_balance or self._on_default,
+        )
+        self.__sio.on(
+            WSEvent.GAME_LOADED, self.on_game_loaded or self._on_default
+        )
+        self.__sio.on(WSEvent.ERROR, self.on_error or self._on_error)
+        self.__sio.on(
+            WSEvent.EXCEPTION, self.on_exception or self._on_exception
+        )
+        self.__sio.on(
+            WSEvent.ADD_MULTIPLIERS,
+            self.on_add_multipliers or self._on_default,
+        )
+
+    def __execute_event(self, event: WSEvent, data: any) -> None:
+        self.__sio.emit(event.value, data)
+
+    def _on_connect(self) -> None:
+        print(f"GUI :: connected to server: {WS_SERVER_HOST}:{WS_SERVER_PORT}")
+        self.is_connected = True
+
+    def _on_disconnect(self) -> None:
+        print("GUI :: disconnect from server")
+        self.is_connected = False
+
+    def run(self) -> None:
+        self.__sio.connect(self.WS_SERVER_URL)
+
+    def stop(self) -> None:
+        self.__sio.disconnect()
+
+    def verify(self) -> None:
+        # this verifies if the login is valid
+        self.__execute_event(WSEvent.VERIFY, {})
+
+    def login(self, *, username: str, password) -> None:
+        data = dict(username=username, password=password)
+        self.__execute_event(WSEvent.LOGIN, data)
+
+    def start_bot(
+        self,
+        *,
+        bot_name: str,
+        home_bet_id: int,
+        max_amount_to_bet: float,
+        auto_play: bool,
+        use_game_ai: bool,
+        username: Optional[str] = None,
+        password: Optional[str] = None,
+    ) -> None:
+        data = dict(
+            bot_name=bot_name,
+            home_bet_id=home_bet_id,
+            max_amount_to_bet=max_amount_to_bet,
+            auto_play=auto_play,
+            use_game_ai=use_game_ai,
+            username=username,
+            password=password,
+        )
+        self.__execute_event(WSEvent.START_BOT, data)
+
+    def auto_play(self, *, auto_play: bool) -> None:
+        data = dict(auto_play=auto_play)
+        self.__execute_event(WSEvent.AUTO_PLAY, data)
+
+    def set_max_amount_to_bet(self, *, max_amount_to_bet: float) -> None:
+        data = dict(max_amount_to_bet=max_amount_to_bet)
+        self.__execute_event(WSEvent.SET_MAX_AMOUNT_TO_BET, data)
+
+    def close_game(self) -> None:
+        self.__execute_event(WSEvent.CLOSE_GAME, {})
+
+    @staticmethod
+    def _on_default(data: any) -> None:
+        print(f"WS callback not specify!!!: {data}")
+
+    @staticmethod
+    def _on_close_game(data: any) -> None:
+        print(f"WS callback on_close_game!!!: {data}")
+
+    @staticmethod
+    def _on_set_max_amount_to_bet(data: any) -> None:
+        print(f"WS callback on_set_max_amount_to_bet!!!: {data}")
+
+    @staticmethod
+    def _on_error(data: any) -> None:
+        print(f"WS callback on_error!!!: {data}")
+
+    @staticmethod
+    def _on_exception(data: any) -> None:
+        print(f"WS callback on_exception!!!: {data}")

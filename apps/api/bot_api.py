@@ -1,0 +1,312 @@
+# Standard Library
+import inspect
+import logging
+from http import HTTPStatus
+from typing import Any, Dict, List, Optional
+
+# Internal
+from apps.api.exceptions import (
+    BotAPIBadRequestException,
+    BotAPIConnectionException,
+    BotAPINoAuthorizationException,
+    BotAPINotFoundException,
+)
+from apps.api.models import BetData
+from apps.globals import GlobalVars
+from apps.utils.http.rest.client import RESTClient
+from apps.utils.http.rest.response import Response
+from apps.utils.local_storage import LocalStorage
+from apps.utils.patterns.singleton import Singleton
+
+logger = logging.getLogger(__name__)
+
+local_storage = LocalStorage()
+
+
+class BotAPIConnector(metaclass=Singleton):
+    def __init__(self):
+        self.validate_config()
+        self.API_URL = GlobalVars.config.API_URL
+        headers = {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+            "Authorization": f"Bearer {local_storage.get_token()}",
+        }
+        self.client = RESTClient(api_url=self.API_URL, headers=headers)
+        self.services = BotAPIServices(client=self.client)
+
+    @staticmethod
+    def validate_config():
+        assert isinstance(
+            GlobalVars.config.API_URL, str
+        ), "API_URL must be a str instance"
+
+    def update_token(self):
+        token = local_storage.get_token()
+        self.client.headers["Authorization"] = f"Bearer {token}"
+
+
+class BotAPIServices:
+    LOGIN = "api/token/"
+    TOKEN_REFRESH = "api/token/refresh/"
+    TOKEN_VERIFY = "api/token/verify/"
+    HOME_BET = "home-bet/"
+    HOME_BET_DETAIL = "home-bet/"
+    ADD_MULTIPLIERS = "home-bet/multiplier/"
+    GET_PREDICTION = "predictions/predict/"
+    GET_BOTS = "predictions/bots/"
+    GET_POSITIONS = "predictions/positions/"
+    UPDATE_BALANCE = "customers/balance/"
+    CUSTOMER_DATA = "customers/me/"
+    BET = "bets/"
+
+    def __init__(self, *, client: RESTClient):
+        assert isinstance(
+            client, RESTClient
+        ), "client must be a BotAPIServices instance"
+        self.client = client
+
+    @staticmethod
+    def validate_response(*, response: Response):
+        func_name = inspect.stack()[1][3]
+        status_code = response.status
+        detail = response.body
+        error_code = detail.get("code") if isinstance(detail, dict) else None
+        if status_code >= HTTPStatus.INTERNAL_SERVER_ERROR:
+            logger.error(
+                f"BotAPIServices :: {func_name} :: "
+                f"response status {status_code} :: {detail}"
+            )
+            raise BotAPIConnectionException(detail)
+        if status_code == HTTPStatus.UNAUTHORIZED:
+            logger.error(
+                f"BotAPIServices :: {func_name} :: "
+                f"response status {status_code} :: {detail}"
+            )
+            raise BotAPINoAuthorizationException(detail)
+        if status_code == HTTPStatus.NOT_FOUND and error_code:
+            logger.error(
+                f"BotAPIServices :: {func_name} :: "
+                f"response status {status_code} :: {detail}"
+            )
+            raise BotAPINotFoundException(detail, response.status)
+        if status_code == HTTPStatus.BAD_REQUEST:
+            raise BotAPIBadRequestException(detail, status_code)
+        if status_code >= HTTPStatus.MULTIPLE_CHOICES:
+            logger.error(
+                f"BotAPIServices :: {func_name} :: "
+                f"response status {status_code} :: {detail}"
+            )
+            raise BotAPINotFoundException(detail, response.status)
+
+    def login(self, *, username: str, password: str) -> Dict[str, Any]:
+        """
+        login
+        :param username:
+        :param password:
+        :return:
+        """
+        try:
+            response = self.client.post(
+                service=self.LOGIN,
+                data=dict(
+                    username=username,
+                    password=password,
+                ),
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: login :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def token_refresh(self, *, refresh: str) -> Dict[str, Any]:
+        """
+        token_refresh
+        :param refresh:
+        :return:
+        """
+        try:
+            response = self.client.post(
+                service=self.TOKEN_REFRESH,
+                data=dict(
+                    refresh=refresh,
+                ),
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: token_refresh :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def token_verify(self, *, token: str) -> bool:
+        """
+        token_verify
+        :param token:
+        :return:
+        """
+        try:
+            response = self.client.post(
+                service=self.TOKEN_VERIFY,
+                data=dict(
+                    token=token,
+                ),
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: token_verify :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.status == HTTPStatus.OK
+
+    def get_home_bet(self) -> Dict[str, Any]:
+        try:
+            response = self.client.get(
+                service=self.HOME_BET,
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: get_home_bet :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def get_home_bet_detail(self, *, home_bet_id: int) -> Dict[str, Any]:
+        service = f"{self.HOME_BET_DETAIL}home_bet_id={home_bet_id}/"
+        try:
+            response = self.client.get(
+                service=service,
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: get_home_bet_detail :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def add_multipliers(
+        self, *, home_bet_id: int, multipliers: List[int]
+    ) -> Dict[str, Any]:
+        try:
+            response = self.client.post(
+                service=self.ADD_MULTIPLIERS,
+                data=dict(
+                    home_bet_id=home_bet_id,
+                    multipliers=multipliers,
+                ),
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: add_multipliers :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def request_prediction(
+        self,
+        *,
+        home_bet_id: int,
+        multipliers: List[int],
+        model_home_bet_id: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        data = dict(
+            home_bet_id=home_bet_id,
+            multipliers=multipliers,
+        )
+        if model_home_bet_id:
+            data["model_home_bet_id"] = model_home_bet_id
+        try:
+            response = self.client.post(service=self.GET_PREDICTION, data=data)
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: request_prediction :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def get_bots(self, *, bot_type: Optional[str] = None) -> Dict[str, Any]:
+        try:
+            service = self.GET_BOTS
+            if bot_type is not None:
+                service = f"{service}?bot_type={bot_type}"
+            response = self.client.get(
+                service=service,
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: get_bots :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def get_multiplier_positions(self, *, home_bet_id: int) -> Dict[str, Any]:
+        try:
+            response = self.client.get(
+                service=f"{self.GET_POSITIONS}?home_bet_id={home_bet_id}",
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: get_positions :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def get_me_data(self) -> Dict[str, Any]:
+        try:
+            response = self.client.get(
+                service=self.CUSTOMER_DATA,
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: get_me_data :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def update_balance(
+        self,
+        *,
+        customer_id: int,
+        home_bet_id: int,
+        balance: int,
+    ) -> Dict[str, Any]:
+        try:
+            response = self.client.patch(
+                service=self.UPDATE_BALANCE,
+                data=dict(
+                    customer_id=customer_id,
+                    home_bet_id=home_bet_id,
+                    amount=balance,
+                ),
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: update_balance :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def create_bet(
+        self,
+        *,
+        home_bet_id: int,
+        bets: list[BetData],
+    ) -> Dict[str, Any]:
+        data = dict(
+            home_bet_id=home_bet_id,
+            bets=[vars(bet) for bet in bets],
+        )
+        try:
+            response = self.client.post(service=self.BET, data=data)
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: create_bet :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def get_bet(
+        self,
+        *,
+        bet_id: int,
+    ) -> Dict[str, Any]:
+        service = f"{self.BET}bet_id={bet_id}/"
+        try:
+            response = self.client.get(
+                service=service,
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: get_bet :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body

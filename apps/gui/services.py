@@ -1,0 +1,149 @@
+# Standard Library
+from typing import Optional, Tuple
+
+# Libraries
+from PyQt6.QtWidgets import QListWidgetItem
+
+# Internal
+from apps.constants import HomeBet
+from apps.globals import GlobalVars
+from apps.gui.constants import LOG_CODES
+from apps.gui.utils.encrypt import FernetEncrypt
+from apps.utils.local_storage import LocalStorage
+
+local_storage = LocalStorage()
+
+
+def make_list_item(
+    *,
+    data: dict[str, any],
+    allowed_codes: Optional[list[str]] = None,
+) -> QListWidgetItem | None:
+    """
+    Make list item
+    :param data: data
+    :param allowed_codes: allowed codes
+    :return: QListWidgetItem
+    """
+    allowed_codes = (
+        allowed_codes or GlobalVars.config.ALLOWED_LOG_CODES_TO_SHOW
+    )
+    code = data.get("code", None)
+    if code not in allowed_codes:
+        return
+    message = data.get("message")
+    item = QListWidgetItem(message)
+    code_data = LOG_CODES.get(code, {})
+    foreground = code_data.get("foreground", None)
+    background = code_data.get("background", None)
+    if foreground is not None:
+        item.setForeground(foreground)
+    if background is not None:
+        item.setBackground(background)
+    return item
+
+
+def get_range_amount_to_bet(
+    *,
+    min_bet: float,
+    max_bet: float,
+    balance: Optional[float] = None,
+) -> tuple[float, float]:
+    """
+    Get range amount to bet
+    :param min_bet: min bet allowed by home bet
+    :param max_bet: max bet allowed by home bet
+    :param balance: balance
+    :return: tuple
+    """
+    min_bet = min_bet * 3
+    max_bet = max_bet * GlobalVars.config.MAX_AMOUNT_HOME_BET_PERCENTAGE
+    if balance:
+        min_bet = min(min_bet, balance)
+        max_balance = balance * GlobalVars.config.MAX_AMOUNT_BALANCE_PERCENTAGE
+        max_bet = min(max_bet, max_balance)
+        max_bet = max(max_bet, min_bet)
+    return min_bet, max_bet
+
+
+def validate_max_amount_to_bet(
+    *,
+    home_bet: HomeBet,
+    max_amount_to_bet: float,
+    balance: Optional[float] = None,
+) -> Tuple[bool, float, float]:
+    """
+    Validate max bet amount
+    :param home_bet: home bet
+    :param max_amount_to_bet: amount to bet
+    :param balance: balance
+    :return: bool, min_bet, max_bet
+    """
+    min_bet = home_bet.min_bet
+    max_bet = home_bet.max_bet
+    min_bet, max_bet = get_range_amount_to_bet(
+        min_bet=min_bet,
+        max_bet=max_bet,
+        balance=balance,
+    )
+    min_bet = round(min_bet, 0)
+    max_bet = round(max_bet, 0)
+    return min_bet <= max_amount_to_bet <= max_bet, min_bet, max_bet
+
+
+def save_credentials(
+    *,
+    home_bet: str,
+    username: str,
+    password: str,
+) -> None:
+    """
+    Save credentials
+    :param home_bet: home_bet name
+    :param username: username
+    :param password: password
+    :return: None
+    """
+    fernet = FernetEncrypt()
+    username = fernet.encrypt(username)
+    password = fernet.encrypt(password)
+    local_storage.set_credentials(
+        home_bet=home_bet,
+        username=username,
+        password=password,
+    )
+
+
+def remove_credentials(*, home_bet: Optional[str] = None) -> None:
+    """
+    Remove credentials
+    :param home_bet: home bet
+    :return: None
+    """
+    local_storage.remove_credentials(home_bet=home_bet)
+
+
+def get_credentials() -> dict[str, any] | None:
+    """
+    Get credentials
+    :return: dict
+    """
+    return local_storage.get_all_credentials()
+
+
+def get_credentials_by_home_bet(*, home_bet: str) -> dict[str, any]:
+    """
+    Get credentials
+    :param home_bet: home bet name
+    :return: dict
+    """
+    credentials = get_credentials()
+    if not credentials:
+        return {}
+    fernet = FernetEncrypt()
+    for key, credential in credentials.items():
+        if key == home_bet:
+            credential["username"] = fernet.decrypt(credential["username"])
+            credential["password"] = fernet.decrypt(credential["password"])
+            return credential
+    return {}
