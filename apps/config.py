@@ -20,6 +20,7 @@ class Config(metaclass=Singleton):
         )
         MULTIPLIERS_TO_SHOW_LAST_POSITION = "MULTIPLIERS_TO_SHOW_LAST_POSITION"
         LANGUAGE = "LANGUAGE"
+        IGNORE_DB_LOGS = "IGNORE_DB_LOGS"
 
     def __init__(self):
         self.config_file = CONFIG_FILE_PATH
@@ -37,6 +38,7 @@ class Config(metaclass=Singleton):
         self.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH = 30
         self.MULTIPLIERS_TO_SHOW_LAST_POSITION = []
         self.LANGUAGE = "en"
+        self.IGNORE_DB_LOGS = True
         self._ALLOWED_LANGUAGES = ["en", "es"]
         self.read_config()
 
@@ -77,6 +79,8 @@ class Config(metaclass=Singleton):
                         self.LANGUAGE = value
                         if value not in self._ALLOWED_LANGUAGES:
                             self.LANGUAGE = self._ALLOWED_LANGUAGES[0]
+                    case self.ConfigVar.IGNORE_DB_LOGS:
+                        self.IGNORE_DB_LOGS = bool(int(value))
             return config
 
     def write_config(self):

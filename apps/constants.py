@@ -7,6 +7,7 @@ from typing import Optional
 from apps.scrappers.aviator.aviator_bet_play import AviatorBetPlay
 from apps.scrappers.aviator.aviator_demo import AviatorDemo
 from apps.scrappers.aviator.aviator_one_win import AviatorOneWin
+from apps.scrappers.aviator.aviator_onexbet import AviatorOneXBet
 from apps.scrappers.game_base import AbstractCrashGameBase
 
 
@@ -74,6 +75,15 @@ HomeBets: list[HomeBet] = [
         max_bet=500000,
         url="https://www.rivalo.co",
         game_page=AviatorOneWin,
+        amount_multiple=100,
+    ),
+    HomeBet(
+        id=5,
+        name="1XBet",  # NOQA
+        min_bet=500,
+        max_bet=500000,
+        url="https://1xbet.com/",
+        game_page=AviatorOneXBet,
         amount_multiple=100,
     ),
 ]

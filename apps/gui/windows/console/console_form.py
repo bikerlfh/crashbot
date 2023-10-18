@@ -170,7 +170,11 @@ class ConsoleForm(QWidget, ConsoleDesigner):
                 self.initial_balance = self.balance
             self.lbl_balance.setText(str(self.balance))
             profit = round(self.balance - self.initial_balance, 2)
-            profit_percentage = round((profit / self.initial_balance) * 100, 2)
+            profit_percentage = 0
+            if self.initial_balance > 0:
+                profit_percentage = round(
+                    (profit / self.initial_balance) * 100, 2
+                )
             self.lbl_profit.setText(f"{profit} ({profit_percentage}%)")
         except Exception as e:
             logs_services.save_gui_log(
