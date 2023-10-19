@@ -37,14 +37,27 @@ class BetData:
 
 
 @dataclass
+class BotConditionAction:
+    condition_action: str
+    action_value: float
+
+
+@dataclass
 class BotCondition:
     id: int
     condition_on: str
     condition_on_value: float
-    condition_action: str
-    action_value: float
+    actions: list[BotConditionAction]
     others: dict
     condition_on_value_2: Optional[float] = None
+
+    def __post_init__(self):
+        self.actions = [
+            BotConditionAction(**action)
+            if isinstance(action, dict)
+            else action
+            for action in self.actions  # noqa
+        ]
 
 
 class Bot:

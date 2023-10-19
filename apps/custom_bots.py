@@ -21,8 +21,7 @@ def _validate_conditions(conditions: list[dict]) -> bool:
             "condition_on",
             "condition_on_value",
             # "condition_on_value_2",
-            "condition_action",
-            "action_value",
+            "actions",
         ]
 
         if not all(key in condition for key in fields_):
@@ -43,11 +42,18 @@ def _validate_conditions(conditions: list[dict]) -> bool:
             ):
                 print(f"{i} :: invalid condition_on_value_2 for condition")
                 invalid_values = True
-        if not isinstance(condition["condition_action"], str):
-            print(f"{i} :: invalid condition_action for condition")
+        if not isinstance(condition["actions"], list):
+            print(f"{i} :: invalid actions for condition")
             invalid_values = True
-        if not isinstance(condition["action_value"], (int, float)):
-            print(f"{i} :: invalid action_value for condition")
+        actions = condition["actions"]
+        if not all(isinstance(action, dict) for action in actions):
+            print(f"{i} :: invalid actions for condition")
+            invalid_values = True
+        if not all(
+            set(action.keys()) == {"condition_action", "action_value"}
+            for action in actions
+        ):
+            print(f"{i} :: invalid actions for condition")
             invalid_values = True
         i += 1
     return invalid_values
