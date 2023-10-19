@@ -103,10 +103,6 @@ class BotConditionHelper:
                     _conditions,
                 )
                 for _condition in filter_conditions:
-                    is_same_action = (
-                        _condition.condition_action
-                        == new_condition.condition_action
-                    )
                     if (
                         new_condition.condition_on_value_2 is not None
                         and _condition.condition_on_value_2 is not None
@@ -119,18 +115,14 @@ class BotConditionHelper:
                             _condition.condition_on_value_2
                             < new_condition.condition_on_value_2
                         )
-                        if (
-                            is_same_action
-                            and is_same_value
-                            and is_value_2_less
-                        ):
+                        if is_same_value and is_value_2_less:
                             _conditions.remove(_condition)
                             continue
                     is_value_less = (
                         _condition.condition_on_value
                         < new_condition.condition_on_value
                     )
-                    if is_same_action and is_value_less:
+                    if is_value_less:
                         _conditions.remove(_condition)
             _conditions.append(new_condition)
 
@@ -180,46 +172,52 @@ class BotConditionHelper:
             ),
             reverse=True,
         )
-        streak_wins = next(
+        actions = []
+        streak_wins = list(
             filter(
                 lambda x: x.condition_on == ConditionON.STREAK_WINS.value,
                 _conditions,
-            ),
-            None,
+            )
         )
-        streak_losses = next(
+        for streak_win in streak_wins:
+            actions += streak_win.actions
+        streak_losses = list(
             filter(
                 lambda x: x.condition_on == ConditionON.STREAK_LOSSES.value,
                 _conditions,
-            ),
-            None,
+            )
         )
+        for streak_loss in streak_losses:
+            actions += streak_loss.actions
         if streak_wins or streak_losses:
-            every_wins_ = next(
+            every_conditions = list(
                 filter(
-                    lambda x: (
-                        x.condition_on == ConditionON.EVERY_WIN.value
-                        and x.condition_action == streak_wins.condition_action
-                    ),
+                    lambda x: x.condition_on
+                    in [
+                        ConditionON.EVERY_WIN.value,
+                        ConditionON.EVERY_LOSS.value,
+                    ],
                     _conditions,
-                ),
-                None,
+                )
             )
-            if every_wins_:
-                _conditions.remove(every_wins_)
-            every_losses_ = next(
-                filter(
-                    lambda x: (
-                        x.condition_on == ConditionON.EVERY_LOSS.value
-                        and x.condition_action
-                        == streak_losses.condition_action
-                    ),
-                    _conditions,
-                ),
-                None,
-            )
-            if every_losses_:
-                _conditions.remove(every_losses_)
+            for action in actions:
+                for every_condition in every_conditions:
+                    _actions = [
+                        action.condition_action
+                        for action in every_condition.actions
+                    ]
+                    if action.condition_action in _actions:
+                        # remove the action from the every condition
+                        every_condition.actions = list(
+                            filter(
+                                lambda x: x.condition_action
+                                != action.condition_action,
+                                every_condition.actions,
+                            )
+                        )
+            for every_condition in every_conditions:
+                if not every_condition.actions:
+                    _conditions.remove(every_condition)
         return _conditions
 
     def evaluate_conditions(
@@ -244,32 +242,35 @@ class BotConditionHelper:
         self.valid_conditions = self._check_conditions()
         ignore_model = False
         for condition in self.valid_conditions:
-            condition_action = condition.condition_action
-            action_value = condition.action_value
-            match condition_action:
-                case ConditionAction.INCREASE_BET_AMOUNT:
-                    self.current_bet_amount += (
-                        self.current_bet_amount * action_value
-                    )
-                case ConditionAction.DECREASE_BET_AMOUNT:
-                    self.current_bet_amount -= (
-                        self.current_bet_amount * action_value
-                    )
-                case ConditionAction.RESET_BET_AMOUNT:
-                    self.current_bet_amount = self.initial_bet_amount
-                case ConditionAction.UPDATE_MULTIPLIER:
-                    self.current_multiplier = action_value
-                case ConditionAction.RESET_MULTIPLIER:
-                    if self.profit >= 0:
-                        self.current_multiplier = self.MIN_MULTIPLIER_TO_BET
-                    else:
-                        self.current_multiplier = (
-                            self.MIN_MULTIPLIER_TO_RECOVER_LOSSES
+            for action in condition.actions:
+                condition_action = action.condition_action
+                action_value = action.action_value
+                match condition_action:
+                    case ConditionAction.INCREASE_BET_AMOUNT:
+                        self.current_bet_amount += (
+                            self.current_bet_amount * action_value
                         )
-                case ConditionAction.IGNORE_MODEL:
-                    ignore_model = bool(action_value)
-                case ConditionAction.MAKE_BET:
-                    _make_bet = bool(action_value)
-                    if not _make_bet:
-                        return 0.0, 0.0, ignore_model
+                    case ConditionAction.DECREASE_BET_AMOUNT:
+                        self.current_bet_amount -= (
+                            self.current_bet_amount * action_value
+                        )
+                    case ConditionAction.RESET_BET_AMOUNT:
+                        self.current_bet_amount = self.initial_bet_amount
+                    case ConditionAction.UPDATE_MULTIPLIER:
+                        self.current_multiplier = action_value
+                    case ConditionAction.RESET_MULTIPLIER:
+                        if self.profit >= 0:
+                            self.current_multiplier = (
+                                self.MIN_MULTIPLIER_TO_BET
+                            )
+                        else:
+                            self.current_multiplier = (
+                                self.MIN_MULTIPLIER_TO_RECOVER_LOSSES
+                            )
+                    case ConditionAction.IGNORE_MODEL:
+                        ignore_model = bool(action_value)
+                    case ConditionAction.MAKE_BET:
+                        _make_bet = bool(action_value)
+                        if not _make_bet:
+                            return 0.0, 0.0, ignore_model
         return self.current_bet_amount, self.current_multiplier, ignore_model

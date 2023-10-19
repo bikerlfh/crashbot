@@ -2,7 +2,7 @@
 import pytest
 
 # Internal
-from apps.api.models import BotCondition
+from apps.api.models import BotCondition, BotConditionAction
 from apps.game.bots.constants import ConditionAction, ConditionON
 from apps.game.bots.helpers import BotConditionHelper
 
@@ -15,40 +15,44 @@ class TestBotConditionsIgnoreModel:
                 id=1,
                 condition_on=ConditionON.EVERY_LOSS,
                 condition_on_value=1,
-                condition_action=ConditionAction.RESET_BET_AMOUNT,
-                action_value=0,
-                others={},
-            ),
-            BotCondition(
-                id=2,
-                condition_on=ConditionON.EVERY_LOSS,
-                condition_on_value=1,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=2.5,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_BET_AMOUNT,
+                        action_value=0,
+                    ),
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=2.5,
+                    ),
+                ],
                 others={},
             ),
             BotCondition(
                 id=3,
                 condition_on=ConditionON.EVERY_LOSS,
                 condition_on_value=1,
-                condition_action=ConditionAction.IGNORE_MODEL,
-                action_value=1,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.IGNORE_MODEL,
+                        action_value=1,
+                    )
+                ],
                 others={},
             ),
             BotCondition(
                 id=4,
                 condition_on=ConditionON.EVERY_WIN,
                 condition_on_value=1,
-                condition_action=ConditionAction.RESET_MULTIPLIER,
-                action_value=0.0,
-                others={},
-            ),
-            BotCondition(
-                id=5,
-                condition_on=ConditionON.EVERY_WIN,
-                condition_on_value=1,
-                condition_action=ConditionAction.IGNORE_MODEL,
-                action_value=0.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_MULTIPLIER,
+                        action_value=0.0,
+                    ),
+                    BotConditionAction(
+                        condition_action=ConditionAction.IGNORE_MODEL,
+                        action_value=0.0,
+                    ),
+                ],
                 others={},
             ),
         ]

@@ -1,5 +1,5 @@
 # Internal
-from apps.api.models import BotCondition
+from apps.api.models import BotCondition, BotConditionAction
 from apps.game.bots.constants import ConditionAction, ConditionON
 from apps.game.bots.helpers import BotConditionHelper
 
@@ -12,17 +12,16 @@ class TestBotConditionMakeBet:
                 condition_on=ConditionON.EVERY_WIN,
                 condition_on_value=1,
                 condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_MULTIPLIER,
-                action_value=0,
-                others={},
-            ),
-            BotCondition(
-                id=2,
-                condition_on=ConditionON.EVERY_WIN,
-                condition_on_value=1,
-                condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_BET_AMOUNT,
-                action_value=0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_MULTIPLIER,
+                        action_value=0,
+                    ),
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_BET_AMOUNT,
+                        action_value=0,
+                    ),
+                ],
                 others={},
             ),
             BotCondition(
@@ -30,8 +29,12 @@ class TestBotConditionMakeBet:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=5.0,
                 condition_on_value_2=1.99,
-                condition_action=ConditionAction.MAKE_BET,
-                action_value=0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.MAKE_BET,
+                        action_value=0,
+                    )
+                ],
                 others={},
             ),
         ]
@@ -60,17 +63,16 @@ class TestBotConditionMakeBet:
                 condition_on=ConditionON.EVERY_WIN,
                 condition_on_value=1,
                 condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_MULTIPLIER,
-                action_value=0,
-                others={},
-            ),
-            BotCondition(
-                id=2,
-                condition_on=ConditionON.EVERY_WIN,
-                condition_on_value=1,
-                condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_BET_AMOUNT,
-                action_value=0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_MULTIPLIER,
+                        action_value=0,
+                    ),
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_BET_AMOUNT,
+                        action_value=0,
+                    ),
+                ],
                 others={},
             ),
             BotCondition(
@@ -78,8 +80,12 @@ class TestBotConditionMakeBet:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=5.0,
                 condition_on_value_2=1.99,
-                condition_action=ConditionAction.MAKE_BET,
-                action_value=0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.MAKE_BET,
+                        action_value=0,
+                    )
+                ],
                 others={},
             ),
         ]
@@ -108,17 +114,16 @@ class TestBotConditionMakeBet:
                 condition_on=ConditionON.EVERY_WIN,
                 condition_on_value=1,
                 condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_MULTIPLIER,
-                action_value=0,
-                others={},
-            ),
-            BotCondition(
-                id=2,
-                condition_on=ConditionON.EVERY_WIN,
-                condition_on_value=1,
-                condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_BET_AMOUNT,
-                action_value=0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_MULTIPLIER,
+                        action_value=0,
+                    ),
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_BET_AMOUNT,
+                        action_value=0,
+                    ),
+                ],
                 others={},
             ),
             BotCondition(
@@ -126,8 +131,12 @@ class TestBotConditionMakeBet:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=5.0,
                 condition_on_value_2=1.99,
-                condition_action=ConditionAction.MAKE_BET,
-                action_value=0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.MAKE_BET,
+                        action_value=0,
+                    )
+                ],
                 others={},
             ),
         ]
@@ -156,17 +165,16 @@ class TestBotConditionMakeBet:
                 condition_on=ConditionON.EVERY_WIN,
                 condition_on_value=1,
                 condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_MULTIPLIER,
-                action_value=0,
-                others={},
-            ),
-            BotCondition(
-                id=2,
-                condition_on=ConditionON.EVERY_WIN,
-                condition_on_value=1,
-                condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_BET_AMOUNT,
-                action_value=0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_MULTIPLIER,
+                        action_value=0,
+                    ),
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_BET_AMOUNT,
+                        action_value=0,
+                    ),
+                ],
                 others={},
             ),
             BotCondition(
@@ -174,8 +182,12 @@ class TestBotConditionMakeBet:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=5.0,
                 condition_on_value_2=1.99,
-                condition_action=ConditionAction.MAKE_BET,
-                action_value=0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.MAKE_BET,
+                        action_value=0,
+                    )
+                ],
                 others={},
             ),
         ]

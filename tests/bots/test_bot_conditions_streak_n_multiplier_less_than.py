@@ -1,5 +1,5 @@
 # Internal
-from apps.api.models import BotCondition
+from apps.api.models import BotCondition, BotConditionAction
 from apps.game.bots.constants import ConditionAction, ConditionON
 from apps.game.bots.helpers import BotConditionHelper
 
@@ -12,17 +12,16 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.EVERY_WIN,
                 condition_on_value=1,
                 condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_MULTIPLIER,
-                action_value=0,
-                others={},
-            ),
-            BotCondition(
-                id=2,
-                condition_on=ConditionON.EVERY_WIN,
-                condition_on_value=1,
-                condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_BET_AMOUNT,
-                action_value=0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_MULTIPLIER,
+                        action_value=0,
+                    ),
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_BET_AMOUNT,
+                        action_value=0,
+                    ),
+                ],
                 others={},
             ),
             BotCondition(
@@ -30,8 +29,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=10.0,
                 condition_on_value_2=10.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=10.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=10.0,
+                    )
+                ],
                 others={},
             ),
         ]
@@ -60,17 +63,16 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.EVERY_WIN,
                 condition_on_value=1,
                 condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_MULTIPLIER,
-                action_value=0,
-                others={},
-            ),
-            BotCondition(
-                id=2,
-                condition_on=ConditionON.EVERY_WIN,
-                condition_on_value=1,
-                condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_BET_AMOUNT,
-                action_value=0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_MULTIPLIER,
+                        action_value=0,
+                    ),
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_BET_AMOUNT,
+                        action_value=0,
+                    ),
+                ],
                 others={},
             ),
             BotCondition(
@@ -78,8 +80,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=10.0,
                 condition_on_value_2=10.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=10.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=10.0,
+                    )
+                ],
                 others={},
             ),
         ]
@@ -113,17 +119,16 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.EVERY_WIN,
                 condition_on_value=1,
                 condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_MULTIPLIER,
-                action_value=0,
-                others={},
-            ),
-            BotCondition(
-                id=2,
-                condition_on=ConditionON.EVERY_WIN,
-                condition_on_value=1,
-                condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_BET_AMOUNT,
-                action_value=0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_MULTIPLIER,
+                        action_value=0,
+                    ),
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_BET_AMOUNT,
+                        action_value=0,
+                    ),
+                ],
                 others={},
             ),
             BotCondition(
@@ -131,8 +136,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=10.0,
                 condition_on_value_2=10.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=10.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=10.0,
+                    )
+                ],
                 others={},
             ),
             BotCondition(
@@ -140,8 +149,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=10.0,
                 condition_on_value_2=5.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=5.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=5.0,
+                    )
+                ],
                 others={},
             ),
         ]
@@ -175,17 +188,16 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.EVERY_WIN,
                 condition_on_value=1,
                 condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_MULTIPLIER,
-                action_value=0,
-                others={},
-            ),
-            BotCondition(
-                id=2,
-                condition_on=ConditionON.EVERY_WIN,
-                condition_on_value=1,
-                condition_on_value_2=None,
-                condition_action=ConditionAction.RESET_BET_AMOUNT,
-                action_value=0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_MULTIPLIER,
+                        action_value=0,
+                    ),
+                    BotConditionAction(
+                        condition_action=ConditionAction.RESET_BET_AMOUNT,
+                        action_value=0,
+                    ),
+                ],
                 others={},
             ),
             BotCondition(
@@ -193,8 +205,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=10.0,
                 condition_on_value_2=10.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=10.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=10.0,
+                    )
+                ],
                 others={},
             ),
             BotCondition(
@@ -202,8 +218,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=5.0,
                 condition_on_value_2=5.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=5.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=5.0,
+                    )
+                ],
                 others={},
             ),
         ]
@@ -237,8 +257,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=4.0,
                 condition_on_value_2=2.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=2.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=2.0,
+                    )
+                ],
                 others={},
             ),
             BotCondition(
@@ -246,8 +270,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=5.0,
                 condition_on_value_2=5.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=5.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=5.0,
+                    )
+                ],
                 others={},
             ),
             BotCondition(
@@ -255,8 +283,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=7.0,
                 condition_on_value_2=7.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=7.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=7.0,
+                    )
+                ],
                 others={},
             ),
             BotCondition(
@@ -264,8 +296,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=19.0,
                 condition_on_value_2=10.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=10.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=10.0,
+                    )
+                ],
                 others={},
             ),
         ]
@@ -299,8 +335,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=4.0,
                 condition_on_value_2=2.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=2.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=2.0,
+                    )
+                ],
                 others={},
             ),
             BotCondition(
@@ -308,8 +348,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=5.0,
                 condition_on_value_2=5.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=5.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=5.0,
+                    )
+                ],
                 others={},
             ),
             BotCondition(
@@ -317,8 +361,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=7.0,
                 condition_on_value_2=7.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=7.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=7.0,
+                    )
+                ],
                 others={},
             ),
             BotCondition(
@@ -326,8 +374,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=19.0,
                 condition_on_value_2=10.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=10.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=10.0,
+                    )
+                ],
                 others={},
             ),
         ]
@@ -361,8 +413,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=4.0,
                 condition_on_value_2=2.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=2.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=2.0,
+                    )
+                ],
                 others={},
             ),
             BotCondition(
@@ -370,8 +426,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=5.0,
                 condition_on_value_2=5.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=5.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=5.0,
+                    )
+                ],
                 others={},
             ),
             BotCondition(
@@ -379,8 +439,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=7.0,
                 condition_on_value_2=7.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=7.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=7.0,
+                    )
+                ],
                 others={},
             ),
             BotCondition(
@@ -388,8 +452,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
                 condition_on=ConditionON.STREAK_N_MULTIPLIER_LESS_THAN,
                 condition_on_value=19.0,
                 condition_on_value_2=10.0,
-                condition_action=ConditionAction.UPDATE_MULTIPLIER,
-                action_value=10.0,
+                actions=[
+                    BotConditionAction(
+                        condition_action=ConditionAction.UPDATE_MULTIPLIER,
+                        action_value=10.0,
+                    )
+                ],
                 others={},
             ),
         ]
