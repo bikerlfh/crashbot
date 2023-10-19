@@ -15,7 +15,6 @@ class LocalStorage(metaclass=Singleton):
         TOKEN = "token"
         REFRESH = "refresh"
         CUSTOMER_ID = "customer_id"
-        HOME_BETS = "home_bets"
         LAST_INITIAL_BALANCE = "last_initial_balance"
         CREDENTIALS = "credentials"
 
@@ -58,27 +57,6 @@ class LocalStorage(metaclass=Singleton):
     def get_customer_id(self) -> int:
         customer_id = self.get(LocalStorage.LocalStorageKeys.CUSTOMER_ID.value)
         return int(customer_id) if customer_id else None
-
-    def set_home_bets(self, home_bets: list[dict[str, any]]):
-        self.set(
-            LocalStorage.LocalStorageKeys.HOME_BETS.value,
-            json.dumps(home_bets),
-        )
-
-    def get_home_bets(self) -> list[dict[str, any]]:
-        """
-        :return: list[dict(
-            id: int,
-            name: str,
-            url: str,
-            min_bet: float,
-            max_bet: float,
-        )]
-        """
-        home_bets = self.get(LocalStorage.LocalStorageKeys.HOME_BETS.value)
-        if home_bets:
-            home_bets = json.loads(home_bets)
-        return home_bets if home_bets else []
 
     def set_last_initial_balance(self, *, home_bet_id: int, balance: float):
         data = self.get(

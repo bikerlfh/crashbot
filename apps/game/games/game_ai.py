@@ -3,7 +3,7 @@ from typing import Optional
 
 # Internal
 from apps.api import services as api_services
-from apps.constants import HomeBet
+from apps.game.bookmakers.home_bet import HomeBet
 from apps.game.bots.bot_ai import BotAI
 from apps.game.games.constants import GameType
 from apps.game.games.game_base import GameBase

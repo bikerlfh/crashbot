@@ -1,10 +1,11 @@
 # Internal
-from apps.scrappers.aviator.aviator import Aviator
+from apps.game.bookmakers.constants import BookmakerIDS
+from apps.scrappers.aviator.aviator_base import AviatorBase
 
 
-class AviatorDemo(Aviator):
-    def __init__(self, url: str):
-        super().__init__(url)
+class AviatorDemo(AviatorBase, configuration=BookmakerIDS.DEMO.value):
+    def __init__(self, *, url: str, **kwargs):
+        super().__init__(url=url, **kwargs)
         self._frame = None
 
     async def _login(self):

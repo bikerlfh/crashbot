@@ -5,7 +5,7 @@ from typing import Optional, Tuple
 from PyQt6.QtWidgets import QListWidgetItem
 
 # Internal
-from apps.constants import HomeBet
+from apps.game.bookmakers.home_bet import HomeBet
 from apps.globals import GlobalVars
 from apps.gui.constants import LOG_CODES
 from apps.gui.utils.encrypt import FernetEncrypt

@@ -2,7 +2,6 @@
 from PyQt6 import QtCore, QtWidgets
 
 # Internal
-from apps.constants import HomeBets
 from apps.globals import GlobalVars
 from apps.gui import services
 from apps.gui.windows.parameter.parameter_designer import ParameterDesigner
@@ -23,31 +22,14 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         self.main_window = main_window
         self.btn_start.clicked.connect(self.button_start_clicked_event)
         self.receive_start_bot_signal.connect(self._on_receive_start_bot)
-        self.HomeBets = HomeBets
+        self.home_bets: list[object] = []
 
     def initialize(self):
         """
         invoke after get info of customer
         :return:
         """
-        home_bets_data = local_storage.get_home_bets()
-        if home_bets_data:
-            home_bets_ = []
-            for home_bet in home_bets_data:
-                home_bet_id = home_bet["id"]
-                home_bet_ = list(
-                    filter(lambda x: x.id == home_bet_id, HomeBets)
-                )
-                if home_bet_:
-                    home_bet_ = home_bet_[0]
-                    home_bet_.url = home_bet["url"]
-                    home_bet_.min_bet = home_bet["min_bet"]
-                    home_bet_.max_bet = home_bet["max_bet"]
-                    home_bets_.append(home_bet_)
-            GlobalVars.set_allowed_home_bets(home_bets_)
-            self.HomeBets = home_bets_
-        else:
-            GlobalVars.set_allowed_home_bets(HomeBets)
+        self.home_bets = GlobalVars.get_allowed_home_bets()
         if GlobalVars.get_plan_with_ai():
             self.chk_use_ai.setVisible(True)
             self.chk_use_ai.setEnabled(True)
@@ -55,7 +37,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
 
     def __fill_cmb_fields(self):
         count_cmb_bot = self.cmb_home_bet.count()
-        for key, val in enumerate(self.HomeBets):
+        for key, val in enumerate(self.home_bets):
             if key >= count_cmb_bot:
                 self.cmb_home_bet.addItem("")
             self.cmb_home_bet.setItemText(key, val.name)
@@ -76,8 +58,8 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
             QtWidgets.QMessageBox.warning(self, "Error", "Select a home bet")
             return
 
-        home_bet = self.HomeBets[home_bet_index]
-        home_bet_id = home_bet.id
+        home_bet = self.home_bets[home_bet_index]
+        home_bet_id = home_bet.id  # noqa
         return dict(
             bot_name=bot_name,
             home_bet_index=home_bet_index,
@@ -93,9 +75,9 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         use_game_ai = self.chk_use_ai.isChecked()
         if self.chk_use_credentials.isChecked():
             home_bet_index = self.cmb_home_bet.currentIndex()
-            home_bet = self.HomeBets[home_bet_index]
+            home_bet = self.home_bets[home_bet_index]
             credential = services.get_credentials_by_home_bet(
-                home_bet=home_bet.name
+                home_bet=home_bet.name  # noqa
             )
             data["username"] = credential.get("username")
             data["password"] = credential.get("password")
