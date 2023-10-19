@@ -1,5 +1,4 @@
 # Standard Library
-import abc
 import asyncio
 from typing import Optional, Union
 
@@ -14,11 +13,18 @@ from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.aviator.bet_control import BetControl
 from apps.scrappers.game_base import AbstractCrashGameBase, Control
 from apps.utils.datetime import sleep_now
+from apps.utils.patterns.factory import ConfigurationFactory
 
 
-class Aviator(AbstractCrashGameBase, abc.ABC):
-    def __init__(self, url: str):
-        super().__init__(url)
+class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
+    """
+    Aviator base scrapper
+    Use Factory to implement a new bookmaker (home_bet)
+    import all the classes in apps/game/bookmakers/__init__.py
+    """
+
+    def __init__(self, *, url: str, **kwargs):
+        super().__init__(url=url)
 
     async def _click(self, element: Locator):
         box = await element.bounding_box()
@@ -31,6 +37,9 @@ class Aviator(AbstractCrashGameBase, abc.ABC):
         await self._page.mouse.click(
             box["x"] + box["width"] / 2, box["y"] + box["height"] / 2, delay=50
         )
+
+    async def _login(self):
+        pass
 
     async def _get_app_game(self) -> Locator:
         if not self._page:

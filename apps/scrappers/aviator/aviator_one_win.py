@@ -2,15 +2,16 @@
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 # Internal
+from apps.game.bookmakers.constants import BookmakerIDS
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
-from apps.scrappers.aviator.aviator import Aviator
+from apps.scrappers.aviator.aviator_base import AviatorBase
 from apps.utils.datetime import sleep_now
 
 
-class AviatorOneWin(Aviator):
-    def __init__(self, url: str):
-        super().__init__(url)
+class AviatorOneWin(AviatorBase, configuration=BookmakerIDS.ONE_WIN.value):
+    def __init__(self, *, url: str, **kwargs):
+        super().__init__(url=url, **kwargs)
         self._frame = None
 
     async def _login(self):

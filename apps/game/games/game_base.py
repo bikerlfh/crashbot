@@ -4,7 +4,7 @@ import abc
 # Internal
 from apps.api import services as api_services
 from apps.api.models import BetData, MultiplierPositions
-from apps.constants import HomeBet
+from apps.game.bookmakers.home_bet import HomeBet
 from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, Multiplier
 from apps.globals import GlobalVars
@@ -50,8 +50,8 @@ class GameBase(abc.ABC, ConfigurationFactory):
         **kwargs,
     ):
         self.customer_id = local_storage.get_customer_id()
-        self.home_bet: home_bet = home_bet
-        self.game_page = self.home_bet.get_game_page()
+        self.home_bet = home_bet
+        self.game_page = self.home_bet.get_crash_game()
         self.minimum_bet: float = home_bet.min_bet
         self.maximum_bet: float = home_bet.max_bet
 

@@ -64,7 +64,7 @@ class AbstractControlBase(abc.ABC):
 
 
 class AbstractCrashGameBase(abc.ABC):
-    def __init__(self, url: str):
+    def __init__(self, *, url: str):
         self.playwright: Union[sync_playwright, None] = None
         self._browser: Union[Browser, None] = None
         self._context: Union[BrowserContext, None] = None
