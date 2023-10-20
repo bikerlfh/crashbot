@@ -1,6 +1,3 @@
-# Standard Library
-from typing import Optional
-
 # Internal
 from apps.scrappers.aviator.aviator_base import AviatorBase
 
@@ -14,7 +11,7 @@ class HomeBet:
         min_bet: float,
         max_bet: float,
         url: str,
-        amount_multiple: Optional[float] = None,
+        amount_multiple: float,
     ):
         self.id = id
         self.name = name
