@@ -35,8 +35,6 @@ class BotConditionHelper:
                 x.condition_on_value_2 if x.condition_on_value_2 else 0.0,
             ),
         )
-        # valid conditions of the round
-        self.valid_conditions: list[BotCondition] = []
         self.MIN_MULTIPLIER_TO_BET = copy.copy(min_multiplier_to_bet)
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = copy.copy(
             min_multiplier_to_recover_losses
@@ -126,29 +124,31 @@ class BotConditionHelper:
                         _conditions.remove(_condition)
             _conditions.append(new_condition)
 
-        for condition in self.bot_conditions:
-            condition_on = ConditionON(condition.condition_on)
-            condition_on_value = condition.condition_on_value
-            condition_on_value_2 = condition.condition_on_value_2
+        bot_conditions = copy.copy(self.bot_conditions)
+        for condition in bot_conditions:
+            condition_ = copy.copy(condition)
+            condition_on = ConditionON(condition_.condition_on)
+            condition_on_value = condition_.condition_on_value
+            condition_on_value_2 = condition_.condition_on_value_2
             match condition_on:
                 case ConditionON.EVERY_WIN:
                     if self.last_games and self.last_games[-1]:
-                        _add_valid_condition(condition)
+                        _add_valid_condition(condition_)
                 case ConditionON.EVERY_LOSS:
                     if self.last_games and not self.last_games[-1]:
-                        _add_valid_condition(condition)
+                        _add_valid_condition(condition_)
                 case ConditionON.STREAK_WINS:
                     if self.calculate_streak(True) >= int(condition_on_value):
-                        _add_valid_condition(condition)
+                        _add_valid_condition(condition_)
                 case ConditionON.STREAK_LOSSES:
                     if self.calculate_streak(False) >= int(condition_on_value):
-                        _add_valid_condition(condition)
+                        _add_valid_condition(condition_)
                 case ConditionON.PROFIT_GREATER_THAN:
                     if self.profit > condition_on_value:
-                        _add_valid_condition(condition)
+                        _add_valid_condition(condition_)
                 case ConditionON.PROFIT_LESS_THAN:
                     if self.profit < condition_on_value:
-                        _add_valid_condition(condition)
+                        _add_valid_condition(condition_)
                 case ConditionON.STREAK_N_MULTIPLIER_LESS_THAN:
                     in_streak = self.calculate_multiplier_streak(
                         multiplier=condition_on_value_2,
@@ -156,7 +156,7 @@ class BotConditionHelper:
                         is_less=True,
                     )
                     if in_streak:
-                        _add_valid_condition(condition)
+                        _add_valid_condition(condition_)
                 case ConditionON.STREAK_N_MULTIPLIER_GREATER_THAN:
                     in_streak = self.calculate_multiplier_streak(
                         multiplier=condition_on_value_2,
@@ -164,7 +164,7 @@ class BotConditionHelper:
                         is_less=False,
                     )
                     if in_streak:
-                        _add_valid_condition(condition)
+                        _add_valid_condition(condition_)
         _conditions = sorted(
             _conditions,
             key=lambda x: self._priority_conditions.index(
@@ -239,9 +239,9 @@ class BotConditionHelper:
         if result_last_game is not None:
             self.add_last_game(result_last_game)
         self.profit = profit
-        self.valid_conditions = self._check_conditions()
+        valid_conditions = self._check_conditions()
         ignore_model = False
-        for condition in self.valid_conditions:
+        for condition in valid_conditions:
             for action in condition.actions:
                 condition_action = action.condition_action
                 action_value = action.action_value
