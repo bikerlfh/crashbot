@@ -99,12 +99,21 @@ class TestBotConditionMakeBet:
         helper.current_bet_amount = 2000
         helper.last_games = [False, False, False, False]
         bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
-            result_last_game=True,
+            result_last_game=False,
             multiplier_result=1.6,
             profit=0.0,
         )
         assert bet_amount == 0
         assert multiplier == 0
+        assert ignore_model is False
+
+        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+            result_last_game=True,
+            multiplier_result=3.4,
+            profit=0.0,
+        )
+        assert bet_amount == 1000
+        assert multiplier == 2
         assert ignore_model is False
 
     def test_make_bet_after_no_bet(self):
