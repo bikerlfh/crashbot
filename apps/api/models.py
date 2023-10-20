@@ -14,6 +14,7 @@ class HomeBetModel:
     url: str
     min_bet: float
     max_bet: float
+    amount_multiple: float
 
 
 @dataclass
