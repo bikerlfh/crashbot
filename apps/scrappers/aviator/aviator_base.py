@@ -80,7 +80,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         self._browser = await self.playwright.chromium.launch(headless=False)
         self._context = await self._browser.new_context(no_viewport=True)
         self._page = await self._context.new_page()
-        await self._page.goto(self.url, timeout=50000)
+        await self._page.goto(self.url, timeout=100000)
         await self._login()
         self._app_game = await self._get_app_game()
         self._history_game = self._app_game.locator(".result-history")

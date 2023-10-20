@@ -269,10 +269,10 @@ class BotBase(abc.ABC):
         self.set_max_amount_to_bet(amount=bet_amount)
         self.MIN_MULTIPLIER_TO_BET = multiplier
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = multiplier
-        # SendEventToGUI.log.debug(
-        #     f"evaluate_conditions :: bet_amount "
-        #     f"{bet_amount} multiplier {multiplier}"
-        # )
+        SendEventToGUI.log.debug(
+            f"evaluate_conditions :: bet_amount "
+            f"{bet_amount} multiplier {multiplier}"
+        )
 
     def evaluate_bets(self, multiplier_result: float):
         total_amount = 0
