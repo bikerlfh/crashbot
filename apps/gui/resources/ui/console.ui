@@ -481,7 +481,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -503,7 +503,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -528,7 +528,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -544,13 +544,13 @@
     <rect>
      <x>20</x>
      <y>140</y>
-     <width>61</width>
+     <width>71</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -561,15 +561,15 @@
   <widget class="QLabel" name="lbl_balance">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>100</x>
      <y>140</y>
-     <width>161</width>
+     <width>151</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -580,15 +580,15 @@
   <widget class="QLabel" name="lbl_profit">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>100</x>
      <y>170</y>
-     <width>161</width>
+     <width>151</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
      <kerning>true</kerning>
     </font>
@@ -608,7 +608,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -627,7 +627,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -646,7 +646,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -665,7 +665,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
     </font>
    </property>
    <property name="inputMethodHints">
@@ -686,7 +686,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
     </font>
    </property>
    <property name="orientation">
@@ -704,7 +704,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
     </font>
    </property>
    <property name="orientation">
@@ -722,7 +722,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
     </font>
    </property>
    <property name="orientation">
@@ -740,7 +740,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -780,7 +780,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
     </font>
    </property>
    <property name="toolTip">
@@ -798,7 +798,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -817,13 +817,13 @@
     <rect>
      <x>20</x>
      <y>200</y>
-     <width>61</width>
+     <width>71</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -834,15 +834,15 @@
   <widget class="QLabel" name="lbl_profit_per">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>100</x>
      <y>200</y>
-     <width>161</width>
+     <width>151</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
