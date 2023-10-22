@@ -48,12 +48,11 @@ class AviatorBetPlay(AviatorBase, configuration=BookmakerIDS.BET_PLAY.value):
     async def _get_app_game(self):
         if not self._page:
             raise Exception("_getAppGame :: page is null")
-
-        await self._page.wait_for_url(
-            "**/slots/launchGame?gameCode=SPB_aviator**", timeout=50000
-        )
         while True:
             try:
+                await self._page.wait_for_url(
+                    "**/slots/launchGame?gameCode=SPB_aviator**", timeout=50000
+                )
                 self._frame = (
                     self._page.frame_locator("#gameFrame")
                     .frame_locator("#spribe-game")
