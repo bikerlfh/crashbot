@@ -3,6 +3,7 @@ from typing import Optional
 
 # Libraries
 from playwright.async_api import Locator
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 # Internal
 from apps.gui.gui_events import SendEventToGUI
@@ -35,9 +36,18 @@ class BetControl(AbstractControlBase):
         self.was_load = False
 
     async def init(self):
-        await self.aviator_page.locator("app-bet-control").first.wait_for(
-            timeout=15000
-        )
+        while True:
+            try:
+                await self.aviator_page.locator(
+                    "app-bet-control"
+                ).first.wait_for(timeout=15000)
+                break
+            except Exception as e:
+                if isinstance(e, PlaywrightTimeoutError):
+                    SendEventToGUI.log.debug(
+                        f"BetControl :: init :: timeout :: {e}"
+                    )
+                    continue
         bet_controls = self.aviator_page.locator("app-bet-control")
         # validating if the game has 2 controls
         count_controls = await bet_controls.count()

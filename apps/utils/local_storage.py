@@ -1,5 +1,7 @@
 # Standard Library
 import json
+import os
+import pathlib
 from enum import Enum
 from typing import Optional
 
@@ -19,7 +21,20 @@ class LocalStorage(metaclass=Singleton):
         CREDENTIALS = "credentials"
 
     def __init__(self):
-        self.local_storage = localStoragePy("co.crashbot.local", "json")
+        app_namespace = "co.crashbot.local"
+        try:
+            self.local_storage = localStoragePy(app_namespace, "json")
+            return
+        except (Exception,):
+            path = os.path.join(
+                pathlib.Path.home(),
+                ".config",
+                "localStoragePy",
+                app_namespace,
+                "localStorageJSON.json",
+            )
+            os.remove(path)
+        self.local_storage = localStoragePy(app_namespace, "json")
 
     def get(self, key: str):
         return self.local_storage.getItem(key)
