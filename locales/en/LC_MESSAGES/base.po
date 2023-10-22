@@ -282,3 +282,14 @@ msgstr ""
 msgid "please set username and password to login!"
 msgstr ""
 
+msgid "Multiplicator trend"
+msgstr ""
+
+msgid "Trend"
+msgstr ""
+
+msgid "log messages"
+msgstr ""
+
+msgid "possible bet"
+msgstr ""

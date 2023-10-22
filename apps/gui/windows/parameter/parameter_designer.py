@@ -81,7 +81,7 @@ class ParameterDesigner(object):
         Parameters.setWindowTitle(_("Parameters"))  # noqa
         self.label.setText(_("Home bet"))  # noqa
         self.cmb_home_bet.setItemText(0, "Demo")  # noqa
-        self.label_2.setText(_("Bot type"))  # noqa
+        self.label_2.setText(_("Bot"))  # noqa
         self.cmb_bot_type.setItemText(0, "Agressive")  # noqa
         self.btn_start.setText(_("Start"))  # noqa
         self.chk_use_credentials.setText(_("Use saved credentials"))  # noqa

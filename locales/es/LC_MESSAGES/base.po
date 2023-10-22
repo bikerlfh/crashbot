@@ -291,3 +291,6 @@ msgstr "Tendencia"
 
 msgid "log messages"
 msgstr "log mensajes"
+
+msgid "possible bet"
+msgstr "posible apuesta"
