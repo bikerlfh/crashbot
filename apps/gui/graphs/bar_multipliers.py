@@ -54,7 +54,7 @@ class BarMultiplier(QVBoxLayout):
 
     def __get_bar_height(self, multipliers: list[float]) -> list[int]:
         bar_height = self.bar_heights or []
-        if bar_height and len(bar_height) > self.max_multipliers:
+        if bar_height and len(bar_height) >= self.max_multipliers:
             bar_height.pop(0)
         bar_height = graph_utils.convert_multipliers_to_coordinate(
             multipliers, bar_height
@@ -69,7 +69,7 @@ class BarMultiplier(QVBoxLayout):
     def __get_bar_color(self, multipliers: list[float]):
         # use https://matplotlib.org/stable/gallery/color/named_colors.html
         bar_colors = self.bar_colors or []
-        if bar_colors and len(bar_colors) > self.max_multipliers:
+        if bar_colors and len(bar_colors) >= self.max_multipliers:
             bar_colors.pop(0)
         for multiplier in multipliers:
             if multiplier < 2:
@@ -117,6 +117,7 @@ class BarMultiplier(QVBoxLayout):
         self._multipliers += multipliers
         if len(multipliers) > self.max_multipliers:
             multipliers = multipliers[-self.max_multipliers :]  # noqa
+        if len(self._multipliers) > self.max_multipliers:
             self._multipliers = self._multipliers[
                 -self.max_multipliers :  # noqa
             ]
