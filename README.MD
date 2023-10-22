@@ -93,6 +93,13 @@ pip install python-gettext
 pygettext -d base -o locales/base.po  .
 ```
 
+Generate the binary file
+
+```
+msgfmt -o locales/es/LC_MESSAGES/base.mo locales/es/LC_MESSAGES/base
+```
+Edit Configurations...
+
 use poedit to translate the file base.po (https://poedit.net/)
 
 

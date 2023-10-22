@@ -290,3 +290,6 @@ msgstr ""
 
 msgid "log messages"
 msgstr ""
+
+msgid "possible bet"
+msgstr ""
