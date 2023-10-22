@@ -13,4 +13,5 @@ localStoragePy==0.2.3
 uvicorn[standard]==0.21.1
 matplotlib==3.7.1
 py-machineid==0.3.0
+mplcursors==0.5.2
 # pwntools==4.10.0

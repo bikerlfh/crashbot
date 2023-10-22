@@ -116,22 +116,24 @@ class MainForm(QMainWindow, MainDesigner):
         msg.setWindowTitle(title)
         msg.exec()
 
+    def show_login_screen(self):
+        self.menubar.setVisible(False)
+        self.__change_screen(
+            screen=self.login_screen,
+            width=300,
+            height=230,
+            title=f"{GlobalVars.APP_NAME} - Login",
+        )
+
     @QtCore.pyqtSlot()
     def show_parameters_screen(self):
+        self.menubar.setVisible(True)
         self.parameters_screen.initialize()
         self.__change_screen(
             screen=self.parameters_screen,
             width=412,
             height=291,
             title=f"{GlobalVars.APP_NAME}",
-        )
-
-    def show_login_screen(self):
-        self.__change_screen(
-            screen=self.login_screen,
-            width=300,
-            height=250,
-            title=f"{GlobalVars.APP_NAME} - Login",
         )
 
     @QtCore.pyqtSlot()

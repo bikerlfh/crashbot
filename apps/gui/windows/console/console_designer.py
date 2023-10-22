@@ -541,8 +541,6 @@ class ConsoleDesigner(object):
         self.lbl_home_bet.setText("Demo")  # noqa
         self.lbl_bot_type.setText("Bot: Aggressive")  # noqa
         self.btn_auto_cash_out.setText(f"{_('Auto CashOut')} OFF")  # noqa
-        self.gbox_graph.setToolTip(_("Multiplicator trend"))  # noqa
         self.gbox_graph.setTitle(_("Trend"))  # noqa
-        self.list_log.setToolTip(_("log messages"))  # noqa
         self.label_5.setText("% Profit:")
         self.lbl_profit_per.setText("0")
