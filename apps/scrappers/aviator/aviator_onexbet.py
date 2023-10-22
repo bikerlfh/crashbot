@@ -48,11 +48,9 @@ class AviatorOneXBet(AviatorBase, configuration=BookmakerIDS.ONE_X_BET.value):
     async def _get_app_game(self):
         if not self._page:
             raise Exception("_getAppGame :: page is null")
-
-        await self._page.wait_for_url("**/slots**", timeout=50000)
-
         while True:
             try:
+                await self._page.wait_for_url("**/slots**", timeout=50000)
                 self._frame = (
                     self._page.locator(".slots-place__place")
                     .frame_locator(
