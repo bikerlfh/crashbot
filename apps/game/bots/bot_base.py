@@ -396,7 +396,9 @@ class BotBase(abc.ABC):
             if position < 0:
                 position = f"> {len_multipliers}"
             SendEventToGUI.log.info(f"\t{multiplier}:{position}")
-        SendEventToGUI.log.info("********* Multipliers Positions *********")
+        SendEventToGUI.log.info(
+            f"********* {_('Multipliers Positions')} *********"  # noqa
+        )
 
     @staticmethod
     def calculate_recovery_amount(
