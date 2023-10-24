@@ -40,9 +40,6 @@
      <bold>true</bold>
     </font>
    </property>
-   <property name="title">
-    <string>CrashBot</string>
-   </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
    </property>
