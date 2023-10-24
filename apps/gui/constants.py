@@ -1,3 +1,6 @@
+# Standard Library
+from enum import Enum
+
 # Libraries
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
@@ -24,3 +27,8 @@ LOG_CODES = {
         "background": QColor(Qt.GlobalColor.darkBlue),
     },
 }
+
+
+class LANGUAGES(str, Enum):
+    ENGLISH = "en"
+    SPANISH = "es"

@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import QMainWindow, QMessageBox, QStackedWidget, QWidget
 
 # Internal
 from apps.globals import GlobalVars
+from apps.gui.constants import LANGUAGES
 from apps.gui.socket_io_client import SocketIOClient
 from apps.gui.utils import os as utils_os
 from apps.gui.windows.console.console_form import ConsoleForm
@@ -56,7 +57,14 @@ class MainForm(QMainWindow, MainDesigner):
         self.action_crendentials.triggered.connect(self.show_credential)
         self.action_exit.triggered.connect(self.closeEvent)
         self.action_signout.triggered.connect(self._action_sign_out)
+        self.action_spanish.triggered.connect(self._action_change_language)
+        self.action_english.triggered.connect(self._action_change_language)
         self.show_login_screen()
+        self.action_english.setChecked(True)
+        lang = LANGUAGES(GlobalVars.config.LANGUAGE)
+        if lang == LANGUAGES.SPANISH:
+            self.action_spanish.setChecked(True)
+            self.action_english.setChecked(False)
 
     def _load_version(self) -> None:
         self.lbl_version.setText(GlobalVars.APP_VERSION)
@@ -146,6 +154,7 @@ class MainForm(QMainWindow, MainDesigner):
             height=587,
             title=GlobalVars.APP_NAME,
         )
+        self.menu_language.setEnabled(False)
 
     def show_credential(self):
         self.credential_screen.initialize()
@@ -172,6 +181,24 @@ class MainForm(QMainWindow, MainDesigner):
             self.allowed_logs.append(log_name.lower())
             return
         self.allowed_logs.remove(log_name.lower())
+
+    def _action_change_language(self):
+        _action = cast(QtGui.QAction, self.sender())
+        language_ = LANGUAGES.ENGLISH
+        if _action == self.action_english:
+            self.action_spanish.setChecked(False)
+            self.action_english.setChecked(True)
+        else:
+            self.action_english.setChecked(False)
+            self.action_spanish.setChecked(True)
+            language_ = LANGUAGES.SPANISH
+        GlobalVars.config.write_config(language=language_.value)
+        self.show_message_box(
+            title="Info",
+            message=_(  # noqa
+                "You must restart the application to apply the changes"
+            ),
+        )
 
     def _action_sign_out(self):
         self.socket.close_game()

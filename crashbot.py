@@ -15,7 +15,7 @@ from apps.ws_client import WebSocketClient
 logger = logging.getLogger(__name__)
 
 
-if __name__ == "__main__":
+def init_app():
     GlobalVars.init()
     try:
         lang = gettext.translation(
@@ -24,8 +24,8 @@ if __name__ == "__main__":
         lang.install()
     except Exception as exc:
         logger.error(f"error loading language: {exc}")
-    custom_bots = custom_bots.read_custom_bots()
-    GlobalVars.set_bots(custom_bots)
+    custom_bots_ = custom_bots.read_custom_bots()
+    GlobalVars.set_bots(custom_bots_)
     ws_client = WebSocketClient()
     event = Event()
     ws_server_thread = Thread(
@@ -50,3 +50,7 @@ if __name__ == "__main__":
     ws_server_thread.join()
     ws_client_thread.join()
     ws_client.close()
+
+
+if __name__ == "__main__":
+    init_app()

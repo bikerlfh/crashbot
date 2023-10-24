@@ -297,3 +297,15 @@ msgstr "posible apuesta"
 
 msgid "Multipliers Positions"
 msgstr "Posiciones de los multiplicadores"
+
+msgid "You must restart the application to apply the changes"
+msgstr "Debes reiniciar la aplicación para aplicar los cambios"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "English"
+msgstr "Ingles"
+
+msgid "Spanish"
+msgstr "Español"
