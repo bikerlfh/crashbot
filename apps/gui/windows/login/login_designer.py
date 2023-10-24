@@ -403,7 +403,6 @@ class LoginDesigner(object):
 
     def retranslateUi(self, Login):
         Login.setWindowTitle(_("Login"))  # noqa
-        self.groupBox.setTitle("CrashBot")  # noqa
         self.label.setText(_("Username"))  # noqa
         self.label_2.setText(_("Password"))  # noqa
         self.btn_login.setText(_("Login"))  # noqa
