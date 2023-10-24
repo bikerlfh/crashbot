@@ -1,4 +1,5 @@
 # Standard Library
+import glob
 import os
 import platform
 import shutil
@@ -23,6 +24,13 @@ def _zipdir(dir_path: str, zip_path: str):
             zipf.write(
                 os.path.join(dir_path, file_name), f"crashbot/{file_name}/"
             )
+
+
+def remove_po_files(locales_path: str):
+    po_files = glob.glob(f"{locales_path}/*/LC_MESSAGES/*.po")
+    for po_file in po_files:
+        os.remove(po_file)
+    os.remove(f"{locales_path}/base.po")
 
 
 def main():
@@ -61,6 +69,7 @@ def main():
         shutil.copy("conf._ini", "dist/conf.ini")
         shutil.copy("custom_bots.json", "dist/custom_bots.json")
         shutil.copy("crashbot-icon.ico", "dist/crashbot-icon.ico")
+        remove_po_files("dist/locales")
     else:
         file_name = f"crashbot/{file_name}"
         print("**************generating executable**************")
@@ -72,6 +81,7 @@ def main():
             --add-data "crashbot-icon.ico{os.pathsep}." crashbot.py'
         )
         shutil.copy("conf._ini", "dist/crashbot/conf.ini")
+        remove_po_files("dist/crashbot/locales")
     os.system(
         f"pyarmor gen -O obfdist --pack dist/{file_name} -r crashbot.py apps"
     )

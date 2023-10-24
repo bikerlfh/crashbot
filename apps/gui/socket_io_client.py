@@ -81,11 +81,14 @@ class SocketIOClient(QtCore.QThread):
         self.__sio.emit(event.value, data)
 
     def _on_connect(self) -> None:
-        print(f"GUI :: connected to server: {WS_SERVER_HOST}:{WS_SERVER_PORT}")
+        # print(
+        #     f"GUI :: connected to server: "
+        #     f"{WS_SERVER_HOST}:{WS_SERVER_PORT}"
+        # )
         self.is_connected = True
 
     def _on_disconnect(self) -> None:
-        print("GUI :: disconnect from server")
+        # print("GUI :: disconnect from server")
         self.is_connected = False
 
     def run(self) -> None:

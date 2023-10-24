@@ -293,3 +293,6 @@ msgstr ""
 
 msgid "possible bet"
 msgstr ""
+
+msgid "Multipliers Positions"
+msgstr ""
