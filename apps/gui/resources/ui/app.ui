@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>727</width>
-    <height>594</height>
+    <height>609</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -54,19 +54,6 @@
     </widget>
     <widget class="QWidget" name="page_2"/>
    </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>550</y>
-      <width>58</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -74,7 +61,7 @@
      <x>0</x>
      <y>0</y>
      <width>727</width>
-     <height>24</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
@@ -101,7 +88,15 @@
     <property name="title">
      <string>Configuration</string>
     </property>
+    <widget class="QMenu" name="menu_language">
+     <property name="title">
+      <string>Language</string>
+     </property>
+     <addaction name="action_english"/>
+     <addaction name="action_spanish"/>
+    </widget>
     <addaction name="action_crendentials"/>
+    <addaction name="menu_language"/>
    </widget>
    <addaction name="menu_file"/>
    <addaction name="menuView"/>
@@ -143,6 +138,22 @@
   <action name="action_signout">
    <property name="text">
     <string>Sign out</string>
+   </property>
+  </action>
+  <action name="action_english">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>English</string>
+   </property>
+  </action>
+  <action name="action_spanish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Spanish</string>
    </property>
   </action>
  </widget>

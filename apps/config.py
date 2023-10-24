@@ -36,7 +36,7 @@ class Config(metaclass=Singleton):
         self.MAX_AMOUNT_HOME_BET_PERCENTAGE = 0.5
         self.MAX_AMOUNT_BALANCE_PERCENTAGE = 0.005
         self.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH = 30
-        self.MULTIPLIERS_TO_SHOW_LAST_POSITION = []
+        self.MULTIPLIERS_TO_SHOW_LAST_POSITION = [10, 15, 20, 50, 100]
         self.LANGUAGE = "en"
         self.IGNORE_DB_LOGS = True
         self._ALLOWED_LANGUAGES = ["en", "es"]
@@ -83,22 +83,31 @@ class Config(metaclass=Singleton):
                         self.IGNORE_DB_LOGS = bool(int(value))
             return config
 
-    def write_config(self):
+    def write_config(self, *, language: str):
+        self.LANGUAGE = language
         with open(self.config_file, "w") as file:
             file.write("# Default configuration\n")
             # file.write(f"API_URL={self.API_URL}\n")
             # file.write(f"WS_URL={self.WS_URL}\n")
-            file.write(f"LANGUAGE={self.LANGUAGE}\n")
+            file.write(
+                f"MAX_AMOUNT_HOME_BET_PERCENTAGE="
+                f"{self.MAX_AMOUNT_HOME_BET_PERCENTAGE}\n"
+            )
+            file.write(
+                f"MAX_AMOUNT_BALANCE_PERCENTAGE="
+                f"{self.MAX_AMOUNT_BALANCE_PERCENTAGE}\n"
+            )
+            file.write(
+                f"ALLOWED_LOG_CODES_TO_SHOW="
+                f'{",".join(self.ALLOWED_LOG_CODES_TO_SHOW)}\n'
+            )
             file.write(
                 f"NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH="
                 f"{self.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH}\n"
             )
-            # file.write(
-            #   f'ALLOWED_LOG_CODES_TO_SHOW={",".join(self.ALLOWED_LOG_CODES_TO_SHOW)}\n'
-            # )
-            # file.write(
-            #     f"MAX_AMOUNT_HOME_BET_PERCENTAGE={self.MAX_AMOUNT_HOME_BET_PERCENTAGE}\n"
-            # )
-            # file.write(
-            #     f"MAX_AMOUNT_BALANCE_PERCENTAGE={self.MAX_AMOUNT_BALANCE_PERCENTAGE}\n"
-            # )
+            _positions = ",".join(
+                [str(p) for p in self.MULTIPLIERS_TO_SHOW_LAST_POSITION]
+            )
+            file.write(f"MULTIPLIERS_TO_SHOW_LAST_POSITION={_positions}\n")
+            # ALLOWED_LANGUAGES (es, en)
+            file.write(f"LANGUAGE={self.LANGUAGE}\n")

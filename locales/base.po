@@ -296,3 +296,15 @@ msgstr ""
 
 msgid "Multipliers Positions"
 msgstr ""
+
+msgid "You must restart the application to apply the changes"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "English"
+msgstr ""
+
+msgid "Spanish"
+msgstr ""

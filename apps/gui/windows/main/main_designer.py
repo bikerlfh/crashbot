@@ -13,7 +13,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class MainDesigner(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(727, 594)
+        MainWindow.resize(727, 609)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.stackedWidget = QtWidgets.QStackedWidget(
@@ -40,12 +40,9 @@ class MainDesigner(object):
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
         self.stackedWidget.addWidget(self.page_2)
-        self.label = QtWidgets.QLabel(parent=self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(60, 550, 58, 16))
-        self.label.setObjectName("label")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 727, 24))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 727, 22))
         self.menubar.setObjectName("menubar")
         self.menu_file = QtWidgets.QMenu(parent=self.menubar)
         self.menu_file.setObjectName("menu_file")
@@ -55,6 +52,8 @@ class MainDesigner(object):
         self.menu_logs.setObjectName("menu_logs")
         self.menu_configuration = QtWidgets.QMenu(parent=self.menubar)
         self.menu_configuration.setObjectName("menu_configuration")
+        self.menu_language = QtWidgets.QMenu(parent=self.menu_configuration)
+        self.menu_language.setObjectName("menu_language")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -73,12 +72,21 @@ class MainDesigner(object):
         self.action_crendentials.setObjectName("action_crendentials")
         self.action_signout = QtGui.QAction(parent=MainWindow)
         self.action_signout.setObjectName("action_signout")
+        self.action_english = QtGui.QAction(parent=MainWindow)
+        self.action_english.setCheckable(True)
+        self.action_english.setObjectName("action_english")
+        self.action_spanish = QtGui.QAction(parent=MainWindow)
+        self.action_spanish.setCheckable(True)
+        self.action_spanish.setObjectName("action_spanish")
         self.menu_file.addAction(self.action_signout)
         self.menu_file.addAction(self.action_exit)
         self.menu_logs.addAction(self.actionInfo)
         self.menu_logs.addAction(self.actionDebug)
         self.menuView.addAction(self.menu_logs.menuAction())
+        self.menu_language.addAction(self.action_english)
+        self.menu_language.addAction(self.action_spanish)
         self.menu_configuration.addAction(self.action_crendentials)
+        self.menu_configuration.addAction(self.menu_language.menuAction())
         self.menubar.addAction(self.menu_file.menuAction())
         self.menubar.addAction(self.menuView.menuAction())
         self.menubar.addAction(self.menu_configuration.menuAction())
@@ -87,15 +95,38 @@ class MainDesigner(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.lbl_version.setText(_translate("MainWindow", "1.0.0"))
+        self.menu_file.setTitle(_translate("MainWindow", "File"))
+        self.menuView.setTitle(_translate("MainWindow", "View"))
+        self.menu_logs.setTitle(_translate("MainWindow", "Logs"))
+        self.menu_configuration.setTitle(
+            _translate("MainWindow", "Configuration")
+        )
+        self.menu_language.setTitle(_translate("MainWindow", "Language"))
+        self.action_exit.setText(_translate("MainWindow", "Exit"))
+        self.actionInfo.setText(_translate("MainWindow", "Info"))
+        self.actionDebug.setText(_translate("MainWindow", "Debug"))
+        self.action_crendentials.setText(
+            _translate("MainWindow", "Crendentials")
+        )
+        self.action_signout.setText(_translate("MainWindow", "Sign out"))
+        self.action_english.setText(_translate("MainWindow", "English"))
+        self.action_spanish.setText(_translate("MainWindow", "Spanish"))
+
+    def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle("MainWindow")  # noqa
         self.lbl_version.setText("1.0.0")  # noqa
-        self.label.setText("TextLabel")  # noqa
         self.menu_file.setTitle(_("File"))  # noqa
         self.menuView.setTitle(_("View"))  # noqa
         self.menu_logs.setTitle(_("Logs"))  # noqa
         self.menu_configuration.setTitle(_("Configuration"))  # noqa
+        self.menu_language.setTitle(_("Language"))  # noqa
         self.action_exit.setText(_("Exit"))  # noqa
         self.actionInfo.setText(_("Info"))  # noqa
         self.actionDebug.setText(_("Debug"))  # noqa
         self.action_crendentials.setText(_("Crendentials"))  # noqa
         self.action_signout.setText(_("Sign out"))  # noqa
+        self.action_english.setText(_("English"))  # noqa
+        self.action_spanish.setText(_("Spanish"))  # noqa
