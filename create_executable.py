@@ -6,6 +6,7 @@ import shutil
 import zipfile
 
 # Internal
+from apps.gui.constants import ICON_NAME
 from apps.gui.utils import os as utils_os
 
 
@@ -64,21 +65,21 @@ def main():
     # use pyarmor to obfuscate the code and one file
     if _one_file:
         print("**************generating one file executable**************")
-        os.system("pyinstaller --onefile --icon=crashbot-icon.ico crashbot.py")
+        os.system(f"pyinstaller --onefile --icon={ICON_NAME} crashbot.py")
         shutil.copytree("locales", "dist/locales")
         shutil.copy("conf._ini", "dist/conf.ini")
         shutil.copy("custom_bots.json", "dist/custom_bots.json")
-        shutil.copy("crashbot-icon.ico", "dist/crashbot-icon.ico")
+        shutil.copy(ICON_NAME, f"dist/{ICON_NAME}")
         remove_po_files("dist/locales")
     else:
         file_name = f"crashbot/{file_name}"
         print("**************generating executable**************")
         os.system(
-            f'pyinstaller --icon=crashbot-icon.ico \
+            f'pyinstaller --icon={ICON_NAME} \
             --add-data "custom_bots.json{os.pathsep}." \
             --add-data "locales{os.pathsep}locales" \
             --add-data "license.txt{os.pathsep}." \
-            --add-data "crashbot-icon.ico{os.pathsep}." crashbot.py'
+            --add-data "{ICON_NAME}{os.pathsep}." crashbot.py'
         )
         shutil.copy("conf._ini", "dist/crashbot/conf.ini")
         remove_po_files("dist/crashbot/locales")
