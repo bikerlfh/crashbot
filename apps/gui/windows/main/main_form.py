@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import QMainWindow, QMessageBox, QStackedWidget, QWidget
 
 # Internal
 from apps.globals import GlobalVars
-from apps.gui.constants import LANGUAGES
+from apps.gui.constants import ICON_NAME, LANGUAGES
 from apps.gui.socket_io_client import SocketIOClient
 from apps.gui.utils import os as utils_os
 from apps.gui.windows.console.console_form import ConsoleForm
@@ -24,7 +24,7 @@ class MainForm(QMainWindow, MainDesigner):
     def __init__(self) -> None:
         super().__init__()
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon("crashbot-icon.ico"))
+        self.setWindowIcon(QtGui.QIcon(ICON_NAME))
         self.__init_screen()
         self.allowed_logs = GlobalVars.config.ALLOWED_LOG_CODES_TO_SHOW
         self._generate_menu_logs()

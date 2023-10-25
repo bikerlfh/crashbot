@@ -5,6 +5,9 @@ from enum import Enum
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
 
+ICON_NAME = "favicon.ico"
+
+
 LOG_CODES = {
     "info": {
         "foreground": None,
