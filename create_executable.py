@@ -5,9 +5,11 @@ import platform
 import shutil
 import zipfile
 
+# Libraries
+from utils import os as utils_os
+
 # Internal
 from apps.gui.constants import ICON_NAME
-from apps.gui.utils import os as utils_os
 
 
 def _zipdir(dir_path: str, zip_path: str):

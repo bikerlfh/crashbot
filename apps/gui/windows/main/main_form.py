@@ -9,12 +9,12 @@ from PyQt6.QtWidgets import QMainWindow, QMessageBox, QStackedWidget, QWidget
 from apps.globals import GlobalVars
 from apps.gui.constants import ICON_NAME, LANGUAGES
 from apps.gui.socket_io_client import SocketIOClient
-from apps.gui.utils import os as utils_os
 from apps.gui.windows.console.console_form import ConsoleForm
 from apps.gui.windows.credential.credential_dialog import CredentialDialog
 from apps.gui.windows.login.login_form import LoginForm
 from apps.gui.windows.main.main_designer import MainDesigner
 from apps.gui.windows.parameter.parameter_form import ParameterForm
+from apps.utils import os as utils_os
 from apps.utils.local_storage import LocalStorage
 
 local_storage = LocalStorage()

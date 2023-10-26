@@ -8,8 +8,8 @@ from PyQt6.QtWidgets import QListWidgetItem
 from apps.game.bookmakers.home_bet import HomeBet
 from apps.globals import GlobalVars
 from apps.gui.constants import LOG_CODES
-from apps.gui.utils.encrypt import FernetEncrypt
 from apps.utils.local_storage import LocalStorage
+from apps.utils.security.encrypt import FernetEncrypt
 
 local_storage = LocalStorage()
 
