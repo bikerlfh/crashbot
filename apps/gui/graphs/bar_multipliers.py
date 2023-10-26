@@ -42,10 +42,10 @@ class BarMultiplier(QVBoxLayout):
         self.bar_colors = []
         self.x_data = []
         self.add_multipliers(multipliers)
-        x0 = 0.05
-        y0 = 0.05
-        x1 = 0.92
-        y1 = 0.92
+        x0 = 0.01
+        y0 = 0.01
+        x1 = 0.99
+        y1 = 0.99
         self.ax.set_position((x0, y0, x1, y1))
         # ax.legend()
 
@@ -174,9 +174,9 @@ class BarMultiplier(QVBoxLayout):
             ann.set_text(f"{_multiplier}")
 
         self.ax.grid(axis="y", color="gray", linestyle="dashed", linewidth=0.4)
-        for label in self.ax.get_yticklabels():
-            label.set_color("white")
-
+        self.ax.set_yticklabels([])
+        # for label in self.ax.get_yticklabels():
+        #    label.set_color("white")
         self.draw()
 
     @staticmethod
