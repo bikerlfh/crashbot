@@ -21,13 +21,13 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     receive_balance_signal = QtCore.pyqtSignal(dict)
     receive_auto_play_signal = QtCore.pyqtSignal(dict)
     receive_game_loaded_signal = QtCore.pyqtSignal(dict)
+    receive_multiplier_positions_signal = QtCore.pyqtSignal(list)
 
     def __init__(
         self,
         main_window: any,
     ):
         super().__init__()
-
         self.logs_to_save = []
         self.home_bet = None
         self.initial_balance = None
@@ -52,6 +52,9 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.receive_balance_signal.connect(self._on_receive_balance)
         self.receive_auto_play_signal.connect(self._on_receive_auto_play)
         self.receive_game_loaded_signal.connect(self._on_receive_game_loaded)
+        self.receive_multiplier_positions_signal.connect(
+            self._on_receive_multiplier_positions
+        )
         self.btn_auto_bet.setEnabled(False)
         self.btn_set_max_amount.setEnabled(False)
         self.btn_auto_cash_out.setEnabled(False)
@@ -241,3 +244,27 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             title="Game not loaded",
             message="Please, reload the page and try again",
         )
+
+    def update_multiplier_positions(
+        self, positions: list[tuple[int, int]]
+    ) -> None:
+        for i in range(len(positions)):
+            multiplier, position = positions[i]
+            lbl_mul = getattr(self, f"lbl_mul_{i+1}", None)
+            if not lbl_mul:
+                break
+            lbl_mul.setText(f"{multiplier}:{position}")
+
+    def on_receive_multiplier_positions(self, positions):
+        """
+        ws_server callback on add multipliers
+        :param positions: dict(multipliers: list)
+        :return: None
+        """
+        self.receive_multiplier_positions_signal.emit(positions)
+
+    @QtCore.pyqtSlot(list)
+    def _on_receive_multiplier_positions(
+        self, positions: list[tuple[int, int]]
+    ):
+        self.update_multiplier_positions(positions=positions)

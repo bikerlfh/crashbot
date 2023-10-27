@@ -308,3 +308,6 @@ msgstr ""
 
 msgid "Spanish"
 msgstr ""
+
+msgid "Last multiplier positions. Format (multiplier:position)</p><p>If the position is -1, the multiplier was not found in all the analyzed rounds."
+msgstr ""

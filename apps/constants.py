@@ -14,6 +14,7 @@ class WSEvent(str, Enum):
     ADD_MULTIPLIERS = "add_multipliers"
     UPDATE_BALANCE = "update_balance"
     GAME_LOADED = "game_loaded"
+    RECEIVE_MULTIPLIER_POSITIONS = "receive_multiplier_positions"
     ERROR = "error"
     EXCEPTION = "exception"
 

@@ -98,7 +98,8 @@ class GameBase(abc.ABC, ConfigurationFactory):
         self.request_save_customer_balance()
         SendEventToGUI.log.success(_("Game initialized"))  # noqa
         SendEventToGUI.game_loaded(True)
-        self.bot.show_last_position_of_multipliers()
+        positions = self.bot.get_last_position_of_multipliers()
+        SendEventToGUI.send_multiplier_positions(positions)
 
     async def close(self):
         await self.game_page.close()
@@ -244,7 +245,8 @@ class GameBase(abc.ABC, ConfigurationFactory):
         while self.initialized:
             await self.wait_next_game()
             self.get_next_bet()
-            self.bot.show_last_position_of_multipliers()
+            positions = self.bot.get_last_position_of_multipliers()
+            SendEventToGUI.send_multiplier_positions(positions)
             await self.send_bets_to_aviator()
             SendEventToGUI.log.info(
                 "*****************************************"
