@@ -38,6 +38,9 @@ class MainForm(QMainWindow, MainDesigner):
             on_update_balance=self.console_screen.on_update_balance,
             on_add_multipliers=self.console_screen.on_add_multipliers,
             on_game_loaded=self.console_screen.on_game_loaded,
+            on_receive_multiplier_positions=(
+                self.console_screen.on_receive_multiplier_positions
+            ),
         )
         self.socket.run()
         # verify token login
@@ -151,7 +154,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.__change_screen(
             screen=self.console_screen,
             width=897,
-            height=587,
+            height=520,
             title=GlobalVars.APP_NAME,
         )
         self.menu_language.setEnabled(False)

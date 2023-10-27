@@ -26,6 +26,7 @@ class SocketIOClient(QtCore.QThread):
         on_error: Optional[Callable] = None,
         on_exception: Optional[Callable] = None,
         on_add_multipliers: Optional[Callable] = None,
+        on_receive_multiplier_positions: Optional[Callable] = None,
     ):
         super().__init__()
         self.WS_SERVER_URL = f"http://{WS_SERVER_HOST}:{WS_SERVER_PORT}"
@@ -41,6 +42,7 @@ class SocketIOClient(QtCore.QThread):
         self.on_error = on_error
         self.on_exception = on_exception
         self.on_add_multipliers = on_add_multipliers
+        self.on_receive_multiplier_positions = on_receive_multiplier_positions
         self.__sio = socketio.Client()
         self.__assign_events()
         self.is_connected = False
@@ -75,6 +77,10 @@ class SocketIOClient(QtCore.QThread):
         self.__sio.on(
             WSEvent.ADD_MULTIPLIERS,
             self.on_add_multipliers or self._on_default,
+        )
+        self.__sio.on(
+            WSEvent.RECEIVE_MULTIPLIER_POSITIONS,
+            self.on_receive_multiplier_positions or self._on_default,
         )
 
     def __execute_event(self, event: WSEvent, data: any) -> None:

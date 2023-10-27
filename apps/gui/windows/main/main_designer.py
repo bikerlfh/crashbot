@@ -27,7 +27,7 @@ class MainDesigner(object):
         self.lbl_version = QtWidgets.QLabel(parent=self.page)
         self.lbl_version.setGeometry(QtCore.QRect(670, 510, 41, 16))
         font = QtGui.QFont()
-        font.setPointSize(14)
+        font.setPointSize(12)
         font.setBold(True)
         font.setItalic(False)
         font.setKerning(False)

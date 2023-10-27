@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 class GlobalVars:
     APP_NAME: str = "CrashBot"
-    APP_VERSION: str = "1.2.0"
+    APP_VERSION: str = "1.2.1"
     SIO: AsyncServer = None
     GAME: any = None
     WS_SERVER_EVENT: Event
