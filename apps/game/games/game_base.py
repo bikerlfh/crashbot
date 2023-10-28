@@ -1,5 +1,6 @@
 # Standard Library
 import abc
+from typing import Optional
 
 # Internal
 from apps.api import services as api_services
@@ -97,6 +98,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
             multipliers=self.multipliers_to_save,
         )
         self.initialized = True
+        self.request_customer_live()
         self.request_save_multipliers()
         self.request_save_customer_balance()
         SendEventToGUI.log.success(_("Game initialized"))  # noqa
@@ -105,6 +107,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
         SendEventToGUI.send_multiplier_positions(positions)
 
     async def close(self):
+        self.request_customer_live(closing_session=True)
         await self.game_page.close()
         # TODO: clean all variables
         self.initialized = False
@@ -114,6 +117,26 @@ class GameBase(abc.ABC, ConfigurationFactory):
         Read the balance from the Aviator
         """
         return await self.game_page.read_balance() or 0
+
+    def request_customer_live(
+        self, *, closing_session: Optional[bool] = False
+    ):
+        """
+        Request the customer live
+        """
+        try:
+            response = api_services.request_customer_live(
+                home_bet_id=self.home_bet.id, closing_session=closing_session
+            )
+            GlobalVars.set_allowed_to_save_multipliers(
+                response.allowed_to_save_multiplier
+            )
+            SendEventToGUI.log.debug(
+                f"customer live received: allowed_to_save_multiplier: "
+                f"{response.allowed_to_save_multiplier}"
+            )
+        except Exception as error:
+            SendEventToGUI.log.debug(f"Error in requestCustomerLive: {error}")
 
     def request_multiplier_positions(self):
         """
@@ -246,6 +269,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
 
     async def play(self):
         while self.initialized:
+            self.request_customer_live()
             await self.wait_next_game()
             self.get_next_bet()
             positions = self.bot.get_last_position_of_multipliers()

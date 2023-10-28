@@ -57,6 +57,7 @@ class BotAPIServices:
     GET_POSITIONS = "predictions/positions/"
     UPDATE_BALANCE = "customers/balance/"
     CUSTOMER_DATA = "customers/me/"
+    CUSTOMER_LIVE = "customers/live/"
     BET = "bets/"
 
     def __init__(self, *, client: RESTClient):
@@ -242,6 +243,23 @@ class BotAPIServices:
         try:
             response = self.client.get(
                 service=f"{self.CUSTOMER_DATA}?app_hash_str={app_hash_str}"
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: get_me_data :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def customer_live(
+        self, *, home_bet_id: int, closing_session: Optional[bool] = False
+    ) -> Dict[str, Any]:
+        try:
+            response = self.client.post(
+                service=self.CUSTOMER_LIVE,
+                data=dict(
+                    home_bet_id=home_bet_id,
+                    closing_session=closing_session,
+                ),
             )
         except Exception as exc:
             logger.exception(f"BotAPIServices :: get_me_data :: {exc}")

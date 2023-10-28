@@ -18,6 +18,9 @@ from socketio import AsyncServer
 from apps.config import Config
 from apps.utils.security import encrypt
 
+# from apps.utils.sesion_time import SessionTime
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -29,6 +32,7 @@ class GlobalVars:
     GAME: any = None
     WS_SERVER_EVENT: Event
     config: Config
+    # session_time: SessionTime
 
     class VARS(str, Enum):
         HOME_BET_GAME_ID = "HOME_BET_GAME_ID"
@@ -51,6 +55,7 @@ class GlobalVars:
         GlobalVars.APP_HASH = encrypt.md5(
             f"{GlobalVars.APP_NAME}{GlobalVars.APP_VERSION}"
         )
+        # GlobalVars.session_time = SessionTime()
         globals().setdefault(GlobalVars.VARS.HOME_BET_GAME_ID, None)
         globals().setdefault(GlobalVars.VARS.CURRENCY, None)
         globals().setdefault(GlobalVars.VARS.AUTO_PLAY, False)

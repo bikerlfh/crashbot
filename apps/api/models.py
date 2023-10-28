@@ -172,6 +172,11 @@ class CustomerData:
 
 
 @dataclass
+class CustomerLiveData:
+    allowed_to_save_multiplier: bool
+
+
+@dataclass
 class Positions:
     count: int
     positions: dict[int, int]

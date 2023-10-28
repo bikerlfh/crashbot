@@ -9,6 +9,7 @@ from apps.api.models import (
     BetData,
     Bot,
     CustomerData,
+    CustomerLiveData,
     MultiplierPositions,
     PlanData,
     Positions,
@@ -167,6 +168,18 @@ def get_customer_data(*, app_hash_str: str) -> CustomerData:
         plan=PlanData(**data.get("plan")),
     )
     return customer_data
+
+
+def request_customer_live(
+    *, home_bet_id: int, closing_session: Optional[bool] = False
+) -> CustomerLiveData:
+    bot_connector = BotAPIConnector()
+    data = bot_connector.services.customer_live(
+        home_bet_id=home_bet_id,
+        closing_session=closing_session,
+    )
+    customer_live_data = CustomerLiveData(**data)
+    return customer_live_data
 
 
 def update_customer_balance(
