@@ -46,7 +46,7 @@ class ErrorAPI:
             os._exit(0)  # noqa
 
 
-class APICodeError(ErrorAPI, Enum):
+class APICodeError(Enum):
     E00 = ErrorAPI(
         message="An unexpected error occurred, try again", close_app=True
     )
