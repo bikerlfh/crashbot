@@ -31,7 +31,7 @@ class BotAPIConnector(metaclass=Singleton):
         headers = {
             "Content-Type": "application/json",
             "Cache-Control": "no-cache",
-            "Authorization": f"Bearer {local_storage.get_token()}",
+            "Authorization": f"Token {local_storage.get_token()}",
         }
         self.client = RESTClient(api_url=self.API_URL, headers=headers)
         self.services = BotAPIServices(client=self.client)
@@ -44,21 +44,23 @@ class BotAPIConnector(metaclass=Singleton):
 
     def update_token(self):
         token = local_storage.get_token()
-        self.client.headers["Authorization"] = f"Bearer {token}"
+        self.client.headers["Authorization"] = f"Token {token}"
+
+    def remove_token(self):
+        self.client.headers.pop("Authorization", None)
 
 
 class BotAPIServices:
-    LOGIN = "api/token/"
-    TOKEN_REFRESH = "api/token/refresh/"
-    TOKEN_VERIFY = "api/token/verify/"
-    ADD_MULTIPLIERS = "home-bet/multiplier/"
-    GET_PREDICTION = "predictions/predict/"
-    GET_BOTS = "predictions/bots/"
-    GET_POSITIONS = "predictions/positions/"
-    UPDATE_BALANCE = "customers/balance/"
-    CUSTOMER_DATA = "customers/me/"
-    CUSTOMER_LIVE = "customers/live/"
-    BET = "bets/"
+    LOGIN = "api/auth/login/"
+    VERIFY_TOKEN = "api/auth/verify/"
+    ADD_MULTIPLIERS = "api/home-bet/multiplier/"
+    GET_PREDICTION = "api/predictions/predict/"
+    GET_BOTS = "api/predictions/bots/"
+    GET_POSITIONS = "api/predictions/positions/"
+    UPDATE_BALANCE = "api/customers/balance/"
+    CUSTOMER_DATA = "api/customers/me/"
+    CUSTOMER_LIVE = "api/customers/live/"
+    BET = "api/bets/"
 
     def __init__(self, *, client: RESTClient):
         assert isinstance(
@@ -81,11 +83,12 @@ class BotAPIServices:
         return errors
 
     @staticmethod
-    def validate_response(*, response: Response):
+    def validate_response(*, response: Response, ignore_errors: bool = False):
         func_name = inspect.stack()[1][3]
         status_code = response.status
         detail = response.body
-        BotAPIServices.validate_api_code_error(detail)
+        if not ignore_errors:
+            BotAPIServices.validate_api_code_error(detail)
         error_code = detail.get("code") if isinstance(detail, dict) else None
         if status_code >= HTTPStatus.INTERNAL_SERVER_ERROR:
             logger.error(
@@ -135,42 +138,19 @@ class BotAPIServices:
         self.validate_response(response=response)
         return response.body
 
-    def token_refresh(self, *, refresh: str) -> Dict[str, Any]:
+    def request_verify_token(self) -> bool:
         """
-        token_refresh
-        :param refresh:
+        verify_token
         :return:
         """
         try:
-            response = self.client.post(
-                service=self.TOKEN_REFRESH,
-                data=dict(
-                    refresh=refresh,
-                ),
-            )
-        except Exception as exc:
-            logger.exception(f"BotAPIServices :: token_refresh :: {exc}")
-            raise BotAPIConnectionException(exc)
-        self.validate_response(response=response)
-        return response.body
-
-    def token_verify(self, *, token: str) -> bool:
-        """
-        token_verify
-        :param token:
-        :return:
-        """
-        try:
-            response = self.client.post(
-                service=self.TOKEN_VERIFY,
-                data=dict(
-                    token=token,
-                ),
+            response = self.client.get(
+                service=self.VERIFY_TOKEN,
             )
         except Exception as exc:
             logger.exception(f"BotAPIServices :: token_verify :: {exc}")
             raise BotAPIConnectionException(exc)
-        self.validate_response(response=response)
+        self.validate_response(response=response, ignore_errors=True)
         return response.status == HTTPStatus.OK
 
     def add_multipliers(

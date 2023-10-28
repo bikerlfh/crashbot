@@ -15,7 +15,6 @@ from apps.utils.patterns.singleton import Singleton
 class LocalStorage(metaclass=Singleton):
     class LocalStorageKeys(Enum):
         TOKEN = "token"
-        REFRESH = "refresh"
         CUSTOMER_ID = "customer_id"
         LAST_INITIAL_BALANCE = "last_initial_balance"
         CREDENTIALS = "credentials"
@@ -54,17 +53,9 @@ class LocalStorage(metaclass=Singleton):
     def get_token(self):
         return self.get(LocalStorage.LocalStorageKeys.TOKEN.value)
 
-    def set_refresh(self, refresh: str):
-        self.set(LocalStorage.LocalStorageKeys.REFRESH.value, refresh)
-
-    def get_refresh(self):
-        return self.get(LocalStorage.LocalStorageKeys.REFRESH.value)
-
     def remove_token(self):
         if self.get_token():
             self.remove(LocalStorage.LocalStorageKeys.TOKEN.value)
-        if self.get_refresh():
-            self.remove(LocalStorage.LocalStorageKeys.REFRESH.value)
 
     def set_customer_id(self, customer_id: int):
         self.set(LocalStorage.LocalStorageKeys.CUSTOMER_ID.value, customer_id)
