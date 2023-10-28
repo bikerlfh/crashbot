@@ -295,8 +295,8 @@ msgstr "log mensajes"
 msgid "possible bet"
 msgstr "posible apuesta"
 
-msgid "Multipliers Positions"
-msgstr "Posiciones de los multiplicadores"
+msgid "Mutiplier/Round"
+msgstr "Multi/Ronda"
 
 msgid "You must restart the application to apply the changes"
 msgstr "Debes reiniciar la aplicación para aplicar los cambios"
