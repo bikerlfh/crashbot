@@ -186,3 +186,16 @@ class Positions:
 class MultiplierPositions:
     all_time: dict[int, Positions]
     today: dict[int, Positions]
+
+
+@dataclass
+class Multiplier:
+    multiplier: float
+    multiplier_dt: datetime
+
+    def __dict__(self):
+        multiplier_dt = self.multiplier_dt.strftime("%Y-%m-%d %H:%M:%S")
+        return dict(
+            multiplier=self.multiplier,
+            multiplier_dt=multiplier_dt,
+        )
