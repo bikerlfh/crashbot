@@ -29,9 +29,7 @@ def update_token() -> None:
     bot_connector.update_token()
 
 
-def request_login(
-    *, username: str, password: str
-) -> tuple[str | None, str | None]:
+def request_login(*, username: str, password: str) -> str | None:
     """
     request_login
     :param username:
@@ -40,46 +38,28 @@ def request_login(
     """
     bot_connector = BotAPIConnector()
     try:
+        bot_connector.remove_token()
         response = bot_connector.services.login(
             username=username, password=password
         )
-        access = response.get("access")
-        refresh = response.get("refresh")
-        return access, refresh
+        token = response.get("token")
+        return token
     except BotAPINoAuthorizationException:
-        return None, None
+        return None
     except Exception as exc:
         logger.exception(f"BotAPIServices :: request_login :: {exc}")
-        return None, None
-
-
-def request_token_refresh(*, refresh: str) -> str | None:
-    """
-    request_token_refresh
-    :param refresh:
-    :return:
-    """
-    bot_connector = BotAPIConnector()
-    try:
-        response = bot_connector.services.token_refresh(refresh=refresh)
-        access = response.get("access")
-        return access
-    except BotAPINoAuthorizationException:
-        return None
-    except Exception as exc:
-        logger.exception(f"BotAPIServices :: request_token_refresh :: {exc}")
         return None
 
 
-def request_token_verify(*, token: str) -> bool:
+def request_token_verify() -> bool:
     """
     request_token_verify
-    :param token:
     :return:
     """
     bot_connector = BotAPIConnector()
     try:
-        is_valid = bot_connector.services.token_verify(token=token)
+        bot_connector.update_token()
+        is_valid = bot_connector.services.request_verify_token()
         return is_valid
     except BotAPINoAuthorizationException:
         return False

@@ -54,6 +54,9 @@ class APICodeError(ErrorAPI, Enum):
     AUTH02 = ErrorAPI(
         message="You are not allowed to use this application", close_app=True
     )
+    authentication_failed = ErrorAPI(
+        message="Authentication failed", close_app=True
+    )
 
     @classmethod
     def get_by_code(cls, code: str):

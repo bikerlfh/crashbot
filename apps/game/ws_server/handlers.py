@@ -26,7 +26,7 @@ def _get_customer_data() -> None:
 def verify_token(token: Optional[str] = None) -> dict[str, any]:
     token = token or local_storage.get_token()
     if token:
-        logged = api_services.request_token_verify(token=token)
+        logged = api_services.request_token_verify()
         if logged:
             _get_customer_data()
         return dict(logged=logged)
@@ -35,27 +35,16 @@ def verify_token(token: Optional[str] = None) -> dict[str, any]:
 
 def login(username: str, password: str) -> dict[str, any]:
     token = local_storage.get_token()
-    refresh = local_storage.get_refresh()
     if token:
         verify = verify_token(token=token)
         if verify.get("logged"):
             return verify
-    elif refresh:
-        token = api_services.request_token_refresh(refresh=refresh)
-        if token:
-            local_storage.set_token(token=token)
-            api_services.update_token()
-            _get_customer_data()
-            return dict(logged=True)
     if not username or not password:
         return dict(logged=False)
-    token, refresh = api_services.request_login(
-        username=username, password=password
-    )
-    if not token or not refresh:
+    token = api_services.request_login(username=username, password=password)
+    if not token:
         return dict(logged=False)
     local_storage.set_token(token)
-    local_storage.set_refresh(refresh)
     api_services.update_token()
     _get_customer_data()
     return dict(logged=True)
