@@ -8,13 +8,48 @@ from apps.constants import BetType
 
 
 @dataclass
+class LimitModel:
+    max_bet: float
+    min_bet: float
+    amount_multiple: float
+
+
+@dataclass
 class HomeBetModel:
     id: int
     name: str
     url: str
-    min_bet: float
-    max_bet: float
-    amount_multiple: float
+    limits: dict[str, LimitModel]
+
+    def __post_init__(self):
+        limits_ = {}
+        for key in self.limits.keys():
+            value = self.limits[key]
+            if isinstance(self.limits[key], dict):
+                value = LimitModel(**value)  # noqa
+            limits_.update({key: value})
+        self.limits = limits_
+
+    def _get_limits(self) -> LimitModel:
+        # Internal
+        from apps.globals import GlobalVars
+
+        currency = GlobalVars.get_currency()
+        if not currency:
+            currency = list(self.limits.keys())[0]
+        return self.limits[currency]
+
+    @property
+    def min_bet(self) -> float:
+        return self._get_limits().min_bet
+
+    @property
+    def max_bet(self) -> float:
+        return self._get_limits().max_bet
+
+    @property
+    def amount_multiple(self) -> float:
+        return self._get_limits().amount_multiple
 
 
 @dataclass
@@ -101,19 +136,44 @@ class Bot:
 
 
 @dataclass
+class CrashApp:
+    version: str
+    home_bet_game_id: int
+    home_bets: list[HomeBetModel]
+
+    def __post_init__(self):
+        self.home_bets = [
+            HomeBetModel(**home_bet) for home_bet in self.home_bets  # noqa
+        ]
+
+
+@dataclass
 class PlanData:
     name: str
     with_ai: bool
     start_dt: datetime
     end_dt: datetime
     is_active: bool
+    crash_app: CrashApp
+
+    def __post_init__(self):
+        if isinstance(self.crash_app, dict):
+            self.crash_app = CrashApp(**self.crash_app)  # noqa
 
 
 @dataclass
 class CustomerData:
     customer_id: int
-    home_bets: list[HomeBetModel]
     plan: PlanData
+
+    def __post_init__(self):
+        if isinstance(self.plan, dict):
+            self.plan = PlanData(**self.plan)
+
+
+@dataclass
+class CustomerLiveData:
+    allowed_to_save_multiplier: bool
 
 
 @dataclass

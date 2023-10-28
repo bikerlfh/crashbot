@@ -9,7 +9,7 @@ from apps.api.models import (
     BetData,
     Bot,
     CustomerData,
-    HomeBetModel,
+    CustomerLiveData,
     MultiplierPositions,
     PlanData,
     Positions,
@@ -87,29 +87,18 @@ def request_token_verify(*, token: str) -> bool:
         return False
 
 
-def get_home_bets() -> list[HomeBetModel]:
-    """
-    request_home_bet
-    :return:
-    """
-    bot_connector = BotAPIConnector()
-    home_bets = bot_connector.services.get_home_bet()
-    data = [HomeBetModel(**data) for data in home_bets]
-    return data
-
-
 def add_multipliers(
-    *, home_bet_id: int, multipliers: list[float]
+    *, home_bet_game_id: int, multipliers: list[float]
 ) -> dict[str, any]:
     """
     add_multipliers
-    :param home_bet_id:
+    :param home_bet_game_id:
     :param multipliers:
     :return:
     """
     bot_connector = BotAPIConnector()
     response = bot_connector.services.add_multipliers(
-        home_bet_id=home_bet_id, multipliers=multipliers
+        home_bet_game_id=home_bet_game_id, multipliers=multipliers
     )
     return response
 
@@ -151,10 +140,10 @@ def get_bots(*, bot_type: Optional[str] = None) -> list[Bot]:
     return data
 
 
-def get_multiplier_positions(*, home_bet_id: int) -> MultiplierPositions:
+def get_multiplier_positions(*, home_bet_game_id: int) -> MultiplierPositions:
     bot_connector = BotAPIConnector()
     response = bot_connector.services.get_multiplier_positions(
-        home_bet_id=home_bet_id
+        home_bet_game_id=home_bet_game_id
     )
     all_time = response.get("all_time", {})
     today = response.get("today", {})
@@ -171,17 +160,26 @@ def get_multiplier_positions(*, home_bet_id: int) -> MultiplierPositions:
     return positions
 
 
-def get_customer_data() -> CustomerData:
+def get_customer_data(*, app_hash_str: str) -> CustomerData:
     bot_connector = BotAPIConnector()
-    data = bot_connector.services.get_me_data()
+    data = bot_connector.services.get_me_data(app_hash_str=app_hash_str)
     customer_data = CustomerData(
         customer_id=data.get("customer_id"),
-        home_bets=[
-            HomeBetModel(**home_bet) for home_bet in data.get("home_bets", [])
-        ],
         plan=PlanData(**data.get("plan")),
     )
     return customer_data
+
+
+def request_customer_live(
+    *, home_bet_id: int, closing_session: Optional[bool] = False
+) -> CustomerLiveData:
+    bot_connector = BotAPIConnector()
+    data = bot_connector.services.customer_live(
+        home_bet_id=home_bet_id,
+        closing_session=closing_session,
+    )
+    customer_live_data = CustomerLiveData(**data)
+    return customer_live_data
 
 
 def update_customer_balance(

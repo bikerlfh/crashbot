@@ -1,5 +1,6 @@
 # Standard Library
 import base64
+import hashlib
 
 # Libraries
 import machineid
@@ -34,3 +35,13 @@ class FernetEncrypt(metaclass=Singleton):
         """
         fernet = Fernet(self.KEY_ENCRYPTED)
         return fernet.decrypt(data.encode()).decode()
+
+
+def md5(text: str) -> str:
+    try:
+        _md5 = hashlib.md5()
+        _md5.update(text.encode("utf-8"))
+        hash_md5 = _md5.hexdigest()
+        return hash_md5
+    except Exception as e:
+        return str(e)

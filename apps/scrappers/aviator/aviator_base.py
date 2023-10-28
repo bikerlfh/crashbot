@@ -87,6 +87,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         SendEventToGUI.log.debug("Result history found")
         await self.read_balance()
         await self.read_multipliers()
+        await self.read_currency()
         # await self.read_game_limits()
         self._controls = BetControl(self._app_game)
         await self._controls.init()
@@ -170,6 +171,31 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
             raise Exception("balance element is null")
         self.balance = float(await self._balance_element.text_content() or "0")
         return self.balance
+
+    async def read_currency(self) -> str:
+        if self._app_game is None:
+            SendEventToGUI.exception(
+                {
+                    "location": "AviatorPage",
+                    "message": "read_currency :: _appGame is null",
+                }
+            )
+            raise Exception("read_currency :: _appGame is null")
+        self._currency_element = self._app_game.locator(
+            ".balance>div>.currency"
+        )
+        if self._currency_element is None:
+            SendEventToGUI.exception(
+                {
+                    "location": "AviatorPage",
+                    "message": "read_currency :: balance element is null",
+                }
+            )
+            raise Exception("currency element is null")
+        self.currency = (
+            await self._currency_element.text_content() or self.currency
+        )
+        return self.currency
 
     async def read_multipliers(self):
         if not self._page or not self._history_game:

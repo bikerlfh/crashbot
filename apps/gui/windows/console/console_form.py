@@ -94,10 +94,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             if auto_play
             else f"{_('AutoBet')} OFF"  # noqa
         )
-        self.ws_client.set_home_bet(
-            home_bet_id=self.home_bet.id,  # noqa
-            customer_id=local_storage.get_customer_id(),
-        )
+        # self.ws_client.set_home_bet(
+        #     home_bet_id=self.home_bet.id,  # noqa
+        #     customer_id=local_storage.get_customer_id(),
+        # )
 
     def button_auto_bet_clicked_event(self):
         self.auto_play = not self.auto_play

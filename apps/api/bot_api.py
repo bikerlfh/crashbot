@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Optional
 
 # Internal
 from apps.api.exceptions import (
+    APICodeError,
     BotAPIBadRequestException,
     BotAPIConnectionException,
     BotAPINoAuthorizationException,
@@ -50,14 +51,13 @@ class BotAPIServices:
     LOGIN = "api/token/"
     TOKEN_REFRESH = "api/token/refresh/"
     TOKEN_VERIFY = "api/token/verify/"
-    HOME_BET = "home-bet/"
-    HOME_BET_DETAIL = "home-bet/"
     ADD_MULTIPLIERS = "home-bet/multiplier/"
     GET_PREDICTION = "predictions/predict/"
     GET_BOTS = "predictions/bots/"
     GET_POSITIONS = "predictions/positions/"
     UPDATE_BALANCE = "customers/balance/"
     CUSTOMER_DATA = "customers/me/"
+    CUSTOMER_LIVE = "customers/live/"
     BET = "bets/"
 
     def __init__(self, *, client: RESTClient):
@@ -67,10 +67,25 @@ class BotAPIServices:
         self.client = client
 
     @staticmethod
+    def validate_api_code_error(error: dict):
+        if not isinstance(error, dict):
+            return
+        errors = error.get("errors")
+        if not errors:
+            return
+        for error in errors:
+            code = error.get("code")
+            _error = APICodeError.get_by_code(code)
+            if _error:
+                _error.value.exc_error()
+        return errors
+
+    @staticmethod
     def validate_response(*, response: Response):
         func_name = inspect.stack()[1][3]
         status_code = response.status
         detail = response.body
+        BotAPIServices.validate_api_code_error(detail)
         error_code = detail.get("code") if isinstance(detail, dict) else None
         if status_code >= HTTPStatus.INTERNAL_SERVER_ERROR:
             logger.error(
@@ -158,37 +173,14 @@ class BotAPIServices:
         self.validate_response(response=response)
         return response.status == HTTPStatus.OK
 
-    def get_home_bet(self) -> Dict[str, Any]:
-        try:
-            response = self.client.get(
-                service=self.HOME_BET,
-            )
-        except Exception as exc:
-            logger.exception(f"BotAPIServices :: get_home_bet :: {exc}")
-            raise BotAPIConnectionException(exc)
-        self.validate_response(response=response)
-        return response.body
-
-    def get_home_bet_detail(self, *, home_bet_id: int) -> Dict[str, Any]:
-        service = f"{self.HOME_BET_DETAIL}home_bet_id={home_bet_id}/"
-        try:
-            response = self.client.get(
-                service=service,
-            )
-        except Exception as exc:
-            logger.exception(f"BotAPIServices :: get_home_bet_detail :: {exc}")
-            raise BotAPIConnectionException(exc)
-        self.validate_response(response=response)
-        return response.body
-
     def add_multipliers(
-        self, *, home_bet_id: int, multipliers: List[int]
+        self, *, home_bet_game_id: int, multipliers: List[int]
     ) -> Dict[str, Any]:
         try:
             response = self.client.post(
                 service=self.ADD_MULTIPLIERS,
                 data=dict(
-                    home_bet_id=home_bet_id,
+                    home_bet_game_id=home_bet_game_id,
                     multipliers=multipliers,
                 ),
             )
@@ -233,10 +225,13 @@ class BotAPIServices:
         self.validate_response(response=response)
         return response.body
 
-    def get_multiplier_positions(self, *, home_bet_id: int) -> Dict[str, Any]:
+    def get_multiplier_positions(
+        self, *, home_bet_game_id: int
+    ) -> Dict[str, Any]:
+        service = f"{self.GET_POSITIONS}?home_bet_game_id={home_bet_game_id}"
         try:
             response = self.client.get(
-                service=f"{self.GET_POSITIONS}?home_bet_id={home_bet_id}",
+                service=service,
             )
         except Exception as exc:
             logger.exception(f"BotAPIServices :: get_positions :: {exc}")
@@ -244,10 +239,27 @@ class BotAPIServices:
         self.validate_response(response=response)
         return response.body
 
-    def get_me_data(self) -> Dict[str, Any]:
+    def get_me_data(self, *, app_hash_str: str) -> Dict[str, Any]:
         try:
             response = self.client.get(
-                service=self.CUSTOMER_DATA,
+                service=f"{self.CUSTOMER_DATA}?app_hash_str={app_hash_str}"
+            )
+        except Exception as exc:
+            logger.exception(f"BotAPIServices :: get_me_data :: {exc}")
+            raise BotAPIConnectionException(exc)
+        self.validate_response(response=response)
+        return response.body
+
+    def customer_live(
+        self, *, home_bet_id: int, closing_session: Optional[bool] = False
+    ) -> Dict[str, Any]:
+        try:
+            response = self.client.post(
+                service=self.CUSTOMER_LIVE,
+                data=dict(
+                    home_bet_id=home_bet_id,
+                    closing_session=closing_session,
+                ),
             )
         except Exception as exc:
             logger.exception(f"BotAPIServices :: get_me_data :: {exc}")

@@ -10,11 +10,16 @@ local_storage = LocalStorage()
 
 
 def _get_customer_data() -> None:
-    customer_data = api_services.get_customer_data()
+    customer_data = api_services.get_customer_data(
+        app_hash_str=GlobalVars.APP_HASH
+    )
     GlobalVars.set_plan_with_ai(customer_data.plan.with_ai)
     bots = api_services.get_bots()
     GlobalVars.set_bots(bots=bots)
-    GlobalVars.set_allowed_home_bets(customer_data.home_bets)
+    crash_app = customer_data.plan.crash_app
+    home_bet_game_id = crash_app.home_bet_game_id
+    GlobalVars.set_home_bet_game_id(home_bet_game_id)
+    GlobalVars.set_allowed_home_bets(crash_app.home_bets)
     local_storage.set_customer_id(customer_id=customer_data.customer_id)
 
 
