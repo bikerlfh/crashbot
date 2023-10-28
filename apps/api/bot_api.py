@@ -227,7 +227,7 @@ class BotAPIServices:
         except Exception as exc:
             logger.exception(f"BotAPIServices :: get_me_data :: {exc}")
             raise BotAPIConnectionException(exc)
-        self.validate_response(response=response)
+        self.validate_response(response=response, ignore_errors=False)
         return response.body
 
     def customer_live(

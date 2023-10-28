@@ -14,6 +14,50 @@ class MainDesigner(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(727, 609)
+        palette = QtGui.QPalette()
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.ToolTipBase,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.ToolTipText,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.ToolTipBase,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.ToolTipText,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.ToolTipBase,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.ToolTipText,
+            brush,
+        )
+        MainWindow.setPalette(palette)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.stackedWidget = QtWidgets.QStackedWidget(
@@ -93,27 +137,6 @@ class MainDesigner(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.lbl_version.setText(_translate("MainWindow", "1.0.0"))
-        self.menu_file.setTitle(_translate("MainWindow", "File"))
-        self.menuView.setTitle(_translate("MainWindow", "View"))
-        self.menu_logs.setTitle(_translate("MainWindow", "Logs"))
-        self.menu_configuration.setTitle(
-            _translate("MainWindow", "Configuration")
-        )
-        self.menu_language.setTitle(_translate("MainWindow", "Language"))
-        self.action_exit.setText(_translate("MainWindow", "Exit"))
-        self.actionInfo.setText(_translate("MainWindow", "Info"))
-        self.actionDebug.setText(_translate("MainWindow", "Debug"))
-        self.action_crendentials.setText(
-            _translate("MainWindow", "Crendentials")
-        )
-        self.action_signout.setText(_translate("MainWindow", "Sign out"))
-        self.action_english.setText(_translate("MainWindow", "English"))
-        self.action_spanish.setText(_translate("MainWindow", "Spanish"))
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle("MainWindow")  # noqa

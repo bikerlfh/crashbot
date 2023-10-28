@@ -108,14 +108,14 @@ class ConsoleDesigner(object):
             QtGui.QPalette.ColorRole.AlternateBase,
             brush,
         )
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 220))
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
             QtGui.QPalette.ColorGroup.Active,
             QtGui.QPalette.ColorRole.ToolTipBase,
             brush,
         )
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
             QtGui.QPalette.ColorGroup.Active,
@@ -220,14 +220,14 @@ class ConsoleDesigner(object):
             QtGui.QPalette.ColorRole.AlternateBase,
             brush,
         )
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 220))
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
             QtGui.QPalette.ColorGroup.Inactive,
             QtGui.QPalette.ColorRole.ToolTipBase,
             brush,
         )
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
             QtGui.QPalette.ColorGroup.Inactive,
@@ -332,14 +332,14 @@ class ConsoleDesigner(object):
             QtGui.QPalette.ColorRole.AlternateBase,
             brush,
         )
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 220))
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
             QtGui.QPalette.ColorGroup.Disabled,
             QtGui.QPalette.ColorRole.ToolTipBase,
             brush,
         )
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
         palette.setBrush(
             QtGui.QPalette.ColorGroup.Disabled,
@@ -466,6 +466,50 @@ class ConsoleDesigner(object):
         self.line_3.setObjectName("line_3")
         self.gbox_graph = QtWidgets.QGroupBox(parent=consoleForm)
         self.gbox_graph.setGeometry(QtCore.QRect(260, 10, 621, 281))
+        palette = QtGui.QPalette()
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.ToolTipBase,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.ToolTipText,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.ToolTipBase,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.ToolTipText,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.ToolTipBase,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.ToolTipText,
+            brush,
+        )
+        self.gbox_graph.setPalette(palette)
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
@@ -510,6 +554,50 @@ class ConsoleDesigner(object):
         self.lbl_profit_per.setObjectName("lbl_profit_per")
         self.groupBox = QtWidgets.QGroupBox(parent=consoleForm)
         self.groupBox.setGeometry(QtCore.QRect(750, 300, 131, 201))
+        palette = QtGui.QPalette()
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.ToolTipBase,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.ToolTipText,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.ToolTipBase,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.ToolTipText,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.ToolTipBase,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.ToolTipText,
+            brush,
+        )
+        self.groupBox.setPalette(palette)
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
@@ -622,8 +710,8 @@ class ConsoleDesigner(object):
         self.gbox_graph.setTitle(_("Trend"))  # noqa
         self.label_5.setText("% Profit:")
         self.lbl_profit_per.setText("0")
-        self.groupBox.setTitle(_("Multiplier/Position"))  # noqa
-        self.groupBox.setToolTip(_("last multiplier position"))  # noqa
+        self.groupBox.setTitle(_("Mutiplier/Round"))  # noqa
+        self.groupBox.setToolTip(_("last multiplier round"))  # noqa
         self.lbl_mul_1.setText("0:0")
         self.lbl_mul_2.setText("0:0")
         self.lbl_mul_3.setText("0:0")
@@ -631,8 +719,8 @@ class ConsoleDesigner(object):
         self.lbl_mul_5.setText("0:0")
         self.lbl_mul_6.setText("0:0")
         self.gbox_graph.setToolTip(
-            f"<html><head/><body><p><span style=\" color:#0000ff;\">{_('Multiplicator')} trend</span></p></body></html>"
-        )  # noqa
+            f"<html><head/><body><p><span>{_('Multiplicator')} trend</span></p></body></html>"  # noqa
+        )
         self.groupBox.setToolTip(
-            f"<html><head/><body><p>{_('Last multiplier positions. Format (multiplier:position)</p><p>If the position is -1, the multiplier was not found in all the analyzed rounds.')}</p></body></html>"
-        )  # noqa
+            f"<html><head/><body><p>{_('Last multiplier positions. Format (multiplier:position)</p><p>If the position is -1, the multiplier was not found in all the analyzed rounds.')}</p></body></html>"  # noqa
+        )

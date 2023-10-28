@@ -294,7 +294,7 @@ msgstr ""
 msgid "possible bet"
 msgstr ""
 
-msgid "Multipliers Positions"
+msgid "Mutiplier/Round"
 msgstr ""
 
 msgid "You must restart the application to apply the changes"
