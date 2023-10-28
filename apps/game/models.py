@@ -2,6 +2,7 @@
 import random
 import string
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional
 
 # Internal
@@ -12,6 +13,7 @@ class Multiplier:
     def __init__(self, multiplier: float):
         self.multiplier = multiplier
         self.category = 1 if multiplier < 2 else 2
+        self.multiplier_dt = datetime.now()
 
 
 class Bet:

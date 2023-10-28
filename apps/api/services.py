@@ -10,6 +10,7 @@ from apps.api.models import (
     Bot,
     CustomerData,
     CustomerLiveData,
+    Multiplier,
     MultiplierPositions,
     PlanData,
     Positions,
@@ -88,17 +89,20 @@ def request_token_verify(*, token: str) -> bool:
 
 
 def add_multipliers(
-    *, home_bet_game_id: int, multipliers: list[float]
+    *, home_bet_game_id: int, multipliers_data: list[Multiplier]
 ) -> dict[str, any]:
     """
     add_multipliers
     :param home_bet_game_id:
-    :param multipliers:
+    :param multipliers_data:
     :return:
     """
     bot_connector = BotAPIConnector()
     response = bot_connector.services.add_multipliers(
-        home_bet_game_id=home_bet_game_id, multipliers=multipliers
+        home_bet_game_id=home_bet_game_id,
+        multipliers_data=[
+            multiplier.__dict__() for multiplier in multipliers_data
+        ],
     )
     return response
 

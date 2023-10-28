@@ -1,10 +1,13 @@
 # Standard Library
 import abc
+from copy import copy
 from typing import Optional
 
 # Internal
 from apps.api import services as api_services
-from apps.api.models import BetData, MultiplierPositions
+from apps.api.models import BetData
+from apps.api.models import Multiplier as APIMultiplierData
+from apps.api.models import MultiplierPositions
 from apps.game.bookmakers.home_bet import HomeBet
 from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, Multiplier
@@ -39,7 +42,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
     balance: float = 0
     currency: str = "USD"
     multipliers: list[Multiplier] = []
-    multipliers_to_save: list[float] = []
+    multipliers_to_save: list[Multiplier] = []
     bets: list[Bet] = []
 
     multiplier_positions: MultiplierPositions = None
@@ -88,14 +91,15 @@ class GameBase(abc.ABC, ConfigurationFactory):
             )
         SendEventToGUI.balance(self.balance)
         SendEventToGUI.log.debug("loading the player")
-        self.multipliers_to_save = self.game_page.multipliers
-        SendEventToGUI.send_multipliers(self.multipliers_to_save)
+        multipliers_ = self.game_page.multipliers
+        SendEventToGUI.send_multipliers(multipliers_)
         self.multipliers = list(
-            map(lambda item: Multiplier(item), self.multipliers_to_save)
+            map(lambda item: Multiplier(item), multipliers_)
         )
+        self.multipliers_to_save = copy(self.multipliers)
         self.bot.initialize(
             balance=self.initial_balance,
-            multipliers=self.multipliers_to_save,
+            multipliers=multipliers_,
         )
         self.initialized = True
         self.request_customer_live()
@@ -162,12 +166,19 @@ class GameBase(abc.ABC, ConfigurationFactory):
         if len(self.multipliers_to_save) < self.MAX_MULTIPLIERS_TO_SAVE:
             return
         try:
+            _multipliers = [
+                APIMultiplierData(
+                    multiplier=item.multiplier,
+                    multiplier_dt=item.multiplier_dt,
+                )
+                for item in self.multipliers_to_save
+            ]
             api_services.add_multipliers(
                 home_bet_game_id=GlobalVars.get_home_bet_game_id(),
-                multipliers=self.multipliers_to_save,
+                multipliers_data=_multipliers,
             )
             self.multipliers_to_save = []
-            # SendEventToGUI.log.debug("multipliers saved")
+            SendEventToGUI.log.debug("multipliers saved")
             self.request_multiplier_positions()
         except Exception as error:
             SendEventToGUI.log.debug(
@@ -260,7 +271,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
         self.evaluate_bets(multiplier)
         self.multipliers.append(Multiplier(multiplier))
         self.bot.add_multiplier(multiplier)
-        self.multipliers_to_save.append(multiplier)
+        self.multipliers_to_save.append(Multiplier(multiplier))
         self.request_save_bets()
         self.request_save_multipliers()
         # remove the first multiplier

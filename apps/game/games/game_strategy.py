@@ -31,7 +31,7 @@ class GameStrategy(GameBase, configuration=GameType.STRATEGY.value):
         self.evaluate_bets(multiplier)
         self.multipliers.append(Multiplier(multiplier))
         self.bot.add_multiplier(multiplier)
-        self.multipliers_to_save.append(multiplier)
+        self.multipliers_to_save.append(Multiplier(multiplier))
         self.request_save_multipliers()
         # remove the first multiplier
         self.multipliers = self.multipliers[1:]

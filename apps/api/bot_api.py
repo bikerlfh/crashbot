@@ -174,14 +174,14 @@ class BotAPIServices:
         return response.status == HTTPStatus.OK
 
     def add_multipliers(
-        self, *, home_bet_game_id: int, multipliers: List[int]
+        self, *, home_bet_game_id: int, multipliers_data: List[dict[str, any]]
     ) -> Dict[str, Any]:
         try:
             response = self.client.post(
                 service=self.ADD_MULTIPLIERS,
                 data=dict(
                     home_bet_game_id=home_bet_game_id,
-                    multipliers=multipliers,
+                    multipliers_data=multipliers_data,
                 ),
             )
         except Exception as exc:
