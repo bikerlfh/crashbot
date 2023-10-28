@@ -24,3 +24,6 @@ black: ## black
 
 generate-installer:
 	pyinstaller --onefile --icon=/apps/gui/resources/bot.ico crashbot.py
+
+translate:
+	msgfmt -o locales/es/LC_MESSAGES/base.mo locales/es/LC_MESSAGES/base

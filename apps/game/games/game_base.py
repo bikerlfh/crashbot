@@ -36,6 +36,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
     home_bet: HomeBet
     initial_balance: float = 0
     balance: float = 0
+    currency: str = "USD"
     multipliers: list[Multiplier] = []
     multipliers_to_save: list[float] = []
     bets: list[Bet] = []
@@ -73,6 +74,8 @@ class GameBase(abc.ABC, ConfigurationFactory):
         SendEventToGUI.log.info(_("reading the player's balance"))  # noqa
         self.initial_balance = self.game_page.balance
         self.balance = self.initial_balance
+        self.currency = self.game_page.currency
+        GlobalVars.set_currency(self.currency)
         last_balance = local_storage.get_last_initial_balance(
             home_bet_id=self.home_bet.id
         )
@@ -118,7 +121,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
         """
         try:
             self.multiplier_positions = api_services.get_multiplier_positions(
-                home_bet_id=self.home_bet.id
+                home_bet_game_id=GlobalVars.get_home_bet_game_id()
             )
             # SendEventToGUI.log.debug("multiplier positions received")
         except Exception as error:
@@ -137,7 +140,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
             return
         try:
             api_services.add_multipliers(
-                home_bet_id=self.home_bet.id,
+                home_bet_game_id=GlobalVars.get_home_bet_game_id(),
                 multipliers=self.multipliers_to_save,
             )
             self.multipliers_to_save = []

@@ -16,19 +16,23 @@ from socketio import AsyncServer
 
 # Internal
 from apps.config import Config
+from apps.utils.security import encrypt
 
 logger = logging.getLogger(__name__)
 
 
 class GlobalVars:
     APP_NAME: str = "CrashBot"
-    APP_VERSION: str = "1.2.1"
+    APP_VERSION: str = "1.3.0"
+    APP_HASH: str = None
     SIO: AsyncServer = None
     GAME: any = None
     WS_SERVER_EVENT: Event
     config: Config
 
     class VARS(str, Enum):
+        HOME_BET_GAME_ID = "HOME_BET_GAME_ID"
+        CURRENCY = "CURRENCY"
         AUTO_PLAY = "AUTO_PLAY"
         MAX_AMOUNT_TO_BET = "MAX_AMOUNT_TO_BET"
         ADD_LOG = "ADD_LOG"
@@ -44,6 +48,11 @@ class GlobalVars:
 
     @staticmethod
     def init() -> None:
+        GlobalVars.APP_HASH = encrypt.md5(
+            f"{GlobalVars.APP_NAME}{GlobalVars.APP_VERSION}"
+        )
+        globals().setdefault(GlobalVars.VARS.HOME_BET_GAME_ID, None)
+        globals().setdefault(GlobalVars.VARS.CURRENCY, None)
         globals().setdefault(GlobalVars.VARS.AUTO_PLAY, False)
         globals().setdefault(GlobalVars.VARS.MAX_AMOUNT_TO_BET, 0)
         globals().setdefault(GlobalVars.VARS.ADD_LOG, None)
@@ -79,6 +88,22 @@ class GlobalVars:
     @classmethod
     def get_game(cls) -> any:
         return cls.GAME
+
+    @staticmethod
+    def get_home_bet_game_id() -> int:
+        return globals().get(GlobalVars.VARS.HOME_BET_GAME_ID)
+
+    @staticmethod
+    def set_home_bet_game_id(home_bet_game_id: int) -> None:
+        globals()[GlobalVars.VARS.HOME_BET_GAME_ID] = home_bet_game_id
+
+    @staticmethod
+    def get_currency() -> str:
+        return globals().get(GlobalVars.VARS.CURRENCY)
+
+    @staticmethod
+    def set_currency(currency: str) -> None:
+        globals()[GlobalVars.VARS.CURRENCY] = currency
 
     @staticmethod
     def get_auto_play() -> bool:
