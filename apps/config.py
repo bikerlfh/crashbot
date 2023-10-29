@@ -13,6 +13,7 @@ class Config(metaclass=Singleton):
         API_URL = "API_URL"
         WS_URL = "WS_URL"
         ALLOWED_LOG_CODES_TO_SHOW = "ALLOWED_LOG_CODES_TO_SHOW"
+        DEBUG = "DEBUG"
         MAX_AMOUNT_HOME_BET_PERCENTAGE = "MAX_AMOUNT_HOME_BET_PERCENTAGE"
         MAX_AMOUNT_BALANCE_PERCENTAGE = "MAX_AMOUNT_BALANCE_PERCENTAGE"
         NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH = (
@@ -33,6 +34,7 @@ class Config(metaclass=Singleton):
             "error",
             # "debug",
         ]
+        self.DEBUG = False
         self.MAX_AMOUNT_HOME_BET_PERCENTAGE = 0.5
         self.MAX_AMOUNT_BALANCE_PERCENTAGE = 0.005
         self.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH = 30
@@ -60,11 +62,14 @@ class Config(metaclass=Singleton):
                 variable, value = line.strip().split("=")
                 match variable:
                     case self.ConfigVar.API_URL:
-                        self.API_URL = value
+                        if self.DEBUG:
+                            self.API_URL = value
                     case self.ConfigVar.WS_URL:
                         self.WS_URL = value
                     case self.ConfigVar.ALLOWED_LOG_CODES_TO_SHOW:
                         self.ALLOWED_LOG_CODES_TO_SHOW = value.split(",")
+                    case self.ConfigVar.DEBUG:
+                        self.DEBUG = bool(int(value))
                     case self.ConfigVar.MAX_AMOUNT_HOME_BET_PERCENTAGE:
                         self.MAX_AMOUNT_HOME_BET_PERCENTAGE = float(value)
                     case self.ConfigVar.MAX_AMOUNT_BALANCE_PERCENTAGE:
@@ -97,10 +102,10 @@ class Config(metaclass=Singleton):
                 f"MAX_AMOUNT_BALANCE_PERCENTAGE="
                 f"{self.MAX_AMOUNT_BALANCE_PERCENTAGE}\n"
             )
-            file.write(
-                f"ALLOWED_LOG_CODES_TO_SHOW="
-                f'{",".join(self.ALLOWED_LOG_CODES_TO_SHOW)}\n'
-            )
+            # file.write(
+            #     f"ALLOWED_LOG_CODES_TO_SHOW="
+            #     f'{",".join(self.ALLOWED_LOG_CODES_TO_SHOW)}\n'
+            # )
             file.write(
                 f"NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH="
                 f"{self.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH}\n"

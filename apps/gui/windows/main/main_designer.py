@@ -90,9 +90,9 @@ class MainDesigner(object):
         self.menubar.setObjectName("menubar")
         self.menu_file = QtWidgets.QMenu(parent=self.menubar)
         self.menu_file.setObjectName("menu_file")
-        self.menuView = QtWidgets.QMenu(parent=self.menubar)
-        self.menuView.setObjectName("menuView")
-        self.menu_logs = QtWidgets.QMenu(parent=self.menuView)
+        self.menu_view = QtWidgets.QMenu(parent=self.menubar)
+        self.menu_view.setObjectName("menu_view")
+        self.menu_logs = QtWidgets.QMenu(parent=self.menu_view)
         self.menu_logs.setObjectName("menu_logs")
         self.menu_configuration = QtWidgets.QMenu(parent=self.menubar)
         self.menu_configuration.setObjectName("menu_configuration")
@@ -126,13 +126,13 @@ class MainDesigner(object):
         self.menu_file.addAction(self.action_exit)
         self.menu_logs.addAction(self.actionInfo)
         self.menu_logs.addAction(self.actionDebug)
-        self.menuView.addAction(self.menu_logs.menuAction())
+        self.menu_view.addAction(self.menu_logs.menuAction())
         self.menu_language.addAction(self.action_english)
         self.menu_language.addAction(self.action_spanish)
         self.menu_configuration.addAction(self.action_crendentials)
         self.menu_configuration.addAction(self.menu_language.menuAction())
         self.menubar.addAction(self.menu_file.menuAction())
-        self.menubar.addAction(self.menuView.menuAction())
+        self.menubar.addAction(self.menu_view.menuAction())
         self.menubar.addAction(self.menu_configuration.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -142,7 +142,7 @@ class MainDesigner(object):
         MainWindow.setWindowTitle("MainWindow")  # noqa
         self.lbl_version.setText("1.0.0")  # noqa
         self.menu_file.setTitle(_("File"))  # noqa
-        self.menuView.setTitle(_("View"))  # noqa
+        self.menu_view.setTitle(_("View"))  # noqa
         self.menu_logs.setTitle(_("Logs"))  # noqa
         self.menu_configuration.setTitle(_("Configuration"))  # noqa
         self.menu_language.setTitle(_("Language"))  # noqa

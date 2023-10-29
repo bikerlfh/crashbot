@@ -9,7 +9,6 @@ import copy
 import logging
 from enum import Enum
 from threading import Event
-from typing import Callable
 
 # Libraries
 from socketio import AsyncServer
@@ -39,7 +38,6 @@ class GlobalVars:
         CURRENCY = "CURRENCY"
         AUTO_PLAY = "AUTO_PLAY"
         MAX_AMOUNT_TO_BET = "MAX_AMOUNT_TO_BET"
-        ADD_LOG = "ADD_LOG"
         ALLOWED_HOME_BETS = "ALLOWED_HOME_BETS"
         USERNAME = "USERNAME"
         PASSWORD = "PASSWORD"
@@ -60,7 +58,6 @@ class GlobalVars:
         globals().setdefault(GlobalVars.VARS.CURRENCY, None)
         globals().setdefault(GlobalVars.VARS.AUTO_PLAY, False)
         globals().setdefault(GlobalVars.VARS.MAX_AMOUNT_TO_BET, 0)
-        globals().setdefault(GlobalVars.VARS.ADD_LOG, None)
         globals().setdefault(GlobalVars.VARS.ALLOWED_HOME_BETS, [])
         globals().setdefault(GlobalVars.VARS.USERNAME, None)
         globals().setdefault(GlobalVars.VARS.PASSWORD, None)
@@ -125,14 +122,6 @@ class GlobalVars:
     @staticmethod
     def set_max_amount_to_bet(max_amount_to_bet: float) -> None:
         globals()[GlobalVars.VARS.MAX_AMOUNT_TO_BET] = max_amount_to_bet
-
-    @staticmethod
-    def get_add_log_callback() -> Callable:
-        return globals().get(GlobalVars.VARS.ADD_LOG)
-
-    @staticmethod
-    def set_add_log_call_back(add_log: Callable) -> None:
-        globals()[GlobalVars.VARS.ADD_LOG] = add_log
 
     @staticmethod
     def get_allowed_home_bets() -> list[object]:

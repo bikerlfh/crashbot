@@ -135,7 +135,7 @@
     <addaction name="action_signout"/>
     <addaction name="action_exit"/>
    </widget>
-   <widget class="QMenu" name="menuView">
+   <widget class="QMenu" name="menu_view">
     <property name="title">
      <string>View</string>
     </property>
@@ -163,7 +163,7 @@
     <addaction name="menu_language"/>
    </widget>
    <addaction name="menu_file"/>
-   <addaction name="menuView"/>
+   <addaction name="menu_view"/>
    <addaction name="menu_configuration"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

@@ -60,6 +60,8 @@ class SendEventToGUI:
 
         @staticmethod
         def debug(message: str):
+            if not GlobalVars.config.DEBUG:
+                return
             _send_log_to_gui(message, LogCode.DEBUG)
 
     log = _LogEvent
