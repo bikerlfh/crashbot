@@ -516,6 +516,7 @@ class ConsoleDesigner(object):
         self.gbox_graph.setFont(font)
         self.gbox_graph.setTabletTracking(False)
         self.gbox_graph.setAcceptDrops(False)
+        self.gbox_graph.setToolTip("")
         self.gbox_graph.setWhatsThis("")
         self.gbox_graph.setAutoFillBackground(False)
         self.gbox_graph.setFlat(False)
@@ -605,6 +606,7 @@ class ConsoleDesigner(object):
         font.setUnderline(False)
         font.setStrikeOut(False)
         self.groupBox.setFont(font)
+        self.groupBox.setToolTip("")
         self.groupBox.setObjectName("groupBox")
         self.lbl_mul_1 = QtWidgets.QLabel(parent=self.groupBox)
         self.lbl_mul_1.setGeometry(QtCore.QRect(10, 20, 111, 20))
@@ -718,9 +720,3 @@ class ConsoleDesigner(object):
         self.lbl_mul_4.setText("0:0")
         self.lbl_mul_5.setText("0:0")
         self.lbl_mul_6.setText("0:0")
-        self.gbox_graph.setToolTip(
-            f"<html><head/><body><p><span>{_('Multiplicator')} trend</span></p></body></html>"  # noqa
-        )
-        self.groupBox.setToolTip(
-            f"<html><head/><body><p>{_('Last multiplier positions. Format (multiplier:position)</p><p>If the position is -1, the multiplier was not found in all the analyzed rounds.')}</p></body></html>"  # noqa
-        )
