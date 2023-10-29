@@ -62,7 +62,8 @@ class Config(metaclass=Singleton):
                 variable, value = line.strip().split("=")
                 match variable:
                     case self.ConfigVar.API_URL:
-                        self.API_URL = value
+                        if self.DEBUG:
+                            self.API_URL = value
                     case self.ConfigVar.WS_URL:
                         self.WS_URL = value
                     case self.ConfigVar.ALLOWED_LOG_CODES_TO_SHOW:
