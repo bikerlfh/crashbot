@@ -173,6 +173,9 @@ class MainForm(QMainWindow, MainDesigner):
 
     def _generate_menu_logs(self) -> None:
         self.menu_logs.clear()
+        if not GlobalVars.config.DEBUG:
+            self.menu_view.removeAction(self.menu_logs.menuAction())
+            return
         for code in self.allowed_logs:
             action = self._add_action(code.capitalize())
             self.menu_logs.addAction(action)
