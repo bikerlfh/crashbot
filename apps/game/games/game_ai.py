@@ -87,10 +87,8 @@ class GameAI(GameBase, configuration=GameType.AI.value):
         if auto_play:
             self.bets = bets
         elif bets:
-            _possible_bets = [
-                dict(amount=bet.amount, multiplier=bet.multiplier)
-                for bet in bets
-            ]
-            for bet in reversed(_possible_bets):
-                SendEventToGUI.log.info(f"possible bet: {bet}")
+            for bet in reversed(bets):
+                SendEventToGUI.log.info(
+                    f"{_('recommended bet')}: ${bet.amount} x {bet.multiplier}x"  # noqa
+                )
         return self.bets

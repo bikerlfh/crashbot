@@ -129,7 +129,7 @@ msgid "Error in request_get_prediction"
 msgstr ""
 
 #: ./apps/game/game.py:206
-msgid "waiting for the next game"
+msgid "Waiting for the next game"
 msgstr ""
 
 #: ./apps/game/game.py:233
@@ -271,7 +271,7 @@ msgid "Sending bet to aviator"
 msgstr ""
 
 #: ./apps/scrappers/aviator/aviator.py:235
-msgid "New Multiplier"
+msgid "Last Multiplier"
 msgstr ""
 
 #: ./apps/scrappers/aviator/aviator_bet_play.py:24
