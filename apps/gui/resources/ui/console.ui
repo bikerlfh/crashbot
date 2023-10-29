@@ -815,7 +815,7 @@
     <bool>false</bool>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span&gt;Multiplicator trend&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string/>
    </property>
    <property name="whatsThis">
     <string notr="true"/>
@@ -997,7 +997,7 @@
     </font>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Last multiplier positions. Format (multiplier:position)&lt;/p&gt;&lt;p&gt;If the position is -1, the multiplier was not found in all the analyzed rounds.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string/>
    </property>
    <property name="title">
     <string>Mutiplier/Round</string>
