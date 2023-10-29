@@ -89,11 +89,8 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.lbl_home_bet.setText(self.home_bet.name)  # noqa
         self.lbl_bot_type.setText(bot_name)
         self.txt_max_amount_to_bet.setText(str(max_amount_to_bet))
-        self.btn_auto_bet.setText(
-            f"{_('AutoBet')} ON"  # noqa
-            if auto_play
-            else f"{_('AutoBet')} OFF"  # noqa
-        )
+        text_ = _("Stop Bot") if auto_play else _("Start Bot")  # noqa
+        self.btn_auto_bet.setText(text_)
         # self.ws_client.set_home_bet(
         #     home_bet_id=self.home_bet.id,  # noqa
         #     customer_id=local_storage.get_customer_id(),
@@ -106,11 +103,12 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     def button_auto_cash_out_clicked_event(self):
         auto_cash_out = not GlobalVars.get_auto_cash_out()
         GlobalVars.set_auto_cash_out(auto_cash_out)
-        self.btn_auto_cash_out.setText(
-            f"{_('Auto CashOut')} ON"  # noqa
+        text_ = (
+            _("Turn off auto cash out")  # noqa
             if auto_cash_out
-            else f"{_('Auto CashOut')} OFF"  # noqa
-        )
+            else _("Turn on auto cash out")  # noqa
+        )  # noqa
+        self.btn_auto_cash_out.setText(text_)
 
     def button_set_max_amount_to_bet_clicked_event(self):
         amount = self.txt_max_amount_to_bet.text()
@@ -127,8 +125,8 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         if not amount_is_valid:
             QMessageBox.warning(
                 self,
-                "Amount to bet is not valid",
-                f"Amount to bet must be between {min_} and {max_}",
+                _("Amount to bet is not valid"),  # noqa
+                f"{_('Amount to bet must be between')} {min_} {_('and')} {max_}",  # noqa
             )
             self.txt_max_amount_to_bet.setFocus()
             return
@@ -145,12 +143,16 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     @QtCore.pyqtSlot(dict)
     def _on_receive_auto_play(self, data: dict):
         try:
+            amount = GlobalVars.get_max_amount_to_bet()
+            if not amount:
+                self.main_window.show_message_box(
+                    title="Error",
+                    message=_("Please, set the max amount to bet"),  # noqa
+                )
+                return
             self.auto_play = data.get("auto_play")
-            self.btn_auto_bet.setText(
-                f"{_('AutoBet')} ON"  # noqa
-                if self.auto_play
-                else f"{_('AutoBet')} OFF"  # noqa
-            )
+            text_ = _("Stop Bot") if self.auto_play else _("Start Bot")  # noqa
+            self.btn_auto_bet.setText(text_)
             self.btn_auto_cash_out.setEnabled(self.auto_play)
         except Exception as e:
             logs_services.save_gui_log(
@@ -253,7 +255,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             lbl_mul = getattr(self, f"lbl_mul_{i+1}", None)
             if not lbl_mul:
                 break
-            lbl_mul.setText(f"{multiplier}:{position}")
+            lbl_mul.setText(f"{multiplier} : {position}")
 
     def on_receive_multiplier_positions(self, positions):
         """

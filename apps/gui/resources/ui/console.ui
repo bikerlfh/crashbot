@@ -481,7 +481,8 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -489,7 +490,7 @@
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="text">
-    <string>Set Amount Bet</string>
+    <string>Set amount to bet</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_auto_bet">
@@ -503,7 +504,8 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -514,7 +516,10 @@
     <string extracomment="turn on/of auto bet"/>
    </property>
    <property name="text">
-    <string>AutoBet ON</string>
+    <string>Start Bot</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -528,7 +533,8 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -542,7 +548,7 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>100</y>
      <width>71</width>
      <height>30</height>
@@ -550,7 +556,8 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -569,7 +576,8 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -588,7 +596,8 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <bold>true</bold>
      <kerning>true</kerning>
     </font>
@@ -600,15 +609,16 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>130</y>
-     <width>61</width>
+     <width>71</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -619,15 +629,16 @@
   <widget class="QLabel" name="lbl_home_bet">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>20</y>
-     <width>231</width>
+     <width>221</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -638,15 +649,16 @@
   <widget class="QLabel" name="lbl_bot_type">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>50</y>
-     <width>231</width>
+     <width>221</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -665,14 +677,24 @@
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>12</pointsize>
     </font>
    </property>
    <property name="inputMethodHints">
     <set>Qt::ImhPreferNumbers</set>
    </property>
+   <property name="inputMask">
+    <string notr="true"/>
+   </property>
+   <property name="maxLength">
+    <number>600</number>
+   </property>
    <property name="frame">
     <bool>false</bool>
+   </property>
+   <property name="clearButtonEnabled">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="Line" name="line">
@@ -686,6 +708,7 @@
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>12</pointsize>
     </font>
    </property>
@@ -704,6 +727,7 @@
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>12</pointsize>
     </font>
    </property>
@@ -722,6 +746,7 @@
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>12</pointsize>
     </font>
    </property>
@@ -804,7 +829,8 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -844,7 +870,8 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
     </font>
    </property>
    <property name="toolTip">
@@ -862,7 +889,8 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -873,13 +901,16 @@
     <string extracomment="turn on/of auto bet"/>
    </property>
    <property name="text">
-    <string>Auto CashOut OFF</string>
+    <string>Turn On auto cash out</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>160</y>
      <width>71</width>
      <height>30</height>
@@ -887,12 +918,13 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
    <property name="text">
-    <string>% profit:</string>
+    <string>%:</string>
    </property>
   </widget>
   <widget class="QLabel" name="lbl_profit_per">
@@ -906,7 +938,8 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -989,7 +1022,8 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
      <italic>false</italic>
      <bold>true</bold>
      <underline>false</underline>
@@ -1000,7 +1034,10 @@
     <string/>
    </property>
    <property name="title">
-    <string>Mutiplier/Round</string>
+    <string>Multipliers</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
    <widget class="QLabel" name="lbl_mul_1">
     <property name="geometry">
@@ -1013,7 +1050,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
       <italic>false</italic>
       <bold>true</bold>
       <underline>false</underline>
@@ -1038,7 +1076,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
       <italic>false</italic>
       <bold>true</bold>
       <underline>false</underline>
@@ -1066,7 +1105,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
       <italic>false</italic>
       <bold>true</bold>
       <underline>false</underline>
@@ -1091,7 +1131,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
       <italic>false</italic>
       <bold>true</bold>
       <underline>false</underline>
@@ -1116,7 +1157,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
       <italic>false</italic>
       <bold>true</bold>
       <underline>false</underline>
@@ -1141,7 +1183,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
       <italic>false</italic>
       <bold>true</bold>
       <underline>false</underline>
