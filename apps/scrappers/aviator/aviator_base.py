@@ -234,7 +234,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         for i, bet in enumerate(bets):
             control = Control.Control1 if i == 0 else Control.Control2
             SendEventToGUI.log.info(
-                f"{_('Sending bet to aviator')} {bet.amount} * "  # noqa
+                f"{_('Sending bet to aviator')} ${bet.amount} * "  # noqa
                 f"{bet.multiplier} control: {control.value}"
             )
             await self._controls.bet(
@@ -285,7 +285,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
                 if last_multiplier_saved != last_multiplier:
                     self.multipliers.append(last_multiplier)
                     SendEventToGUI.log.success(
-                        f"{_('New Multiplier')}: {last_multiplier}"  # noqa
+                        f"{_('Last Multiplier')}: {last_multiplier}"  # noqa
                     )
                     self.multipliers = self.multipliers[1:]
                     return

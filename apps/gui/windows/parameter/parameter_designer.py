@@ -19,7 +19,7 @@ class ParameterDesigner(object):
         self.groupBox = QtWidgets.QGroupBox(parent=Parameters)
         self.groupBox.setGeometry(QtCore.QRect(10, 10, 391, 271))
         font = QtGui.QFont()
-        font.setPointSize(12)
+        font.setPointSize(10)
         self.groupBox.setFont(font)
         self.groupBox.setTitle("")
         self.groupBox.setObjectName("groupBox")

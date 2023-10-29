@@ -42,7 +42,7 @@ class GameStrategy(GameBase, configuration=GameType.STRATEGY.value):
         Wait for the next game to start
         override the base method to not save customer balance
         """
-        SendEventToGUI.log.info(_("waiting for the next game"))  # noqa
+        SendEventToGUI.log.info(_("Waiting for the next game"))  # noqa
         await self.game_page.wait_next_game()
         self.balance = await self.read_balance_to_aviator()
         # TODO implement create manual bets
@@ -59,10 +59,8 @@ class GameStrategy(GameBase, configuration=GameType.STRATEGY.value):
         if auto_play:
             self.bets = bets
         elif bets:
-            _possible_bets = [
-                dict(amount=bet.amount, multiplier=bet.multiplier)
-                for bet in bets
-            ]
-            for bet in reversed(_possible_bets):
-                SendEventToGUI.log.info(f"possible bet: {bet}")
+            for bet in reversed(bets):
+                SendEventToGUI.log.info(
+                    f"{_('recommended bet')}: ${bet.amount} x {bet.multiplier}x"  # noqa
+                )
         return self.bets

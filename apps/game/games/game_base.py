@@ -234,7 +234,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
         """
         Wait for the next game to start
         """
-        SendEventToGUI.log.info(_("waiting for the next game"))  # noqa
+        SendEventToGUI.log.info(_("Waiting for the next game"))  # noqa
         await self.game_page.wait_next_game()
         balance = await self.read_balance_to_aviator()
         if balance != self.balance:
