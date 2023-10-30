@@ -286,7 +286,7 @@ class BotBase(abc.ABC):
             elif profit > 0:
                 result_last_game = True
                 self.remove_loss(profit)
-        else:
+        elif self.bets:
             for bet in self.bets:
                 profit = bet.evaluate(multiplier_result)
                 if profit < 0:

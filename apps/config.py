@@ -59,7 +59,10 @@ class Config(metaclass=Singleton):
             for line in file:
                 if line.startswith("#"):
                     continue
-                variable, value = line.strip().split("=")
+                try:
+                    variable, value = line.strip().split("=")
+                except Exception:
+                    continue
                 match variable:
                     case self.ConfigVar.API_URL:
                         if self.DEBUG:
