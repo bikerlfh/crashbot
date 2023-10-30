@@ -40,7 +40,7 @@ class BotBase(abc.ABC):
 
     auto_play: bool = False
 
-    MAX_MULTIPLIERS_IN_MEMORY: int = 50
+    MAX_MULTIPLIERS_IN_MEMORY: int = 200
 
     amount_multiple: Optional[float] = None
     # real initial balance
@@ -387,17 +387,19 @@ class BotBase(abc.ABC):
         min_ = round(multiplier * (1 - percentage), 2)
         return min_, multiplier
 
-    def get_last_position_of_multipliers(self) -> list[tuple[int, int]]:
+    def get_last_position_of_multipliers(
+        self,
+    ) -> tuple[list[tuple[int, int]], int]:  # noqa
         multipliers = GlobalVars.config.MULTIPLIERS_TO_SHOW_LAST_POSITION
         positions = []
         if not multipliers:
-            return []
+            return [], 0
         for multiplier in multipliers:
             position = game_utils.get_last_position_multiplier(
                 multiplier=multiplier, last_multipliers=self.multipliers
             )
             positions.append((multiplier, position))
-        return positions
+        return positions, len(self.multipliers)
 
     @staticmethod
     def calculate_recovery_amount(

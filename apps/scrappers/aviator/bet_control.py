@@ -155,6 +155,8 @@ class BetControl(AbstractControlBase):
         value = round(float(await input_element.input_value(timeout=1000)), 0)
         if value != amount:
             await input_element.fill("", timeout=1000)
+            if amount - int(amount) == 0:
+                amount = int(amount)
             await input_element.type(
                 str(amount), delay=self._random_delay(500)
             )

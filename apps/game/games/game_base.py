@@ -107,8 +107,8 @@ class GameBase(abc.ABC, ConfigurationFactory):
         self.request_save_customer_balance()
         SendEventToGUI.log.success(_("Game initialized"))  # noqa
         SendEventToGUI.game_loaded(True)
-        positions = self.bot.get_last_position_of_multipliers()
-        SendEventToGUI.send_multiplier_positions(positions)
+        positions, len_multiplier = self.bot.get_last_position_of_multipliers()
+        SendEventToGUI.send_multiplier_positions(positions, len_multiplier)
 
     async def close(self):
         self.request_customer_live(closing_session=True)
@@ -283,8 +283,13 @@ class GameBase(abc.ABC, ConfigurationFactory):
             self.request_customer_live()
             await self.wait_next_game()
             self.get_next_bet()
-            positions = self.bot.get_last_position_of_multipliers()
-            SendEventToGUI.send_multiplier_positions(positions)
+            (
+                positions,
+                len_multipliers,
+            ) = self.bot.get_last_position_of_multipliers()
+            SendEventToGUI.send_multiplier_positions(
+                positions, len_multipliers
+            )
             await self.send_bets_to_aviator()
             SendEventToGUI.log.info(
                 "*****************************************"
