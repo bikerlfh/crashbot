@@ -229,6 +229,9 @@ class BotBase(abc.ABC):
             SendEventToGUI.log.debug("setting maxAmountToBet to balance")
             self._max_amount_to_bet = 0
         self._min_amount_to_bet = round(self._max_amount_to_bet * 0.3, 0)
+        if self._min_amount_to_bet < self.minimum_bet:
+            self._min_amount_to_bet = self.minimum_bet
+            self._max_amount_to_bet = amount - self._min_amount_to_bet
         if self.amount_multiple:
             self._max_amount_to_bet = game_utils.round_number_to(
                 self._max_amount_to_bet, self.amount_multiple
