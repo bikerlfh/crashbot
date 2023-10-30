@@ -333,3 +333,12 @@ msgstr "Ganancia:"
 
 msgid "recommended bet"
 msgstr "apuesta recomendada"
+
+msgid "The balance is very low"
+msgstr "El balance es muy bajo"
+
+msgid "The selected bot recommends to have at least"
+msgstr "El bot seleccionado recomienda tener al menos"
+
+msgid "in the bank. ¡Play at your own risk!"
+msgstr "en el banco. ¡Juega bajo tu propio riesgo!"
