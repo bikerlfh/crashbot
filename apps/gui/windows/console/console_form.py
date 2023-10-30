@@ -30,6 +30,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         super().__init__()
         self.logs_to_save = []
         self.home_bet = None
+        self.bot = None
         self.initial_balance = None
         self.balance = None
         self.setupUi(self)
@@ -86,6 +87,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     ):
         home_bets = GlobalVars.get_allowed_home_bets()
         self.home_bet = home_bets[home_bet_index]
+        self.bot = next(
+            filter(lambda x: x.name == bot_name, GlobalVars.get_bots()),
+            None,
+        )
         self.lbl_home_bet.setText(self.home_bet.name)  # noqa
         self.lbl_bot_type.setText(bot_name)
         self.txt_max_amount_to_bet.setText(str(max_amount_to_bet))
@@ -130,6 +135,18 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             )
             self.txt_max_amount_to_bet.setFocus()
             return
+        number_of_min_bets_allowed_in_bank = (
+            self.bot.number_of_min_bets_allowed_in_bank
+        )
+        num_bets_in_bank = self.balance / amount
+        if num_bets_in_bank < number_of_min_bets_allowed_in_bank:
+            amount_ = amount * number_of_min_bets_allowed_in_bank
+            QMessageBox.warning(
+                self,
+                _("The balance is very low"),  # noqa
+                f"{_('The selected bot recommends to have at least')} ${amount_} "  # noqa
+                f"{_('in the bank. ¡Play at your own risk!')}",  # noqa
+            )
         self.main_window.socket.set_max_amount_to_bet(max_amount_to_bet=amount)
 
     def on_auto_play(self, data):

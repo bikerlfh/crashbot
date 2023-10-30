@@ -84,6 +84,7 @@ def read_custom_bots() -> list[Bot]:
     required_keys = [
         "name",
         "bot_type",
+        "number_of_min_bets_allowed_in_bank",
         "risk_factor",
         "min_multiplier_to_bet",
         "min_multiplier_to_recover_losses",
@@ -106,6 +107,9 @@ def read_custom_bots() -> list[Bot]:
             invalid_values = True
         if item["bot_type"] not in BotType.to_list():
             print("custom bots: invalid bot_type")
+            invalid_values = True
+        if not isinstance(item["number_of_min_bets_allowed_in_bank"], int):
+            print("custom bots: invalid number_of_min_bets_allowed_in_bank")
             invalid_values = True
         if not isinstance(item["risk_factor"], float):
             print("custom bots: invalid risk_factor")
@@ -150,6 +154,9 @@ def read_custom_bots() -> list[Bot]:
                 id=i,
                 name=item["name"],
                 bot_type=item["bot_type"],
+                number_of_min_bets_allowed_in_bank=item[
+                    "number_of_min_bets_allowed_in_bank"
+                ],
                 risk_factor=item["risk_factor"],
                 min_multiplier_to_bet=item["min_multiplier_to_bet"],
                 min_multiplier_to_recover_losses=item[

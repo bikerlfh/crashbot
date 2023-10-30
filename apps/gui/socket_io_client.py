@@ -1,4 +1,5 @@
 # Standard Library
+import logging
 from typing import Callable, Optional
 
 # Libraries
@@ -8,6 +9,8 @@ from PyQt6 import QtCore
 # Internal
 from apps.constants import WSEvent
 from apps.game.ws_server.constants import WS_SERVER_HOST, WS_SERVER_PORT
+
+logger = logging.getLogger(__name__)
 
 
 class SocketIOClient(QtCore.QThread):
@@ -146,20 +149,20 @@ class SocketIOClient(QtCore.QThread):
 
     @staticmethod
     def _on_default(data: any) -> None:
-        print(f"WS callback not specify!!!: {data}")
+        logger.info(f"WS callback not specify!!!: {data}")
 
     @staticmethod
     def _on_close_game(data: any) -> None:
-        print(f"WS callback on_close_game!!!: {data}")
+        logger.info(f"WS callback on_close_game!!!: {data}")
 
     @staticmethod
     def _on_set_max_amount_to_bet(data: any) -> None:
-        print(f"WS callback on_set_max_amount_to_bet!!!: {data}")
+        logger.info(f"WS callback on_set_max_amount_to_bet!!!: {data}")
 
     @staticmethod
     def _on_error(data: any) -> None:
-        print(f"WS callback on_error!!!: {data}")
+        logger.error(f"WS callback on_error!!!: {data}")
 
     @staticmethod
     def _on_exception(data: any) -> None:
-        print(f"WS callback on_exception!!!: {data}")
+        logger.exception(f"WS callback on_exception!!!: {data}")

@@ -102,6 +102,7 @@ class Bot:
         id: int,
         name: str,
         bot_type: str,
+        number_of_min_bets_allowed_in_bank: int,
         risk_factor: float,
         min_multiplier_to_bet: float,
         min_multiplier_to_recover_losses: float,
@@ -117,6 +118,9 @@ class Bot:
         self.id = id
         self.name = name
         self.bot_type = bot_type
+        self.number_of_min_bets_allowed_in_bank = (
+            number_of_min_bets_allowed_in_bank
+        )
         self.risk_factor = risk_factor
         self.min_multiplier_to_bet = min_multiplier_to_bet
         self.min_multiplier_to_recover_losses = (
