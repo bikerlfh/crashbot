@@ -80,15 +80,15 @@ class GameBase(abc.ABC, ConfigurationFactory):
         self.balance = self.initial_balance
         self.currency = self.game_page.currency
         GlobalVars.set_currency(self.currency)
-        last_balance = local_storage.get_last_initial_balance(
-            home_bet_id=self.home_bet.id
-        )
-        if last_balance and last_balance > self.initial_balance:
-            self.initial_balance = last_balance
-            SendEventToGUI.log.debug(
-                f"Update the initial balance from"
-                f" local storage {self.initial_balance}"
-            )
+        # last_balance = local_storage.get_last_initial_balance(
+        #     home_bet_id=self.home_bet.id
+        # )
+        # if last_balance and last_balance > self.initial_balance:
+        #     self.initial_balance = last_balance
+        #     SendEventToGUI.log.debug(
+        #         f"Update the initial balance from"
+        #         f" local storage {self.initial_balance}"
+        #     )
         SendEventToGUI.balance(self.balance)
         SendEventToGUI.log.debug("loading the player")
         multipliers_ = self.game_page.multipliers

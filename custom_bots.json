@@ -1,13 +1,13 @@
 [
     {
-        "name": "MyAggressiveBot",
+        "name": "CustomBot1",
         "bot_type": "aggressive",
         "risk_factor": 0.1,
-        "min_multiplier_to_bet": 2.0,
+        "min_multiplier_to_bet": 1.95,
         "min_multiplier_to_recover_losses": 2.0,
         "min_probability_to_bet": 0.5,
         "min_category_percentage_to_bet": 0.5,
-        "max_recovery_percentage_on_max_bet": 1.0,
+        "max_recovery_percentage_on_max_bet": 0.8,
         "min_average_model_prediction": 0.1,
         "stop_loss_percentage": 1.0,
         "take_profit_percentage": 3.0,
@@ -35,10 +35,6 @@
                 "condition_on_value": 1.0,
                 "condition_on_value_2": null,
                 "actions": [
-                    {
-                        "condition_action": "reset_bet_amount",
-                        "action_value": 0.0
-                    },
                     {
                         "condition_action": "update_multiplier",
                         "action_value": 1.5
@@ -127,6 +123,19 @@
             {
                 "id": 9,
                 "condition_on": "streak_wins",
+                "condition_on_value": 3.0,
+                "condition_on_value_2": null,
+                "actions": [
+                    {
+                        "condition_action": "increase_bet_amount",
+                        "action_value": 0.5
+                    }
+                ],
+                "others": null
+            },
+            {
+                "id": 10,
+                "condition_on": "streak_wins",
                 "condition_on_value": 5.0,
                 "condition_on_value_2": null,
                 "actions": [
@@ -138,7 +147,7 @@
                 "others": null
             },
             {
-                "id": 10,
+                "id": 11,
                 "condition_on": "streak_n_multiplier_less_than",
                 "condition_on_value": 1,
                 "condition_on_value_2": 1.25,
@@ -151,7 +160,20 @@
                 "others": null
             },
             {
-                "id": 11,
+                "id": 12,
+                "condition_on": "streak_n_multiplier_less_than",
+                "condition_on_value": 15.0,
+                "condition_on_value_2": 5.0,
+                "actions": [
+                    {
+                        "condition_action": "update_multiplier",
+                        "action_value": 5.0
+                    }
+                ],
+                "others": null
+            },
+            {
+                "id": 13,
                 "condition_on": "streak_n_multiplier_less_than",
                 "condition_on_value": 25.0,
                 "condition_on_value_2": 10.0,
