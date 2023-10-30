@@ -163,6 +163,32 @@
             {
                 "id": 12,
                 "condition_on": "streak_n_multiplier_less_than",
+                "condition_on_value": 3,
+                "condition_on_value_2": 1.5,
+                "actions": [
+                    {
+                        "condition_action": "make_bet",
+                        "action_value": 0
+                    }
+                ],
+                "others": null
+            },
+            {
+                "id": 13,
+                "condition_on": "streak_n_multiplier_less_than",
+                "condition_on_value": 6,
+                "condition_on_value_2": 2.0,
+                "actions": [
+                    {
+                        "condition_action": "make_bet",
+                        "action_value": 0
+                    }
+                ],
+                "others": null
+            },
+            {
+                "id": 14,
+                "condition_on": "streak_n_multiplier_less_than",
                 "condition_on_value": 20.0,
                 "condition_on_value_2": 7.0,
                 "actions": [
@@ -174,7 +200,7 @@
                 "others": null
             },
             {
-                "id": 13,
+                "id": 15,
                 "condition_on": "streak_n_multiplier_less_than",
                 "condition_on_value": 30.0,
                 "condition_on_value_2": 10.0,
@@ -187,7 +213,7 @@
                 "others": null
             },
              {
-                "id": 14,
+                "id": 16,
                 "condition_on": "streak_n_multiplier_less_than",
                 "condition_on_value": 38.0,
                 "condition_on_value_2": 10.0,
