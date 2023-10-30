@@ -77,9 +77,17 @@ class SendEventToGUI:
         )
 
     @staticmethod
-    def send_multiplier_positions(multiplier_position: list[tuple[int, int]]):
+    def send_multiplier_positions(
+        positions: list[tuple[int, int]], len_multipliers: int
+    ):
+        """
+        Send multiplier positions to GUI
+        @param positions: tuple of list of multipliers
+        @param len_multipliers: length of multipliers
+        """
         GlobalVars.emit_to_gui(
-            GUIEvent.RECEIVE_MULTIPLIER_POSITIONS, multiplier_position
+            GUIEvent.RECEIVE_MULTIPLIER_POSITIONS,
+            data=dict(positions=positions, len_multipliers=len_multipliers),
         )
 
     @staticmethod

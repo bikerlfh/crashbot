@@ -21,7 +21,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     receive_balance_signal = QtCore.pyqtSignal(dict)
     receive_auto_play_signal = QtCore.pyqtSignal(dict)
     receive_game_loaded_signal = QtCore.pyqtSignal(dict)
-    receive_multiplier_positions_signal = QtCore.pyqtSignal(list)
+    receive_multiplier_positions_signal = QtCore.pyqtSignal(dict)
 
     def __init__(
         self,
@@ -265,13 +265,15 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         )
 
     def update_multiplier_positions(
-        self, positions: list[tuple[int, int]]
+        self, *, positions: list[tuple[int, int]], len_multipliers: int
     ) -> None:
         for i in range(len(positions)):
             multiplier, position = positions[i]
             lbl_mul = getattr(self, f"lbl_mul_{i+1}", None)
             if not lbl_mul:
                 break
+            if position < 0:
+                position = f"> {len_multipliers}"
             lbl_mul.setText(f"{multiplier} : {position}")
 
     def on_receive_multiplier_positions(self, positions):
@@ -282,8 +284,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         """
         self.receive_multiplier_positions_signal.emit(positions)
 
-    @QtCore.pyqtSlot(list)
-    def _on_receive_multiplier_positions(
-        self, positions: list[tuple[int, int]]
-    ):
-        self.update_multiplier_positions(positions=positions)
+    @QtCore.pyqtSlot(dict)
+    def _on_receive_multiplier_positions(self, data: dict):
+        positions = data.get("positions", [])
+        len_multipliers = data.get("len_multipliers", 0)
+        self.update_multiplier_positions(
+            positions=positions, len_multipliers=len_multipliers
+        )
