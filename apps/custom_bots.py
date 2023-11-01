@@ -192,6 +192,6 @@ def read_custom_bots(custom_bots_path: str) -> list[Bot]:
     ]
     custom_bots = []
     for file_name in files:
-        custom_bots_file = f"{custom_bots_path}/{file_name}"
+        custom_bots_file = os.path.join(custom_bots_path, file_name)
         custom_bots += _read_custom_bots_from_file(custom_bots_file)
     return custom_bots
