@@ -5,6 +5,7 @@ from apps.game.games.game_base import GameBase
 from apps.game.models import Bet, Multiplier
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
+from apps.utils.display import format_amount_to_display
 from apps.utils.local_storage import LocalStorage
 
 local_storage = LocalStorage()
@@ -61,6 +62,6 @@ class GameStrategy(GameBase, configuration=GameType.STRATEGY.value):
         elif bets:
             for bet in reversed(bets):
                 SendEventToGUI.log.info(
-                    f"{_('recommended bet')}: ${bet.amount} x {bet.multiplier}x"  # noqa
+                    f"{_('recommended bet')}: ${format_amount_to_display(bet.amount)} x {format_amount_to_display(bet.multiplier)}x"  # noqa
                 )
         return self.bets
