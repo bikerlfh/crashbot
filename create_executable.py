@@ -68,7 +68,7 @@ def main():
         os.system(f"pyinstaller --onefile --icon={ICON_NAME} crashbot.py")
         shutil.copytree("locales", "dist/locales")
         shutil.copy("conf._ini", "dist/conf.ini")
-        shutil.copy("custom_bots.json", "dist/custom_bots.json")
+        shutil.copytree("custom_bots", "dist/custom_bots")
         shutil.copy(ICON_NAME, f"dist/{ICON_NAME}")
         remove_po_files("dist/locales")
     else:
@@ -76,7 +76,7 @@ def main():
         print("**************generating executable**************")
         os.system(
             f'pyinstaller --icon={ICON_NAME} \
-            --add-data "custom_bots.json{os.pathsep}." \
+            --add-data "custom_bots{os.pathsep}custom_bots" \
             --add-data "locales{os.pathsep}locales" \
             --add-data "license.txt{os.pathsep}." \
             --add-data "{ICON_NAME}{os.pathsep}." crashbot.py'

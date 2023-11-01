@@ -64,6 +64,11 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         # NOTE at this point the class should have been instantiated.
         self.ws_client = WebSocketClient()
 
+    def _format_amount_to_display(self, amount: float) -> float | int:
+        if amount - int(amount) == 0:
+            amount = int(amount)
+        return amount
+
     def __add_item_to_list(self, item: QListWidgetItem):
         current_row = self.list_log.currentRow()
         # add new item to the top
@@ -141,6 +146,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         num_bets_in_bank = self.balance / amount
         if num_bets_in_bank < number_of_min_bets_allowed_in_bank:
             amount_ = amount * number_of_min_bets_allowed_in_bank
+            amount_ = self._format_amount_to_display(amount_)
             QMessageBox.warning(
                 self,
                 _("The balance is very low"),  # noqa
@@ -190,13 +196,17 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             self.balance = float(data.get("balance"))
             if self.initial_balance is None:
                 self.initial_balance = self.balance
-            self.lbl_balance.setText(str(self.balance))
+            balance_ = self._format_amount_to_display(self.balance)
+            self.lbl_balance.setText(str(balance_))
             profit = round(self.balance - self.initial_balance, 2)
             self.lbl_profit.setText(f"{profit}")
             profit_percentage = 0
             if self.initial_balance > 0:
                 profit_percentage = round(
                     (profit / self.initial_balance) * 100, 2
+                )
+                profit_percentage = self._format_amount_to_display(
+                    profit_percentage
                 )
             self.lbl_profit_per.setText(f"{profit_percentage}%")
         except Exception as e:
