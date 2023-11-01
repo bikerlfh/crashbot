@@ -3,6 +3,7 @@ import gettext
 import logging
 import os
 from threading import Event, Thread
+from typing import Optional
 
 # Internal
 # from pwn import log, listen
@@ -18,33 +19,33 @@ from apps.utils.datetime import sleep_now
 logger = logging.getLogger(__name__)
 
 
-def _get_base_path(filename: str):
-    base_path = filename
+def _get_base_path(filename: Optional[str] = None):
+    base_path = ""
     if utils_os.is_macos():
         base_path = os.path.dirname(os.path.abspath(__file__))
+    if filename:
         base_path = os.path.join(base_path, filename)
     return base_path
 
 
-def setup_language(lang):
+def setup_language(lang: str):
     domain = "base"
     localedir = _get_base_path("locales")
     translate = gettext.translation(domain, localedir, fallback=True)
-    if lang:
+    try:
         translate = gettext.translation(
             domain, localedir, fallback=True, languages=[lang]
         )
-    translate.install()
+        translate.install()
+    except Exception as exc:
+        logger.error(f"error loading language: {exc}")
     _ = translate.gettext
     return _
 
 
 def init_app():
-    GlobalVars.init()
-    try:
-        setup_language(GlobalVars.config.LANGUAGE)
-    except Exception as exc:
-        logger.error(f"error loading language: {exc}")
+    GlobalVars.init(_get_base_path())
+    setup_language(GlobalVars.config.LANGUAGE)
     custom_bot_path = _get_base_path("custom_bots")
     custom_bots_ = custom_bots.read_custom_bots(custom_bot_path)
     GlobalVars.set_bots(custom_bots_)
