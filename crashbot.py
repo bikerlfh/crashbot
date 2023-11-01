@@ -10,6 +10,7 @@ from apps import custom_bots
 from apps.game.ws_server import server as game_server
 from apps.globals import GlobalVars
 from apps.gui import app as gui_app
+from apps.utils import os as utils_os
 from apps.utils.datetime import sleep_now
 
 # from apps.ws_client import WebSocketClient
@@ -18,8 +19,10 @@ logger = logging.getLogger(__name__)
 
 
 def _get_base_path(filename: str):
-    base_path = os.path.dirname(os.path.abspath(__file__))
-    base_path = os.path.join(base_path, filename)
+    base_path = filename
+    if utils_os.is_macos():
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        base_path = os.path.join(base_path, filename)
     return base_path
 
 
