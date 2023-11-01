@@ -1,6 +1,7 @@
 # Standard Library
 import gettext
 import logging
+import os
 from threading import Event, Thread
 
 # Internal
@@ -16,16 +17,33 @@ from apps.utils.datetime import sleep_now
 logger = logging.getLogger(__name__)
 
 
+def _get_base_path(filename: str):
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    base_path = os.path.join(base_path, filename)
+    return base_path
+
+
+def setup_language(lang):
+    domain = "base"
+    localedir = _get_base_path("locales")
+    translate = gettext.translation(domain, localedir, fallback=True)
+    if lang:
+        translate = gettext.translation(
+            domain, localedir, fallback=True, languages=[lang]
+        )
+    translate.install()
+    _ = translate.gettext
+    return _
+
+
 def init_app():
     GlobalVars.init()
     try:
-        lang = gettext.translation(
-            "base", localedir="locales", languages=[GlobalVars.config.LANGUAGE]
-        )
-        lang.install()
+        setup_language(GlobalVars.config.LANGUAGE)
     except Exception as exc:
         logger.error(f"error loading language: {exc}")
-    custom_bots_ = custom_bots.read_custom_bots()
+    custom_bot_path = _get_base_path("custom_bots")
+    custom_bots_ = custom_bots.read_custom_bots(custom_bot_path)
     GlobalVars.set_bots(custom_bots_)
     # ws_client = WebSocketClient()
     event = Event()

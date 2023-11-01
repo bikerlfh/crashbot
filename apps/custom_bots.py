@@ -177,19 +177,21 @@ def _read_custom_bots_from_file(custom_bots_file: str) -> list[Bot]:
     return custom_bots
 
 
-def read_custom_bots() -> list[Bot]:
+def read_custom_bots(custom_bots_path: str) -> list[Bot]:
     """
     read custom bots from file
+    @param custom_bots_path: path to custom bots folder
     """
     # validate if file exists
-    path_ = "custom_bots/"
-    if not os.path.exists(path_):
+    if not os.path.exists(custom_bots_path):
         return []
     print("loading custom bots")
     # read all json files
-    files = [file for file in os.listdir(path_) if file.endswith(".json")]
+    files = [
+        file for file in os.listdir(custom_bots_path) if file.endswith(".json")
+    ]
     custom_bots = []
     for file_name in files:
-        custom_bots_file = f"{path_}{file_name}"
+        custom_bots_file = f"{custom_bots_path}/{file_name}"
         custom_bots += _read_custom_bots_from_file(custom_bots_file)
     return custom_bots

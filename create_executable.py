@@ -55,11 +55,14 @@ def main():
             os.system("export PLAYWRIGHT_BROWSERS_PATH=0")
         os.system("python -m playwright install chromium")
     file_name = "crashbot.exe" if is_windows else "crashbot"
-    #  question input one_file
-    q_one_file = input(
-        "Do you want to generate a one file executable? (default true) (y/n): "
-    )
-    _one_file = q_one_file.lower() != "n"
+    _one_file = False
+    if not utils_os.is_macos():
+        #  question input one_file
+        q_one_file = input(
+            "Do you want to generate a one file executable? "
+            "(default true) (y/n): "
+        )
+        _one_file = q_one_file.lower() != "n"
     # remove dist folder
     shutil.rmtree("dist", ignore_errors=True)
     # use pyarmor to obfuscate the code and one file
