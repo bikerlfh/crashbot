@@ -7,6 +7,7 @@ from apps.globals import GlobalVars
 from apps.gui import services
 from apps.gui.graphs.bar_multipliers import BarMultiplier
 from apps.gui.windows.console.console_designer import ConsoleDesigner
+from apps.utils.display import format_amount_to_display
 from apps.utils.local_storage import LocalStorage
 from apps.utils.logs import services as logs_services
 from apps.ws_client import WebSocketClient
@@ -128,6 +129,8 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             balance=self.balance,
         )
         if not amount_is_valid:
+            min_ = format_amount_to_display(min_)
+            max_ = format_amount_to_display(max_)
             QMessageBox.warning(
                 self,
                 _("Amount to bet is not valid"),  # noqa
@@ -141,6 +144,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         num_bets_in_bank = self.balance / amount
         if num_bets_in_bank < number_of_min_bets_allowed_in_bank:
             amount_ = amount * number_of_min_bets_allowed_in_bank
+            amount_ = format_amount_to_display(amount_)
             QMessageBox.warning(
                 self,
                 _("The balance is very low"),  # noqa
@@ -190,7 +194,8 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             self.balance = float(data.get("balance"))
             if self.initial_balance is None:
                 self.initial_balance = self.balance
-            self.lbl_balance.setText(str(self.balance))
+            balance_ = format_amount_to_display(self.balance)
+            self.lbl_balance.setText(str(balance_))
             profit = round(self.balance - self.initial_balance, 2)
             self.lbl_profit.setText(f"{profit}")
             profit_percentage = 0
@@ -198,6 +203,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
                 profit_percentage = round(
                     (profit / self.initial_balance) * 100, 2
                 )
+                profit_percentage = format_amount_to_display(profit_percentage)
             self.lbl_profit_per.setText(f"{profit_percentage}%")
         except Exception as e:
             logs_services.save_gui_log(

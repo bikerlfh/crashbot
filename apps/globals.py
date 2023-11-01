@@ -17,7 +17,7 @@ from socketio import AsyncServer
 from apps.config import Config
 from apps.utils.security import encrypt
 
-# from apps.utils.sesion_time import SessionTime
+# from apps.utils.session_time import SessionTime
 
 
 logger = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class GlobalVars:
     APP_NAME: str = "CrashBot"
-    APP_VERSION: str = "1.3.0"
+    APP_VERSION: str = "1.3.1"
     APP_HASH: str = None
     SIO: AsyncServer = None
     GAME: any = None

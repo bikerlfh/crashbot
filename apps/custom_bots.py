@@ -59,16 +59,10 @@ def _validate_conditions(conditions: list[dict]) -> bool:
     return invalid_values
 
 
-def read_custom_bots() -> list[Bot]:
-    """
-    read custom bots from file
-    """
-    # validate if file exists
-    custom_bots_file = "custom_bots.json"
+def _read_custom_bots_from_file(custom_bots_file: str) -> list[Bot]:
     if not os.path.exists(custom_bots_file):
         print("custom bots: file not found")
         return []
-    print("loading custom bots")
     # read json file
     with open(custom_bots_file, "r") as file:
         data = json.load(file)
@@ -149,10 +143,11 @@ def read_custom_bots() -> list[Bot]:
     custom_bots = []
     i = -1
     for item in data:
+        name = item["name"]
         custom_bots.append(
             Bot(
                 id=i,
-                name=item["name"],
+                name=name,
                 bot_type=item["bot_type"],
                 number_of_min_bets_allowed_in_bank=item[
                     "number_of_min_bets_allowed_in_bank"
@@ -177,6 +172,24 @@ def read_custom_bots() -> list[Bot]:
                 conditions=item["conditions"],
             )
         )
+        print(f"custom bot: {name} loaded")
         i -= 1
-    print(f"{len(custom_bots)} custom bots loaded")
+    return custom_bots
+
+
+def read_custom_bots() -> list[Bot]:
+    """
+    read custom bots from file
+    """
+    # validate if file exists
+    path_ = "custom_bots/"
+    if not os.path.exists(path_):
+        return []
+    print("loading custom bots")
+    # read all json files
+    files = [file for file in os.listdir(path_) if file.endswith(".json")]
+    custom_bots = []
+    for file_name in files:
+        custom_bots_file = f"{path_}{file_name}"
+        custom_bots += _read_custom_bots_from_file(custom_bots_file)
     return custom_bots

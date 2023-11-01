@@ -13,6 +13,7 @@ from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.aviator.bet_control import BetControl
 from apps.scrappers.game_base import AbstractCrashGameBase, Control
 from apps.utils.datetime import sleep_now
+from apps.utils.display import format_amount_to_display
 from apps.utils.patterns.factory import ConfigurationFactory
 
 
@@ -234,7 +235,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         for i, bet in enumerate(bets):
             control = Control.Control1 if i == 0 else Control.Control2
             SendEventToGUI.log.info(
-                f"{_('Sending bet to aviator')} ${bet.amount} * "  # noqa
+                f"{_('Sending bet to aviator')} ${format_amount_to_display(bet.amount)} * "  # noqa
                 f"{bet.multiplier} control: {control.value}"
             )
             await self._controls.bet(

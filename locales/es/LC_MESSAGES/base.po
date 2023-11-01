@@ -187,7 +187,7 @@ msgstr "Eliminar todos"
 
 #: apps/gui/windows/credential/credential_designer.py:125
 msgid "Saved Credentials"
-msgstr "Guardar credenciales"
+msgstr "Credenciales Guardadas"
 
 #: apps/gui/windows/credential/credential_designer.py:127
 #: apps/gui/windows/login/login_designer.py:348
