@@ -1,7 +1,9 @@
 # Standard Library
 import gettext
 import logging
+import os
 from threading import Event, Thread
+from typing import Optional
 
 # Internal
 # from pwn import log, listen
@@ -9,6 +11,7 @@ from apps import custom_bots
 from apps.game.ws_server import server as game_server
 from apps.globals import GlobalVars
 from apps.gui import app as gui_app
+from apps.utils import os as utils_os
 from apps.utils.datetime import sleep_now
 
 # from apps.ws_client import WebSocketClient
@@ -16,16 +19,35 @@ from apps.utils.datetime import sleep_now
 logger = logging.getLogger(__name__)
 
 
-def init_app():
-    GlobalVars.init()
+def _get_base_path(filename: Optional[str] = None):
+    base_path = ""
+    if utils_os.is_macos():
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    if filename:
+        base_path = os.path.join(base_path, filename)
+    return base_path
+
+
+def setup_language(lang: str):
+    domain = "base"
+    localedir = _get_base_path("locales")
+    translate = gettext.translation(domain, localedir, fallback=True)
     try:
-        lang = gettext.translation(
-            "base", localedir="locales", languages=[GlobalVars.config.LANGUAGE]
+        translate = gettext.translation(
+            domain, localedir, fallback=True, languages=[lang]
         )
-        lang.install()
+        translate.install()
     except Exception as exc:
         logger.error(f"error loading language: {exc}")
-    custom_bots_ = custom_bots.read_custom_bots()
+    _ = translate.gettext
+    return _
+
+
+def init_app():
+    GlobalVars.init(_get_base_path())
+    setup_language(GlobalVars.config.LANGUAGE)
+    custom_bot_path = _get_base_path("custom_bots")
+    custom_bots_ = custom_bots.read_custom_bots(custom_bot_path)
     GlobalVars.set_bots(custom_bots_)
     # ws_client = WebSocketClient()
     event = Event()

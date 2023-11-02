@@ -23,8 +23,10 @@ class Config(metaclass=Singleton):
         LANGUAGE = "LANGUAGE"
         IGNORE_DB_LOGS = "IGNORE_DB_LOGS"
 
-    def __init__(self):
+    def __init__(self, base_path: str):
         self.config_file = CONFIG_FILE_PATH
+        if base_path:
+            self.config_file = os.path.join(base_path, CONFIG_FILE_PATH)
         self.API_URL = "https://probetsai.com"
         self.WS_URL = "ws://probetsai.com:5000/ws/bot/"
         self.ALLOWED_LOG_CODES_TO_SHOW = [

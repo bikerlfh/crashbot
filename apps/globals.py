@@ -34,6 +34,7 @@ class GlobalVars:
     # session_time: SessionTime
 
     class VARS(str, Enum):
+        BASE_PATH = "BASE_PATH"
         HOME_BET_GAME_ID = "HOME_BET_GAME_ID"
         CURRENCY = "CURRENCY"
         AUTO_PLAY = "AUTO_PLAY"
@@ -49,11 +50,12 @@ class GlobalVars:
         PLAN_WITH_AI = "PLAN_WITH_AI"
 
     @staticmethod
-    def init() -> None:
+    def init(base_path: str) -> None:
         GlobalVars.APP_HASH = encrypt.md5(
             f"{GlobalVars.APP_NAME}{GlobalVars.APP_VERSION}"
         )
         # GlobalVars.session_time = SessionTime()
+        globals().setdefault(GlobalVars.VARS.BASE_PATH, base_path)
         globals().setdefault(GlobalVars.VARS.HOME_BET_GAME_ID, None)
         globals().setdefault(GlobalVars.VARS.CURRENCY, None)
         globals().setdefault(GlobalVars.VARS.AUTO_PLAY, False)
@@ -73,7 +75,7 @@ class GlobalVars:
 
     @classmethod
     def init_config(cls) -> None:
-        cls.config = Config()
+        cls.config = Config(cls.get_base_path())
 
     @classmethod
     def is_connected(cls) -> bool:
@@ -90,6 +92,10 @@ class GlobalVars:
     @classmethod
     def get_game(cls) -> any:
         return cls.GAME
+
+    @staticmethod
+    def get_base_path() -> str:
+        return globals().get(GlobalVars.VARS.BASE_PATH)
 
     @staticmethod
     def get_home_bet_game_id() -> int:
