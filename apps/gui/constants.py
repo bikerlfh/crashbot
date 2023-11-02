@@ -35,3 +35,7 @@ LOG_CODES = {
 class LANGUAGES(str, Enum):
     ENGLISH = "en"
     SPANISH = "es"
+
+
+DEFAULT_FONT_SIZE = 10
+MAC_FONT_SIZE = 13

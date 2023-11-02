@@ -5,8 +5,10 @@ from PyQt6.QtWidgets import QListWidgetItem, QMessageBox, QWidget
 # Internal
 from apps.globals import GlobalVars
 from apps.gui import services
+from apps.gui.constants import DEFAULT_FONT_SIZE, MAC_FONT_SIZE
 from apps.gui.graphs.bar_multipliers import BarMultiplier
 from apps.gui.windows.console.console_designer import ConsoleDesigner
+from apps.utils import os as os_utils
 from apps.utils.display import format_amount_to_display
 from apps.utils.local_storage import LocalStorage
 from apps.utils.logs import services as logs_services
@@ -34,8 +36,9 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.bot = None
         self.initial_balance = None
         self.balance = None
-        self.setupUi(self)
         self.auto_play = False
+        self.setupUi(self)
+        self._resize_font()
         self.main_window = main_window
         self.btn_auto_bet.clicked.connect(self.button_auto_bet_clicked_event)
         self.btn_auto_cash_out.clicked.connect(
@@ -101,6 +104,39 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         #     home_bet_id=self.home_bet.id,  # noqa
         #     customer_id=local_storage.get_customer_id(),
         # )
+
+    def _resize_font(self):
+        font_size = (
+            DEFAULT_FONT_SIZE if not os_utils.is_macos() else MAC_FONT_SIZE
+        )
+
+        def _set_font(widget: any):
+            font = widget.font()
+            font.setPointSize(font_size)
+            widget.setFont(font)
+
+        _set_font(self.btn_set_max_amount)
+        _set_font(self.list_log)
+        _set_font(self.btn_auto_bet)
+        _set_font(self.label)
+        _set_font(self.label_2)
+        _set_font(self.lbl_balance)
+        _set_font(self.lbl_profit)
+        _set_font(self.label_4)
+        _set_font(self.lbl_home_bet)
+        _set_font(self.lbl_bot_type)
+        _set_font(self.btn_auto_cash_out)
+        _set_font(self.gbox_graph)
+        _set_font(self.label_5)
+        _set_font(self.lbl_profit_per)
+        _set_font(self.groupBox)
+        _set_font(self.lbl_mul_1)
+        _set_font(self.lbl_mul_2)
+        _set_font(self.lbl_mul_3)
+        _set_font(self.lbl_mul_4)
+        _set_font(self.lbl_mul_5)
+        _set_font(self.lbl_mul_6)
+        _set_font(self.lbl_mul_2)
 
     def button_auto_bet_clicked_event(self):
         self.auto_play = not self.auto_play
