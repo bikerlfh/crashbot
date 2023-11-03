@@ -22,6 +22,8 @@ class Config(metaclass=Singleton):
         MULTIPLIERS_TO_SHOW_LAST_POSITION = "MULTIPLIERS_TO_SHOW_LAST_POSITION"
         LANGUAGE = "LANGUAGE"
         IGNORE_DB_LOGS = "IGNORE_DB_LOGS"
+        WS_SERVER_HOST = "WS_SERVER_HOST"
+        WS_SERVER_PORT = "WS_SERVER_PORT"
 
     def __init__(self, base_path: str):
         self.config_file = CONFIG_FILE_PATH
@@ -44,6 +46,8 @@ class Config(metaclass=Singleton):
         self.LANGUAGE = "en"
         self.IGNORE_DB_LOGS = True
         self._ALLOWED_LANGUAGES = ["en", "es"]
+        self.WS_SERVER_HOST = "localhost"
+        self.WS_SERVER_PORT = 5000
         self.read_config()
 
     def __create_config(self):
@@ -91,6 +95,10 @@ class Config(metaclass=Singleton):
                             self.LANGUAGE = self._ALLOWED_LANGUAGES[0]
                     case self.ConfigVar.IGNORE_DB_LOGS:
                         self.IGNORE_DB_LOGS = bool(int(value))
+                    case self.ConfigVar.WS_SERVER_HOST:
+                        self.WS_SERVER_HOST = value
+                    case self.ConfigVar.WS_SERVER_PORT:
+                        self.WS_SERVER_PORT = int(value)
             return config
 
     def write_config(self, *, language: str):

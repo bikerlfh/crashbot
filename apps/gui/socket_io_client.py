@@ -8,7 +8,7 @@ from PyQt6 import QtCore
 
 # Internal
 from apps.constants import WSEvent
-from apps.game.ws_server.constants import WS_SERVER_HOST, WS_SERVER_PORT
+from apps.globals import GlobalVars
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,10 @@ class SocketIOClient(QtCore.QThread):
         on_receive_multiplier_positions: Optional[Callable] = None,
     ):
         super().__init__()
-        self.WS_SERVER_URL = f"http://{WS_SERVER_HOST}:{WS_SERVER_PORT}"
+        self.WS_SERVER_URL = (
+            f"http://{GlobalVars.config.WS_SERVER_HOST}:"
+            f"{GlobalVars.config.WS_SERVER_PORT}"
+        )
         self.on_verify = on_verify
         self.on_login = on_login
         self.on_start_bot = on_start_bot

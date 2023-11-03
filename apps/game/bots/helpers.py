@@ -3,7 +3,7 @@ import copy
 from typing import Optional
 
 # Internal
-from apps.api.models import BotCondition
+from apps.api.models import BotCondition, BotConditionAction
 from apps.game.bots.constants import ConditionAction, ConditionON
 
 
@@ -86,6 +86,13 @@ class BotConditionHelper:
             break
         return streak >= count_multipliers
 
+    @staticmethod
+    def _has_no_make_bet(actions: list[BotConditionAction]):
+        actions_ = [action.condition_action for action in actions]
+        if ConditionAction.MAKE_BET.value in actions_:
+            return any([action.action_value == 0 for action in actions])
+        return False
+
     def _check_conditions(self) -> list[BotCondition]:
         """
         Check if the conditions are valid
@@ -120,7 +127,8 @@ class BotConditionHelper:
                         _condition.condition_on_value
                         < new_condition.condition_on_value
                     )
-                    if is_value_less:
+                    no_make_bet = self._has_no_make_bet(_condition.actions)
+                    if is_value_less and not no_make_bet:
                         _conditions.remove(_condition)
             _conditions.append(new_condition)
 
