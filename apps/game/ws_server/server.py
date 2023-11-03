@@ -8,7 +8,6 @@ import uvicorn
 # Internal
 from apps.constants import WSEvent
 from apps.game.ws_server import events
-from apps.game.ws_server.constants import WS_SERVER_HOST, WS_SERVER_PORT
 from apps.globals import GlobalVars
 
 sio = socketio.AsyncServer(async_mode="asgi")
@@ -67,4 +66,8 @@ async def start_bot(sid, data, room=None):
 def run_server(event: Event):
     GlobalVars.set_io(sio)
     GlobalVars.WS_SERVER_EVENT = event
-    uvicorn.run(app, host=WS_SERVER_HOST, port=WS_SERVER_PORT)
+    uvicorn.run(
+        app,
+        host=GlobalVars.config.WS_SERVER_HOST,
+        port=GlobalVars.config.WS_SERVER_PORT,
+    )
