@@ -49,12 +49,19 @@ class AviatorOneWin(AviatorBase, configuration=BookmakerIDS.ONE_WIN.value):
             raise Exception("_getAppGame :: page is null")
         while True:
             try:
-                await self._page.wait_for_url(
-                    "**/casino/play/spribe_aviator**", timeout=50000
+                # await self._page.wait_for_url(
+                #     "**/casino/play/spribe_aviator**", timeout=50000
+                # )
+                # self._frame = self._page.locator(
+                #     ".CasinoGamePromoted_game_vXIG_"
+                # ).frame_locator("[src^=https]")
+                await self._page.wait_for_selector(
+                    "[src*='spribegaming.com']", timeout=50000
                 )
-                self._frame = self._page.locator(
-                    ".CasinoGamePromoted_game_vXIG_"
-                ).frame_locator("[src^=https]")
+                self._frame = self._page.frame_locator(
+                    "[src*='spribegaming.com']"
+                ).first
+
                 self._app_game = self._frame.locator("app-game").first
                 await self._app_game.locator(".result-history").wait_for(
                     timeout=5000
