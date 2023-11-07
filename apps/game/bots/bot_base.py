@@ -148,9 +148,9 @@ class BotBase(abc.ABC):
         SendEventToGUI.log.debug(
             f"{_('Bot conditions count')}: {len(self.bot_condition_helper.bot_conditions)}"  # noqa
         )
-        self.set_max_amount_to_bet(
-            amount=GlobalVars.get_max_amount_to_bet(), user_change=True
-        )
+        # self.set_max_amount_to_bet(
+        #     amount=GlobalVars.get_max_amount_to_bet(), user_change=False
+        # )
 
     def validate_bet_amount(self, amount: float) -> float:
         # if amount < minimumBet, set amount = minimumBet

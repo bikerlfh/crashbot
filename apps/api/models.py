@@ -37,6 +37,12 @@ class HomeBetModel:
         currency = GlobalVars.get_currency()
         if not currency:
             currency = list(self.limits.keys())[0]
+        if currency not in self.limits:
+            error_msg = (
+                f"error: {_('Currency not found in limits')}: {currency} "  # noqa
+                f"{_('please contact support')}"  # noqa
+            )
+            raise ValueError(error_msg)
         return self.limits[currency]
 
     @property

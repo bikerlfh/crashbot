@@ -342,3 +342,10 @@ msgstr "El bot seleccionado recomienda tener al menos"
 
 msgid "in the bank. ¡Play at your own risk!"
 msgstr "en el banco. ¡Juega bajo tu propio riesgo!"
+
+
+msgid "Currency not found in limits"
+msgstr "Moneda no encontrada en los límites"
+
+msgid "please contact support"
+msgstr "por favor contacta soporte"
