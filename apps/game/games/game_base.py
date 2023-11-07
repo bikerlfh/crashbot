@@ -28,6 +28,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
     file apps/game/games/__init__.py
     """
 
+    BOT_NAME: str
     MAX_MULTIPLIERS_TO_SAVE: int = 10
     game_page: AbstractCrashGameBase
     minimum_bet: float = 0
@@ -54,14 +55,16 @@ class GameBase(abc.ABC, ConfigurationFactory):
         bot_name: str,
         **kwargs,
     ):
+        self.BOT_NAME = bot_name
         self.customer_id = local_storage.get_customer_id()
         self.home_bet = home_bet
         self.game_page = self.home_bet.get_crash_game()
-        self.minimum_bet: float = home_bet.min_bet
-        self.maximum_bet: float = home_bet.max_bet
 
-        self._initialize_bot(bot_name=bot_name)
-        self.maximum_win_for_one_bet: float = self.maximum_bet * 100
+    def _set_max_min_bet(self):
+        # use after GlobalVars.set_currency(self.currency)
+        self.minimum_bet = self.home_bet.min_bet
+        self.maximum_bet = self.home_bet.max_bet
+        self.maximum_win_for_one_bet = self.maximum_bet * 100
 
     @abc.abstractmethod
     def _initialize_bot(self, *, bot_name: str):
@@ -80,6 +83,8 @@ class GameBase(abc.ABC, ConfigurationFactory):
         self.balance = self.initial_balance
         self.currency = self.game_page.currency
         GlobalVars.set_currency(self.currency)
+        self._set_max_min_bet()
+        self._initialize_bot(bot_name=self.BOT_NAME)
         # last_balance = local_storage.get_last_initial_balance(
         #     home_bet_id=self.home_bet.id
         # )
