@@ -447,7 +447,7 @@ class ConsoleDesigner(object):
         font.setPointSize(10)
         self.txt_max_amount_to_bet.setFont(font)
         self.txt_max_amount_to_bet.setInputMethodHints(
-            QtCore.Qt.InputMethodHint.ImhPreferNumbers
+            QtCore.Qt.InputMethodHint.ImhDigitsOnly
         )
         self.txt_max_amount_to_bet.setInputMask("")
         self.txt_max_amount_to_bet.setMaxLength(600)

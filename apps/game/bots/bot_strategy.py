@@ -117,6 +117,8 @@ class BotStrategy(BotBase):
                 self.MIN_MULTIPLIER_TO_RECOVER_LOSSES
             )
             return self.bets
+        if self.MIN_MULTIPLIER_TO_BET == 0:
+            return []
         # get the possible next second multiplier
         if min_multiplier > second_multiplier:
             second_multiplier = game_utils.generate_random_multiplier(
