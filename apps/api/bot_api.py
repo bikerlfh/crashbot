@@ -57,7 +57,6 @@ class BotAPIServices:
     GET_PREDICTION = "api/predictions/predict/"
     GET_BOTS = "api/predictions/bots/"
     GET_POSITIONS = "api/predictions/positions/"
-    UPDATE_BALANCE = "api/customers/balance/"
     CUSTOMER_DATA = "api/customers/me/"
     CUSTOMER_LIVE = "api/customers/live/"
     BET = "api/bets/"
@@ -231,40 +230,25 @@ class BotAPIServices:
         return response.body
 
     def customer_live(
-        self, *, home_bet_id: int, closing_session: Optional[bool] = False
+        self,
+        *,
+        home_bet_id: int,
+        balance: float,
+        currency: Optional[str] = None,
+        closing_session: Optional[bool] = False,
     ) -> Dict[str, Any]:
         try:
             response = self.client.post(
                 service=self.CUSTOMER_LIVE,
                 data=dict(
                     home_bet_id=home_bet_id,
+                    amount=balance,
+                    currency=currency,
                     closing_session=closing_session,
                 ),
             )
         except Exception as exc:
             logger.exception(f"BotAPIServices :: get_me_data :: {exc}")
-            raise BotAPIConnectionException(exc)
-        self.validate_response(response=response)
-        return response.body
-
-    def update_balance(
-        self,
-        *,
-        customer_id: int,
-        home_bet_id: int,
-        balance: int,
-    ) -> Dict[str, Any]:
-        try:
-            response = self.client.patch(
-                service=self.UPDATE_BALANCE,
-                data=dict(
-                    customer_id=customer_id,
-                    home_bet_id=home_bet_id,
-                    amount=balance,
-                ),
-            )
-        except Exception as exc:
-            logger.exception(f"BotAPIServices :: update_balance :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body

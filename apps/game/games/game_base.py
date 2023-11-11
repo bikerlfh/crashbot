@@ -109,7 +109,6 @@ class GameBase(abc.ABC, ConfigurationFactory):
         self.initialized = True
         self.request_customer_live()
         self.request_save_multipliers()
-        self.request_save_customer_balance()
         SendEventToGUI.log.success(_("Game initialized"))  # noqa
         SendEventToGUI.game_loaded(True)
         positions, len_multiplier = self.bot.get_last_position_of_multipliers()
@@ -135,7 +134,10 @@ class GameBase(abc.ABC, ConfigurationFactory):
         """
         try:
             response = api_services.request_customer_live(
-                home_bet_id=self.home_bet.id, closing_session=closing_session
+                home_bet_id=self.home_bet.id,
+                balance=self.balance,
+                currency=self.currency,
+                closing_session=closing_session,
             )
             GlobalVars.set_allowed_to_save_multipliers(
                 response.allowed_to_save_multiplier
@@ -190,23 +192,6 @@ class GameBase(abc.ABC, ConfigurationFactory):
                 f"error in requestSaveMultipliers: {error}"
             )
 
-    def request_save_customer_balance(self):
-        """
-        Save the customer's balance in the database
-        """
-        # SendEventToGUI.log.debug("saving balance")
-        try:
-            api_services.update_customer_balance(
-                customer_id=self.customer_id,
-                home_bet_id=self.home_bet.id,
-                balance=round(self.balance, 2),
-            )
-            # SendEventToGUI.log.debug("balance saved")
-        except Exception as error:
-            SendEventToGUI.log.debug(
-                f"Error in request_save_customer_balance :: bet :: {error}"
-            )
-
     def request_save_bets(self):
         """
         Save the bets in the database
@@ -241,10 +226,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
         """
         SendEventToGUI.log.info(_("Waiting for the next game"))  # noqa
         await self.game_page.wait_next_game()
-        balance = await self.read_balance_to_aviator()
-        if balance != self.balance:
-            self.balance = balance
-            self.request_save_customer_balance()
+        self.balance = await self.read_balance_to_aviator()
         # TODO implement create manual bets
         self.bot.update_balance(self.balance)
         self.add_multiplier(self.game_page.multipliers[-1])
@@ -262,11 +244,8 @@ class GameBase(abc.ABC, ConfigurationFactory):
 
     def evaluate_bets(self, multiplier: float) -> None:
         """
-        Evaluate the bets and update the balance
+        Evaluate the bets
         """
-        for bet in self.bets:
-            profit = bet.evaluate(multiplier)
-            self.balance += profit
         self.bot.evaluate_bets(multiplier)
 
     def add_multiplier(self, multiplier: float) -> None:
@@ -285,8 +264,8 @@ class GameBase(abc.ABC, ConfigurationFactory):
 
     async def play(self):
         while self.initialized:
-            self.request_customer_live()
             await self.wait_next_game()
+            self.request_customer_live()
             self.get_next_bet()
             (
                 positions,
