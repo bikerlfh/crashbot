@@ -33,6 +33,9 @@ class BotBase(abc.ABC):
 
     # minimum value to determine if the game is bullish or bearish
     MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME = 0.31
+    # minimum value to determine if the game is bullish or bearish
+    # this value need to be negative
+    LEN_WINDOW_TO_DETERMINE_BULLISH_GAME = -6
     # if True, the bot will ignore the model
     # PROBABILITY_TO_BET and MIN_AVERAGE_MODEL_PREDICTION
     IGNORE_MODEL = False
@@ -196,7 +199,7 @@ class BotBase(abc.ABC):
             self.multipliers
         )
         slope, _ = utils_graphs.calculate_slope_linear_regression(
-            y_coordinates
+            y_coordinates, self.LEN_WINDOW_TO_DETERMINE_BULLISH_GAME
         )
         return slope >= self.MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME
 
@@ -281,13 +284,6 @@ class BotBase(abc.ABC):
         self.set_max_amount_to_bet(amount=bet_amount)
         self.MIN_MULTIPLIER_TO_BET = multiplier
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = multiplier
-        SendEventToGUI.log.debug(
-            f"MIN_MULTIPLIER_TO_BET: {self.MIN_MULTIPLIER_TO_BET}"
-        )
-        SendEventToGUI.log.debug(
-            f"MIN_MULTIPLIER_TO_RECOVER_LOSSES: "
-            f"{self.MIN_MULTIPLIER_TO_RECOVER_LOSSES}"
-        )
         SendEventToGUI.log.debug(
             f"evaluate_conditions :: bet_amount "
             f"{bet_amount} multiplier {multiplier}"
