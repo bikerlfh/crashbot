@@ -682,7 +682,7 @@
     </font>
    </property>
    <property name="inputMethodHints">
-    <set>Qt::ImhDigitsOnly</set>
+    <set>Qt::ImhPreferNumbers</set>
    </property>
    <property name="inputMask">
     <string notr="true"/>
