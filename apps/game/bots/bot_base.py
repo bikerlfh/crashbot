@@ -33,6 +33,9 @@ class BotBase(abc.ABC):
 
     # minimum value to determine if the game is bullish or bearish
     MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME = 0.31
+    # minimum value to determine if the game is bullish or bearish
+    # this value need to be negative
+    LEN_WINDOW_TO_DETERMINE_BULLISH_GAME = -6
     # if True, the bot will ignore the model
     # PROBABILITY_TO_BET and MIN_AVERAGE_MODEL_PREDICTION
     IGNORE_MODEL = False
@@ -51,13 +54,17 @@ class BotBase(abc.ABC):
     balance: float = 0
     stop_loss: float = 0
     take_profit: float = 0
+    # minimum allowed amount to bet in home bet
     minimum_bet: float
+    # maximum allowed amount to bet in home bet
     maximum_bet: float
     bets: List[Bet] = []
     amounts_lost: List[float] = []
     multipliers: List[float] = []
 
+    # max amount to bet
     _max_amount_to_bet: float = 0
+    # min amount to bet
     _min_amount_to_bet: float = 0
 
     multiplier_positions: MultiplierPositions = None
@@ -157,11 +164,11 @@ class BotBase(abc.ABC):
         final_amount = max(amount, self.minimum_bet)
         # get the min amount between amount, maximumBet and balance
         final_amount = min(final_amount, self.maximum_bet, self.balance)
-        final_amount = round(final_amount, 0)
         if self.amount_multiple:
             final_amount = game_utils.round_number_to(
                 amount, self.amount_multiple
             )
+        final_amount = round(final_amount, 2)
         return final_amount
 
     def add_multiplier(self, multiplier: float):
@@ -192,7 +199,7 @@ class BotBase(abc.ABC):
             self.multipliers
         )
         slope, _ = utils_graphs.calculate_slope_linear_regression(
-            y_coordinates
+            y_coordinates, self.LEN_WINDOW_TO_DETERMINE_BULLISH_GAME
         )
         return slope >= self.MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME
 
@@ -218,17 +225,20 @@ class BotBase(abc.ABC):
         :param user_change: if the user changed the amount
         :return: None
         """
+        if amount == 0:
+            return
         self.bot_condition_helper.set_bet_amount(
             bet_amount=amount, user_change=user_change
         )
-        self._max_amount_to_bet = round(amount * 0.7, 0)
+        self._max_amount_to_bet = amount * 0.7
         if self._max_amount_to_bet > self.balance:
             SendEventToGUI.log.debug(
                 f"maxAmountToBet is greater than balance({self.balance})"
             )
             SendEventToGUI.log.debug("setting maxAmountToBet to balance")
             self._max_amount_to_bet = 0
-        self._min_amount_to_bet = round(self._max_amount_to_bet * 0.3, 0)
+        # self._min_amount_to_bet = round(self._max_amount_to_bet * 0.3, 0)
+        self._min_amount_to_bet = amount * 0.3
         if self._min_amount_to_bet < self.minimum_bet:
             self._min_amount_to_bet = self.minimum_bet
             self._max_amount_to_bet = amount - self._min_amount_to_bet
@@ -242,6 +252,8 @@ class BotBase(abc.ABC):
         total = self._max_amount_to_bet + self._min_amount_to_bet
         if total < amount:
             self._max_amount_to_bet += amount - total
+        self._max_amount_to_bet = round(self._max_amount_to_bet, 2)
+        self._min_amount_to_bet = round(self._min_amount_to_bet, 2)
         if user_change:
             SendEventToGUI.log.success(
                 f"{_('Min bet amount')}: {self._min_amount_to_bet}"  # noqa

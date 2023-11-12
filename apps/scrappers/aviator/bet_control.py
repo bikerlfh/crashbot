@@ -248,17 +248,16 @@ class BetControl(AbstractControlBase):
                     continue
                 case 1:
                     break
-        started = False
         multiplier_ = 0
         while multiplier_ < multiplier:
             # cash_out button
+            status_ = await get_status_of_btn(btn_)
+            if status_ != 1:
+                break
             value_ = float(
                 (await btn_.text_content(timeout=2000)).split(" ")[-2]
             )
             multiplier_ = round(value_ / amount, 2)
-            if multiplier_ == 1 and started is True:
-                break
-            started = True
             if multiplier_ >= multiplier:
                 await btn_.click()
                 return

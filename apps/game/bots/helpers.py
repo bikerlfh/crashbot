@@ -249,6 +249,7 @@ class BotConditionHelper:
         self.profit = profit
         valid_conditions = self._check_conditions()
         ignore_model = False
+        _current_bet_amount = copy.copy(self.current_bet_amount)
         for condition in valid_conditions:
             for action in condition.actions:
                 condition_action = action.condition_action
@@ -280,5 +281,10 @@ class BotConditionHelper:
                     case ConditionAction.MAKE_BET:
                         _make_bet = bool(action_value)
                         if not _make_bet:
+                            self.current_bet_amount = _current_bet_amount
                             return 0.0, 0.0, ignore_model
-        return self.current_bet_amount, self.current_multiplier, ignore_model
+        return (
+            self.current_bet_amount,
+            self.current_multiplier,
+            ignore_model,
+        )

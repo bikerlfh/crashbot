@@ -155,31 +155,21 @@ def get_customer_data(*, app_hash_str: str) -> CustomerData:
 
 
 def request_customer_live(
-    *, home_bet_id: int, closing_session: Optional[bool] = False
+    *,
+    home_bet_id: int,
+    balance: float,
+    currency: Optional[str] = None,
+    closing_session: Optional[bool] = False,
 ) -> CustomerLiveData:
     bot_connector = BotAPIConnector()
     data = bot_connector.services.customer_live(
         home_bet_id=home_bet_id,
+        balance=round(balance, 2),
+        currency=currency,
         closing_session=closing_session,
     )
     customer_live_data = CustomerLiveData(**data)
     return customer_live_data
-
-
-def update_customer_balance(
-    *, customer_id: int, home_bet_id: int, balance: float
-) -> None:
-    """
-    update_balance
-    :param customer_id:
-    :param home_bet_id:
-    :param balance:
-    :return:
-    """
-    bot_connector = BotAPIConnector()
-    bot_connector.services.update_balance(
-        customer_id=customer_id, home_bet_id=home_bet_id, balance=balance
-    )
 
 
 def create_bets(*, home_bet_id: int, bets: list[BetData]) -> list[BetData]:

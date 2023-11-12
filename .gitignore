@@ -18,6 +18,7 @@ build/
 *.class
 .ipynb_checkpoints
 .python-version
+__pycache__/
 
 # Compiled Python bytecode
 *.py[cod]

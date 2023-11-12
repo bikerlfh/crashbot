@@ -1,5 +1,7 @@
 # Libraries
 from PyQt6 import QtCore
+from PyQt6.QtCore import QRegularExpression
+from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtWidgets import QListWidgetItem, QMessageBox, QWidget
 
 # Internal
@@ -64,7 +66,9 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.btn_set_max_amount.setEnabled(False)
         self.btn_auto_cash_out.setEnabled(False)
         self.txt_max_amount_to_bet.setEnabled(False)
-        self.txt_max_amount_to_bet.setInputMask("999999")
+        regex = QRegularExpression(r"^\d*\.?\d*$")
+        validator = QRegularExpressionValidator(regex)
+        self.txt_max_amount_to_bet.setValidator(validator)
         # NOTE at this point the class should have been instantiated.
         self.ws_client = WebSocketClient()
 
@@ -115,6 +119,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             font.setPointSize(font_size)
             widget.setFont(font)
 
+        _set_font(self.txt_max_amount_to_bet)
         _set_font(self.btn_set_max_amount)
         _set_font(self.list_log)
         _set_font(self.btn_auto_bet)
