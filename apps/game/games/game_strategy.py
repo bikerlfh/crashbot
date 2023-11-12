@@ -53,6 +53,11 @@ class GameStrategy(GameBase, configuration=GameType.STRATEGY.value):
 
     def get_next_bet(self) -> list[Bet]:
         auto_play = GlobalVars.get_auto_play()
+        only_bullish_games = self.bot.ONLY_BULLISH_GAMES
+        is_bullish_game = self.bot.is_bullish_game
+        if only_bullish_games and not is_bullish_game:
+            SendEventToGUI.log.info(_("Skipping bearish game"))  # noqa
+            return []
         bets = self.bot.get_next_bet(
             multiplier_positions=self.multiplier_positions,
             auto_play=auto_play,
@@ -62,6 +67,8 @@ class GameStrategy(GameBase, configuration=GameType.STRATEGY.value):
         elif bets:
             for bet in reversed(bets):
                 SendEventToGUI.log.info(
-                    f"{_('recommended bet')}: ${format_amount_to_display(bet.amount)} x {format_amount_to_display(bet.multiplier)}x"  # noqa
+                    f"{_('recommended bet')}: "  # noqa
+                    f"${format_amount_to_display(bet.amount)} "
+                    f"x {format_amount_to_display(bet.multiplier)}"
                 )
         return self.bets

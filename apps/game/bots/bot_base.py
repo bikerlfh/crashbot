@@ -20,6 +20,7 @@ class BotBase(abc.ABC):
     """
 
     BOT_NAME: str
+    ONLY_BULLISH_GAMES: bool = False
     RISK_FACTOR: float = 0.1  # 0.1 = 10%
     MIN_MULTIPLIER_TO_BET: float = 1.5
     MIN_MULTIPLIER_TO_RECOVER_LOSSES: float = 2.0
@@ -32,7 +33,7 @@ class BotBase(abc.ABC):
     TAKE_PROFIT_PERCENTAGE: float = 0
 
     # minimum value to determine if the game is bullish or bearish
-    MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME = 0.31
+    MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME = 0.26
     # minimum value to determine if the game is bullish or bearish
     # this value need to be negative
     LEN_WINDOW_TO_DETERMINE_BULLISH_GAME = -6
@@ -111,6 +112,7 @@ class BotBase(abc.ABC):
         self.MIN_AVERAGE_MODEL_PREDICTION = (
             self.bot.min_average_model_prediction
         )
+        self.ONLY_BULLISH_GAMES = self.bot.only_bullish_games
         self.RISK_FACTOR = self.bot.risk_factor
         self.MIN_MULTIPLIER_TO_BET = self.bot.min_multiplier_to_bet
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = (
@@ -129,7 +131,10 @@ class BotBase(abc.ABC):
             self.initial_balance * self.TAKE_PROFIT_PERCENTAGE, 2
         )
         SendEventToGUI.log.info(_("Bot initialized"))  # noqa
-        SendEventToGUI.log.info(f"{_('Bot')}: {self.BOT_NAME}")  # noqa  # noqa
+        SendEventToGUI.log.info(f"{_('Bot')}: {self.BOT_NAME}")  # noqa
+        SendEventToGUI.log.info(
+            f"{_('Only bullish games')}: {self.ONLY_BULLISH_GAMES}"  # noqa
+        )
         SendEventToGUI.log.info(
             f"{_('Bot risk factor')}: {self.RISK_FACTOR}"  # noqa
         )
@@ -177,7 +182,8 @@ class BotBase(abc.ABC):
         if len(self.multipliers) > self.MAX_MULTIPLIERS_IN_MEMORY:
             self.multipliers = self.multipliers[1:]
         self.is_bullish_game = self.determine_bullish_game()
-        SendEventToGUI.log.debug(f"Is bullish game: {self.is_bullish_game}")
+        if self.is_bullish_game:
+            SendEventToGUI.log.info(_("Game is bullish"))  # noqa
 
     def add_loss(self, amount: float):
         self.amounts_lost.append(amount)
@@ -201,6 +207,7 @@ class BotBase(abc.ABC):
         slope, _ = utils_graphs.calculate_slope_linear_regression(
             y_coordinates, self.LEN_WINDOW_TO_DETERMINE_BULLISH_GAME
         )
+        SendEventToGUI.log.debug(f"determine_bullish_game :: slope {slope} ")
         return slope >= self.MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME
 
     def get_last_lost_amount(self) -> float:
@@ -271,6 +278,10 @@ class BotBase(abc.ABC):
         :param multiplier_result: the multiplier result
         :return: None
         """
+        SendEventToGUI.log.debug(
+            f"_execute_conditions :: result_last_game {result_last_game} "
+            f"multiplier_result: {multiplier_result}"
+        )
         profit = self.profit_last_balance
         (
             bet_amount,

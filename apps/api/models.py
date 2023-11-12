@@ -119,6 +119,7 @@ class Bot:
         stop_loss_percentage: float,
         take_profit_percentage: float,
         conditions: list[dict[str, any]],
+        only_bullish_games: Optional[bool] = False,
         **__kwargs,
     ):
         self.id = id
@@ -143,6 +144,7 @@ class Bot:
         self.conditions = [
             BotCondition(**condition) for condition in conditions
         ]
+        self.only_bullish_games = only_bullish_games
 
 
 @dataclass

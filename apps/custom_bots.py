@@ -79,6 +79,7 @@ def _read_custom_bots_from_file(custom_bots_file: str) -> list[Bot]:
         "name",
         "bot_type",
         "number_of_min_bets_allowed_in_bank",
+        "only_bullish_games",
         "risk_factor",
         "min_multiplier_to_bet",
         "min_multiplier_to_recover_losses",
@@ -104,6 +105,9 @@ def _read_custom_bots_from_file(custom_bots_file: str) -> list[Bot]:
             invalid_values = True
         if not isinstance(item["number_of_min_bets_allowed_in_bank"], int):
             print("custom bots: invalid number_of_min_bets_allowed_in_bank")
+            invalid_values = True
+        if not isinstance(item["only_bullish_games"], bool):
+            print("custom bots: invalid only_bullish_games")
             invalid_values = True
         if not isinstance(item["risk_factor"], float):
             print("custom bots: invalid risk_factor")
@@ -152,6 +156,7 @@ def _read_custom_bots_from_file(custom_bots_file: str) -> list[Bot]:
                 number_of_min_bets_allowed_in_bank=item[
                     "number_of_min_bets_allowed_in_bank"
                 ],
+                only_bullish_games=item["only_bullish_games"],
                 risk_factor=item["risk_factor"],
                 min_multiplier_to_bet=item["min_multiplier_to_bet"],
                 min_multiplier_to_recover_losses=item[

@@ -349,3 +349,13 @@ msgstr "Moneda no encontrada en los límites"
 
 msgid "please contact support"
 msgstr "por favor contacta soporte"
+
+
+msgid "Only bullish games"
+msgstr "Solo juegos alcistas"
+
+msgid "Skipping bearish game"
+msgstr "Saltando juego bajista"
+
+msgid "Game is bullish"
+msgstr "El juego es alcista"

@@ -3,6 +3,7 @@
         "name": "1.5xAggressive",
         "bot_type": "aggressive",
         "number_of_min_bets_allowed_in_bank": 400,
+        "only_bullish_games": false,
         "risk_factor": 0.1,
         "min_multiplier_to_bet": 1.5,
         "min_multiplier_to_recover_losses": 2.0,
