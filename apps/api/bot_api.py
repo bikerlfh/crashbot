@@ -248,7 +248,7 @@ class BotAPIServices:
                 ),
             )
         except Exception as exc:
-            logger.exception(f"BotAPIServices :: get_me_data :: {exc}")
+            logger.exception(f"BotAPIServices :: customer_live :: {exc}")
             raise BotAPIConnectionException(exc)
         self.validate_response(response=response)
         return response.body
