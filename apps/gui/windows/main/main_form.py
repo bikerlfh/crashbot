@@ -9,6 +9,9 @@ from PyQt6.QtWidgets import QMainWindow, QMessageBox, QStackedWidget, QWidget
 from apps.globals import GlobalVars
 from apps.gui.constants import ICON_NAME, LANGUAGES
 from apps.gui.socket_io_client import SocketIOClient
+from apps.gui.windows.configurations.configurations_dialog import (
+    ConfigurationsDialog,
+)
 from apps.gui.windows.console.console_form import ConsoleForm
 from apps.gui.windows.credential.credential_dialog import CredentialDialog
 from apps.gui.windows.login.login_form import LoginForm
@@ -56,8 +59,10 @@ class MainForm(QMainWindow, MainDesigner):
         self.stacked_widget.addWidget(self.console_screen)
         self.setCentralWidget(self.stacked_widget)
         self.credential_screen = CredentialDialog()
+        self.configuration_dialog = ConfigurationsDialog()
         self.showMaximized()
         self.action_crendentials.triggered.connect(self.show_credential)
+        self.action_parameters.triggered.connect(self.show_configuration)
         self.action_exit.triggered.connect(self.closeEvent)
         self.action_signout.triggered.connect(self._action_sign_out)
         self.action_spanish.triggered.connect(self._action_change_language)
@@ -162,6 +167,10 @@ class MainForm(QMainWindow, MainDesigner):
     def show_credential(self):
         self.credential_screen.initialize()
         self.credential_screen.exec()
+
+    def show_configuration(self):
+        self.configuration_dialog.initialize()
+        self.configuration_dialog.exec()
 
     def _add_action(self, title: str) -> QtGui.QAction:
         action = QtGui.QAction(parent=self)
