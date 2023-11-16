@@ -3,61 +3,37 @@ from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 # Internal
 from apps.game.bookmakers.constants import BookmakerIDS
-from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.aviator.aviator_base import AviatorBase
 
 
-class AviatorBetPlay(AviatorBase, configuration=BookmakerIDS.BET_PLAY.value):
+class AviatorECUABET(AviatorBase, configuration=BookmakerIDS.ECUABET.value):
     def __init__(self, *, url: str, **kwargs):
         super().__init__(url=url, **kwargs)
         self._frame = None
 
     async def _login(self):
         if not self._page:
-            SendEventToGUI.exception(
-                dict(
-                    location="AviatorBetPlay._login",
-                    message="page is null",
-                )
-            )
-            return
-        username = GlobalVars.get_username()
-        password = GlobalVars.get_password()
-        if not username or not password:
-            SendEventToGUI.log.success(
-                _("Please set username and password to login!")  # noqa
-            )
-            return
-        username_input = self._page.locator("input#userName")
-        password_input = self._page.locator("input#password")
-        login_button = self._page.locator("button#btnLoginPrimary")
-
-        await username_input.type(username, delay=100)
-        await password_input.type(password, delay=100)
-        await self._click(login_button)
-        await self._page.locator("#spanUser").wait_for(timeout=50000)
-        search_button = self._page.locator("input.inputSearch")
-        await self._page.wait_for_timeout(1000)
-        await search_button.type("aviator", delay=150)
-        await self._page.wait_for_timeout(2000)
-        # TODO fix this
-        # await self._page.locator("button.btnSlot").wait_for(timeout=5000)
-        # await self._click(self._page.locator("button.btnSlot").first)
+            raise Exception("_login :: page is null")
+        SendEventToGUI.log.warning(
+            _("please set username and password to login!")  # noqa
+        )
 
     async def _get_app_game(self):
         if not self._page:
             raise Exception("_getAppGame :: page is null")
         while True:
             try:
-                await self._page.wait_for_url(
-                    "**/slots/launchGame?gameCode=SPB_aviator**", timeout=50000
+                await self._page.wait_for_selector(
+                    "[src*='https://casino.virtualsoft.tech']", timeout=50000
                 )
-                self._frame = (
-                    self._page.frame_locator("#gameFrame")
-                    .frame_locator("#spribe-game")
-                    .first
-                )
+                await self._page.wait_for_timeout(2000)
+                frame_1 = self._page.frame_locator(
+                    "[src*='https://casino.virtualsoft.tech']"
+                ).first
+                self._frame = frame_1.frame_locator(
+                    "[src*='spribegaming.com']"
+                ).first
                 self._app_game = self._frame.locator("app-game").first
                 await self._app_game.locator(".result-history").wait_for(
                     timeout=5000
@@ -65,12 +41,8 @@ class AviatorBetPlay(AviatorBase, configuration=BookmakerIDS.BET_PLAY.value):
                 return self._app_game
             except Exception as e:
                 if isinstance(e, PlaywrightTimeoutError):
-                    SendEventToGUI.log.debug("_get_app_game :: timeout")
                     continue
-                SendEventToGUI.log.debug(
-                    f"_get_app_game :: exception :: {str(e)}"
-                )
-                # raise e
+                raise e
 
     async def read_game_limits(self):
         if self._frame is None:
@@ -80,7 +52,6 @@ class AviatorBetPlay(AviatorBase, configuration=BookmakerIDS.BET_PLAY.value):
             raise Exception("readGameLimits :: _appGame is null")
 
         menu = self._app_game.locator(".dropdown-toggle.user")
-
         if menu is None:
             raise Exception("readGameLimits :: menu is null")
 
@@ -88,25 +59,23 @@ class AviatorBetPlay(AviatorBase, configuration=BookmakerIDS.BET_PLAY.value):
         await self._page.wait_for_timeout(400)
 
         app_user_menu = self._app_game.locator("app-settings-menu")
-
         if app_user_menu is None:
             raise Exception("readGameLimits :: appusermenu is null")
 
         list_menu = app_user_menu.locator(".list-menu").last
         menu_limits = list_menu.locator(".list-menu-item").last
-
         await menu_limits.click()
         await self._page.wait_for_timeout(400)
 
         limits = await self._frame.locator("app-game-limits ul>li>span").all()
         self.minimum_bet = float(
-            (await limits[0].text_content()).split(" ")[0] or "0"
+            (await limits[0].text_content() or "0").split(" ")[0]
         )
         self.maximum_bet = float(
-            (await limits[1].text_content()).split(" ")[0] or "0"
+            (await limits[1].text_content() or "0").split(" ")[0]
         )
         self.maximum_win_for_one_bet = float(
-            (await limits[2].text_content()).split(" ")[0] or "0"
+            (await limits[2].text_content() or "0").split(" ")[0]
         )
 
         button_close = self._frame.locator("ngb-modal-window")

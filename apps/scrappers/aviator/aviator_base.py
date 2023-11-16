@@ -1,5 +1,4 @@
 # Standard Library
-import abc
 import asyncio
 from typing import Optional, Union
 
@@ -14,11 +13,19 @@ from apps.gui.gui_events import SendEventToGUI
 from apps.scrappers.aviator.bet_control import BetControl
 from apps.scrappers.game_base import AbstractCrashGameBase, Control
 from apps.utils.datetime import sleep_now
+from apps.utils.display import format_amount_to_display
+from apps.utils.patterns.factory import ConfigurationFactory
 
 
-class Aviator(AbstractCrashGameBase, abc.ABC):
-    def __init__(self, url: str):
-        super().__init__(url)
+class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
+    """
+    Aviator base scrapper
+    Use Factory to implement a new bookmaker (home_bet)
+    import all the classes in apps/game/bookmakers/__init__.py
+    """
+
+    def __init__(self, *, url: str, **kwargs):
+        super().__init__(url=url)
 
     async def _click(self, element: Locator):
         box = await element.bounding_box()
@@ -31,6 +38,9 @@ class Aviator(AbstractCrashGameBase, abc.ABC):
         await self._page.mouse.click(
             box["x"] + box["width"] / 2, box["y"] + box["height"] / 2, delay=50
         )
+
+    async def _login(self):
+        pass
 
     async def _get_app_game(self) -> Locator:
         if not self._page:
@@ -71,13 +81,14 @@ class Aviator(AbstractCrashGameBase, abc.ABC):
         self._browser = await self.playwright.chromium.launch(headless=False)
         self._context = await self._browser.new_context(no_viewport=True)
         self._page = await self._context.new_page()
-        await self._page.goto(self.url, timeout=50000)
+        await self._page.goto(self.url, timeout=100000)
         await self._login()
         self._app_game = await self._get_app_game()
         self._history_game = self._app_game.locator(".result-history")
         SendEventToGUI.log.debug("Result history found")
         await self.read_balance()
         await self.read_multipliers()
+        await self.read_currency()
         # await self.read_game_limits()
         self._controls = BetControl(self._app_game)
         await self._controls.init()
@@ -162,6 +173,31 @@ class Aviator(AbstractCrashGameBase, abc.ABC):
         self.balance = float(await self._balance_element.text_content() or "0")
         return self.balance
 
+    async def read_currency(self) -> str:
+        if self._app_game is None:
+            SendEventToGUI.exception(
+                {
+                    "location": "AviatorPage",
+                    "message": "read_currency :: _appGame is null",
+                }
+            )
+            raise Exception("read_currency :: _appGame is null")
+        self._currency_element = self._app_game.locator(
+            ".balance>div>.currency"
+        )
+        if self._currency_element is None:
+            SendEventToGUI.exception(
+                {
+                    "location": "AviatorPage",
+                    "message": "read_currency :: balance element is null",
+                }
+            )
+            raise Exception("currency element is null")
+        self.currency = (
+            await self._currency_element.text_content() or self.currency
+        )
+        return self.currency
+
     async def read_multipliers(self):
         if not self._page or not self._history_game:
             SendEventToGUI.exception(
@@ -199,7 +235,7 @@ class Aviator(AbstractCrashGameBase, abc.ABC):
         for i, bet in enumerate(bets):
             control = Control.Control1 if i == 0 else Control.Control2
             SendEventToGUI.log.info(
-                f"{_('Sending bet to aviator')} {bet.amount} * "  # noqa
+                f"{_('Sending bet to aviator')} ${format_amount_to_display(bet.amount)} * "  # noqa
                 f"{bet.multiplier} control: {control.value}"
             )
             await self._controls.bet(
@@ -250,7 +286,7 @@ class Aviator(AbstractCrashGameBase, abc.ABC):
                 if last_multiplier_saved != last_multiplier:
                     self.multipliers.append(last_multiplier)
                     SendEventToGUI.log.success(
-                        f"{_('New Multiplier')}: {last_multiplier}"  # noqa
+                        f"{_('Last Multiplier')}: {last_multiplier}"  # noqa
                     )
                     self.multipliers = self.multipliers[1:]
                     return

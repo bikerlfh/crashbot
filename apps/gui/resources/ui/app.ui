@@ -7,8 +7,72 @@
     <x>0</x>
     <y>0</y>
     <width>727</width>
-    <height>594</height>
+    <height>609</height>
    </rect>
+  </property>
+  <property name="palette">
+   <palette>
+    <active>
+     <colorrole role="ToolTipBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </active>
+    <inactive>
+     <colorrole role="ToolTipBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </inactive>
+    <disabled>
+     <colorrole role="ToolTipBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </disabled>
+   </palette>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -38,7 +102,7 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>14</pointsize>
+        <pointsize>12</pointsize>
         <italic>false</italic>
         <bold>true</bold>
         <kerning>false</kerning>
@@ -54,19 +118,6 @@
     </widget>
     <widget class="QWidget" name="page_2"/>
    </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>550</y>
-      <width>58</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -74,7 +125,7 @@
      <x>0</x>
      <y>0</y>
      <width>727</width>
-     <height>24</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
@@ -84,7 +135,7 @@
     <addaction name="action_signout"/>
     <addaction name="action_exit"/>
    </widget>
-   <widget class="QMenu" name="menuView">
+   <widget class="QMenu" name="menu_view">
     <property name="title">
      <string>View</string>
     </property>
@@ -101,10 +152,18 @@
     <property name="title">
      <string>Configuration</string>
     </property>
+    <widget class="QMenu" name="menu_language">
+     <property name="title">
+      <string>Language</string>
+     </property>
+     <addaction name="action_english"/>
+     <addaction name="action_spanish"/>
+    </widget>
     <addaction name="action_crendentials"/>
+    <addaction name="menu_language"/>
    </widget>
    <addaction name="menu_file"/>
-   <addaction name="menuView"/>
+   <addaction name="menu_view"/>
    <addaction name="menu_configuration"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -143,6 +202,22 @@
   <action name="action_signout">
    <property name="text">
     <string>Sign out</string>
+   </property>
+  </action>
+  <action name="action_english">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>English</string>
+   </property>
+  </action>
+  <action name="action_spanish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Spanish</string>
    </property>
   </action>
  </widget>

@@ -11,6 +11,7 @@ class GUIEvent(str, Enum):
     LOG = "log"
     UPDATE_BALANCE = "update_balance"
     ADD_MULTIPLIERS = "add_multipliers"
+    RECEIVE_MULTIPLIER_POSITIONS = "receive_multiplier_positions"
     GAME_LOADED = "game_loaded"
     ERROR = "error"
     EXCEPTION = "exception"
@@ -59,6 +60,8 @@ class SendEventToGUI:
 
         @staticmethod
         def debug(message: str):
+            if not GlobalVars.config.DEBUG:
+                return
             _send_log_to_gui(message, LogCode.DEBUG)
 
     log = _LogEvent
@@ -71,6 +74,20 @@ class SendEventToGUI:
     def send_multipliers(multipliers: list[float]):
         GlobalVars.emit_to_gui(
             GUIEvent.ADD_MULTIPLIERS, dict(multipliers=multipliers)
+        )
+
+    @staticmethod
+    def send_multiplier_positions(
+        positions: list[tuple[int, int]], len_multipliers: int
+    ):
+        """
+        Send multiplier positions to GUI
+        @param positions: tuple of list of multipliers
+        @param len_multipliers: length of multipliers
+        """
+        GlobalVars.emit_to_gui(
+            GUIEvent.RECEIVE_MULTIPLIER_POSITIONS,
+            data=dict(positions=positions, len_multipliers=len_multipliers),
         )
 
     @staticmethod

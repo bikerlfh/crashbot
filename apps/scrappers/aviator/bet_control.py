@@ -3,6 +3,7 @@ from typing import Optional
 
 # Libraries
 from playwright.async_api import Locator
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 # Internal
 from apps.gui.gui_events import SendEventToGUI
@@ -35,9 +36,18 @@ class BetControl(AbstractControlBase):
         self.was_load = False
 
     async def init(self):
-        await self.aviator_page.locator("app-bet-control").first.wait_for(
-            timeout=15000
-        )
+        while True:
+            try:
+                await self.aviator_page.locator(
+                    "app-bet-control"
+                ).first.wait_for(timeout=15000)
+                break
+            except Exception as e:
+                if isinstance(e, PlaywrightTimeoutError):
+                    SendEventToGUI.log.debug(
+                        f"BetControl :: init :: timeout :: {e}"
+                    )
+                    continue
         bet_controls = self.aviator_page.locator("app-bet-control")
         # validating if the game has 2 controls
         count_controls = await bet_controls.count()
@@ -145,6 +155,8 @@ class BetControl(AbstractControlBase):
         value = round(float(await input_element.input_value(timeout=1000)), 0)
         if value != amount:
             await input_element.fill("", timeout=1000)
+            if amount - int(amount) == 0:
+                amount = int(amount)
             await input_element.type(
                 str(amount), delay=self._random_delay(500)
             )
@@ -236,17 +248,16 @@ class BetControl(AbstractControlBase):
                     continue
                 case 1:
                     break
-        started = False
         multiplier_ = 0
         while multiplier_ < multiplier:
             # cash_out button
+            status_ = await get_status_of_btn(btn_)
+            if status_ != 1:
+                break
             value_ = float(
                 (await btn_.text_content(timeout=2000)).split(" ")[-2]
             )
             multiplier_ = round(value_ / amount, 2)
-            if multiplier_ == 1 and started is True:
-                break
-            started = True
             if multiplier_ >= multiplier:
                 await btn_.click()
                 return

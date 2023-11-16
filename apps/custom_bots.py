@@ -21,8 +21,7 @@ def _validate_conditions(conditions: list[dict]) -> bool:
             "condition_on",
             "condition_on_value",
             # "condition_on_value_2",
-            "condition_action",
-            "action_value",
+            "actions",
         ]
 
         if not all(key in condition for key in fields_):
@@ -43,26 +42,27 @@ def _validate_conditions(conditions: list[dict]) -> bool:
             ):
                 print(f"{i} :: invalid condition_on_value_2 for condition")
                 invalid_values = True
-        if not isinstance(condition["condition_action"], str):
-            print(f"{i} :: invalid condition_action for condition")
+        if not isinstance(condition["actions"], list):
+            print(f"{i} :: invalid actions for condition")
             invalid_values = True
-        if not isinstance(condition["action_value"], (int, float)):
-            print(f"{i} :: invalid action_value for condition")
+        actions = condition["actions"]
+        if not all(isinstance(action, dict) for action in actions):
+            print(f"{i} :: invalid actions for condition")
+            invalid_values = True
+        if not all(
+            set(action.keys()) == {"condition_action", "action_value"}
+            for action in actions
+        ):
+            print(f"{i} :: invalid actions for condition")
             invalid_values = True
         i += 1
     return invalid_values
 
 
-def read_custom_bots() -> list[Bot]:
-    """
-    read custom bots from file
-    """
-    # validate if file exists
-    custom_bots_file = "custom_bots.json"
+def _read_custom_bots_from_file(custom_bots_file: str) -> list[Bot]:
     if not os.path.exists(custom_bots_file):
         print("custom bots: file not found")
         return []
-    print("loading custom bots")
     # read json file
     with open(custom_bots_file, "r") as file:
         data = json.load(file)
@@ -78,6 +78,7 @@ def read_custom_bots() -> list[Bot]:
     required_keys = [
         "name",
         "bot_type",
+        "number_of_min_bets_allowed_in_bank",
         "risk_factor",
         "min_multiplier_to_bet",
         "min_multiplier_to_recover_losses",
@@ -100,6 +101,9 @@ def read_custom_bots() -> list[Bot]:
             invalid_values = True
         if item["bot_type"] not in BotType.to_list():
             print("custom bots: invalid bot_type")
+            invalid_values = True
+        if not isinstance(item["number_of_min_bets_allowed_in_bank"], int):
+            print("custom bots: invalid number_of_min_bets_allowed_in_bank")
             invalid_values = True
         if not isinstance(item["risk_factor"], float):
             print("custom bots: invalid risk_factor")
@@ -139,11 +143,15 @@ def read_custom_bots() -> list[Bot]:
     custom_bots = []
     i = -1
     for item in data:
+        name = item["name"]
         custom_bots.append(
             Bot(
                 id=i,
-                name=item["name"],
+                name=name,
                 bot_type=item["bot_type"],
+                number_of_min_bets_allowed_in_bank=item[
+                    "number_of_min_bets_allowed_in_bank"
+                ],
                 risk_factor=item["risk_factor"],
                 min_multiplier_to_bet=item["min_multiplier_to_bet"],
                 min_multiplier_to_recover_losses=item[
@@ -164,6 +172,26 @@ def read_custom_bots() -> list[Bot]:
                 conditions=item["conditions"],
             )
         )
+        print(f"custom bot: {name} loaded")
         i -= 1
-    print(f"{len(custom_bots)} custom bots loaded")
+    return custom_bots
+
+
+def read_custom_bots(custom_bots_path: str) -> list[Bot]:
+    """
+    read custom bots from file
+    @param custom_bots_path: path to custom bots folder
+    """
+    # validate if file exists
+    if not os.path.exists(custom_bots_path):
+        return []
+    print("loading custom bots")
+    # read all json files
+    files = [
+        file for file in os.listdir(custom_bots_path) if file.endswith(".json")
+    ]
+    custom_bots = []
+    for file_name in files:
+        custom_bots_file = os.path.join(custom_bots_path, file_name)
+        custom_bots += _read_custom_bots_from_file(custom_bots_file)
     return custom_bots

@@ -129,7 +129,7 @@ msgid "Error in request_get_prediction"
 msgstr ""
 
 #: ./apps/game/game.py:206
-msgid "waiting for the next game"
+msgid "Waiting for the next game"
 msgstr ""
 
 #: ./apps/game/game.py:233
@@ -271,7 +271,7 @@ msgid "Sending bet to aviator"
 msgstr ""
 
 #: ./apps/scrappers/aviator/aviator.py:235
-msgid "New Multiplier"
+msgid "Last Multiplier"
 msgstr ""
 
 #: ./apps/scrappers/aviator/aviator_bet_play.py:24
@@ -289,4 +289,25 @@ msgid "Trend"
 msgstr ""
 
 msgid "log messages"
+msgstr ""
+
+msgid "possible bet"
+msgstr ""
+
+msgid "Mutiplier/Round"
+msgstr ""
+
+msgid "You must restart the application to apply the changes"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "English"
+msgstr ""
+
+msgid "Spanish"
+msgstr ""
+
+msgid "Last multiplier positions. Format (multiplier:position)</p><p>If the position is -1, the multiplier was not found in all the analyzed rounds."
 msgstr ""

@@ -22,8 +22,8 @@ msgstr "Bot inicializado"
 
 #: apps/game/bots/bot_base.py:90
 #: apps/gui/windows/parameter/parameter_designer.py:75
-msgid "Bot type"
-msgstr "Tipo de Bot"
+msgid "Bot"
+msgstr ""
 
 #: apps/game/bots/bot_base.py:91
 msgid "Bot risk factor"
@@ -130,8 +130,8 @@ msgid "Error in request_get_prediction"
 msgstr "Error en request_get_prediction"
 
 #: apps/game/game.py:206
-msgid "waiting for the next game"
-msgstr "esperando por el siguiente juego"
+msgid "Waiting for the next game"
+msgstr "Esperando por el siguiente juego"
 
 #: apps/game/game.py:233
 msgid "The game is not initialized"
@@ -150,22 +150,28 @@ msgid "probability"
 msgstr "probabilidad"
 
 #: apps/gui/windows/console/console_designer.py:494
-msgid "Set Amount Bet"
-msgstr "Monto a apostar"
+
+msgid "Amount Bet"
+msgstr "Cantidad a Apostar"
+
+msgid "Set amount to bet"
+msgstr "Seleccionar apuesta"
 
 #: apps/gui/windows/console/console_designer.py:495
 #: apps/gui/windows/console/console_form.py:81
 #: apps/gui/windows/console/console_form.py:132
-msgid "AutoBet"
-msgstr "Auto Apuesta"
+msgid "Start Bot"
+msgstr "Iniciar Bot"
 
-#: apps/gui/windows/console/console_designer.py:496
-msgid "Amount Bet"
-msgstr "Monto de apuesta"
+msgid "Stop Bot"
+msgstr "Detener Bot"
 
 #: apps/gui/windows/console/console_designer.py:503
-msgid "Auto CashOut"
-msgstr "Retiro Automático"
+msgid "Turn on auto cash out"
+msgstr "Activar cobro automático"
+
+msgid "Turn off auto cash out"
+msgstr "Desactivar cobro automático"
 
 #: apps/gui/windows/credential/credential_designer.py:113
 msgid "Credentials"
@@ -181,7 +187,7 @@ msgstr "Eliminar todos"
 
 #: apps/gui/windows/credential/credential_designer.py:125
 msgid "Saved Credentials"
-msgstr "Guardar credenciales"
+msgstr "Credenciales Guardadas"
 
 #: apps/gui/windows/credential/credential_designer.py:127
 #: apps/gui/windows/login/login_designer.py:348
@@ -253,7 +259,7 @@ msgstr "Parámetros"
 
 #: apps/gui/windows/parameter/parameter_designer.py:79
 msgid "Start"
-msgstr ""
+msgstr "Iniciar"
 
 #: apps/gui/windows/parameter/parameter_designer.py:81
 msgid "Use saved credentials"
@@ -272,8 +278,8 @@ msgid "Sending bet to aviator"
 msgstr "Enviando apuesta a aviator"
 
 #: apps/scrappers/aviator/aviator.py:235
-msgid "New Multiplier"
-msgstr "Nuevo Multiplicador"
+msgid "Last Multiplier"
+msgstr "Último multiplicador"
 
 #: apps/scrappers/aviator/aviator_bet_play.py:24
 msgid "Please set username and password to login!"
@@ -291,3 +297,55 @@ msgstr "Tendencia"
 
 msgid "log messages"
 msgstr "log mensajes"
+
+msgid "possible bet"
+msgstr "posible apuesta"
+
+msgid "Multipliers"
+msgstr "Multiplicadores"
+
+msgid "You must restart the application to apply the changes"
+msgstr "Debes reiniciar la aplicación para aplicar los cambios"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "English"
+msgstr "Ingles"
+
+msgid "Spanish"
+msgstr "Español"
+
+msgid "Amount to bet is not valid"
+msgstr "El monto a apostar no es válido"
+
+msgid "Amount to bet must be between"
+msgstr "El monto a apostar debe estar entre"
+
+msgid "and"
+msgstr "y"
+
+msgid "Please, set the max amount to bet"
+msgstr "Por favor, ingresa el monto máximo a apostar"
+
+msgid "Profit:"
+msgstr "Ganancia:"
+
+msgid "recommended bet"
+msgstr "apuesta recomendada"
+
+msgid "The balance is very low"
+msgstr "El balance es muy bajo"
+
+msgid "The selected bot recommends to have at least"
+msgstr "El bot seleccionado recomienda tener al menos"
+
+msgid "in the bank. ¡Play at your own risk!"
+msgstr "en el banco. ¡Juega bajo tu propio riesgo!"
+
+
+msgid "Currency not found in limits"
+msgstr "Moneda no encontrada en los límites"
+
+msgid "please contact support"
+msgstr "por favor contacta soporte"

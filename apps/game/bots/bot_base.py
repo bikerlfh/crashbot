@@ -33,6 +33,9 @@ class BotBase(abc.ABC):
 
     # minimum value to determine if the game is bullish or bearish
     MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME = 0.31
+    # minimum value to determine if the game is bullish or bearish
+    # this value need to be negative
+    LEN_WINDOW_TO_DETERMINE_BULLISH_GAME = -6
     # if True, the bot will ignore the model
     # PROBABILITY_TO_BET and MIN_AVERAGE_MODEL_PREDICTION
     IGNORE_MODEL = False
@@ -40,7 +43,7 @@ class BotBase(abc.ABC):
 
     auto_play: bool = False
 
-    MAX_MULTIPLIERS_IN_MEMORY: int = 50
+    MAX_MULTIPLIERS_IN_MEMORY: int = 200
 
     amount_multiple: Optional[float] = None
     # real initial balance
@@ -51,13 +54,17 @@ class BotBase(abc.ABC):
     balance: float = 0
     stop_loss: float = 0
     take_profit: float = 0
+    # minimum allowed amount to bet in home bet
     minimum_bet: float
+    # maximum allowed amount to bet in home bet
     maximum_bet: float
     bets: List[Bet] = []
     amounts_lost: List[float] = []
     multipliers: List[float] = []
 
+    # max amount to bet
     _max_amount_to_bet: float = 0
+    # min amount to bet
     _min_amount_to_bet: float = 0
 
     multiplier_positions: MultiplierPositions = None
@@ -148,20 +155,20 @@ class BotBase(abc.ABC):
         SendEventToGUI.log.debug(
             f"{_('Bot conditions count')}: {len(self.bot_condition_helper.bot_conditions)}"  # noqa
         )
-        self.set_max_amount_to_bet(
-            amount=GlobalVars.get_max_amount_to_bet(), user_change=True
-        )
+        # self.set_max_amount_to_bet(
+        #     amount=GlobalVars.get_max_amount_to_bet(), user_change=False
+        # )
 
     def validate_bet_amount(self, amount: float) -> float:
         # if amount < minimumBet, set amount = minimumBet
         final_amount = max(amount, self.minimum_bet)
         # get the min amount between amount, maximumBet and balance
         final_amount = min(final_amount, self.maximum_bet, self.balance)
-        final_amount = round(final_amount, 0)
         if self.amount_multiple:
             final_amount = game_utils.round_number_to(
                 amount, self.amount_multiple
             )
+        final_amount = round(final_amount, 2)
         return final_amount
 
     def add_multiplier(self, multiplier: float):
@@ -192,7 +199,7 @@ class BotBase(abc.ABC):
             self.multipliers
         )
         slope, _ = utils_graphs.calculate_slope_linear_regression(
-            y_coordinates
+            y_coordinates, self.LEN_WINDOW_TO_DETERMINE_BULLISH_GAME
         )
         return slope >= self.MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME
 
@@ -218,17 +225,23 @@ class BotBase(abc.ABC):
         :param user_change: if the user changed the amount
         :return: None
         """
+        if amount == 0:
+            return
         self.bot_condition_helper.set_bet_amount(
             bet_amount=amount, user_change=user_change
         )
-        self._max_amount_to_bet = round(amount * 0.7, 0)
+        self._max_amount_to_bet = amount * 0.7
         if self._max_amount_to_bet > self.balance:
             SendEventToGUI.log.debug(
                 f"maxAmountToBet is greater than balance({self.balance})"
             )
             SendEventToGUI.log.debug("setting maxAmountToBet to balance")
             self._max_amount_to_bet = 0
-        self._min_amount_to_bet = round(self._max_amount_to_bet * 0.3, 0)
+        # self._min_amount_to_bet = round(self._max_amount_to_bet * 0.3, 0)
+        self._min_amount_to_bet = amount * 0.3
+        if self._min_amount_to_bet < self.minimum_bet:
+            self._min_amount_to_bet = self.minimum_bet
+            self._max_amount_to_bet = amount - self._min_amount_to_bet
         if self.amount_multiple:
             self._max_amount_to_bet = game_utils.round_number_to(
                 self._max_amount_to_bet, self.amount_multiple
@@ -239,6 +252,8 @@ class BotBase(abc.ABC):
         total = self._max_amount_to_bet + self._min_amount_to_bet
         if total < amount:
             self._max_amount_to_bet += amount - total
+        self._max_amount_to_bet = round(self._max_amount_to_bet, 2)
+        self._min_amount_to_bet = round(self._min_amount_to_bet, 2)
         if user_change:
             SendEventToGUI.log.success(
                 f"{_('Min bet amount')}: {self._min_amount_to_bet}"  # noqa
@@ -269,10 +284,10 @@ class BotBase(abc.ABC):
         self.set_max_amount_to_bet(amount=bet_amount)
         self.MIN_MULTIPLIER_TO_BET = multiplier
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = multiplier
-        # SendEventToGUI.log.debug(
-        #     f"evaluate_conditions :: bet_amount "
-        #     f"{bet_amount} multiplier {multiplier}"
-        # )
+        SendEventToGUI.log.debug(
+            f"evaluate_conditions :: bet_amount "
+            f"{bet_amount} multiplier {multiplier}"
+        )
 
     def evaluate_bets(self, multiplier_result: float):
         total_amount = 0
@@ -286,7 +301,7 @@ class BotBase(abc.ABC):
             elif profit > 0:
                 result_last_game = True
                 self.remove_loss(profit)
-        else:
+        elif self.bets:
             for bet in self.bets:
                 profit = bet.evaluate(multiplier_result)
                 if profit < 0:
@@ -384,19 +399,19 @@ class BotBase(abc.ABC):
         min_ = round(multiplier * (1 - percentage), 2)
         return min_, multiplier
 
-    def show_last_position_of_multipliers(self) -> None:
+    def get_last_position_of_multipliers(
+        self,
+    ) -> tuple[list[tuple[int, int]], int]:  # noqa
         multipliers = GlobalVars.config.MULTIPLIERS_TO_SHOW_LAST_POSITION
+        positions = []
         if not multipliers:
-            return
-        len_multipliers = len(self.multipliers)
-        for multiplier in reversed(multipliers):
+            return [], 0
+        for multiplier in multipliers:
             position = game_utils.get_last_position_multiplier(
                 multiplier=multiplier, last_multipliers=self.multipliers
             )
-            if position < 0:
-                position = f"> {len_multipliers}"
-            SendEventToGUI.log.info(f"\t{multiplier}:{position}")
-        SendEventToGUI.log.info("********* Multipliers Positions *********")
+            positions.append((multiplier, position))
+        return positions, len(self.multipliers)
 
     @staticmethod
     def calculate_recovery_amount(

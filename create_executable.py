@@ -1,11 +1,13 @@
 # Standard Library
+import glob
 import os
 import platform
 import shutil
 import zipfile
 
 # Internal
-from apps.gui.utils import os as utils_os
+from apps.gui.constants import ICON_NAME
+from apps.utils import os as utils_os
 
 
 def _zipdir(dir_path: str, zip_path: str):
@@ -23,6 +25,13 @@ def _zipdir(dir_path: str, zip_path: str):
             zipf.write(
                 os.path.join(dir_path, file_name), f"crashbot/{file_name}/"
             )
+
+
+def remove_po_files(locales_path: str):
+    po_files = glob.glob(f"{locales_path}/*/LC_MESSAGES/*.po")
+    for po_file in po_files:
+        os.remove(po_file)
+    os.remove(f"{locales_path}/base.po")
 
 
 def main():
@@ -46,32 +55,37 @@ def main():
             os.system("export PLAYWRIGHT_BROWSERS_PATH=0")
         os.system("python -m playwright install chromium")
     file_name = "crashbot.exe" if is_windows else "crashbot"
-    #  question input one_file
-    q_one_file = input(
-        "Do you want to generate a one file executable? (default true) (y/n): "
-    )
-    _one_file = q_one_file.lower() != "n"
+    _one_file = False
+    if not utils_os.is_macos():
+        #  question input one_file
+        q_one_file = input(
+            "Do you want to generate a one file executable? "
+            "(default true) (y/n): "
+        )
+        _one_file = q_one_file.lower() != "n"
     # remove dist folder
     shutil.rmtree("dist", ignore_errors=True)
     # use pyarmor to obfuscate the code and one file
     if _one_file:
         print("**************generating one file executable**************")
-        os.system("pyinstaller --onefile --icon=crashbot-icon.ico crashbot.py")
+        os.system(f"pyinstaller --onefile --icon={ICON_NAME} crashbot.py")
         shutil.copytree("locales", "dist/locales")
         shutil.copy("conf._ini", "dist/conf.ini")
-        shutil.copy("custom_bots.json", "dist/custom_bots.json")
-        shutil.copy("crashbot-icon.ico", "dist/crashbot-icon.ico")
+        shutil.copytree("custom_bots", "dist/custom_bots")
+        shutil.copy(ICON_NAME, f"dist/{ICON_NAME}")
+        remove_po_files("dist/locales")
     else:
         file_name = f"crashbot/{file_name}"
         print("**************generating executable**************")
         os.system(
-            f'pyinstaller --icon=crashbot-icon.ico \
-            --add-data "custom_bots.json{os.pathsep}." \
+            f'pyinstaller --icon={ICON_NAME} \
+            --add-data "custom_bots{os.pathsep}custom_bots" \
             --add-data "locales{os.pathsep}locales" \
             --add-data "license.txt{os.pathsep}." \
-            --add-data "crashbot-icon.ico{os.pathsep}." crashbot.py'
+            --add-data "{ICON_NAME}{os.pathsep}." crashbot.py'
         )
         shutil.copy("conf._ini", "dist/crashbot/conf.ini")
+        remove_po_files("dist/crashbot/locales")
     os.system(
         f"pyarmor gen -O obfdist --pack dist/{file_name} -r crashbot.py apps"
     )

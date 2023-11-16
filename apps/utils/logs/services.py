@@ -4,12 +4,15 @@ from datetime import datetime
 from typing import Optional
 
 # Internal
+from apps.globals import GlobalVars
 from apps.utils.logs.logs_db_handler import LogsDBHandler
 
 
 def save_game_log(
     *, message: str, level: str, timestamp: Optional[datetime] = None
 ) -> None:
+    if GlobalVars.config.IGNORE_DB_LOGS:
+        return
     log_handler = LogsDBHandler()
     timestamp = timestamp or datetime.now()
     caller_frame = inspect.stack()[1]
@@ -26,6 +29,8 @@ def save_game_log(
 def save_gui_log(
     *, message: str, level: str, timestamp: Optional[datetime] = None
 ) -> None:
+    if GlobalVars.config.IGNORE_DB_LOGS:
+        return
     log_handler = LogsDBHandler()
     timestamp = timestamp or datetime.now()
     caller_frame = inspect.stack()[1]

@@ -9,7 +9,8 @@ from apps.api.models import (
     BetData,
     Bot,
     CustomerData,
-    HomeBetModel,
+    CustomerLiveData,
+    Multiplier,
     MultiplierPositions,
     PlanData,
     Positions,
@@ -28,9 +29,7 @@ def update_token() -> None:
     bot_connector.update_token()
 
 
-def request_login(
-    *, username: str, password: str
-) -> tuple[str | None, str | None]:
+def request_login(*, username: str, password: str) -> str | None:
     """
     request_login
     :param username:
@@ -39,46 +38,28 @@ def request_login(
     """
     bot_connector = BotAPIConnector()
     try:
+        bot_connector.remove_token()
         response = bot_connector.services.login(
             username=username, password=password
         )
-        access = response.get("access")
-        refresh = response.get("refresh")
-        return access, refresh
+        token = response.get("token")
+        return token
     except BotAPINoAuthorizationException:
-        return None, None
+        return None
     except Exception as exc:
         logger.exception(f"BotAPIServices :: request_login :: {exc}")
-        return None, None
-
-
-def request_token_refresh(*, refresh: str) -> str | None:
-    """
-    request_token_refresh
-    :param refresh:
-    :return:
-    """
-    bot_connector = BotAPIConnector()
-    try:
-        response = bot_connector.services.token_refresh(refresh=refresh)
-        access = response.get("access")
-        return access
-    except BotAPINoAuthorizationException:
-        return None
-    except Exception as exc:
-        logger.exception(f"BotAPIServices :: request_token_refresh :: {exc}")
         return None
 
 
-def request_token_verify(*, token: str) -> bool:
+def request_token_verify() -> bool:
     """
     request_token_verify
-    :param token:
     :return:
     """
     bot_connector = BotAPIConnector()
     try:
-        is_valid = bot_connector.services.token_verify(token=token)
+        bot_connector.update_token()
+        is_valid = bot_connector.services.request_verify_token()
         return is_valid
     except BotAPINoAuthorizationException:
         return False
@@ -87,29 +68,21 @@ def request_token_verify(*, token: str) -> bool:
         return False
 
 
-def get_home_bets() -> list[HomeBetModel]:
-    """
-    request_home_bet
-    :return:
-    """
-    bot_connector = BotAPIConnector()
-    home_bets = bot_connector.services.get_home_bet()
-    data = [HomeBetModel(**data) for data in home_bets]
-    return data
-
-
 def add_multipliers(
-    *, home_bet_id: int, multipliers: list[float]
+    *, home_bet_game_id: int, multipliers_data: list[Multiplier]
 ) -> dict[str, any]:
     """
     add_multipliers
-    :param home_bet_id:
-    :param multipliers:
+    :param home_bet_game_id:
+    :param multipliers_data:
     :return:
     """
     bot_connector = BotAPIConnector()
     response = bot_connector.services.add_multipliers(
-        home_bet_id=home_bet_id, multipliers=multipliers
+        home_bet_game_id=home_bet_game_id,
+        multipliers_data=[
+            multiplier.__dict__() for multiplier in multipliers_data
+        ],
     )
     return response
 
@@ -151,10 +124,10 @@ def get_bots(*, bot_type: Optional[str] = None) -> list[Bot]:
     return data
 
 
-def get_multiplier_positions(*, home_bet_id: int) -> MultiplierPositions:
+def get_multiplier_positions(*, home_bet_game_id: int) -> MultiplierPositions:
     bot_connector = BotAPIConnector()
     response = bot_connector.services.get_multiplier_positions(
-        home_bet_id=home_bet_id
+        home_bet_game_id=home_bet_game_id
     )
     all_time = response.get("all_time", {})
     today = response.get("today", {})
@@ -171,33 +144,32 @@ def get_multiplier_positions(*, home_bet_id: int) -> MultiplierPositions:
     return positions
 
 
-def get_customer_data() -> CustomerData:
+def get_customer_data(*, app_hash_str: str) -> CustomerData:
     bot_connector = BotAPIConnector()
-    data = bot_connector.services.get_me_data()
+    data = bot_connector.services.get_me_data(app_hash_str=app_hash_str)
     customer_data = CustomerData(
         customer_id=data.get("customer_id"),
-        home_bets=[
-            HomeBetModel(**home_bet) for home_bet in data.get("home_bets", [])
-        ],
         plan=PlanData(**data.get("plan")),
     )
     return customer_data
 
 
-def update_customer_balance(
-    *, customer_id: int, home_bet_id: int, balance: float
-) -> None:
-    """
-    update_balance
-    :param customer_id:
-    :param home_bet_id:
-    :param balance:
-    :return:
-    """
+def request_customer_live(
+    *,
+    home_bet_id: int,
+    balance: float,
+    currency: Optional[str] = None,
+    closing_session: Optional[bool] = False,
+) -> CustomerLiveData:
     bot_connector = BotAPIConnector()
-    bot_connector.services.update_balance(
-        customer_id=customer_id, home_bet_id=home_bet_id, balance=balance
+    data = bot_connector.services.customer_live(
+        home_bet_id=home_bet_id,
+        balance=round(balance, 2),
+        currency=currency,
+        closing_session=closing_session,
     )
+    customer_live_data = CustomerLiveData(**data)
+    return customer_live_data
 
 
 def create_bets(*, home_bet_id: int, bets: list[BetData]) -> list[BetData]:

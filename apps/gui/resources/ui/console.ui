@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>897</width>
-    <height>587</height>
+    <height>520</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>897</width>
-    <height>587</height>
+    <height>520</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -145,18 +145,18 @@
      <colorrole role="ToolTipBase">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>255</red>
-        <green>255</green>
-        <blue>220</blue>
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
        </color>
       </brush>
      </colorrole>
      <colorrole role="ToolTipText">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>0</red>
-        <green>0</green>
-        <blue>0</blue>
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
        </color>
       </brush>
      </colorrole>
@@ -291,18 +291,18 @@
      <colorrole role="ToolTipBase">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>255</red>
-        <green>255</green>
-        <blue>220</blue>
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
        </color>
       </brush>
      </colorrole>
      <colorrole role="ToolTipText">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>0</red>
-        <green>0</green>
-        <blue>0</blue>
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
        </color>
       </brush>
      </colorrole>
@@ -437,18 +437,18 @@
      <colorrole role="ToolTipBase">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>255</red>
-        <green>255</green>
-        <blue>220</blue>
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
        </color>
       </brush>
      </colorrole>
      <colorrole role="ToolTipText">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>0</red>
-        <green>0</green>
-        <blue>0</blue>
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
        </color>
       </brush>
      </colorrole>
@@ -474,13 +474,15 @@
    <property name="geometry">
     <rect>
      <x>19</x>
-     <y>350</y>
+     <y>300</y>
      <width>211</width>
      <height>41</height>
     </rect>
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -488,20 +490,22 @@
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="text">
-    <string>Set Amount Bet</string>
+    <string>Set amount to bet</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_auto_bet">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>450</y>
+     <y>390</y>
      <width>211</width>
      <height>41</height>
     </rect>
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -512,21 +516,25 @@
     <string extracomment="turn on/of auto bet"/>
    </property>
    <property name="text">
-    <string>AutoBet ON</string>
+    <string>Start Bot</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>280</y>
+     <y>220</y>
      <width>191</width>
      <height>20</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -541,14 +549,15 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>150</y>
-     <width>91</width>
+     <y>100</y>
+     <width>71</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -559,15 +568,16 @@
   <widget class="QLabel" name="lbl_balance">
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>150</y>
-     <width>141</width>
+     <x>90</x>
+     <y>100</y>
+     <width>151</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -578,15 +588,16 @@
   <widget class="QLabel" name="lbl_profit">
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>190</y>
-     <width>141</width>
+     <x>90</x>
+     <y>130</y>
+     <width>151</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
      <bold>true</bold>
      <kerning>true</kerning>
     </font>
@@ -599,14 +610,15 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>190</y>
-     <width>81</width>
+     <y>130</y>
+     <width>71</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -618,14 +630,15 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>40</y>
-     <width>231</width>
+     <y>20</y>
+     <width>221</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -637,14 +650,15 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>70</y>
-     <width>231</width>
+     <y>50</y>
+     <width>221</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -656,30 +670,46 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>310</y>
+     <y>250</y>
      <width>211</width>
      <height>31</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
    <property name="inputMethodHints">
     <set>Qt::ImhPreferNumbers</set>
    </property>
+   <property name="inputMask">
+    <string notr="true"/>
+   </property>
+   <property name="maxLength">
+    <number>600</number>
+   </property>
    <property name="frame">
     <bool>false</bool>
+   </property>
+   <property name="clearButtonEnabled">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="Line" name="line">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>120</y>
+     <y>80</y>
      <width>241</width>
      <height>16</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="orientation">
@@ -690,14 +720,15 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>240</y>
+     <y>200</y>
      <width>241</width>
      <height>16</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="orientation">
@@ -708,10 +739,16 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>410</y>
+     <y>360</y>
      <width>241</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
+    </font>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
@@ -726,8 +763,73 @@
      <height>281</height>
     </rect>
    </property>
+   <property name="palette">
+    <palette>
+     <active>
+      <colorrole role="ToolTipBase">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="ToolTipText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </active>
+     <inactive>
+      <colorrole role="ToolTipBase">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="ToolTipText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </inactive>
+     <disabled>
+      <colorrole role="ToolTipBase">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="ToolTipText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </disabled>
+    </palette>
+   </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>10</pointsize>
      <bold>true</bold>
     </font>
@@ -739,7 +841,7 @@
     <bool>false</bool>
    </property>
    <property name="toolTip">
-    <string>Multiplicator trend</string>
+    <string/>
    </property>
    <property name="whatsThis">
     <string notr="true"/>
@@ -761,10 +863,16 @@
    <property name="geometry">
     <rect>
      <x>260</x>
-     <y>300</y>
-     <width>621</width>
-     <height>271</height>
+     <y>310</y>
+     <width>481</width>
+     <height>191</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
+    </font>
    </property>
    <property name="toolTip">
     <string>log messages</string>
@@ -774,13 +882,15 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>510</y>
+     <y>450</y>
      <width>211</width>
      <height>41</height>
     </rect>
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -791,8 +901,303 @@
     <string extracomment="turn on/of auto bet"/>
    </property>
    <property name="text">
-    <string>Auto CashOut OFF</string>
+    <string>Turn On auto cash out</string>
    </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>160</y>
+     <width>71</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>%:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lbl_profit_per">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>160</y>
+     <width>151</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>300</y>
+     <width>131</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="palette">
+    <palette>
+     <active>
+      <colorrole role="ToolTipBase">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="ToolTipText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </active>
+     <inactive>
+      <colorrole role="ToolTipBase">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="ToolTipText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </inactive>
+     <disabled>
+      <colorrole role="ToolTipBase">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="ToolTipText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </disabled>
+    </palette>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
+     <italic>false</italic>
+     <bold>true</bold>
+     <underline>false</underline>
+     <strikeout>false</strikeout>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string/>
+   </property>
+   <property name="title">
+    <string>Multipliers</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <widget class="QLabel" name="lbl_mul_1">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>10</pointsize>
+      <italic>false</italic>
+      <bold>true</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+     </font>
+    </property>
+    <property name="text">
+     <string>0:0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_mul_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>10</pointsize>
+      <italic>false</italic>
+      <bold>true</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="text">
+     <string>0:0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_mul_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>10</pointsize>
+      <italic>false</italic>
+      <bold>true</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+     </font>
+    </property>
+    <property name="text">
+     <string>0:0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_mul_4">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>10</pointsize>
+      <italic>false</italic>
+      <bold>true</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+     </font>
+    </property>
+    <property name="text">
+     <string>0:0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_mul_5">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>140</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>10</pointsize>
+      <italic>false</italic>
+      <bold>true</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+     </font>
+    </property>
+    <property name="text">
+     <string>0:0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_mul_6">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>170</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>10</pointsize>
+      <italic>false</italic>
+      <bold>true</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+     </font>
+    </property>
+    <property name="text">
+     <string>0:0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
   </widget>
   <zorder>btn_set_max_amount</zorder>
   <zorder>btn_auto_bet</zorder>
@@ -810,6 +1215,9 @@
   <zorder>gbox_graph</zorder>
   <zorder>list_log</zorder>
   <zorder>btn_auto_cash_out</zorder>
+  <zorder>label_5</zorder>
+  <zorder>lbl_profit_per</zorder>
+  <zorder>groupBox</zorder>
  </widget>
  <resources/>
  <connections/>

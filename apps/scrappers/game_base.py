@@ -64,7 +64,7 @@ class AbstractControlBase(abc.ABC):
 
 
 class AbstractCrashGameBase(abc.ABC):
-    def __init__(self, url: str):
+    def __init__(self, *, url: str):
         self.playwright: Union[sync_playwright, None] = None
         self._browser: Union[Browser, None] = None
         self._context: Union[BrowserContext, None] = None
@@ -72,6 +72,7 @@ class AbstractCrashGameBase(abc.ABC):
         self._app_game: Union[Locator, None] = None
         self._history_game: Union[Locator, None] = None
         self._balance_element: Union[Locator, None] = None
+        self._currency_element: Union[Locator, None] = None
         self._controls: Union[AbstractControlBase, None] = None
         self.minimum_bet: int = 0
         self.maximum_bet: int = 0
@@ -79,6 +80,7 @@ class AbstractCrashGameBase(abc.ABC):
         self.url: str = url
         self.multipliers: list[float] = []
         self.balance: int = 0
+        self.currency: str = "USD1"
 
     @staticmethod
     def _format_multiplier(multiplier: str) -> float:
@@ -106,6 +108,10 @@ class AbstractCrashGameBase(abc.ABC):
 
     @abc.abstractmethod
     async def read_balance(self) -> float:
+        ...
+
+    @abc.abstractmethod
+    async def read_currency(self) -> str:
         ...
 
     @abc.abstractmethod

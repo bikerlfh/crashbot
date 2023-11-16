@@ -1,9 +1,10 @@
 # Libraries
-from PyQt6 import QtWidgets
+from PyQt6 import QtGui, QtWidgets
 
 # Internal
 from apps.globals import GlobalVars
 from apps.gui import services
+from apps.gui.constants import ICON_NAME
 from apps.gui.windows.credential.credential_designer import CredentialDesigner
 
 
@@ -12,6 +13,7 @@ class CredentialDialog(QtWidgets.QDialog, CredentialDesigner):
         super().__init__()
         self.credentials = []
         self.setupUi(self)
+        self.setWindowIcon(QtGui.QIcon(ICON_NAME))
         self.show_credentials()
         self.btn_save.clicked.connect(self.btn_save_clicked)
         self.lst_credentials_home_bet.itemSelectionChanged.connect(

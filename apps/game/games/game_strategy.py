@@ -5,6 +5,7 @@ from apps.game.games.game_base import GameBase
 from apps.game.models import Bet, Multiplier
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
+from apps.utils.display import format_amount_to_display
 from apps.utils.local_storage import LocalStorage
 
 local_storage = LocalStorage()
@@ -31,7 +32,7 @@ class GameStrategy(GameBase, configuration=GameType.STRATEGY.value):
         self.evaluate_bets(multiplier)
         self.multipliers.append(Multiplier(multiplier))
         self.bot.add_multiplier(multiplier)
-        self.multipliers_to_save.append(multiplier)
+        self.multipliers_to_save.append(Multiplier(multiplier))
         self.request_save_multipliers()
         # remove the first multiplier
         self.multipliers = self.multipliers[1:]
@@ -42,7 +43,7 @@ class GameStrategy(GameBase, configuration=GameType.STRATEGY.value):
         Wait for the next game to start
         override the base method to not save customer balance
         """
-        SendEventToGUI.log.info(_("waiting for the next game"))  # noqa
+        SendEventToGUI.log.info(_("Waiting for the next game"))  # noqa
         await self.game_page.wait_next_game()
         self.balance = await self.read_balance_to_aviator()
         # TODO implement create manual bets
@@ -59,10 +60,8 @@ class GameStrategy(GameBase, configuration=GameType.STRATEGY.value):
         if auto_play:
             self.bets = bets
         elif bets:
-            _possible_bets = [
-                dict(amount=bet.amount, multiplier=bet.multiplier)
-                for bet in bets
-            ]
-            for bet in reversed(_possible_bets):
-                SendEventToGUI.log.info(f"possible bet: {bet}")
+            for bet in reversed(bets):
+                SendEventToGUI.log.info(
+                    f"{_('recommended bet')}: ${format_amount_to_display(bet.amount)} x {format_amount_to_display(bet.multiplier)}x"  # noqa
+                )
         return self.bets

@@ -1,5 +1,7 @@
 # Standard Library
 import json
+import os
+import pathlib
 from enum import Enum
 from typing import Optional
 
@@ -13,14 +15,25 @@ from apps.utils.patterns.singleton import Singleton
 class LocalStorage(metaclass=Singleton):
     class LocalStorageKeys(Enum):
         TOKEN = "token"
-        REFRESH = "refresh"
         CUSTOMER_ID = "customer_id"
-        HOME_BETS = "home_bets"
         LAST_INITIAL_BALANCE = "last_initial_balance"
         CREDENTIALS = "credentials"
 
     def __init__(self):
-        self.local_storage = localStoragePy("co.crashbot.local", "json")
+        app_namespace = "co.crashbot.local"
+        try:
+            self.local_storage = localStoragePy(app_namespace, "json")
+            return
+        except (Exception,):
+            path = os.path.join(
+                pathlib.Path.home(),
+                ".config",
+                "localStoragePy",
+                app_namespace,
+                "localStorageJSON.json",
+            )
+            os.remove(path)
+        self.local_storage = localStoragePy(app_namespace, "json")
 
     def get(self, key: str):
         return self.local_storage.getItem(key)
@@ -40,17 +53,9 @@ class LocalStorage(metaclass=Singleton):
     def get_token(self):
         return self.get(LocalStorage.LocalStorageKeys.TOKEN.value)
 
-    def set_refresh(self, refresh: str):
-        self.set(LocalStorage.LocalStorageKeys.REFRESH.value, refresh)
-
-    def get_refresh(self):
-        return self.get(LocalStorage.LocalStorageKeys.REFRESH.value)
-
     def remove_token(self):
         if self.get_token():
             self.remove(LocalStorage.LocalStorageKeys.TOKEN.value)
-        if self.get_refresh():
-            self.remove(LocalStorage.LocalStorageKeys.REFRESH.value)
 
     def set_customer_id(self, customer_id: int):
         self.set(LocalStorage.LocalStorageKeys.CUSTOMER_ID.value, customer_id)
@@ -58,27 +63,6 @@ class LocalStorage(metaclass=Singleton):
     def get_customer_id(self) -> int:
         customer_id = self.get(LocalStorage.LocalStorageKeys.CUSTOMER_ID.value)
         return int(customer_id) if customer_id else None
-
-    def set_home_bets(self, home_bets: list[dict[str, any]]):
-        self.set(
-            LocalStorage.LocalStorageKeys.HOME_BETS.value,
-            json.dumps(home_bets),
-        )
-
-    def get_home_bets(self) -> list[dict[str, any]]:
-        """
-        :return: list[dict(
-            id: int,
-            name: str,
-            url: str,
-            min_bet: float,
-            max_bet: float,
-        )]
-        """
-        home_bets = self.get(LocalStorage.LocalStorageKeys.HOME_BETS.value)
-        if home_bets:
-            home_bets = json.loads(home_bets)
-        return home_bets if home_bets else []
 
     def set_last_initial_balance(self, *, home_bet_id: int, balance: float):
         data = self.get(

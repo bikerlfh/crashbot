@@ -3,6 +3,7 @@ from socketio import AsyncServer
 
 # Internal
 from apps.constants import WSEvent
+from apps.game.bookmakers.home_bet import HomeBet
 from apps.game.games.constants import GameType
 from apps.game.games.game_base import GameBase
 from apps.game.ws_server import handlers
@@ -79,13 +80,13 @@ async def start_bot_event(
         )
         return
     home_bets = GlobalVars.get_allowed_home_bets()
-    home_bet = list(filter(lambda x: x.id == home_bet_id, home_bets))
-    if not home_bet:
+    home_bet_ = next(filter(lambda x: x.id == home_bet_id, home_bets), None)
+    if not home_bet_:
         await sio.emit(
             WSEvent.START_BOT, data=make_error("invalid home_bet_id"), room=sid
         )
         return
-    home_bet = home_bet[0]
+    home_bet = HomeBet(**vars(home_bet_))
     GlobalVars.set_username(username)
     GlobalVars.set_password(password)
     game = GlobalVars.get_game()

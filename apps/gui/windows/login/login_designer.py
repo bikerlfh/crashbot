@@ -19,7 +19,7 @@ class LoginDesigner(object):
         self.groupBox = QtWidgets.QGroupBox(parent=Login)
         self.groupBox.setGeometry(QtCore.QRect(10, 10, 281, 231))
         font = QtGui.QFont()
-        font.setPointSize(12)
+        font.setPointSize(10)
         font.setBold(True)
         self.groupBox.setFont(font)
         self.groupBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -390,7 +390,7 @@ class LoginDesigner(object):
         self.btn_login.setPalette(palette)
         font = QtGui.QFont()
         font.setFamily("Arial")
-        font.setPointSize(12)
+        font.setPointSize(10)
         font.setBold(True)
         font.setUnderline(False)
         font.setStrikeOut(False)
@@ -403,7 +403,6 @@ class LoginDesigner(object):
 
     def retranslateUi(self, Login):
         Login.setWindowTitle(_("Login"))  # noqa
-        self.groupBox.setTitle("CrashBot")  # noqa
         self.label.setText(_("Username"))  # noqa
         self.label_2.setText(_("Password"))  # noqa
         self.btn_login.setText(_("Login"))  # noqa

@@ -1,10 +1,14 @@
 # Standard Library
 import abc
+from copy import copy
+from typing import Optional
 
 # Internal
 from apps.api import services as api_services
-from apps.api.models import BetData, MultiplierPositions
-from apps.constants import HomeBet
+from apps.api.models import BetData
+from apps.api.models import Multiplier as APIMultiplierData
+from apps.api.models import MultiplierPositions
+from apps.game.bookmakers.home_bet import HomeBet
 from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, Multiplier
 from apps.globals import GlobalVars
@@ -24,6 +28,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
     file apps/game/games/__init__.py
     """
 
+    BOT_NAME: str
     MAX_MULTIPLIERS_TO_SAVE: int = 10
     game_page: AbstractCrashGameBase
     minimum_bet: float = 0
@@ -36,8 +41,9 @@ class GameBase(abc.ABC, ConfigurationFactory):
     home_bet: HomeBet
     initial_balance: float = 0
     balance: float = 0
+    currency: str = "USD"
     multipliers: list[Multiplier] = []
-    multipliers_to_save: list[float] = []
+    multipliers_to_save: list[Multiplier] = []
     bets: list[Bet] = []
 
     multiplier_positions: MultiplierPositions = None
@@ -49,14 +55,16 @@ class GameBase(abc.ABC, ConfigurationFactory):
         bot_name: str,
         **kwargs,
     ):
+        self.BOT_NAME = bot_name
         self.customer_id = local_storage.get_customer_id()
-        self.home_bet: home_bet = home_bet
-        self.game_page = self.home_bet.get_game_page()
-        self.minimum_bet: float = home_bet.min_bet
-        self.maximum_bet: float = home_bet.max_bet
+        self.home_bet = home_bet
+        self.game_page = self.home_bet.get_crash_game()
 
-        self._initialize_bot(bot_name=bot_name)
-        self.maximum_win_for_one_bet: float = self.maximum_bet * 100
+    def _set_max_min_bet(self):
+        # use after GlobalVars.set_currency(self.currency)
+        self.minimum_bet = self.home_bet.min_bet
+        self.maximum_bet = self.home_bet.max_bet
+        self.maximum_win_for_one_bet = self.maximum_bet * 100
 
     @abc.abstractmethod
     def _initialize_bot(self, *, bot_name: str):
@@ -73,34 +81,41 @@ class GameBase(abc.ABC, ConfigurationFactory):
         SendEventToGUI.log.info(_("reading the player's balance"))  # noqa
         self.initial_balance = self.game_page.balance
         self.balance = self.initial_balance
-        last_balance = local_storage.get_last_initial_balance(
-            home_bet_id=self.home_bet.id
-        )
-        if last_balance and last_balance > self.initial_balance:
-            self.initial_balance = last_balance
-            SendEventToGUI.log.debug(
-                f"Update the initial balance from"
-                f" local storage {self.initial_balance}"
-            )
+        self.currency = self.game_page.currency
+        GlobalVars.set_currency(self.currency)
+        self._set_max_min_bet()
+        self._initialize_bot(bot_name=self.BOT_NAME)
+        # last_balance = local_storage.get_last_initial_balance(
+        #     home_bet_id=self.home_bet.id
+        # )
+        # if last_balance and last_balance > self.initial_balance:
+        #     self.initial_balance = last_balance
+        #     SendEventToGUI.log.debug(
+        #         f"Update the initial balance from"
+        #         f" local storage {self.initial_balance}"
+        #     )
         SendEventToGUI.balance(self.balance)
         SendEventToGUI.log.debug("loading the player")
-        self.multipliers_to_save = self.game_page.multipliers
-        SendEventToGUI.send_multipliers(self.multipliers_to_save)
+        multipliers_ = self.game_page.multipliers
+        SendEventToGUI.send_multipliers(multipliers_)
         self.multipliers = list(
-            map(lambda item: Multiplier(item), self.multipliers_to_save)
+            map(lambda item: Multiplier(item), multipliers_)
         )
+        self.multipliers_to_save = copy(self.multipliers)
         self.bot.initialize(
             balance=self.initial_balance,
-            multipliers=self.multipliers_to_save,
+            multipliers=multipliers_,
         )
         self.initialized = True
+        self.request_customer_live()
         self.request_save_multipliers()
-        self.request_save_customer_balance()
         SendEventToGUI.log.success(_("Game initialized"))  # noqa
         SendEventToGUI.game_loaded(True)
-        self.bot.show_last_position_of_multipliers()
+        positions, len_multiplier = self.bot.get_last_position_of_multipliers()
+        SendEventToGUI.send_multiplier_positions(positions, len_multiplier)
 
     async def close(self):
+        self.request_customer_live(closing_session=True)
         await self.game_page.close()
         # TODO: clean all variables
         self.initialized = False
@@ -111,13 +126,36 @@ class GameBase(abc.ABC, ConfigurationFactory):
         """
         return await self.game_page.read_balance() or 0
 
+    def request_customer_live(
+        self, *, closing_session: Optional[bool] = False
+    ):
+        """
+        Request the customer live
+        """
+        try:
+            response = api_services.request_customer_live(
+                home_bet_id=self.home_bet.id,
+                balance=self.balance,
+                currency=self.currency,
+                closing_session=closing_session,
+            )
+            GlobalVars.set_allowed_to_save_multipliers(
+                response.allowed_to_save_multiplier
+            )
+            SendEventToGUI.log.debug(
+                f"customer live received: allowed_to_save_multiplier: "
+                f"{response.allowed_to_save_multiplier}"
+            )
+        except Exception as error:
+            SendEventToGUI.log.debug(f"Error in requestCustomerLive: {error}")
+
     def request_multiplier_positions(self):
         """
         Get the multiplier positions from the database
         """
         try:
             self.multiplier_positions = api_services.get_multiplier_positions(
-                home_bet_id=self.home_bet.id
+                home_bet_game_id=GlobalVars.get_home_bet_game_id()
             )
             # SendEventToGUI.log.debug("multiplier positions received")
         except Exception as error:
@@ -135,33 +173,23 @@ class GameBase(abc.ABC, ConfigurationFactory):
         if len(self.multipliers_to_save) < self.MAX_MULTIPLIERS_TO_SAVE:
             return
         try:
+            _multipliers = [
+                APIMultiplierData(
+                    multiplier=item.multiplier,
+                    multiplier_dt=item.multiplier_dt,
+                )
+                for item in self.multipliers_to_save
+            ]
             api_services.add_multipliers(
-                home_bet_id=self.home_bet.id,
-                multipliers=self.multipliers_to_save,
+                home_bet_game_id=GlobalVars.get_home_bet_game_id(),
+                multipliers_data=_multipliers,
             )
             self.multipliers_to_save = []
-            # SendEventToGUI.log.debug("multipliers saved")
+            SendEventToGUI.log.debug("multipliers saved")
             self.request_multiplier_positions()
         except Exception as error:
             SendEventToGUI.log.debug(
                 f"error in requestSaveMultipliers: {error}"
-            )
-
-    def request_save_customer_balance(self):
-        """
-        Save the customer's balance in the database
-        """
-        # SendEventToGUI.log.debug("saving balance")
-        try:
-            api_services.update_customer_balance(
-                customer_id=self.customer_id,
-                home_bet_id=self.home_bet.id,
-                balance=round(self.balance, 2),
-            )
-            # SendEventToGUI.log.debug("balance saved")
-        except Exception as error:
-            SendEventToGUI.log.debug(
-                f"Error in request_save_customer_balance :: bet :: {error}"
             )
 
     def request_save_bets(self):
@@ -196,12 +224,9 @@ class GameBase(abc.ABC, ConfigurationFactory):
         """
         Wait for the next game to start
         """
-        SendEventToGUI.log.info(_("waiting for the next game"))  # noqa
+        SendEventToGUI.log.info(_("Waiting for the next game"))  # noqa
         await self.game_page.wait_next_game()
-        balance = await self.read_balance_to_aviator()
-        if balance != self.balance:
-            self.balance = balance
-            self.request_save_customer_balance()
+        self.balance = await self.read_balance_to_aviator()
         # TODO implement create manual bets
         self.bot.update_balance(self.balance)
         self.add_multiplier(self.game_page.multipliers[-1])
@@ -219,11 +244,8 @@ class GameBase(abc.ABC, ConfigurationFactory):
 
     def evaluate_bets(self, multiplier: float) -> None:
         """
-        Evaluate the bets and update the balance
+        Evaluate the bets
         """
-        for bet in self.bets:
-            profit = bet.evaluate(multiplier)
-            self.balance += profit
         self.bot.evaluate_bets(multiplier)
 
     def add_multiplier(self, multiplier: float) -> None:
@@ -233,7 +255,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
         self.evaluate_bets(multiplier)
         self.multipliers.append(Multiplier(multiplier))
         self.bot.add_multiplier(multiplier)
-        self.multipliers_to_save.append(multiplier)
+        self.multipliers_to_save.append(Multiplier(multiplier))
         self.request_save_bets()
         self.request_save_multipliers()
         # remove the first multiplier
@@ -243,12 +265,19 @@ class GameBase(abc.ABC, ConfigurationFactory):
     async def play(self):
         while self.initialized:
             await self.wait_next_game()
+            self.request_customer_live()
             self.get_next_bet()
+            (
+                positions,
+                len_multipliers,
+            ) = self.bot.get_last_position_of_multipliers()
+            SendEventToGUI.send_multiplier_positions(
+                positions, len_multipliers
+            )
             await self.send_bets_to_aviator()
             SendEventToGUI.log.info(
                 "*****************************************"
             )
-            self.bot.show_last_position_of_multipliers()
         SendEventToGUI.log.error(_("The game is not initialized"))  # noqa
 
     @abc.abstractmethod

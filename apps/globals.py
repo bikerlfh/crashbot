@@ -9,29 +9,36 @@ import copy
 import logging
 from enum import Enum
 from threading import Event
-from typing import Callable
 
 # Libraries
 from socketio import AsyncServer
 
 # Internal
 from apps.config import Config
+from apps.utils.security import encrypt
+
+# from apps.utils.session_time import SessionTime
+
 
 logger = logging.getLogger(__name__)
 
 
 class GlobalVars:
     APP_NAME: str = "CrashBot"
-    APP_VERSION: str = "1.2.0"
+    APP_VERSION: str = "1.3.6"
+    APP_HASH: str = None
     SIO: AsyncServer = None
     GAME: any = None
     WS_SERVER_EVENT: Event
     config: Config
+    # session_time: SessionTime
 
     class VARS(str, Enum):
+        BASE_PATH = "BASE_PATH"
+        HOME_BET_GAME_ID = "HOME_BET_GAME_ID"
+        CURRENCY = "CURRENCY"
         AUTO_PLAY = "AUTO_PLAY"
         MAX_AMOUNT_TO_BET = "MAX_AMOUNT_TO_BET"
-        ADD_LOG = "ADD_LOG"
         ALLOWED_HOME_BETS = "ALLOWED_HOME_BETS"
         USERNAME = "USERNAME"
         PASSWORD = "PASSWORD"
@@ -43,10 +50,16 @@ class GlobalVars:
         PLAN_WITH_AI = "PLAN_WITH_AI"
 
     @staticmethod
-    def init() -> None:
+    def init(base_path: str) -> None:
+        GlobalVars.APP_HASH = encrypt.md5(
+            f"{GlobalVars.APP_NAME}{GlobalVars.APP_VERSION}"
+        )
+        # GlobalVars.session_time = SessionTime()
+        globals().setdefault(GlobalVars.VARS.BASE_PATH, base_path)
+        globals().setdefault(GlobalVars.VARS.HOME_BET_GAME_ID, None)
+        globals().setdefault(GlobalVars.VARS.CURRENCY, None)
         globals().setdefault(GlobalVars.VARS.AUTO_PLAY, False)
         globals().setdefault(GlobalVars.VARS.MAX_AMOUNT_TO_BET, 0)
-        globals().setdefault(GlobalVars.VARS.ADD_LOG, None)
         globals().setdefault(GlobalVars.VARS.ALLOWED_HOME_BETS, [])
         globals().setdefault(GlobalVars.VARS.USERNAME, None)
         globals().setdefault(GlobalVars.VARS.PASSWORD, None)
@@ -62,7 +75,7 @@ class GlobalVars:
 
     @classmethod
     def init_config(cls) -> None:
-        cls.config = Config()
+        cls.config = Config(cls.get_base_path())
 
     @classmethod
     def is_connected(cls) -> bool:
@@ -81,6 +94,26 @@ class GlobalVars:
         return cls.GAME
 
     @staticmethod
+    def get_base_path() -> str:
+        return globals().get(GlobalVars.VARS.BASE_PATH)
+
+    @staticmethod
+    def get_home_bet_game_id() -> int:
+        return globals().get(GlobalVars.VARS.HOME_BET_GAME_ID)
+
+    @staticmethod
+    def set_home_bet_game_id(home_bet_game_id: int) -> None:
+        globals()[GlobalVars.VARS.HOME_BET_GAME_ID] = home_bet_game_id
+
+    @staticmethod
+    def get_currency() -> str:
+        return globals().get(GlobalVars.VARS.CURRENCY)
+
+    @staticmethod
+    def set_currency(currency: str) -> None:
+        globals()[GlobalVars.VARS.CURRENCY] = currency
+
+    @staticmethod
     def get_auto_play() -> bool:
         return globals().get(GlobalVars.VARS.AUTO_PLAY)
 
@@ -95,14 +128,6 @@ class GlobalVars:
     @staticmethod
     def set_max_amount_to_bet(max_amount_to_bet: float) -> None:
         globals()[GlobalVars.VARS.MAX_AMOUNT_TO_BET] = max_amount_to_bet
-
-    @staticmethod
-    def get_add_log_callback() -> Callable:
-        return globals().get(GlobalVars.VARS.ADD_LOG)
-
-    @staticmethod
-    def set_add_log_call_back(add_log: Callable) -> None:
-        globals()[GlobalVars.VARS.ADD_LOG] = add_log
 
     @staticmethod
     def get_allowed_home_bets() -> list[object]:

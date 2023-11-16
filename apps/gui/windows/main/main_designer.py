@@ -13,7 +13,51 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class MainDesigner(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(727, 594)
+        MainWindow.resize(727, 609)
+        palette = QtGui.QPalette()
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.ToolTipBase,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Active,
+            QtGui.QPalette.ColorRole.ToolTipText,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.ToolTipBase,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Inactive,
+            QtGui.QPalette.ColorRole.ToolTipText,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.ToolTipBase,
+            brush,
+        )
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QtGui.QPalette.ColorGroup.Disabled,
+            QtGui.QPalette.ColorRole.ToolTipText,
+            brush,
+        )
+        MainWindow.setPalette(palette)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.stackedWidget = QtWidgets.QStackedWidget(
@@ -27,7 +71,7 @@ class MainDesigner(object):
         self.lbl_version = QtWidgets.QLabel(parent=self.page)
         self.lbl_version.setGeometry(QtCore.QRect(670, 510, 41, 16))
         font = QtGui.QFont()
-        font.setPointSize(14)
+        font.setPointSize(12)
         font.setBold(True)
         font.setItalic(False)
         font.setKerning(False)
@@ -40,21 +84,20 @@ class MainDesigner(object):
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
         self.stackedWidget.addWidget(self.page_2)
-        self.label = QtWidgets.QLabel(parent=self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(60, 550, 58, 16))
-        self.label.setObjectName("label")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 727, 24))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 727, 22))
         self.menubar.setObjectName("menubar")
         self.menu_file = QtWidgets.QMenu(parent=self.menubar)
         self.menu_file.setObjectName("menu_file")
-        self.menuView = QtWidgets.QMenu(parent=self.menubar)
-        self.menuView.setObjectName("menuView")
-        self.menu_logs = QtWidgets.QMenu(parent=self.menuView)
+        self.menu_view = QtWidgets.QMenu(parent=self.menubar)
+        self.menu_view.setObjectName("menu_view")
+        self.menu_logs = QtWidgets.QMenu(parent=self.menu_view)
         self.menu_logs.setObjectName("menu_logs")
         self.menu_configuration = QtWidgets.QMenu(parent=self.menubar)
         self.menu_configuration.setObjectName("menu_configuration")
+        self.menu_language = QtWidgets.QMenu(parent=self.menu_configuration)
+        self.menu_language.setObjectName("menu_language")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -73,14 +116,23 @@ class MainDesigner(object):
         self.action_crendentials.setObjectName("action_crendentials")
         self.action_signout = QtGui.QAction(parent=MainWindow)
         self.action_signout.setObjectName("action_signout")
+        self.action_english = QtGui.QAction(parent=MainWindow)
+        self.action_english.setCheckable(True)
+        self.action_english.setObjectName("action_english")
+        self.action_spanish = QtGui.QAction(parent=MainWindow)
+        self.action_spanish.setCheckable(True)
+        self.action_spanish.setObjectName("action_spanish")
         self.menu_file.addAction(self.action_signout)
         self.menu_file.addAction(self.action_exit)
         self.menu_logs.addAction(self.actionInfo)
         self.menu_logs.addAction(self.actionDebug)
-        self.menuView.addAction(self.menu_logs.menuAction())
+        self.menu_view.addAction(self.menu_logs.menuAction())
+        self.menu_language.addAction(self.action_english)
+        self.menu_language.addAction(self.action_spanish)
         self.menu_configuration.addAction(self.action_crendentials)
+        self.menu_configuration.addAction(self.menu_language.menuAction())
         self.menubar.addAction(self.menu_file.menuAction())
-        self.menubar.addAction(self.menuView.menuAction())
+        self.menubar.addAction(self.menu_view.menuAction())
         self.menubar.addAction(self.menu_configuration.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -89,13 +141,15 @@ class MainDesigner(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle("MainWindow")  # noqa
         self.lbl_version.setText("1.0.0")  # noqa
-        self.label.setText("TextLabel")  # noqa
         self.menu_file.setTitle(_("File"))  # noqa
-        self.menuView.setTitle(_("View"))  # noqa
+        self.menu_view.setTitle(_("View"))  # noqa
         self.menu_logs.setTitle(_("Logs"))  # noqa
         self.menu_configuration.setTitle(_("Configuration"))  # noqa
+        self.menu_language.setTitle(_("Language"))  # noqa
         self.action_exit.setText(_("Exit"))  # noqa
         self.actionInfo.setText(_("Info"))  # noqa
         self.actionDebug.setText(_("Debug"))  # noqa
         self.action_crendentials.setText(_("Crendentials"))  # noqa
         self.action_signout.setText(_("Sign out"))  # noqa
+        self.action_english.setText(_("English"))  # noqa
+        self.action_spanish.setText(_("Spanish"))  # noqa

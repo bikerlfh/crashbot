@@ -1,6 +1,12 @@
+# Standard Library
+from enum import Enum
+
 # Libraries
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
+
+ICON_NAME = "favicon.ico"
+
 
 LOG_CODES = {
     "info": {
@@ -24,3 +30,12 @@ LOG_CODES = {
         "background": QColor(Qt.GlobalColor.darkBlue),
     },
 }
+
+
+class LANGUAGES(str, Enum):
+    ENGLISH = "en"
+    SPANISH = "es"
+
+
+DEFAULT_FONT_SIZE = 10
+MAC_FONT_SIZE = 13
