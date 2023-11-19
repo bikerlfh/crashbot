@@ -377,3 +377,6 @@ msgstr "Número de rondas en el gráfico:"
 
 msgid "Multipliers to show last positions:"
 msgstr "Multiplicadores para mostrar:"
+
+msgid "The number of multipliers in the bar graph can not be less than"
+msgstr "El número de multiplicadores en el gráfico de barras no puede ser menor que"

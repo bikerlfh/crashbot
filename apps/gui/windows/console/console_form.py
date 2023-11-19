@@ -52,7 +52,6 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.bar_multiplier = BarMultiplier(
             self.gbox_graph,
             [],
-            GlobalVars.config.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH,
         )
         self.receive_log_signal.connect(self._on_receive_log)
         self.receive_multipliers_signal.connect(self._on_receive_multipliers)

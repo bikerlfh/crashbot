@@ -20,12 +20,8 @@ class Config(metaclass=Singleton):
         NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH = (
             "NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH"
         )
-        MIN_VALUE_TO_DETERMINE_BULLISH_GAME = (
-            "MIN_VALUE_TO_DETERMINE_BULLISH_GAME"
-        )
-        LEN_WINDOW_TO_DETERMINE_BULLISH_GAME = (
-            "LEN_WINDOW_TO_DETERMINE_BULLISH_GAME"
-        )
+        MIN_VALUE_TO_BULLISH_GAME = "MIN_VALUE_TO_BULLISH_GAME"
+        LEN_WINDOW_TO_BULLISH_GAME = "LEN_WINDOW_TO_BULLISH_GAME"
         MULTIPLIERS_TO_SHOW_LAST_POSITION = "MULTIPLIERS_TO_SHOW_LAST_POSITION"
         LANGUAGE = "LANGUAGE"
         IGNORE_DB_LOGS = "IGNORE_DB_LOGS"
@@ -45,8 +41,8 @@ class Config(metaclass=Singleton):
             "error",
             # "debug",
         ]
-        self.MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME = 0.26
-        self.LEN_WINDOW_TO_DETERMINE_BULLISH_GAME = 6
+        self.MIN_VALUE_TO_BULLISH_GAME = 0.26
+        self.LEN_WINDOW_TO_BULLISH_GAME = 6
         self.DEBUG = False
         self.MAX_AMOUNT_HOME_BET_PERCENTAGE = 0.5
         self.MAX_AMOUNT_BALANCE_PERCENTAGE = 0.005
@@ -98,12 +94,10 @@ class Config(metaclass=Singleton):
                         self.MULTIPLIERS_TO_SHOW_LAST_POSITION = [
                             int(i) for i in value.split(",")
                         ]
-                    case self.ConfigVar.MIN_VALUE_TO_DETERMINE_BULLISH_GAME:
-                        self.MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME = float(
-                            value
-                        )
-                    case self.ConfigVar.LEN_WINDOW_TO_DETERMINE_BULLISH_GAME:
-                        self.LEN_WINDOW_TO_DETERMINE_BULLISH_GAME = int(value)
+                    case self.ConfigVar.MIN_VALUE_TO_BULLISH_GAME:
+                        self.MIN_VALUE_TO_BULLISH_GAME = float(value)
+                    case self.ConfigVar.LEN_WINDOW_TO_BULLISH_GAME:
+                        self.LEN_WINDOW_TO_BULLISH_GAME = int(value)
                     case self.ConfigVar.LANGUAGE:
                         self.LANGUAGE = value
                         if value not in self._ALLOWED_LANGUAGES:
@@ -132,11 +126,11 @@ class Config(metaclass=Singleton):
                 multipliers_to_show_last_position
             )
         if min_value_to_determine_bullish_game:
-            self.MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME = (
+            self.MIN_VALUE_TO_BULLISH_GAME = (
                 min_value_to_determine_bullish_game
             )
         if len_window_to_determine_bullish_game:
-            self.LEN_WINDOW_TO_DETERMINE_BULLISH_GAME = (
+            self.LEN_WINDOW_TO_BULLISH_GAME = (
                 len_window_to_determine_bullish_game
             )
         if number_of_multipliers_in_bar_graph:
@@ -164,12 +158,12 @@ class Config(metaclass=Singleton):
                 f"{self.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH}\n"
             )
             file.write(
-                f"MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME="
-                f"{self.MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME}\n"
+                f"MIN_VALUE_TO_BULLISH_GAME="
+                f"{self.MIN_VALUE_TO_BULLISH_GAME}\n"
             )
             file.write(
-                f"LEN_WINDOW_TO_DETERMINE_BULLISH_GAME="
-                f"{self.LEN_WINDOW_TO_DETERMINE_BULLISH_GAME}\n"
+                f"LEN_WINDOW_TO_BULLISH_GAME="
+                f"{self.LEN_WINDOW_TO_BULLISH_GAME}\n"
             )
             _positions = ",".join(
                 [str(p) for p in self.MULTIPLIERS_TO_SHOW_LAST_POSITION]

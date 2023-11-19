@@ -31,12 +31,6 @@ class BotBase(abc.ABC):
     MIN_AVERAGE_MODEL_PREDICTION: float = 0.8  # 0.8 = 80%
     STOP_LOSS_PERCENTAGE: float = 0
     TAKE_PROFIT_PERCENTAGE: float = 0
-
-    # minimum value to determine if the game is bullish or bearish
-    MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME = 0.26
-    # minimum value to determine if the game is bullish or bearish
-    # this value need to be negative
-    LEN_WINDOW_TO_DETERMINE_BULLISH_GAME = -6
     # if True, the bot will ignore the model
     # PROBABILITY_TO_BET and MIN_AVERAGE_MODEL_PREDICTION
     IGNORE_MODEL = False
@@ -164,6 +158,20 @@ class BotBase(abc.ABC):
         #     amount=GlobalVars.get_max_amount_to_bet(), user_change=False
         # )
 
+    @property
+    def min_value_to_bullish_game(self):
+        # minimum value to determine if the game is bullish or bearish
+        return GlobalVars.config.MIN_VALUE_TO_BULLISH_GAME
+
+    @property
+    def len_window_to_bullish_game(self):
+        # minimum value to determine if the game is bullish or bearish
+        # this value need to be negative
+        len_window = GlobalVars.config.LEN_WINDOW_TO_BULLISH_GAME
+        if len_window > 0:
+            len_window *= -1
+        return len_window
+
     def validate_bet_amount(self, amount: float) -> float:
         # if amount < minimumBet, set amount = minimumBet
         final_amount = max(amount, self.minimum_bet)
@@ -205,10 +213,10 @@ class BotBase(abc.ABC):
             self.multipliers
         )
         slope, _ = utils_graphs.calculate_slope_linear_regression(
-            y_coordinates, self.LEN_WINDOW_TO_DETERMINE_BULLISH_GAME
+            y_coordinates, self.len_window_to_bullish_game
         )
         SendEventToGUI.log.debug(f"determine_bullish_game :: slope {slope} ")
-        return slope >= self.MINIMUM_VALUE_TO_DETERMINE_BULLISH_GAME
+        return slope >= self.min_value_to_bullish_game
 
     def get_last_lost_amount(self) -> float:
         """

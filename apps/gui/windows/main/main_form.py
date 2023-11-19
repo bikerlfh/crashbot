@@ -48,6 +48,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.socket.run()
         # verify token login
         self._verify_token()
+        self.console_is_visible = False
 
     def __init_screen(self) -> None:
         self.stacked_widget = QStackedWidget(self)
@@ -163,13 +164,16 @@ class MainForm(QMainWindow, MainDesigner):
             title=GlobalVars.APP_NAME,
         )
         self.menu_language.setEnabled(False)
+        self.console_is_visible = True
 
     def show_credential(self):
         self.credential_screen.initialize()
         self.credential_screen.exec()
 
     def show_configuration(self):
-        self.configuration_dialog.initialize()
+        self.configuration_dialog.initialize(
+            console_is_visible=self.console_is_visible
+        )
         self.configuration_dialog.exec()
 
     def _add_action(self, title: str) -> QtGui.QAction:
