@@ -17,12 +17,18 @@ class GameStrategy(GameBase, configuration=GameType.STRATEGY.value):
     This game no uses the AI. Only use strategy to bet.
     """
 
-    def _initialize_bot(self, *, bot_name: str):
+    def initialize_bot(self, *, bot_name: str):
+        multipliers_ = [item.multiplier for item in self.multipliers]
+        self.BOT_NAME = bot_name
         self.bot = BotStrategy(
-            bot_name=bot_name,
+            bot_name=self.BOT_NAME,
             minimum_bet=self.minimum_bet,
             maximum_bet=self.maximum_bet,
             amount_multiple=self.home_bet.amount_multiple,
+        )
+        self.bot.initialize(
+            balance=self.initial_balance,
+            multipliers=multipliers_,
         )
 
     def add_multiplier(self, multiplier: float) -> None:

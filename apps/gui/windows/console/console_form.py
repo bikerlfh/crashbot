@@ -41,6 +41,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.auto_play = False
         self.setupUi(self)
         self._resize_font()
+        self.__fill_cmb_fields()
         self.main_window = main_window
         self.btn_auto_bet.clicked.connect(self.button_auto_bet_clicked_event)
         self.btn_auto_cash_out.clicked.connect(
@@ -61,6 +62,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.receive_multiplier_positions_signal.connect(
             self._on_receive_multiplier_positions
         )
+        self.cmb_bot.currentIndexChanged.connect(self.cmb_bot_changed)
         self.btn_auto_bet.setEnabled(False)
         self.btn_set_max_amount.setEnabled(False)
         self.btn_auto_cash_out.setEnabled(False)
@@ -70,6 +72,15 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.txt_max_amount_to_bet.setValidator(validator)
         # NOTE at this point the class should have been instantiated.
         self.ws_client = WebSocketClient()
+
+    def __fill_cmb_fields(self):
+        count_cmb_bot = self.cmb_bot.count()
+        bots = GlobalVars.get_bots()
+        for i in range(len(bots)):
+            if i >= count_cmb_bot:
+                self.cmb_bot.addItem("")
+            self.cmb_bot.setItemText(i, bots[i].name)  # noqa
+        self.cmb_bot.setEnabled(False)
 
     def __add_item_to_list(self, item: QListWidgetItem):
         current_row = self.list_log.currentRow()
@@ -99,7 +110,13 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             None,
         )
         self.lbl_home_bet.setText(self.home_bet.name)  # noqa
-        self.lbl_bot_type.setText(bot_name)
+        bots = GlobalVars.get_bots()
+        bot_index = 0
+        for i in range(len(bots)):
+            if bots[i].name == bot_name:  # noqa
+                bot_index = i
+                break
+        self.cmb_bot.setCurrentIndex(bot_index)
         self.txt_max_amount_to_bet.setText(str(max_amount_to_bet))
         text_ = _("Stop Bot") if auto_play else _("Start Bot")  # noqa
         self.btn_auto_bet.setText(text_)
@@ -128,7 +145,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         _set_font(self.lbl_profit)
         _set_font(self.label_4)
         _set_font(self.lbl_home_bet)
-        _set_font(self.lbl_bot_type)
+        _set_font(self.cmb_bot)
         _set_font(self.btn_auto_cash_out)
         _set_font(self.gbox_graph)
         _set_font(self.label_5)
@@ -192,6 +209,18 @@ class ConsoleForm(QWidget, ConsoleDesigner):
                 f"{_('in the bank. ¡Play at your own risk!')}",  # noqa
             )
         self.main_window.socket.set_max_amount_to_bet(max_amount_to_bet=amount)
+
+    def cmb_bot_changed(self, index):
+        bot_name = self.cmb_bot.currentText()
+        if not bot_name:
+            return
+        bot = next(
+            filter(lambda x: x.name == bot_name, GlobalVars.get_bots()),
+            None,
+        )
+        if not bot:
+            return
+        self.main_window.socket.change_bot(bot_name=bot.name)
 
     def on_auto_play(self, data):
         """
@@ -301,6 +330,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     def _on_receive_game_loaded(self, data: dict[str, str]):
         loaded = data.get("loaded", False)
         if loaded:
+            self.cmb_bot.setEnabled(True)
             self.btn_auto_bet.setEnabled(True)
             self.btn_set_max_amount.setEnabled(True)
             self.txt_max_amount_to_bet.setEnabled(True)

@@ -125,7 +125,7 @@ class BotBase(abc.ABC):
             self.initial_balance * self.TAKE_PROFIT_PERCENTAGE, 2
         )
         SendEventToGUI.log.info(_("Bot initialized"))  # noqa
-        SendEventToGUI.log.info(f"{_('Bot')}: {self.BOT_NAME}")  # noqa
+        SendEventToGUI.log.warning(f"{_('Bot')}: {self.BOT_NAME}")  # noqa
         SendEventToGUI.log.info(
             f"{_('Only bullish games')}: {self.ONLY_BULLISH_GAMES}"  # noqa
         )

@@ -474,8 +474,8 @@
    <property name="geometry">
     <rect>
      <x>19</x>
-     <y>300</y>
-     <width>211</width>
+     <y>310</y>
+     <width>221</width>
      <height>41</height>
     </rect>
    </property>
@@ -498,7 +498,7 @@
     <rect>
      <x>20</x>
      <y>390</y>
-     <width>211</width>
+     <width>221</width>
      <height>41</height>
     </rect>
    </property>
@@ -526,8 +526,8 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>220</y>
-     <width>191</width>
+     <y>230</y>
+     <width>211</width>
      <height>20</height>
     </rect>
    </property>
@@ -549,7 +549,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>100</y>
+     <y>120</y>
      <width>71</width>
      <height>30</height>
     </rect>
@@ -569,7 +569,7 @@
    <property name="geometry">
     <rect>
      <x>90</x>
-     <y>100</y>
+     <y>120</y>
      <width>151</width>
      <height>30</height>
     </rect>
@@ -589,7 +589,7 @@
    <property name="geometry">
     <rect>
      <x>90</x>
-     <y>130</y>
+     <y>150</y>
      <width>151</width>
      <height>30</height>
     </rect>
@@ -610,7 +610,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>130</y>
+     <y>150</y>
      <width>71</width>
      <height>30</height>
     </rect>
@@ -646,32 +646,12 @@
     <string>Demo</string>
    </property>
   </widget>
-  <widget class="QLabel" name="lbl_bot_type">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>50</y>
-     <width>221</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Arial</family>
-     <pointsize>10</pointsize>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>Bot: Aggressive</string>
-   </property>
-  </widget>
   <widget class="QLineEdit" name="txt_max_amount_to_bet">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>250</y>
-     <width>211</width>
+     <y>260</y>
+     <width>221</width>
      <height>31</height>
     </rect>
    </property>
@@ -701,7 +681,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>80</y>
+     <y>100</y>
      <width>241</width>
      <height>16</height>
     </rect>
@@ -720,7 +700,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>200</y>
+     <y>210</y>
      <width>241</width>
      <height>16</height>
     </rect>
@@ -883,7 +863,7 @@
     <rect>
      <x>20</x>
      <y>450</y>
-     <width>211</width>
+     <width>221</width>
      <height>41</height>
     </rect>
    </property>
@@ -911,7 +891,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>160</y>
+     <y>180</y>
      <width>71</width>
      <height>30</height>
     </rect>
@@ -931,7 +911,7 @@
    <property name="geometry">
     <rect>
      <x>90</x>
-     <y>160</y>
+     <y>180</y>
      <width>151</width>
      <height>30</height>
     </rect>
@@ -1199,6 +1179,21 @@
     </property>
    </widget>
   </widget>
+  <widget class="QComboBox" name="cmb_bot">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>60</y>
+     <width>221</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>demo</string>
+    </property>
+   </item>
+  </widget>
   <zorder>btn_set_max_amount</zorder>
   <zorder>btn_auto_bet</zorder>
   <zorder>label</zorder>
@@ -1206,7 +1201,6 @@
   <zorder>lbl_profit</zorder>
   <zorder>label_4</zorder>
   <zorder>lbl_home_bet</zorder>
-  <zorder>lbl_bot_type</zorder>
   <zorder>txt_max_amount_to_bet</zorder>
   <zorder>line</zorder>
   <zorder>line_2</zorder>
@@ -1218,6 +1212,7 @@
   <zorder>label_5</zorder>
   <zorder>lbl_profit_per</zorder>
   <zorder>groupBox</zorder>
+  <zorder>cmb_bot</zorder>
  </widget>
  <resources/>
  <connections/>

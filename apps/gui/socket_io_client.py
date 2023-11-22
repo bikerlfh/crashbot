@@ -143,6 +143,10 @@ class SocketIOClient(QtCore.QThread):
         data = dict(auto_play=auto_play)
         self.__execute_event(WSEvent.AUTO_PLAY, data)
 
+    def change_bot(self, *, bot_name: str) -> None:
+        data = dict(bot_name=bot_name)
+        self.__execute_event(WSEvent.CHANGE_BOT, data)
+
     def set_max_amount_to_bet(self, *, max_amount_to_bet: float) -> None:
         data = dict(max_amount_to_bet=max_amount_to_bet)
         self.__execute_event(WSEvent.SET_MAX_AMOUNT_TO_BET, data)
