@@ -124,13 +124,14 @@ class BotBase(abc.ABC):
         self.take_profit = round(
             self.initial_balance * self.TAKE_PROFIT_PERCENTAGE, 2
         )
-        SendEventToGUI.log.info(_("Bot initialized"))  # noqa
-        SendEventToGUI.log.warning(f"{_('Bot')}: {self.BOT_NAME}")  # noqa
+        self._show_bot_info()
+        # self.set_max_amount_to_bet(
+        #     amount=GlobalVars.get_max_amount_to_bet(), user_change=False
+        # )
+
+    def _show_bot_info(self):
         SendEventToGUI.log.info(
             f"{_('Only bullish games')}: {self.ONLY_BULLISH_GAMES}"  # noqa
-        )
-        SendEventToGUI.log.info(
-            f"{_('Bot risk factor')}: {self.RISK_FACTOR}"  # noqa
         )
         SendEventToGUI.log.info(
             f"{_('Bot min multiplier to bet')}: {self.MIN_MULTIPLIER_TO_BET}"  # noqa
@@ -139,24 +140,12 @@ class BotBase(abc.ABC):
             f"{_('Bot min multiplier to recover losses')}: "  # noqa
             f"{self.MIN_MULTIPLIER_TO_RECOVER_LOSSES}"
         )
-        SendEventToGUI.log.info(
-            f"{_('Bot min category percentage to bet')}: "  # noqa
-            f"{self.MIN_CATEGORY_PERCENTAGE_TO_BET}"
-        )
-        SendEventToGUI.log.debug(
-            f"{_('Bot min average model prediction')}: "  # noqa
-            f"{self.MIN_AVERAGE_MODEL_PREDICTION}"
-        )
         SendEventToGUI.log.info(f"{_('Stop Loss')}: {self.stop_loss}")  # noqa
         SendEventToGUI.log.info(
             f"{_('Take Profit')}: {self.take_profit}"  # noqa
         )
-        SendEventToGUI.log.debug(
-            f"{_('Bot conditions count')}: {len(self.bot_condition_helper.bot_conditions)}"  # noqa
-        )
-        # self.set_max_amount_to_bet(
-        #     amount=GlobalVars.get_max_amount_to_bet(), user_change=False
-        # )
+        SendEventToGUI.log.info(_("Bot initialized"))  # noqa
+        SendEventToGUI.log.warning(f"{_('Bot')}: {self.BOT_NAME}")  # noqa
 
     @property
     def min_value_to_bullish_game(self):

@@ -24,6 +24,35 @@ class BotAI(BotBase):
     amount of bet / 3 example: max bet = 300, min bet = 300/3 = 100.
     """
 
+    def _show_bot_info(self):
+        SendEventToGUI.log.info(
+            f"{_('Only bullish games')}: {self.ONLY_BULLISH_GAMES}"  # noqa
+        )
+        SendEventToGUI.log.info(
+            f"{_('Bot risk factor')}: {self.RISK_FACTOR}"  # noqa
+        )
+        SendEventToGUI.log.info(
+            f"{_('Bot min multiplier to bet')}: {self.MIN_MULTIPLIER_TO_BET}"  # noqa
+        )
+        SendEventToGUI.log.info(
+            f"{_('Bot min multiplier to recover losses')}: "  # noqa
+            f"{self.MIN_MULTIPLIER_TO_RECOVER_LOSSES}"
+        )
+        SendEventToGUI.log.info(
+            f"{_('Bot min category percentage to bet')}: "  # noqa
+            f"{self.MIN_CATEGORY_PERCENTAGE_TO_BET}"
+        )
+        SendEventToGUI.log.debug(
+            f"{_('Bot min average model prediction')}: "  # noqa
+            f"{self.MIN_AVERAGE_MODEL_PREDICTION}"
+        )
+        SendEventToGUI.log.info(f"{_('Stop Loss')}: {self.stop_loss}")  # noqa
+        SendEventToGUI.log.info(
+            f"{_('Take Profit')}: {self.take_profit}"  # noqa
+        )
+        SendEventToGUI.log.info(_("Bot initialized"))  # noqa
+        SendEventToGUI.log.warning(f"{_('Bot')}: {self.BOT_NAME}")  # noqa
+
     def get_real_profit(self) -> float:
         return self.balance - self.initial_balance
 
