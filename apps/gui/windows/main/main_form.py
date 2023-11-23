@@ -86,6 +86,7 @@ class MainForm(QMainWindow, MainDesigner):
         width: int,
         height: int,
         title: Optional[str] = None,
+        apply_max_min_size: Optional[bool] = True,
     ) -> None:
         if title:
             self.setWindowTitle(title)
@@ -94,16 +95,16 @@ class MainForm(QMainWindow, MainDesigner):
         height += 22
         if utils_os.is_linux() or utils_os.is_windows():
             height += 33
-        self.resize(width, height)
         q_size = QtCore.QSize(width, height)
-        # q_rect = QtCore.QRect(0, 0, width, height)
-        self.setMinimumSize(q_size)
-        self.setMaximumSize(q_size)
+        self.setBaseSize(q_size)
+        self.setMaximumSize(QtCore.QSize(5000, 5000))
+        if apply_max_min_size:
+            self.setMinimumSize(q_size)
+            self.setMaximumSize(q_size)
         qr = self.frameGeometry()
         cp = self.screen().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
-        # self.setGeometry(q_rect)
 
     def _on_verify(self, data: dict[str, any]) -> None:
         """
@@ -162,6 +163,7 @@ class MainForm(QMainWindow, MainDesigner):
             width=897,
             height=520,
             title=GlobalVars.APP_NAME,
+            apply_max_min_size=False,
         )
         self.menu_language.setEnabled(False)
         self.console_is_visible = True
