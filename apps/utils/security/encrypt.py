@@ -1,6 +1,7 @@
 # Standard Library
 import base64
 import hashlib
+from typing import Optional
 
 # Libraries
 import machineid
@@ -10,13 +11,13 @@ from cryptography.fernet import Fernet
 from apps.utils.patterns.singleton import Singleton
 
 
-class FernetEncrypt(metaclass=Singleton):
+class FernetHandler(metaclass=Singleton):
     KEY_ENCRYPTED: bytes
 
-    def __init__(self):
-        self.KEY_ENCRYPTED = base64.urlsafe_b64encode(
-            machineid.hashed_id(machineid.id())[:32].encode()
-        )
+    def __init__(self, key: Optional[str] = None):
+        if not key:
+            key = machineid.hashed_id(machineid.id())[:32]
+        self.KEY_ENCRYPTED = base64.urlsafe_b64encode(key.encode())
 
     def encrypt(self, data: str) -> str:
         """

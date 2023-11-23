@@ -147,37 +147,8 @@ def _read_custom_bots_from_file(custom_bots_file: str) -> list[Bot]:
     custom_bots = []
     i = -1
     for item in data:
-        name = item["name"]
-        custom_bots.append(
-            Bot(
-                id=i,
-                name=name,
-                bot_type=item["bot_type"],
-                number_of_min_bets_allowed_in_bank=item[
-                    "number_of_min_bets_allowed_in_bank"
-                ],
-                only_bullish_games=item["only_bullish_games"],
-                risk_factor=item["risk_factor"],
-                min_multiplier_to_bet=item["min_multiplier_to_bet"],
-                min_multiplier_to_recover_losses=item[
-                    "min_multiplier_to_recover_losses"
-                ],
-                min_probability_to_bet=item["min_probability_to_bet"],
-                min_category_percentage_to_bet=item[
-                    "min_category_percentage_to_bet"
-                ],
-                max_recovery_percentage_on_max_bet=item[
-                    "max_recovery_percentage_on_max_bet"
-                ],
-                min_average_model_prediction=item[
-                    "min_average_model_prediction"
-                ],
-                stop_loss_percentage=item["stop_loss_percentage"],
-                take_profit_percentage=item["take_profit_percentage"],
-                conditions=item["conditions"],
-            )
-        )
-        print(f"custom bot: {name} loaded")
+        custom_bots.append(Bot(id=i, **item))
+        print(f"custom bot: {item['name']} loaded")
         i -= 1
     return custom_bots
 
