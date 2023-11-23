@@ -7,6 +7,7 @@ class WSEvent(str, Enum):
     LOGIN = "login"
     START_BOT = "startBot"
     AUTO_PLAY = "autoPlay"
+    CHANGE_BOT = "changeBot"
     CLOSE_GAME = "closeGame"
     SET_MAX_AMOUNT_TO_BET = "setMaxAmountToBet"
     # events from server

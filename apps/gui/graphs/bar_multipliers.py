@@ -17,10 +17,9 @@ class BarMultiplier(QVBoxLayout):
         self,
         parent: QMainWindow | QWidget,
         multipliers: list[float],
-        max_multipliers: int = 18,
     ):
         super().__init__(parent)
-        self.max_multipliers = max_multipliers
+        # self.max_multipliers = max_multipliers
         self._multipliers = []
         self.bar_heights = []
         self.bar_colors = []
@@ -48,6 +47,13 @@ class BarMultiplier(QVBoxLayout):
         y1 = 0.99
         self.ax.set_position((x0, y0, x1, y1))
         # ax.legend()
+
+    @property
+    def max_multipliers(self):
+        # Internal
+        from apps.globals import GlobalVars
+
+        return GlobalVars.config.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH
 
     def draw(self):
         self.canvas.draw()

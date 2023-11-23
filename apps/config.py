@@ -1,6 +1,7 @@
 # Standard Library
 import os
 from enum import Enum
+from typing import Optional
 
 # Internal
 from apps.utils.patterns.singleton import Singleton
@@ -19,6 +20,8 @@ class Config(metaclass=Singleton):
         NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH = (
             "NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH"
         )
+        MIN_VALUE_TO_BULLISH_GAME = "MIN_VALUE_TO_BULLISH_GAME"
+        LEN_WINDOW_TO_BULLISH_GAME = "LEN_WINDOW_TO_BULLISH_GAME"
         MULTIPLIERS_TO_SHOW_LAST_POSITION = "MULTIPLIERS_TO_SHOW_LAST_POSITION"
         LANGUAGE = "LANGUAGE"
         IGNORE_DB_LOGS = "IGNORE_DB_LOGS"
@@ -38,6 +41,8 @@ class Config(metaclass=Singleton):
             "error",
             # "debug",
         ]
+        self.MIN_VALUE_TO_BULLISH_GAME = 0.26
+        self.LEN_WINDOW_TO_BULLISH_GAME = 6
         self.DEBUG = False
         self.MAX_AMOUNT_HOME_BET_PERCENTAGE = 0.5
         self.MAX_AMOUNT_BALANCE_PERCENTAGE = 0.005
@@ -89,6 +94,10 @@ class Config(metaclass=Singleton):
                         self.MULTIPLIERS_TO_SHOW_LAST_POSITION = [
                             int(i) for i in value.split(",")
                         ]
+                    case self.ConfigVar.MIN_VALUE_TO_BULLISH_GAME:
+                        self.MIN_VALUE_TO_BULLISH_GAME = float(value)
+                    case self.ConfigVar.LEN_WINDOW_TO_BULLISH_GAME:
+                        self.LEN_WINDOW_TO_BULLISH_GAME = int(value)
                     case self.ConfigVar.LANGUAGE:
                         self.LANGUAGE = value
                         if value not in self._ALLOWED_LANGUAGES:
@@ -101,8 +110,33 @@ class Config(metaclass=Singleton):
                         self.WS_SERVER_PORT = int(value)
             return config
 
-    def write_config(self, *, language: str):
-        self.LANGUAGE = language
+    def write_config(
+        self,
+        *,
+        language: Optional[str] = None,
+        min_value_to_determine_bullish_game: Optional[float] = None,
+        len_window_to_determine_bullish_game: Optional[int] = None,
+        multipliers_to_show_last_position: Optional[list[int]] = None,
+        number_of_multipliers_in_bar_graph: Optional[int] = None,
+    ):
+        if language:
+            self.LANGUAGE = language
+        if multipliers_to_show_last_position:
+            self.MULTIPLIERS_TO_SHOW_LAST_POSITION = (
+                multipliers_to_show_last_position
+            )
+        if min_value_to_determine_bullish_game:
+            self.MIN_VALUE_TO_BULLISH_GAME = (
+                min_value_to_determine_bullish_game
+            )
+        if len_window_to_determine_bullish_game:
+            self.LEN_WINDOW_TO_BULLISH_GAME = (
+                len_window_to_determine_bullish_game
+            )
+        if number_of_multipliers_in_bar_graph:
+            self.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH = (
+                number_of_multipliers_in_bar_graph
+            )
         with open(self.config_file, "w") as file:
             file.write("# Default configuration\n")
             # file.write(f"API_URL={self.API_URL}\n")
@@ -122,6 +156,14 @@ class Config(metaclass=Singleton):
             file.write(
                 f"NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH="
                 f"{self.NUMBER_OF_MULTIPLIERS_IN_BAR_GRAPH}\n"
+            )
+            file.write(
+                f"MIN_VALUE_TO_BULLISH_GAME="
+                f"{self.MIN_VALUE_TO_BULLISH_GAME}\n"
+            )
+            file.write(
+                f"LEN_WINDOW_TO_BULLISH_GAME="
+                f"{self.LEN_WINDOW_TO_BULLISH_GAME}\n"
             )
             _positions = ",".join(
                 [str(p) for p in self.MULTIPLIERS_TO_SHOW_LAST_POSITION]

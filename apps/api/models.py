@@ -101,6 +101,11 @@ class BotCondition:
             for action in self.actions  # noqa
         ]
 
+    def dict(self) -> dict:
+        data = self.__dict__
+        data["actions"] = [action.__dict__ for action in self.actions]
+        return data
+
 
 class Bot:
     def __init__(
@@ -119,6 +124,7 @@ class Bot:
         stop_loss_percentage: float,
         take_profit_percentage: float,
         conditions: list[dict[str, any]],
+        only_bullish_games: Optional[bool] = False,
         **__kwargs,
     ):
         self.id = id
@@ -143,6 +149,14 @@ class Bot:
         self.conditions = [
             BotCondition(**condition) for condition in conditions
         ]
+        self.only_bullish_games = only_bullish_games
+
+    def dict(self) -> dict:
+        data = self.__dict__
+        data["conditions"] = [
+            condition.dict() for condition in self.conditions
+        ]
+        return data
 
 
 @dataclass

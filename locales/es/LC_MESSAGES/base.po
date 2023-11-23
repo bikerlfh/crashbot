@@ -349,3 +349,34 @@ msgstr "Moneda no encontrada en los límites"
 
 msgid "please contact support"
 msgstr "por favor contacta soporte"
+
+
+msgid "Only bullish games"
+msgstr "Solo juegos alcistas"
+
+msgid "Skipping bearish game"
+msgstr "Saltando juego bajista"
+
+msgid "Game is bullish"
+msgstr "El juego es alcista"
+
+msgid "Configurations"
+msgstr "Configuraciones"
+
+msgid "Trend Graph Configuration"
+msgstr "Configuración del gráfico de tendencia"
+
+msgid "Size to determine bullish game:"
+msgstr "Tamaño para determinar juego alcista:"
+
+msgid "Value to determine bullish game:"
+msgstr "Valor para determinar juego alcista:"
+
+msgid "Number of multipliers in graph:"
+msgstr "Número de rondas en el gráfico:"
+
+msgid "Multipliers to show last positions:"
+msgstr "Multiplicadores para mostrar:"
+
+msgid "The number of multipliers in the bar graph can not be less than"
+msgstr "El número de multiplicadores en el gráfico de barras no puede ser menor que"

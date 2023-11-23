@@ -125,7 +125,7 @@
      <x>0</x>
      <y>0</y>
      <width>727</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
@@ -160,6 +160,7 @@
      <addaction name="action_spanish"/>
     </widget>
     <addaction name="action_crendentials"/>
+    <addaction name="action_parameters"/>
     <addaction name="menu_language"/>
    </widget>
    <addaction name="menu_file"/>
@@ -218,6 +219,11 @@
    </property>
    <property name="text">
     <string>Spanish</string>
+   </property>
+  </action>
+  <action name="action_parameters">
+   <property name="text">
+    <string>Parameters</string>
    </property>
   </action>
  </widget>

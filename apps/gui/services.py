@@ -9,7 +9,7 @@ from apps.game.bookmakers.home_bet import HomeBet
 from apps.globals import GlobalVars
 from apps.gui.constants import LOG_CODES
 from apps.utils.local_storage import LocalStorage
-from apps.utils.security.encrypt import FernetEncrypt
+from apps.utils.security.encrypt import FernetHandler
 
 local_storage = LocalStorage()
 
@@ -104,7 +104,7 @@ def save_credentials(
     :param password: password
     :return: None
     """
-    fernet = FernetEncrypt()
+    fernet = FernetHandler()
     username = fernet.encrypt(username)
     password = fernet.encrypt(password)
     local_storage.set_credentials(
@@ -140,7 +140,7 @@ def get_credentials_by_home_bet(*, home_bet: str) -> dict[str, any]:
     credentials = get_credentials()
     if not credentials:
         return {}
-    fernet = FernetEncrypt()
+    fernet = FernetHandler()
     for key, credential in credentials.items():
         if key == home_bet:
             credential["username"] = fernet.decrypt(credential["username"])
