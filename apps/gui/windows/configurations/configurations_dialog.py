@@ -2,13 +2,13 @@
 from copy import copy
 
 # Libraries
-from PyQt6 import QtCore
+from PyQt6 import QtCore, QtGui
 from PyQt6.QtWidgets import QDialog, QMessageBox
 
 # Internal
 from apps.globals import GlobalVars
 from apps.gui import utils as gui_utils
-from apps.gui.constants import InputMask
+from apps.gui.constants import ICON_NAME, InputMask
 from apps.gui.windows.configurations.configurations_designer import (
     ConfigurationsDesigner,
 )
@@ -21,6 +21,7 @@ class ConfigurationsDialog(QDialog, ConfigurationsDesigner):
         super().__init__()
         self.setupUi(self)
         self._resize_font()
+        self.setWindowIcon(QtGui.QIcon(ICON_NAME))
         self.console_is_visible = False
         gui_utils.apply_mask_text_input(
             self.txt_multipliers_to_show,
