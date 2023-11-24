@@ -55,7 +55,7 @@ class Config(metaclass=Singleton):
         if config_dir and not os.path.exists(config_dir):
             os.makedirs(config_dir)
         if not os.path.exists(self.config_file):
-            self.write_config()
+            self.write_config(language=self.LANGUAGE)
 
     def read_config(self):
         if not os.path.exists(self.config_file):
