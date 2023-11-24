@@ -96,13 +96,17 @@ class MainForm(QMainWindow, MainDesigner):
         if utils_os.is_linux() or utils_os.is_windows():
             height += 33
         q_size = QtCore.QSize(width, height)
-        self.setBaseSize(q_size)
-        self.setMaximumSize(QtCore.QSize(5000, 5000))
+        # self.setBaseSize(q_size)
+        self.resize(width, height)
+        self.setMinimumSize(q_size)
+        self.setMaximumSize(QtCore.QSize(50000, 50000))
         if apply_max_min_size:
             self.setMinimumSize(q_size)
             self.setMaximumSize(q_size)
-        qr = self.frameGeometry()
+        else:
+            self.setMinimumSize(QtCore.QSize(200, 100))
         cp = self.screen().availableGeometry().center()
+        qr = self.frameGeometry()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
