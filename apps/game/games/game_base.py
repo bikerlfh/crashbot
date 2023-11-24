@@ -67,7 +67,8 @@ class GameBase(abc.ABC, ConfigurationFactory):
         self.maximum_win_for_one_bet = self.maximum_bet * 100
 
     @abc.abstractmethod
-    def _initialize_bot(self, *, bot_name: str):
+    def initialize_bot(self, *, bot_name: str):
+        # initialize bot from this (self.bot.initialize)
         ...
 
     async def initialize(self):
@@ -84,7 +85,6 @@ class GameBase(abc.ABC, ConfigurationFactory):
         self.currency = self.game_page.currency
         GlobalVars.set_currency(self.currency)
         self._set_max_min_bet()
-        self._initialize_bot(bot_name=self.BOT_NAME)
         # last_balance = local_storage.get_last_initial_balance(
         #     home_bet_id=self.home_bet.id
         # )
@@ -102,10 +102,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
             map(lambda item: Multiplier(item), multipliers_)
         )
         self.multipliers_to_save = copy(self.multipliers)
-        self.bot.initialize(
-            balance=self.initial_balance,
-            multipliers=multipliers_,
-        )
+        self.initialize_bot(bot_name=self.BOT_NAME)
         self.initialized = True
         self.request_customer_live()
         self.request_save_multipliers()

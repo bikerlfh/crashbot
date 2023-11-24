@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ConfigurationsDesigner</class>
+ <widget class="QWidget" name="ConfigurationsDesigner">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>412</width>
+    <height>234</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>412</width>
+    <height>234</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>412</width>
+    <height>234</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>391</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Trend Graph Configuration</string>
+   </property>
+   <widget class="QLineEdit" name="txt_len_bullish_game">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>40</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="inputMethodHints">
+     <set>Qt::ImhDigitsOnly</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_len_bullish_game">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>240</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Size to determine bullish game:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_value_bullish_game">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>240</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Value to determine bullish game:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_num_multiplier_in_bar">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>240</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Number of multipliers in graph:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txt_value_bullish_game">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>70</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="inputMethodHints">
+     <set>Qt::ImhDigitsOnly</set>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txt_num_multiplier_in_bar">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>100</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="inputMethodHints">
+     <set>Qt::ImhDigitsOnly</set>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txt_multipliers_to_show">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>130</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="inputMethodHints">
+     <set>Qt::ImhDigitsOnly</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_multipliers_to_show">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>130</y>
+      <width>240</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Multipliers to show last positions:</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="btn_save">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>190</y>
+     <width>100</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

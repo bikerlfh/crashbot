@@ -46,6 +46,12 @@ async def set_auto_play(sid, data, room=None):
     await sio.emit(WSEvent.AUTO_PLAY, data=data_, room=sid)
 
 
+@sio.on(WSEvent.CHANGE_BOT)
+async def change_bot(sid, data, room=None):
+    data_ = events.change_bot_event(data)
+    await sio.emit(WSEvent.CHANGE_BOT, data=data_, room=sid)
+
+
 @sio.on(WSEvent.SET_MAX_AMOUNT_TO_BET)
 async def set_max_amount_to_bet(sid, data, room=None):
     data_ = events.set_max_amount_to_bet_event(data)

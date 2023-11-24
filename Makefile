@@ -19,6 +19,10 @@ generate-ui-parameters:
 generate-ui-console:
 	pyuic6 -x apps/gui/resources/ui/console.ui -o apps/gui/windows/console/console_designer_new.py
 
+
+generate-ui-configurations:
+	pyuic6 -x apps/gui/resources/ui/configurations.ui -o apps/gui/windows/configurations/configurations_designer_new.py
+
 generate-ui-config-bot:
 	pyuic6 -x apps/gui/resources/ui/config_bot.ui -o apps/gui/windows/config_bot/config_bot_designer_new.py
 

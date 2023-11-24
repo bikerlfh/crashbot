@@ -6,8 +6,7 @@ from threading import Event, Thread
 from typing import Optional
 
 # Internal
-# from pwn import log, listen
-from apps import custom_bots
+from apps.custom_bots import services as custom_bots_services
 from apps.game.ws_server import server as game_server
 from apps.globals import GlobalVars
 from apps.gui import app as gui_app
@@ -47,7 +46,7 @@ def init_app():
     GlobalVars.init(_get_base_path())
     setup_language(GlobalVars.config.LANGUAGE)
     custom_bot_path = _get_base_path("custom_bots")
-    custom_bots_ = custom_bots.read_custom_bots(custom_bot_path)
+    custom_bots_ = custom_bots_services.read_custom_bots(custom_bot_path)
     GlobalVars.set_bots(custom_bots_)
     # ws_client = WebSocketClient()
     event = Event()

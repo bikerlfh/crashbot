@@ -39,6 +39,18 @@ def auto_play_event(data: dict[str, any]) -> dict[str, any]:
     return data_
 
 
+def change_bot_event(data: dict[str, any]) -> dict[str, any]:
+    bot_name = data.get("bot_name")
+    if not bot_name:
+        return make_error("bot_name is required")
+    game = GlobalVars.get_game()
+    if not game:
+        return make_error("game is not running")
+    game.initialize_bot(bot_name=bot_name)
+    data = dict(bot_name=game.bot.BOT_NAME)
+    return data
+
+
 def set_max_amount_to_bet_event(data: dict[str, any]) -> dict[str, any]:
     max_amount_to_bet = data.get("max_amount_to_bet")
     if not max_amount_to_bet:
