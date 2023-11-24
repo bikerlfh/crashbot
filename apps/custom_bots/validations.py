@@ -141,6 +141,13 @@ class CustomBotValidationHandler:
                     f"{condition.condition_on_value} "
                     f"must be a {validation.on_value_type}"
                 )
+            elif validation.on_value_2_type == ValueTypeData.PERCENTAGE:
+                if condition.condition_on_value > 1:
+                    errors.append(
+                        f"condition {condition.id}: "
+                        f"{condition.condition_on_value_2} "
+                        f"must be less than 1"
+                    )
         if validation.on_value_2_required:
             if not condition.condition_on_value_2:
                 errors.append(
@@ -155,6 +162,13 @@ class CustomBotValidationHandler:
                     f"{condition.condition_on_value_2} "
                     f"must be a {validation.on_value_2_type}"
                 )
+            elif validation.on_value_2_type == ValueTypeData.PERCENTAGE:
+                if condition.condition_on_value_2 > 1:
+                    errors.append(
+                        f"condition {condition.id}: "
+                        f"{condition.condition_on_value_2} "
+                        f"must be less than 1"
+                    )
         return errors
 
     def _validate_action(
@@ -169,6 +183,13 @@ class CustomBotValidationHandler:
                 f"Condition {condition.id}: action {action.condition_action}:"
                 f" {action.action_value} must be a {validation.value_type}"
             )
+        elif validation.value_type == ValueTypeData.PERCENTAGE:
+            if action.action_value > 1:
+                errors.append(
+                    f"condition {condition.id}: "
+                    f"action {action.condition_action}:"
+                    f"must be less than 1"
+                )
         return errors
 
     def _validate_conditions(self):
