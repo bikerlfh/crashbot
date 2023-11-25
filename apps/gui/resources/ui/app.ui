@@ -161,8 +161,8 @@
     </widget>
     <addaction name="action_crendentials"/>
     <addaction name="action_parameters"/>
-    <addaction name="menu_language"/>
     <addaction name="action_bots"/>
+    <addaction name="menu_language"/>
    </widget>
    <addaction name="menu_file"/>
    <addaction name="menu_view"/>

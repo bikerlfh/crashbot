@@ -73,6 +73,10 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         # NOTE at this point the class should have been instantiated.
         self.ws_client = WebSocketClient()
 
+    def update_bots(self):
+        self.__fill_cmb_fields()
+        self.cmb_bot.setEnabled(True)
+
     def __fill_cmb_fields(self):
         count_cmb_bot = self.cmb_bot.count()
         bots = GlobalVars.get_bots()

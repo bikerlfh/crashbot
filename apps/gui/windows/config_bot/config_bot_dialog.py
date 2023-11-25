@@ -118,7 +118,9 @@ class ConfigBotDialog(QDialog, ConfigBotDesigner):
         game = GlobalVars.get_game()
         if game and game.bot.BOT_NAME == bot.name:
             self.main_window.socket.change_bot(bot_name=bot.name)
-        self.close()
+            self.close()
+        else:
+            self.main_window.console_screen.update_bots()
 
     def _on_btn_add_tree_clicked(self) -> None:
         item = self.tree_configuration.currentItem()
