@@ -1,6 +1,12 @@
 # Libraries
 from PyQt6 import QtCore, QtGui
-from PyQt6.QtWidgets import QComboBox, QPushButton, QTreeWidgetItem, QWidget
+from PyQt6.QtWidgets import (
+    QCheckBox,
+    QComboBox,
+    QPushButton,
+    QTreeWidgetItem,
+    QWidget,
+)
 
 # Internal
 from apps.api.models import Bot, BotCondition, BotConditionAction
@@ -8,9 +14,11 @@ from apps.constants import BotType
 from apps.game.bots.constants import ConditionAction, ConditionON
 from apps.globals import GlobalVars
 from apps.gui.constants import ICON_NAME
+from apps.gui.windows.config_bot import services as config_bot_services
 from apps.gui.windows.config_bot.config_bot_designer import ConfigBotDesigner
 from apps.gui.windows.config_bot.constants import (
     ConfigKeyButton,
+    ConfigKeyCheckBox,
     ConfigKeyComboBox,
 )
 from apps.utils.local_storage import LocalStorage
@@ -18,7 +26,9 @@ from apps.utils.local_storage import LocalStorage
 local_storage = LocalStorage()
 
 
-class ConfigBotDialog(QWidget, ConfigBotDesigner):
+class ConfigBotDialog(
+    QWidget, ConfigBotDesigner
+):  # TODO: remember to change this to QDialog
     def __init__(self):
         super().__init__()
         self.bots = []
@@ -27,59 +37,68 @@ class ConfigBotDialog(QWidget, ConfigBotDesigner):
         self.cmb_bots.currentIndexChanged.connect(
             self.on_current_index_changed
         )
-        self.on_current_index_changed(self.cmb_bots.currentIndex())
         self.btn_add_bot.clicked.connect(self.on_btn_add_bot_clicked)
         self.btn_save.clicked.connect(self.on_btn_save_clicked)
         self.tree_configuration.header().setStretchLastSection(True)
         self.tree_configuration.setColumnWidth(0, 300)
+        self.tree_configuration.doubleClicked.connect(
+            self.on_tree_double_clicked
+        )
+        self.tree_configuration.currentItemChanged.connect(
+            self.on_tree_item_changed
+        )
 
     def initialize(self):
         self.bots = GlobalVars.get_bots()
         self.__fill_cmb_fields()
 
-    def __fill_cmb_fields(self):
-        self.cmb_bots.clear()
-        for bot in self.bots:
-            self.cmb_bots.addItem(bot.name)
-        self.cmb_bots.insertItem(0, "")
-        self.cmb_bots.setCurrentIndex(0)
-
     @QtCore.pyqtSlot(int)
     def on_current_index_changed(self, index):
-        if index <= 0:
+        if index < 0:
             self.tree_configuration.clear()
             return
-        self.__fill_tree_fields(bot=self.bots[index - 1])
+        self.__fill_tree_fields(bot=self.bots[index])
+
+    def on_tree_double_clicked(self, index):
+        current_item = self.tree_configuration.currentItem()
+        if current_item:
+            if index.column() == 0:
+                current_item.setFlags(
+                    current_item.flags() & ~QtCore.Qt.ItemFlag.ItemIsEditable
+                )
+
+    def on_tree_item_changed(self):
+        current_item = self.tree_configuration.currentItem()
+        if current_item:
+            current_item.setFlags(
+                current_item.flags() | QtCore.Qt.ItemFlag.ItemIsEditable
+            )
+            self.tree_configuration.editItem(current_item, 1)
 
     def on_btn_add_bot_clicked(self):
-        self.cmb_bots.setCurrentIndex(0)
+        self.cmb_bots.setCurrentIndex(-1)
         self.__add_bot()
 
     def on_btn_save_clicked(self):
-        data = self._get_data_tree()
+        if self.tree_configuration.topLevelItemCount() == 0:
+            return
+        data = config_bot_services.get_data_tree(tree=self.tree_configuration)
         print(data)
 
-    def _get_data_tree(self) -> dict[str, any]:
-        def _get_dict_from_tree_item(
-            item: QTreeWidgetItem,
-        ) -> dict[str, any] | list[dict[str, any]]:
-            _data = {}
-            for i in range(item.childCount()):
-                child = item.child(i)
-                if child.childCount() > 0:
-                    _data[child.text(0)] = _get_dict_from_tree_item(child)
-                else:
-                    _data[child.text(0)] = child.text(1)
-            values = list(_data.values())
-            if values:
-                if isinstance(values[0], dict):
-                    return values
-            return _data
+    def _on_btn_add_tree_clicked(self) -> None:
+        item = self.tree_configuration.currentItem()
+        if item:
+            self.__add_child(item=item)
 
-        data = _get_dict_from_tree_item(
-            self.tree_configuration.invisibleRootItem()
-        )
-        return data
+    def _on_btn_remove_tree_clicked(self) -> None:
+        item = self.tree_configuration.currentItem()
+        if item:
+            self.__remove_child(parent=item)
+
+    def __fill_cmb_fields(self):
+        for bot in self.bots:
+            self.cmb_bots.addItem(bot.name)
+        self.cmb_bots.setCurrentIndex(-1)
 
     def __add_bot(self):
         bot = Bot(
@@ -99,19 +118,6 @@ class ConfigBotDialog(QWidget, ConfigBotDesigner):
             conditions=[],
         )
         self.__fill_tree_fields(bot=bot)
-
-    def __add_control(self, parent: QTreeWidgetItem, key, value) -> None:
-        if key in ConfigKeyComboBox.to_list():
-            self.__add_combo_box(parent, key, value)
-        elif key in ConfigKeyButton.to_list():
-            self.__add_button(
-                parent=parent, action=ConfigKeyButton.get_action_by_key(key)
-            )
-
-    def _on_btn_add_tree_clicked(self) -> None:
-        item = self.tree_configuration.currentItem()
-        if item:
-            self.__add_child(item=item)
 
     def __add_child(self, item: QTreeWidgetItem) -> None:
         key = item.text(0)
@@ -134,31 +140,17 @@ class ConfigBotDialog(QWidget, ConfigBotDesigner):
                         action_value=0,
                     )
         if data:
-            key_singular = self._get_key_singular(key)
-            self._add_item_tree_child(
-                item, f"{key_singular} {last_item_id}", data.__dict__
+            key_singular = config_bot_services.get_key_singular(key)
+            child = self._add_item_tree_child(
+                item, f"{key_singular} {last_item_id}", data.dict()
             )
-
-    def _on_btn_remove_tree_clicked(self) -> None:
-        item = self.tree_configuration.currentItem()
-        if item:
-            self.__remove_child(parent=item)
+            item.setExpanded(True)
+            child.setExpanded(True)
+            self.tree_configuration.setCurrentItem(child.child(0))
 
     @staticmethod
     def __remove_child(*, parent: QTreeWidgetItem) -> None:
         parent.parent().removeChild(parent)
-
-    def __add_button(self, parent: QTreeWidgetItem, action: str) -> None:
-        column = 1
-        btn = QPushButton()
-        match action:
-            case "add":
-                btn.setText("+")
-                btn.clicked.connect(self._on_btn_add_tree_clicked)
-            case "remove":
-                btn.setText("-")
-                btn.clicked.connect(self._on_btn_remove_tree_clicked)
-        self.tree_configuration.setItemWidget(parent, column, btn)
 
     def __add_combo_box(self, parent: QTreeWidgetItem, key, value) -> None:
         match key:
@@ -176,36 +168,57 @@ class ConfigBotDialog(QWidget, ConfigBotDesigner):
             cmb.setCurrentText(value)
         self.tree_configuration.setItemWidget(parent, 1, cmb)
 
+    def __add_button(self, parent: QTreeWidgetItem, action: str) -> None:
+        column = 1
+        btn = QPushButton()
+        match action:
+            case "add":
+                btn.setText("+")
+                btn.clicked.connect(self._on_btn_add_tree_clicked)
+            case "remove":
+                btn.setText("-")
+                btn.clicked.connect(self._on_btn_remove_tree_clicked)
+        self.tree_configuration.setItemWidget(parent, column, btn)
+
+    def __add_check_box(self, parent: QTreeWidgetItem, value) -> None:
+        check = QCheckBox()
+        check.setChecked(value == "True")
+        parent.setText(1, "")
+        self.tree_configuration.setItemWidget(parent, 1, check)
+
+    def __add_control(self, parent: QTreeWidgetItem, key, value) -> None:
+        if key in ConfigKeyComboBox.to_list():
+            self.__add_combo_box(parent, key, value)
+        elif key in ConfigKeyButton.to_list():
+            self.__add_button(
+                parent=parent, action=ConfigKeyButton.get_action_by_key(key)
+            )
+        elif key in ConfigKeyCheckBox.to_list():
+            self.__add_check_box(parent, value)
+
     def _add_item_tree_child(
         self, parent: QTreeWidgetItem, key, value
-    ) -> None:
+    ) -> QTreeWidgetItem:
         _value = str(value) if isinstance(value, (int, float, str)) else ""
         item = QTreeWidgetItem(parent)
         item.setText(0, key)
         item.setText(1, _value)
         self.__add_control(item, key, _value)
-        item.setFlags(item.flags() | QtCore.Qt.ItemFlag.ItemIsEditable)
 
         if isinstance(value, (list, tuple)):
-            key_singular = self._get_key_singular(key)
+            key_singular = config_bot_services.get_key_singular(key)
             for i, val in enumerate(value):
-                _val = val.__dict__ if isinstance(val, object) else val
-                self._add_item_tree_child(
-                    item, f"{key_singular} {i + 1}", _val
-                )
+                self._add_item_tree_child(item, f"{key_singular} {i + 1}", val)
         elif isinstance(value, dict):
             for k, val in value.items():
                 self._add_item_tree_child(item, k, val)
+        return item
 
     def __fill_tree_fields(self, *, bot: Bot):
-        fields = bot.__dict__
+        fields = bot.dict()
         self.tree_configuration.clear()
 
         for key, value in fields.items():
             if key == "id":
                 continue
             self._add_item_tree_child(self.tree_configuration, key, value)
-
-    @staticmethod
-    def _get_key_singular(key: str) -> str:
-        return key[:-1] if key.endswith("s") else key

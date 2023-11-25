@@ -40,3 +40,11 @@ class ConfigKeyComboBox(str, Enum):
     @classmethod
     def to_list(cls):
         return [item for item in cls]
+
+
+class ConfigKeyCheckBox(str, Enum):
+    ONLY_BULLISH_GAMES = "only_bullish_games"
+
+    @classmethod
+    def to_list(cls):
+        return [item for item in cls]

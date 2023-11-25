@@ -83,6 +83,9 @@ class BotConditionAction:
     condition_action: str
     action_value: float
 
+    def dict(self) -> dict:
+        return self.__dict__
+
 
 @dataclass
 class BotCondition:
@@ -103,7 +106,7 @@ class BotCondition:
 
     def dict(self) -> dict:
         data = self.__dict__
-        data["actions"] = [action.__dict__ for action in self.actions]
+        data["actions"] = [action.dict() for action in self.actions]
         return data
 
 
