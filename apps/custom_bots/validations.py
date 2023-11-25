@@ -2,10 +2,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
-# Libraries
-from api.models import Bot, BotCondition, BotConditionAction
-
 # Internal
+from apps.api.models import Bot, BotCondition, BotConditionAction
 from apps.custom_bots.constants import ValueTypeData
 from apps.game.bots.constants import ConditionAction, ConditionON
 
@@ -19,7 +17,7 @@ class ConditionOnValidationData:
     allowed_actions: Optional[list[ConditionAction]] = None
 
     def __post_init__(self):
-        if not self.allowed_actions:
+        if self.allowed_actions:
             self.allowed_actions = [
                 ConditionAction(action) for action in self.allowed_actions
             ]
@@ -38,10 +36,21 @@ class FieldValidation:
     def _type_error_message(self, field_name: str):
         return f"{field_name} must be a {self.type}"
 
+    @staticmethod
+    def valid_types(value_type: ValueTypeData, value: any) -> bool:
+        if value_type == ValueTypeData.INTEGER:
+            return isinstance(value, int) or (
+                isinstance(value, float) and value.is_integer()
+            )
+        elif value_type == ValueTypeData.BOOLEAN:
+            return value in [True, False, 1, 0, "1", "0"]
+        else:
+            return isinstance(value, value_type.value)
+
     def validate_data(self, field_name: str, value: any) -> Optional[str]:
         if not value and self.required:
             return f"{field_name} is required"
-        if value and not isinstance(value, self.type.value):
+        if value and not self.valid_types(self.type, value):
             return self._type_error_message(field_name)
 
 
@@ -133,40 +142,35 @@ class CustomBotValidationHandler:
                     f"condition {condition.id}: "
                     f"{condition.condition_on} requires a value"
                 )
-            if not isinstance(
-                condition.condition_on_value, validation.on_value_type
+            if not FieldValidation.valid_types(
+                validation.on_value_type, condition.condition_on_value
             ):
                 errors.append(
-                    f"condition {condition.id}: "
-                    f"{condition.condition_on_value} "
+                    f"condition {condition.id}: condition_on_value "
                     f"must be a {validation.on_value_type}"
                 )
             elif validation.on_value_2_type == ValueTypeData.PERCENTAGE:
                 if condition.condition_on_value > 1:
                     errors.append(
-                        f"condition {condition.id}: "
-                        f"{condition.condition_on_value_2} "
+                        f"condition {condition.id}: condition_on_value_2 "
                         f"must be less than 1"
                     )
         if validation.on_value_2_required:
             if not condition.condition_on_value_2:
                 errors.append(
-                    f"condition {condition.id}: "
-                    f"{condition.condition_on} requires a value"
+                    f"condition {condition.id}: condition_on requires a value"
                 )
-            if not isinstance(
-                condition.condition_on_value_2, validation.on_value_2_type
+            if not FieldValidation.valid_types(
+                validation.on_value_2_type, condition.condition_on_value_2
             ):
                 errors.append(
-                    f"condition {condition.id}: "
-                    f"{condition.condition_on_value_2} "
+                    f"condition {condition.id}: condition_on_value_2 "
                     f"must be a {validation.on_value_2_type}"
                 )
             elif validation.on_value_2_type == ValueTypeData.PERCENTAGE:
                 if condition.condition_on_value_2 > 1:
                     errors.append(
-                        f"condition {condition.id}: "
-                        f"{condition.condition_on_value_2} "
+                        f"condition {condition.id}: condition_on_value_2 "
                         f"must be less than 1"
                     )
         return errors
@@ -178,16 +182,18 @@ class CustomBotValidationHandler:
         validation = self._get_action_validation(
             action=ConditionAction(action.condition_action)
         )
-        if not isinstance(action.action_value, validation.value_type):
+        if not FieldValidation.valid_types(
+            validation.value_type, action.action_value
+        ):
             errors.append(
-                f"Condition {condition.id}: action {action.condition_action}:"
-                f" {action.action_value} must be a {validation.value_type}"
+                f"Condition {condition.id}: action {action.condition_action}: "
+                f"action_value must be a {validation.value_type}"
             )
         elif validation.value_type == ValueTypeData.PERCENTAGE:
             if action.action_value > 1:
                 errors.append(
                     f"condition {condition.id}: "
-                    f"action {action.condition_action}:"
+                    f"action {action.condition_action}: "
                     f"must be less than 1"
                 )
         return errors
@@ -197,7 +203,9 @@ class CustomBotValidationHandler:
         for condition in self.bot.conditions:
             errors.extend(self._validate_condition_on(condition=condition))
             for action in condition.actions:
-                errors.extend(self._validate_action(action=action))
+                errors.extend(
+                    self._validate_action(condition=condition, action=action)
+                )
         return errors
 
     @staticmethod

@@ -68,6 +68,49 @@ class ConfigBotDesigner(object):
         self.btn_save.setObjectName("btn_save")
         self.horizontalLayout.addWidget(self.btn_save)
         self.verticalLayout.addLayout(self.horizontalLayout)
+        self.ly_errors = QtWidgets.QVBoxLayout()
+        self.ly_errors.setSizeConstraint(
+            QtWidgets.QLayout.SizeConstraint.SetDefaultConstraint
+        )
+        self.ly_errors.setContentsMargins(-1, 0, -1, -1)
+        self.ly_errors.setSpacing(5)
+        self.ly_errors.setObjectName("ly_errors")
+        self.label = QtWidgets.QLabel(parent=conf_bot)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(
+            self.label.sizePolicy().hasHeightForWidth()
+        )
+        self.label.setSizePolicy(sizePolicy)
+        self.label.setMinimumSize(QtCore.QSize(0, 20))
+        self.label.setMaximumSize(QtCore.QSize(16777215, 10))
+        self.label.setObjectName("label")
+        self.ly_errors.addWidget(self.label)
+        self.lst_errors = QtWidgets.QListWidget(parent=conf_bot)
+        self.lst_errors.setEnabled(True)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(
+            self.lst_errors.sizePolicy().hasHeightForWidth()
+        )
+        self.lst_errors.setSizePolicy(sizePolicy)
+        self.lst_errors.setMinimumSize(QtCore.QSize(0, 100))
+        self.lst_errors.setMaximumSize(QtCore.QSize(16777215, 100))
+        self.lst_errors.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents
+        )
+        self.lst_errors.setResizeMode(QtWidgets.QListView.ResizeMode.Adjust)
+        self.lst_errors.setObjectName("lst_errors")
+        self.ly_errors.addWidget(self.lst_errors)
+        self.verticalLayout.addLayout(self.ly_errors)
         self.tree_configuration = QtWidgets.QTreeWidget(parent=conf_bot)
         self.tree_configuration.setAnimated(True)
         self.tree_configuration.setObjectName("tree_configuration")
@@ -87,6 +130,7 @@ class ConfigBotDesigner(object):
         self.tree_configuration.headerItem().setText(
             0, _translate("conf_bot", "Key")
         )
+        self.label.setText(_translate("conf_bot", "Errors"))
         self.tree_configuration.headerItem().setText(
             1, _translate("conf_bot", "Value")
         )

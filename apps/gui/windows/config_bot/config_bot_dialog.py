@@ -3,6 +3,7 @@ from PyQt6 import QtCore, QtGui
 from PyQt6.QtWidgets import (
     QCheckBox,
     QComboBox,
+    QListWidgetItem,
     QPushButton,
     QTreeWidgetItem,
     QWidget,
@@ -11,6 +12,8 @@ from PyQt6.QtWidgets import (
 # Internal
 from apps.api.models import Bot, BotCondition, BotConditionAction
 from apps.constants import BotType
+from apps.custom_bots.handlers import CustomBotsEncryptHandler
+from apps.custom_bots.validations import CustomBotValidationHandler
 from apps.game.bots.constants import ConditionAction, ConditionON
 from apps.globals import GlobalVars
 from apps.gui.constants import ICON_NAME
@@ -21,9 +24,9 @@ from apps.gui.windows.config_bot.constants import (
     ConfigKeyCheckBox,
     ConfigKeyComboBox,
 )
-from apps.utils.local_storage import LocalStorage
+from crashbot import _get_base_path
 
-local_storage = LocalStorage()
+PATH_CUSTOM_BOTS = _get_base_path("custom_bots")
 
 
 class ConfigBotDialog(
@@ -32,6 +35,7 @@ class ConfigBotDialog(
     def __init__(self):
         super().__init__()
         self.bots = []
+        self.bot_selected = None
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon(ICON_NAME))
         self.cmb_bots.currentIndexChanged.connect(
@@ -55,9 +59,11 @@ class ConfigBotDialog(
     @QtCore.pyqtSlot(int)
     def on_current_index_changed(self, index):
         if index < 0:
+            self.bot_selected = None
             self.tree_configuration.clear()
             return
-        self.__fill_tree_fields(bot=self.bots[index])
+        self.bot_selected = self.bots[index]
+        self.__fill_tree_fields(bot=self.bot_selected)
 
     def on_tree_double_clicked(self, index):
         current_item = self.tree_configuration.currentItem()
@@ -80,10 +86,30 @@ class ConfigBotDialog(
         self.__add_bot()
 
     def on_btn_save_clicked(self):
+        self.lst_errors.clear()
         if self.tree_configuration.topLevelItemCount() == 0:
             return
         data = config_bot_services.get_data_tree(tree=self.tree_configuration)
-        print(data)
+        bot = Bot(id=1, **data)
+
+        errors = self.validate_name_bot(bot=bot)
+        errors.extend(CustomBotValidationHandler(bot=bot).validate_bot())
+        if errors:
+            self.__add_errors(errors=errors)
+            return
+        encrypted_bot = CustomBotsEncryptHandler(PATH_CUSTOM_BOTS)
+        if self.bot_selected:
+            self.bots.remove(self.bot_selected)
+            if self.bot_selected.name != bot.name:
+                encrypted_bot.remove(bot=self.bot_selected)
+        encrypted_bot.save(bot=bot)
+        self.bots.append(bot)
+        GlobalVars.set_bots(bots=self.bots)
+        self.__fill_cmb_fields()
+        # initialize bots
+        game = GlobalVars.get_game()
+        if game and game.bot.name == bot.name:
+            game.initialize_bots()
 
     def _on_btn_add_tree_clicked(self) -> None:
         item = self.tree_configuration.currentItem()
@@ -96,6 +122,7 @@ class ConfigBotDialog(
             self.__remove_child(parent=item)
 
     def __fill_cmb_fields(self):
+        self.cmb_bots.clear()
         for bot in self.bots:
             self.cmb_bots.addItem(bot.name)
         self.cmb_bots.setCurrentIndex(-1)
@@ -187,13 +214,14 @@ class ConfigBotDialog(
         self.tree_configuration.setItemWidget(parent, 1, check)
 
     def __add_control(self, parent: QTreeWidgetItem, key, value) -> None:
-        if key in ConfigKeyComboBox.to_list():
-            self.__add_combo_box(parent, key, value)
-        elif key in ConfigKeyButton.to_list():
+        _key = key.split(" ").pop(0)
+        if _key in ConfigKeyComboBox.to_list():
+            self.__add_combo_box(parent, _key, value)
+        elif _key in ConfigKeyButton.to_list():
             self.__add_button(
-                parent=parent, action=ConfigKeyButton.get_action_by_key(key)
+                parent=parent, action=ConfigKeyButton.get_action_by_key(_key)
             )
-        elif key in ConfigKeyCheckBox.to_list():
+        elif _key in ConfigKeyCheckBox.to_list():
             self.__add_check_box(parent, value)
 
     def _add_item_tree_child(
@@ -222,3 +250,17 @@ class ConfigBotDialog(
             if key == "id":
                 continue
             self._add_item_tree_child(self.tree_configuration, key, value)
+
+    def __add_errors(self, *, errors: list[str]) -> None:
+        for error in errors:
+            item = QListWidgetItem(error, self.lst_errors)
+            item.setForeground(QtGui.QColor("red"))
+            self.lst_errors.addItem(item)
+
+    def validate_name_bot(self, bot: Bot) -> list[str]:
+        if self.bot_selected.name == bot.name:
+            return []
+        bot_names = [bot.name for bot in self.bots]
+        if bot.name in bot_names:
+            return ["Name bot already exists"]
+        return []
