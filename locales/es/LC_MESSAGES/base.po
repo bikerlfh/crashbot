@@ -380,3 +380,49 @@ msgstr "Multiplicadores para mostrar:"
 
 msgid "The number of multipliers in the bar graph can not be less than"
 msgstr "El número de multiplicadores en el gráfico de barras no puede ser menor que"
+
+#: ./apps/gui/windows/config_bot/config_bot_designer.py:125
+msgid "Config Bots"
+msgstr "Configurar Bots"
+
+#: ./apps/gui/windows/config_bot/config_bot_designer.py:126
+msgid "Bots"
+msgstr "Bots"
+
+#: ./apps/gui/windows/config_bot/config_bot_designer.py:127
+msgid "New"
+msgstr "Nuevo"
+
+#: ./apps/gui/windows/config_bot/config_bot_designer.py:130
+msgid "Key"
+msgstr "Clave"
+
+#: ./apps/gui/windows/config_bot/config_bot_designer.py:134
+msgid "Value"
+msgstr "Valor"
+
+#: ./apps/gui/windows/config_bot/config_bot_designer.py:134
+msgid "Errors"
+msgstr "Errores"
+
+#: apps/custom_bots/validations.py
+msgid "Condition"
+msgstr "Condición"
+
+msgid "requires a value"
+msgstr "requiere un valor"
+
+msgid "must be a"
+msgstr "debe ser un"
+
+msgid "must be less than 1"
+msgstr "debe ser menor que 1"
+
+msgid "action"
+msgstr "acción"
+
+msgid "is required"
+msgstr "es requerido"
+
+msgid "Name bot already exists"
+msgstr "El nombre del bot ya existe"

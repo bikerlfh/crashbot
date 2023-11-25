@@ -56,7 +56,8 @@ class GameAI(GameBase, configuration=GameType.AI.value):
         multipliers = [item.multiplier for item in self.multipliers]
         try:
             predictions = api_services.request_prediction(
-                home_bet_id=self.home_bet.id, multipliers=multipliers
+                home_bet_game_id=GlobalVars.get_home_bet_game_id(),
+                multipliers=multipliers,
             )
         except Exception as e:
             SendEventToGUI.log.debug(

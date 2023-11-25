@@ -86,7 +86,7 @@ class MainDesigner(object):
         self.stackedWidget.addWidget(self.page_2)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 727, 24))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 727, 22))
         self.menubar.setObjectName("menubar")
         self.menu_file = QtWidgets.QMenu(parent=self.menubar)
         self.menu_file.setObjectName("menu_file")
@@ -124,6 +124,8 @@ class MainDesigner(object):
         self.action_spanish.setObjectName("action_spanish")
         self.action_parameters = QtGui.QAction(parent=MainWindow)
         self.action_parameters.setObjectName("action_parameters")
+        self.action_bots = QtGui.QAction(parent=MainWindow)
+        self.action_bots.setObjectName("action_bots")
         self.menu_file.addAction(self.action_signout)
         self.menu_file.addAction(self.action_exit)
         self.menu_logs.addAction(self.actionInfo)
@@ -133,6 +135,7 @@ class MainDesigner(object):
         self.menu_language.addAction(self.action_spanish)
         self.menu_configuration.addAction(self.action_crendentials)
         self.menu_configuration.addAction(self.action_parameters)
+        self.menu_configuration.addAction(self.action_bots)
         self.menu_configuration.addAction(self.menu_language.menuAction())
         self.menubar.addAction(self.menu_file.menuAction())
         self.menubar.addAction(self.menu_view.menuAction())
@@ -157,3 +160,4 @@ class MainDesigner(object):
         self.action_english.setText(_("English"))  # noqa
         self.action_spanish.setText(_("Spanish"))  # noqa
         self.action_parameters.setText(_("Parameters"))  # noqa
+        self.action_bots.setText(_("Bots"))  # noqa

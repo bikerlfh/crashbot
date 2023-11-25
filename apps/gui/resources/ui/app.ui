@@ -125,7 +125,7 @@
      <x>0</x>
      <y>0</y>
      <width>727</width>
-     <height>24</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
@@ -161,6 +161,7 @@
     </widget>
     <addaction name="action_crendentials"/>
     <addaction name="action_parameters"/>
+    <addaction name="action_bots"/>
     <addaction name="menu_language"/>
    </widget>
    <addaction name="menu_file"/>
@@ -224,6 +225,11 @@
   <action name="action_parameters">
    <property name="text">
     <string>Parameters</string>
+   </property>
+  </action>
+  <action name="action_bots">
+   <property name="text">
+    <string>Bots</string>
    </property>
   </action>
  </widget>

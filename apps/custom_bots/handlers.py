@@ -21,6 +21,10 @@ class CustomBotsEncryptHandler:
         with open(bot_path, "wb") as file:
             file.write(cipher_text.encode())
 
+    def remove(self, bot: Bot):
+        bot_path = f"{self.path}/{bot.name}{self.BOT_EXTENSION}"
+        os.remove(bot_path)
+
     def load(self, bot_path: str) -> Bot:
         with open(bot_path, "rb") as file:
             cipher_text = file.read()
