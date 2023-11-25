@@ -68,12 +68,18 @@ class ConfigBotDesigner(object):
         self.btn_save.setObjectName("btn_save")
         self.horizontalLayout.addWidget(self.btn_save)
         self.verticalLayout.addLayout(self.horizontalLayout)
+        self.tree_configuration = QtWidgets.QTreeWidget(parent=conf_bot)
+        self.tree_configuration.setAnimated(True)
+        self.tree_configuration.setObjectName("tree_configuration")
+        self.tree_configuration.header().setVisible(True)
+        self.tree_configuration.header().setMinimumSectionSize(60)
+        self.verticalLayout.addWidget(self.tree_configuration)
         self.ly_errors = QtWidgets.QVBoxLayout()
         self.ly_errors.setSizeConstraint(
             QtWidgets.QLayout.SizeConstraint.SetDefaultConstraint
         )
         self.ly_errors.setContentsMargins(-1, 0, -1, -1)
-        self.ly_errors.setSpacing(5)
+        self.ly_errors.setSpacing(10)
         self.ly_errors.setObjectName("ly_errors")
         self.label = QtWidgets.QLabel(parent=conf_bot)
         sizePolicy = QtWidgets.QSizePolicy(
@@ -87,7 +93,7 @@ class ConfigBotDesigner(object):
         )
         self.label.setSizePolicy(sizePolicy)
         self.label.setMinimumSize(QtCore.QSize(0, 20))
-        self.label.setMaximumSize(QtCore.QSize(16777215, 10))
+        self.label.setMaximumSize(QtCore.QSize(16777215, 20))
         self.label.setObjectName("label")
         self.ly_errors.addWidget(self.label)
         self.lst_errors = QtWidgets.QListWidget(parent=conf_bot)
@@ -111,27 +117,16 @@ class ConfigBotDesigner(object):
         self.lst_errors.setObjectName("lst_errors")
         self.ly_errors.addWidget(self.lst_errors)
         self.verticalLayout.addLayout(self.ly_errors)
-        self.tree_configuration = QtWidgets.QTreeWidget(parent=conf_bot)
-        self.tree_configuration.setAnimated(True)
-        self.tree_configuration.setObjectName("tree_configuration")
-        self.tree_configuration.header().setVisible(True)
-        self.tree_configuration.header().setMinimumSectionSize(60)
-        self.verticalLayout.addWidget(self.tree_configuration)
 
         self.retranslateUi(conf_bot)
         QtCore.QMetaObject.connectSlotsByName(conf_bot)
 
     def retranslateUi(self, conf_bot):
-        _translate = QtCore.QCoreApplication.translate
-        conf_bot.setWindowTitle(_translate("conf_bot", "Config Bots"))
-        self.lbl_bots.setText(_translate("conf_bot", "Bots"))
-        self.btn_add_bot.setText(_translate("conf_bot", "New"))
-        self.btn_save.setText(_translate("conf_bot", "Save"))
-        self.tree_configuration.headerItem().setText(
-            0, _translate("conf_bot", "Key")
-        )
-        self.label.setText(_translate("conf_bot", "Errors"))
-        self.tree_configuration.headerItem().setText(
-            1, _translate("conf_bot", "Value")
-        )
+        conf_bot.setWindowTitle(_("Config Bots"))  # noqa
+        self.lbl_bots.setText(_("Bots"))  # noqa
+        self.btn_add_bot.setText(_("New"))  # noqa
+        self.btn_save.setText(_("Save"))  # noqa
+        self.tree_configuration.headerItem().setText(0, _("Key"))  # noqa
+        self.label.setText(_("Errors"))  # noqa
+        self.tree_configuration.headerItem().setText(1, _("Value"))  # noqa
         self.tree_configuration.setSortingEnabled(False)

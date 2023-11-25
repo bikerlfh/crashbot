@@ -9,6 +9,7 @@ from PyQt6.QtWidgets import QMainWindow, QMessageBox, QStackedWidget, QWidget
 from apps.globals import GlobalVars
 from apps.gui.constants import ICON_NAME, LANGUAGES
 from apps.gui.socket_io_client import SocketIOClient
+from apps.gui.windows.config_bot.config_bot_dialog import ConfigBotDialog
 from apps.gui.windows.configurations.configurations_dialog import (
     ConfigurationsDialog,
 )
@@ -61,9 +62,11 @@ class MainForm(QMainWindow, MainDesigner):
         self.setCentralWidget(self.stacked_widget)
         self.credential_screen = CredentialDialog()
         self.configuration_dialog = ConfigurationsDialog()
+        self.config_bots = ConfigBotDialog()
         self.showMaximized()
         self.action_crendentials.triggered.connect(self.show_credential)
         self.action_parameters.triggered.connect(self.show_configuration)
+        self.action_bots.triggered.connect(self.show_bots)
         self.action_exit.triggered.connect(self.closeEvent)
         self.action_signout.triggered.connect(self._action_sign_out)
         self.action_spanish.triggered.connect(self._action_change_language)
@@ -181,6 +184,10 @@ class MainForm(QMainWindow, MainDesigner):
             console_is_visible=self.console_is_visible
         )
         self.configuration_dialog.exec()
+
+    def show_bots(self):
+        self.config_bots.initialize()
+        self.config_bots.exec()
 
     def _add_action(self, title: str) -> QtGui.QAction:
         action = QtGui.QAction(parent=self)

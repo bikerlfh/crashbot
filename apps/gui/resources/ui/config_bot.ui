@@ -83,9 +83,32 @@
     </layout>
    </item>
    <item>
+    <widget class="QTreeWidget" name="tree_configuration">
+     <property name="animated">
+      <bool>true</bool>
+     </property>
+     <attribute name="headerVisible">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="headerMinimumSectionSize">
+      <number>60</number>
+     </attribute>
+     <column>
+      <property name="text">
+       <string>Key</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Value</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item>
     <layout class="QVBoxLayout" name="ly_errors">
      <property name="spacing">
-      <number>5</number>
+      <number>10</number>
      </property>
      <property name="sizeConstraint">
       <enum>QLayout::SetDefaultConstraint</enum>
@@ -104,13 +127,13 @@
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>10</height>
+         <height>20</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>16777215</width>
-         <height>10</height>
+         <height>20</height>
         </size>
        </property>
        <property name="text">
@@ -150,29 +173,6 @@
       </widget>
      </item>
     </layout>
-   </item>
-   <item>
-    <widget class="QTreeWidget" name="tree_configuration">
-     <property name="animated">
-      <bool>true</bool>
-     </property>
-     <attribute name="headerVisible">
-      <bool>true</bool>
-     </attribute>
-     <attribute name="headerMinimumSectionSize">
-      <number>60</number>
-     </attribute>
-     <column>
-      <property name="text">
-       <string>Key</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Value</string>
-      </property>
-     </column>
-    </widget>
    </item>
   </layout>
  </widget>

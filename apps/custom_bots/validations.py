@@ -4,7 +4,7 @@ from typing import Optional
 
 # Internal
 from apps.api.models import Bot, BotCondition, BotConditionAction
-from apps.custom_bots.constants import ValueTypeData
+from apps.custom_bots.constants import PercentageNumber, ValueTypeData
 from apps.game.bots.constants import ConditionAction, ConditionON
 
 
@@ -34,7 +34,7 @@ class FieldValidation:
     type: ValueTypeData
 
     def _type_error_message(self, field_name: str):
-        return f"{field_name} must be a {self.type}"
+        return f"{field_name} {_('must be a')} {self.type}"  # noqa
 
     @staticmethod
     def valid_types(value_type: ValueTypeData, value: any) -> bool:
@@ -44,12 +44,14 @@ class FieldValidation:
             )
         elif value_type == ValueTypeData.BOOLEAN:
             return value in [True, False, 1, 0, "1", "0"]
+        elif value_type == ValueTypeData.PERCENTAGE:
+            return PercentageNumber(value).is_valid()
         else:
             return isinstance(value, value_type.value)
 
     def validate_data(self, field_name: str, value: any) -> Optional[str]:
         if not value and self.required:
-            return f"{field_name} is required"
+            return f"{field_name} {_('is required')}"  # noqa
         if value and not self.valid_types(self.type, value):
             return self._type_error_message(field_name)
 
@@ -139,39 +141,39 @@ class CustomBotValidationHandler:
         if validation.on_value_required:
             if not condition.condition_on_value:
                 errors.append(
-                    f"condition {condition.id}: "
-                    f"{condition.condition_on} requires a value"
+                    f"{_('Condition')} {condition.id}: "  # noqa
+                    f"{condition.condition_on} {_('requires a value')}"  # noqa
                 )
             if not FieldValidation.valid_types(
                 validation.on_value_type, condition.condition_on_value
             ):
                 errors.append(
-                    f"condition {condition.id}: condition_on_value "
-                    f"must be a {validation.on_value_type}"
+                    f"{_('Condition')} {condition.id}: condition_on_value "  # noqa
+                    f"{_('must be a')} {validation.on_value_type}"  # noqa
                 )
             elif validation.on_value_2_type == ValueTypeData.PERCENTAGE:
                 if condition.condition_on_value > 1:
                     errors.append(
-                        f"condition {condition.id}: condition_on_value_2 "
-                        f"must be less than 1"
+                        f"{_('Condition')} {condition.id}: condition_on_value_2 "  # noqa
+                        f"{_('must be less than 1')}"  # noqa
                     )
         if validation.on_value_2_required:
             if not condition.condition_on_value_2:
                 errors.append(
-                    f"condition {condition.id}: condition_on requires a value"
+                    f"{_('Condition')} {condition.id}: condition_on {_('requires a value')}"  # noqa
                 )
             if not FieldValidation.valid_types(
                 validation.on_value_2_type, condition.condition_on_value_2
             ):
                 errors.append(
-                    f"condition {condition.id}: condition_on_value_2 "
-                    f"must be a {validation.on_value_2_type}"
+                    f"{_('Condition')} {condition.id}: condition_on_value_2 "  # noqa
+                    f"{_('must be a')} {validation.on_value_2_type}"  # noqa
                 )
             elif validation.on_value_2_type == ValueTypeData.PERCENTAGE:
                 if condition.condition_on_value_2 > 1:
                     errors.append(
-                        f"condition {condition.id}: condition_on_value_2 "
-                        f"must be less than 1"
+                        f"{_('Condition')} {condition.id}: condition_on_value_2 "  # noqa
+                        f"{_('must be less than 1')}"  # noqa
                     )
         return errors
 
@@ -186,15 +188,15 @@ class CustomBotValidationHandler:
             validation.value_type, action.action_value
         ):
             errors.append(
-                f"Condition {condition.id}: action {action.condition_action}: "
-                f"action_value must be a {validation.value_type}"
+                f"{_('Condition')} {condition.id}: {_('action')} {action.condition_action}: "  # noqa
+                f"action_value {_(' must be a')} {validation.value_type}"  # noqa
             )
         elif validation.value_type == ValueTypeData.PERCENTAGE:
             if action.action_value > 1:
                 errors.append(
-                    f"condition {condition.id}: "
-                    f"action {action.condition_action}: "
-                    f"must be less than 1"
+                    f"{_('Condition')} {condition.id}: "  # noqa
+                    f"{_('action')} {action.condition_action}: "  # noqa
+                    f"{_('must be less than 1')}"  # noqa
                 )
         return errors
 
@@ -252,22 +254,14 @@ class CustomBotValidationHandler:
                     on_value_required=True,
                     on_value_2_required=True,
                     on_value_type=ValueTypeData.INTEGER,
-                    on_value_2_type=ValueTypeData.INTEGER,
-                    allowed_actions=[
-                        ConditionAction.RESET_MULTIPLIER,
-                        ConditionAction.UPDATE_MULTIPLIER,
-                    ],
+                    on_value_2_type=ValueTypeData.FLOAT,
                 )
             case ConditionON.STREAK_N_MULTIPLIER_GREATER_THAN:
                 return ConditionOnValidationData(
                     on_value_required=True,
                     on_value_2_required=True,
                     on_value_type=ValueTypeData.INTEGER,
-                    on_value_2_type=ValueTypeData.INTEGER,
-                    allowed_actions=[
-                        ConditionAction.RESET_MULTIPLIER,
-                        ConditionAction.UPDATE_MULTIPLIER,
-                    ],
+                    on_value_2_type=ValueTypeData.FLOAT,
                 )
 
     @staticmethod

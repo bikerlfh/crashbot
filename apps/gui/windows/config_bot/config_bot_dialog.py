@@ -3,10 +3,10 @@ from PyQt6 import QtCore, QtGui
 from PyQt6.QtWidgets import (
     QCheckBox,
     QComboBox,
+    QDialog,
     QListWidgetItem,
     QPushButton,
     QTreeWidgetItem,
-    QWidget,
 )
 
 # Internal
@@ -29,9 +29,7 @@ from crashbot import _get_base_path
 PATH_CUSTOM_BOTS = _get_base_path("custom_bots")
 
 
-class ConfigBotDialog(
-    QWidget, ConfigBotDesigner
-):  # TODO: remember to change this to QDialog
+class ConfigBotDialog(QDialog, ConfigBotDesigner):
     def __init__(self):
         super().__init__()
         self.bots = []
@@ -58,6 +56,7 @@ class ConfigBotDialog(
 
     @QtCore.pyqtSlot(int)
     def on_current_index_changed(self, index):
+        self.lst_errors.clear()
         if index < 0:
             self.bot_selected = None
             self.tree_configuration.clear()
@@ -82,6 +81,7 @@ class ConfigBotDialog(
             self.tree_configuration.editItem(current_item, 1)
 
     def on_btn_add_bot_clicked(self):
+        self.lst_errors.clear()
         self.cmb_bots.setCurrentIndex(-1)
         self.__add_bot()
 
@@ -258,9 +258,10 @@ class ConfigBotDialog(
             self.lst_errors.addItem(item)
 
     def validate_name_bot(self, bot: Bot) -> list[str]:
-        if self.bot_selected.name == bot.name:
-            return []
-        bot_names = [bot.name for bot in self.bots]
-        if bot.name in bot_names:
-            return ["Name bot already exists"]
+        if self.bot_selected:
+            if self.bot_selected.name == bot.name:
+                return []
+            bot_names = [bot.name for bot in self.bots]
+            if bot.name in bot_names:
+                return [_("Name bot already exists")]  # noqa
         return []
