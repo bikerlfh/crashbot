@@ -169,15 +169,15 @@ class BotAPIServices:
         self.validate_response(response=response)
         return response.body
 
-    def request_prediction(
+    def predict(
         self,
         *,
-        home_bet_id: int,
+        home_bet_game_id: int,
         multipliers: List[int],
         model_home_bet_id: Optional[int] = None,
     ) -> Dict[str, Any]:
         data = dict(
-            home_bet_id=home_bet_id,
+            home_bet_game_id=home_bet_game_id,
             multipliers=multipliers,
         )
         if model_home_bet_id:

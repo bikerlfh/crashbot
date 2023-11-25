@@ -89,20 +89,20 @@ def add_multipliers(
 
 def request_prediction(
     *,
-    home_bet_id: int,
+    home_bet_game_id: int,
     multipliers: list[float],
     model_home_bet_id: Optional[int] = None,
 ) -> list[Prediction]:
     """
     request_prediction
-    :param home_bet_id:
+    :param home_bet_game_id:
     :param multipliers:
     :param model_home_bet_id:
     :return:
     """
     bot_connector = BotAPIConnector()
-    response = bot_connector.services.request_prediction(
-        home_bet_id=home_bet_id,
+    response = bot_connector.services.predict(
+        home_bet_game_id=home_bet_game_id,
         multipliers=multipliers,
         model_home_bet_id=model_home_bet_id,
     )
