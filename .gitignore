@@ -9,6 +9,7 @@ dist/
 data/
 build/
 .venv/
+env/
 .pyarmor/
 .pytest_cache/
 
@@ -58,3 +59,4 @@ Thumbs.db
 *.mov
 *.wmv
 
+test_bot.py

@@ -37,5 +37,11 @@ class LANGUAGES(str, Enum):
     SPANISH = "es"
 
 
+class InputMask(str, Enum):
+    FLOAT = r"^\d*\.?\d*$"
+    INTEGER = r"^\d*$"
+    MULTIPLIER_POSITION = r"^[\d*\,\d*]+$"
+
+
 DEFAULT_FONT_SIZE = 10
 MAC_FONT_SIZE = 13

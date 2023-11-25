@@ -1,6 +1,9 @@
 designer:
 	designer apps/gui/resources/ui/$(ui).ui
 
+designer-win:
+	env/Lib/site-packages/qt6_applications/Qt/bin/designer.exe apps/gui/resources/ui/$(ui).ui
+
 generate-ui:
 	pyuic6 -x apps/gui/resources/ui/${ui}.ui -o file.py
 
@@ -15,6 +18,12 @@ generate-ui-parameters:
 
 generate-ui-console:
 	pyuic6 -x apps/gui/resources/ui/console.ui -o apps/gui/windows/console/console_designer_new.py
+
+generate-ui-configurations:
+	pyuic6 -x apps/gui/resources/ui/configurations.ui -o apps/gui/windows/configurations/configurations_designer_new.py
+
+generate-ui-config-bot:
+	pyuic6 -x apps/gui/resources/ui/config_bot.ui -o apps/gui/windows/config_bot/config_bot_designer_new.py
 
 run:
 	python crashbot.py

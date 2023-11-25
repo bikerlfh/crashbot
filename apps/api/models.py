@@ -1,4 +1,5 @@
 # Standard Library
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
@@ -83,6 +84,9 @@ class BotConditionAction:
     condition_action: str
     action_value: float
 
+    def dict(self) -> dict:
+        return deepcopy(self).__dict__
+
 
 @dataclass
 class BotCondition:
@@ -100,6 +104,11 @@ class BotCondition:
             else action
             for action in self.actions  # noqa
         ]
+
+    def dict(self) -> dict:
+        data = deepcopy(self).__dict__
+        data["actions"] = [action.dict() for action in self.actions]
+        return data
 
 
 class Bot:
@@ -119,6 +128,7 @@ class Bot:
         stop_loss_percentage: float,
         take_profit_percentage: float,
         conditions: list[dict[str, any]],
+        only_bullish_games: Optional[bool] = False,
         **__kwargs,
     ):
         self.id = id
@@ -143,6 +153,14 @@ class Bot:
         self.conditions = [
             BotCondition(**condition) for condition in conditions
         ]
+        self.only_bullish_games = only_bullish_games
+
+    def dict(self) -> dict:
+        data = deepcopy(self).__dict__
+        data["conditions"] = [
+            condition.dict() for condition in self.conditions
+        ]
+        return data
 
 
 @dataclass

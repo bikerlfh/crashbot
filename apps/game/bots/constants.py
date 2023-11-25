@@ -14,6 +14,10 @@ class ConditionON(str, Enum):
     PROFIT_GREATER_THAN = "profit_greater_than"
     PROFIT_LESS_THAN = "profit_less_than"
 
+    @classmethod
+    def to_list(cls):
+        return [key for key in cls]
+
 
 class ConditionAction(str, Enum):
     # values are percentage
@@ -26,3 +30,7 @@ class ConditionAction(str, Enum):
     # values are boolean
     IGNORE_MODEL = "ignore_model"
     MAKE_BET = "make_bet"
+
+    @classmethod
+    def to_list(cls):
+        return [key for key in cls]

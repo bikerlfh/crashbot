@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class GlobalVars:
     APP_NAME: str = "CrashBot"
-    APP_VERSION: str = "1.3.6"
+    APP_VERSION: str = "1.4.0"
     APP_HASH: str = None
     SIO: AsyncServer = None
     GAME: any = None
@@ -184,6 +184,10 @@ class GlobalVars:
     @classmethod
     def get_bots(cls) -> list[object]:
         return globals().get(GlobalVars.VARS.BOTS)
+
+    @classmethod
+    def clear_bots(cls) -> None:
+        globals()[GlobalVars.VARS.BOTS] = []
 
     @classmethod
     def set_bots(cls, bots: list[object]) -> None:

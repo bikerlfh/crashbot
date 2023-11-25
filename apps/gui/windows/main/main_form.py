@@ -9,6 +9,10 @@ from PyQt6.QtWidgets import QMainWindow, QMessageBox, QStackedWidget, QWidget
 from apps.globals import GlobalVars
 from apps.gui.constants import ICON_NAME, LANGUAGES
 from apps.gui.socket_io_client import SocketIOClient
+from apps.gui.windows.config_bot.config_bot_dialog import ConfigBotDialog
+from apps.gui.windows.configurations.configurations_dialog import (
+    ConfigurationsDialog,
+)
 from apps.gui.windows.console.console_form import ConsoleForm
 from apps.gui.windows.credential.credential_dialog import CredentialDialog
 from apps.gui.windows.login.login_form import LoginForm
@@ -45,6 +49,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.socket.run()
         # verify token login
         self._verify_token()
+        self.console_is_visible = False
 
     def __init_screen(self) -> None:
         self.stacked_widget = QStackedWidget(self)
@@ -56,8 +61,12 @@ class MainForm(QMainWindow, MainDesigner):
         self.stacked_widget.addWidget(self.console_screen)
         self.setCentralWidget(self.stacked_widget)
         self.credential_screen = CredentialDialog()
+        self.configuration_dialog = ConfigurationsDialog()
+        self.config_bots = ConfigBotDialog(self)
         self.showMaximized()
         self.action_crendentials.triggered.connect(self.show_credential)
+        self.action_parameters.triggered.connect(self.show_configuration)
+        self.action_bots.triggered.connect(self.show_bots)
         self.action_exit.triggered.connect(self.closeEvent)
         self.action_signout.triggered.connect(self._action_sign_out)
         self.action_spanish.triggered.connect(self._action_change_language)
@@ -80,6 +89,7 @@ class MainForm(QMainWindow, MainDesigner):
         width: int,
         height: int,
         title: Optional[str] = None,
+        apply_max_min_size: Optional[bool] = True,
     ) -> None:
         if title:
             self.setWindowTitle(title)
@@ -88,16 +98,20 @@ class MainForm(QMainWindow, MainDesigner):
         height += 22
         if utils_os.is_linux() or utils_os.is_windows():
             height += 33
-        self.resize(width, height)
         q_size = QtCore.QSize(width, height)
-        # q_rect = QtCore.QRect(0, 0, width, height)
+        # self.setBaseSize(q_size)
+        self.resize(width, height)
         self.setMinimumSize(q_size)
-        self.setMaximumSize(q_size)
-        qr = self.frameGeometry()
+        self.setMaximumSize(QtCore.QSize(50000, 50000))
+        if apply_max_min_size:
+            self.setMinimumSize(q_size)
+            self.setMaximumSize(q_size)
+        else:
+            self.setMinimumSize(QtCore.QSize(200, 100))
         cp = self.screen().availableGeometry().center()
+        qr = self.frameGeometry()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
-        # self.setGeometry(q_rect)
 
     def _on_verify(self, data: dict[str, any]) -> None:
         """
@@ -156,12 +170,24 @@ class MainForm(QMainWindow, MainDesigner):
             width=897,
             height=520,
             title=GlobalVars.APP_NAME,
+            apply_max_min_size=False,
         )
         self.menu_language.setEnabled(False)
+        self.console_is_visible = True
 
     def show_credential(self):
         self.credential_screen.initialize()
         self.credential_screen.exec()
+
+    def show_configuration(self):
+        self.configuration_dialog.initialize(
+            console_is_visible=self.console_is_visible
+        )
+        self.configuration_dialog.exec()
+
+    def show_bots(self):
+        self.config_bots.initialize()
+        self.config_bots.exec()
 
     def _add_action(self, title: str) -> QtGui.QAction:
         action = QtGui.QAction(parent=self)

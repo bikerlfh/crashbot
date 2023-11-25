@@ -35,12 +35,18 @@ class GameAI(GameBase, configuration=GameType.AI.value):
             PredictionModel.get_instance()
         )
 
-    def _initialize_bot(self, *, bot_name: str):
+    def initialize_bot(self, *, bot_name: str):
+        multipliers_ = [item.multiplier for item in self.multipliers]
+        self.BOT_NAME = bot_name
         self.bot = BotAI(
             bot_name=bot_name,
             minimum_bet=self.minimum_bet,
             maximum_bet=self.maximum_bet,
             amount_multiple=self.home_bet.amount_multiple,
+        )
+        self.bot.initialize(
+            balance=self.initial_balance,
+            multipliers=multipliers_,
         )
 
     def request_get_prediction(self) -> Optional[PredictionCore]:
@@ -50,7 +56,8 @@ class GameAI(GameBase, configuration=GameType.AI.value):
         multipliers = [item.multiplier for item in self.multipliers]
         try:
             predictions = api_services.request_prediction(
-                home_bet_id=self.home_bet.id, multipliers=multipliers
+                home_bet_game_id=GlobalVars.get_home_bet_game_id(),
+                multipliers=multipliers,
             )
         except Exception as e:
             SendEventToGUI.log.debug(
