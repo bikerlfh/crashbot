@@ -62,7 +62,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.setCentralWidget(self.stacked_widget)
         self.credential_screen = CredentialDialog()
         self.configuration_dialog = ConfigurationsDialog()
-        self.config_bots = ConfigBotDialog()
+        self.config_bots = ConfigBotDialog(self)
         self.showMaximized()
         self.action_crendentials.triggered.connect(self.show_credential)
         self.action_parameters.triggered.connect(self.show_configuration)

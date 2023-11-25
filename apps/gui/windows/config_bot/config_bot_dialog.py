@@ -1,3 +1,6 @@
+# Standard Library
+from copy import deepcopy
+
 # Libraries
 from PyQt6 import QtCore, QtGui
 from PyQt6.QtWidgets import (
@@ -30,12 +33,16 @@ PATH_CUSTOM_BOTS = _get_base_path("custom_bots")
 
 
 class ConfigBotDialog(QDialog, ConfigBotDesigner):
-    def __init__(self):
+    def __init__(
+        self,
+        main_window: any,
+    ):
         super().__init__()
         self.bots = []
         self.bot_selected = None
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon(ICON_NAME))
+        self.main_window = main_window
         self.cmb_bots.currentIndexChanged.connect(
             self.on_current_index_changed
         )
@@ -51,7 +58,7 @@ class ConfigBotDialog(QDialog, ConfigBotDesigner):
         )
 
     def initialize(self):
-        self.bots = GlobalVars.get_bots()
+        self.bots = deepcopy(GlobalVars.get_bots())
         self.__fill_cmb_fields()
 
     @QtCore.pyqtSlot(int)
@@ -104,12 +111,14 @@ class ConfigBotDialog(QDialog, ConfigBotDesigner):
                 encrypted_bot.remove(bot=self.bot_selected)
         encrypted_bot.save(bot=bot)
         self.bots.append(bot)
+        GlobalVars.clear_bots()
         GlobalVars.set_bots(bots=self.bots)
         self.__fill_cmb_fields()
         # initialize bots
         game = GlobalVars.get_game()
-        if game and game.bot.name == bot.name:
-            game.initialize_bots()
+        if game and game.bot.BOT_NAME == bot.name:
+            self.main_window.socket.change_bot(bot_name=bot.name)
+        self.close()
 
     def _on_btn_add_tree_clicked(self) -> None:
         item = self.tree_configuration.currentItem()

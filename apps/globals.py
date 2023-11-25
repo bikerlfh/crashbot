@@ -186,6 +186,10 @@ class GlobalVars:
         return globals().get(GlobalVars.VARS.BOTS)
 
     @classmethod
+    def clear_bots(cls) -> None:
+        globals()[GlobalVars.VARS.BOTS] = []
+
+    @classmethod
     def set_bots(cls, bots: list[object]) -> None:
         _bots = copy.copy(cls.get_bots())
         _bots.extend(bots)
