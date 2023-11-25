@@ -4,8 +4,9 @@ from typing import Optional
 
 # Internal
 from apps.api.models import Bot, BotCondition, BotConditionAction
-from apps.custom_bots.constants import PercentageNumber, ValueTypeData
+from apps.custom_bots.constants import ValueTypeData
 from apps.game.bots.constants import ConditionAction, ConditionON
+from apps.utils.types import PercentageNumber
 
 
 @dataclass
