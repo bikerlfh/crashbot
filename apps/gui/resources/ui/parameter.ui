@@ -163,7 +163,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>210</y>
+      <y>220</y>
       <width>351</width>
       <height>41</height>
      </rect>
@@ -191,7 +191,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>180</y>
+      <y>190</y>
       <width>341</width>
       <height>30</height>
      </rect>
@@ -207,6 +207,15 @@
       <width>16777215</width>
       <height>30</height>
      </size>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <kerning>true</kerning>
+     </font>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
     </property>
     <property name="toolTipDuration">
      <number>3</number>
@@ -247,6 +256,9 @@
       <width>16777215</width>
       <height>30</height>
      </size>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
     </property>
     <property name="toolTipDuration">
      <number>3</number>
