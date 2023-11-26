@@ -121,6 +121,7 @@ class ConfigBotDialog(QDialog, ConfigBotDesigner):
             self.close()
         else:
             self.main_window.console_screen.update_bots()
+            self.main_window.parameters_screen.update_bots()
 
     def _on_btn_add_tree_clicked(self) -> None:
         item = self.tree_configuration.currentItem()
