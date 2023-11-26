@@ -24,6 +24,14 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         self.receive_start_bot_signal.connect(self._on_receive_start_bot)
         self.home_bets: list[object] = []
 
+    def update_bots(self):
+        count_cmb_bot = self.cmb_bot_type.count()
+        bots = GlobalVars.get_bots()
+        for i in range(len(bots)):
+            if i >= count_cmb_bot:
+                self.cmb_bot_type.addItem("")
+            self.cmb_bot_type.setItemText(i, bots[i].name)  # noqa
+
     def initialize(self):
         """
         invoke after get info of customer
@@ -36,17 +44,12 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         self.__fill_cmb_fields()
 
     def __fill_cmb_fields(self):
-        count_cmb_bot = self.cmb_home_bet.count()
+        count_cmb_home_bet = self.cmb_home_bet.count()
         for key, val in enumerate(self.home_bets):
-            if key >= count_cmb_bot:
+            if key >= count_cmb_home_bet:
                 self.cmb_home_bet.addItem("")
             self.cmb_home_bet.setItemText(key, val.name)
-        count_cmb_bot = self.cmb_bot_type.count()
-        bots = GlobalVars.get_bots()
-        for i in range(len(bots)):
-            if i >= count_cmb_bot:
-                self.cmb_bot_type.addItem("")
-            self.cmb_bot_type.setItemText(i, bots[i].name)  # noqa
+        self.update_bots()
 
     def get_values(self) -> dict[str, any] | None:
         bot_name = self.cmb_bot_type.currentText()
