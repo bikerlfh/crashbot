@@ -39,6 +39,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.initial_balance = None
         self.balance = None
         self.auto_play = False
+        self.game_loaded = False
         self.setupUi(self)
         self._resize_font()
         self.__fill_cmb_fields()
@@ -215,6 +216,8 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         self.main_window.socket.set_max_amount_to_bet(max_amount_to_bet=amount)
 
     def cmb_bot_changed(self, index):
+        if not self.game_loaded:
+            return
         bot_name = self.cmb_bot.currentText()
         if not bot_name:
             return
@@ -338,6 +341,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             self.btn_auto_bet.setEnabled(True)
             self.btn_set_max_amount.setEnabled(True)
             self.txt_max_amount_to_bet.setEnabled(True)
+            self.game_loaded = True
             return
         self.main_window.show_message_box(
             title="Game not loaded",

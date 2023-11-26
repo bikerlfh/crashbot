@@ -47,6 +47,8 @@ def change_bot_event(data: dict[str, any]) -> dict[str, any]:
     if not game:
         return make_error("game is not running")
     game.initialize_bot(bot_name=bot_name)
+    max_amount_to_bet = GlobalVars.get_max_amount_to_bet()
+    game.bot.set_max_amount_to_bet(amount=max_amount_to_bet)
     data = dict(bot_name=game.bot.BOT_NAME)
     return data
 
