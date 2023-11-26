@@ -362,7 +362,7 @@ class ConsoleDesigner(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setSizeConstraint(
-            QtWidgets.QLayout.SizeConstraint.SetFixedSize
+            QtWidgets.QLayout.SizeConstraint.SetDefaultConstraint
         )
         self.verticalLayout.setContentsMargins(-1, -1, 0, -1)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -378,6 +378,7 @@ class ConsoleDesigner(object):
         )
         self.lbl_home_bet.setSizePolicy(sizePolicy)
         self.lbl_home_bet.setMinimumSize(QtCore.QSize(200, 30))
+        self.lbl_home_bet.setMaximumSize(QtCore.QSize(200, 30))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -578,7 +579,8 @@ class ConsoleDesigner(object):
             self.label.sizePolicy().hasHeightForWidth()
         )
         self.label.setSizePolicy(sizePolicy)
-        self.label.setMinimumSize(QtCore.QSize(0, 30))
+        self.label.setMinimumSize(QtCore.QSize(0, 40))
+        self.label.setMaximumSize(QtCore.QSize(16777215, 40))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -612,6 +614,20 @@ class ConsoleDesigner(object):
         self.txt_max_amount_to_bet.setObjectName("txt_max_amount_to_bet")
         self.verticalLayout.addWidget(self.txt_max_amount_to_bet)
         self.btn_set_max_amount = QtWidgets.QPushButton(parent=consoleForm)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(
+            self.btn_set_max_amount.sizePolicy().hasHeightForWidth()
+        )
+        self.btn_set_max_amount.setSizePolicy(sizePolicy)
+        self.btn_set_max_amount.setMinimumSize(QtCore.QSize(0, 0))
+        self.btn_set_max_amount.setMaximumSize(
+            QtCore.QSize(16777215, 16777215)
+        )
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -630,7 +646,7 @@ class ConsoleDesigner(object):
         self.btn_auto_bet = QtWidgets.QPushButton(parent=consoleForm)
         sizePolicy = QtWidgets.QSizePolicy(
             QtWidgets.QSizePolicy.Policy.Minimum,
-            QtWidgets.QSizePolicy.Policy.Fixed,
+            QtWidgets.QSizePolicy.Policy.Preferred,
         )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -638,6 +654,8 @@ class ConsoleDesigner(object):
             self.btn_auto_bet.sizePolicy().hasHeightForWidth()
         )
         self.btn_auto_bet.setSizePolicy(sizePolicy)
+        self.btn_auto_bet.setMinimumSize(QtCore.QSize(0, 0))
+        self.btn_auto_bet.setMaximumSize(QtCore.QSize(16777215, 16777215))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -651,6 +669,18 @@ class ConsoleDesigner(object):
         self.btn_auto_bet.setObjectName("btn_auto_bet")
         self.verticalLayout.addWidget(self.btn_auto_bet)
         self.btn_auto_cash_out = QtWidgets.QPushButton(parent=consoleForm)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(
+            self.btn_auto_cash_out.sizePolicy().hasHeightForWidth()
+        )
+        self.btn_auto_cash_out.setSizePolicy(sizePolicy)
+        self.btn_auto_cash_out.setMinimumSize(QtCore.QSize(0, 0))
+        self.btn_auto_cash_out.setMaximumSize(QtCore.QSize(16777215, 16777215))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -663,16 +693,6 @@ class ConsoleDesigner(object):
         self.btn_auto_cash_out.setCheckable(True)
         self.btn_auto_cash_out.setObjectName("btn_auto_cash_out")
         self.verticalLayout.addWidget(self.btn_auto_cash_out)
-        self.verticalLayout.setStretch(0, 1)
-        self.verticalLayout.setStretch(1, 1)
-        self.verticalLayout.setStretch(3, 1)
-        self.verticalLayout.setStretch(9, 1)
-        self.verticalLayout.setStretch(10, 1)
-        self.verticalLayout.setStretch(11, 1)
-        self.verticalLayout.setStretch(12, 1)
-        self.verticalLayout.setStretch(13, 1)
-        self.verticalLayout.setStretch(14, 1)
-        self.verticalLayout.setStretch(15, 1)
         self.horizontalLayout.addLayout(self.verticalLayout)
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setContentsMargins(-1, -1, 0, -1)

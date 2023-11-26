@@ -37,3 +37,29 @@ class BotType(Enum):
 class BetType(str, Enum):
     MANUAL = "manual"
     AUTOMATIC = "automatic"
+
+
+class BullishGameValues(dict[str, any], Enum):
+    LOW = {"value": 0.26, "index": 0}
+    MEDIUM = {"value": 0.5, "index": 1}
+    HIGH = {"value": 0.7, "index": 2}
+
+    def get_value(self) -> float:
+        return self.value["value"]
+
+    def get_index(self) -> int:
+        return self.value["index"]
+
+    @staticmethod
+    def get_by_index(index: int) -> any:
+        for value in BullishGameValues:
+            if value.value["index"] == index:
+                return value
+        return None
+
+    @staticmethod
+    def get_by_value(value: float) -> any:
+        for val in BullishGameValues:
+            if val.value["value"] == value:
+                return val
+        return None

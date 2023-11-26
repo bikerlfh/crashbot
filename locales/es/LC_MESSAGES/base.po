@@ -426,3 +426,12 @@ msgstr "es requerido"
 
 msgid "Name bot already exists"
 msgstr "El nombre del bot ya existe"
+
+msgid "Low"
+msgstr "Bajo"
+
+msgid "Medium"
+msgstr "Medio"
+
+msgid "High"
+msgstr "Alto"

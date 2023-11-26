@@ -73,6 +73,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.action_english.triggered.connect(self._action_change_language)
         self.show_login_screen()
         self.action_english.setChecked(True)
+        self._set_enabled_configuration_actions(False)
         lang = LANGUAGES(GlobalVars.config.LANGUAGE)
         if lang == LANGUAGES.SPANISH:
             self.action_spanish.setChecked(True)
@@ -81,6 +82,11 @@ class MainForm(QMainWindow, MainDesigner):
     def _load_version(self) -> None:
         self.lbl_version.setText(GlobalVars.APP_VERSION)
         self.statusbar.addPermanentWidget(self.lbl_version)
+
+    def _set_enabled_configuration_actions(self, enabled: bool) -> None:
+        self.action_crendentials.setEnabled(enabled)
+        self.action_parameters.setEnabled(enabled)
+        self.action_bots.setEnabled(enabled)
 
     def __change_screen(
         self,
@@ -160,6 +166,7 @@ class MainForm(QMainWindow, MainDesigner):
             height=291,
             title=f"{GlobalVars.APP_NAME}",
         )
+        self._set_enabled_configuration_actions(True)
 
     @QtCore.pyqtSlot()
     def show_console_screen(self):
