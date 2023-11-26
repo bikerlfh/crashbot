@@ -53,74 +53,6 @@ class BotAI(BotBase):
         SendEventToGUI.log.info(_("Bot initialized"))  # noqa
         SendEventToGUI.log.warning(f"{_('Bot')}: {self.BOT_NAME}")  # noqa
 
-    def get_real_profit(self) -> float:
-        return self.balance - self.initial_balance
-
-    def get_bet_recovery_amount(
-        self, multiplier: float, probability: Optional[float] = None
-    ) -> float:
-        """
-        Adjust the bet recovery amount.
-        :param multiplier: The multiplier.
-        :param probability: The probability.
-        :return: The bet recovery amount.
-        """
-        profit = self.profit
-        # NOTE: no use minBet by strategy
-        # min_bet = self.balance * strategy.min_amount_percentage_to_bet
-        amount_to_recover_losses = self.calculate_recovery_amount(
-            profit, multiplier
-        )
-        if amount_to_recover_losses < self.minimum_bet:
-            return self.minimum_bet
-        # calculate the amount to bet to recover last amount loss
-        last_amount_loss = self.calculate_recovery_amount(
-            self.get_last_lost_amount(), multiplier
-        )
-        # calculates the maximum amount allowed to recover in a single bet
-        max_recovery_amount = (
-            self.maximum_bet * self.MAX_RECOVERY_PERCENTAGE_ON_MAX_BET
-        )
-        amount = min(
-            amount_to_recover_losses, max_recovery_amount, self.balance
-        )
-        amount = max(amount, self.minimum_bet)
-        # validation of new balance after bet recovery with the stop loss
-        possible_loss = abs(profit) + amount
-        if possible_loss >= self.stop_loss:
-            amount = min(round(amount * 0.5, 2), last_amount_loss)
-            SendEventToGUI.log.debug(
-                f"get_bet_recovery_amount ::"
-                f"possible_loss >= self.stop_loss"
-                f"({possible_loss} >= {self.stop_loss}) ::"
-                f"new amount={amount}"
-            )
-        amount = round(max(amount, self.minimum_bet), 2)
-        return amount
-
-    def generate_recovery_bets(
-        self, multiplier: float, probability: Optional[float] = None
-    ) -> list[Bet]:
-        """
-        Generate recovery bets.
-        :param multiplier: The multiplier.
-        :param probability: The probability.
-        :return: The recovery bets.
-        """
-        if multiplier < self.MIN_MULTIPLIER_TO_RECOVER_LOSSES:
-            SendEventToGUI.log.warning(
-                _(  # noqa
-                    "multiplier is less than min multiplier to recovery losses"
-                )
-            )
-            return []
-        SendEventToGUI.log.debug(_("generating recovery bets"))  # noqa
-        bets = []
-        amount = self.get_bet_recovery_amount(multiplier, probability)
-        amount = self.validate_bet_amount(amount)
-        bets.append(Bet(amount, multiplier))
-        return list(filter(lambda b: b.amount > 0, bets))
-
     def generate_bets(
         self, prediction_data: Optional[PredictionData] = None
     ) -> list[Bet]:
@@ -145,6 +77,8 @@ class BotAI(BotBase):
                 category_percentage,
             )
             return self.bets
+        if self.MIN_MULTIPLIER_TO_BET == 0:
+            return []
         # to category 2
         # if the profit is greater than 10% of the initial balance
         # get the possible next second multiplier
