@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class GlobalVars:
     APP_NAME: str = "CrashBot"
-    APP_VERSION: str = "1.4.0"
+    APP_VERSION: str = "1.4.1"
     APP_HASH: str = None
     SIO: AsyncServer = None
     GAME: any = None
