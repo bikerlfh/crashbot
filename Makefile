@@ -2,7 +2,7 @@ designer:
 	designer apps/gui/resources/ui/$(ui).ui
 
 designer-win:
-	env/Lib/site-packages/qt6_applications/Qt/bin/designer.exe apps/gui/resources/ui/$(ui).ui
+	.venv/Lib/site-packages/qt6_applications/Qt/bin/designer.exe apps/gui/resources/ui/$(ui).ui
 
 generate-ui:
 	pyuic6 -x apps/gui/resources/ui/${ui}.ui -o file.py
