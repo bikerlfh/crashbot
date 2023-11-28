@@ -435,3 +435,6 @@ msgstr "Medio"
 
 msgid "High"
 msgstr "Alto"
+
+msgid "Clone"
+msgstr "Clonar"

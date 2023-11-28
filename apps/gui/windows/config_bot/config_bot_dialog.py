@@ -67,7 +67,9 @@ class ConfigBotDialog(QDialog, ConfigBotDesigner):
         if index < 0:
             self.bot_selected = None
             self.tree_configuration.clear()
+            self.btn_clone.setEnabled(False)
             return
+        self.btn_clone.setEnabled(True)
         self.bot_selected = self.bots[index]
         self.__fill_tree_fields(bot=self.bot_selected)
 
@@ -91,6 +93,20 @@ class ConfigBotDialog(QDialog, ConfigBotDesigner):
         self.lst_errors.clear()
         self.cmb_bots.setCurrentIndex(-1)
         self.__add_bot()
+
+    def on_btn_clone_clicked(self):
+        self.lst_errors.clear()
+        if self.tree_configuration.topLevelItemCount() == 0:
+            return
+        data = config_bot_services.get_data_tree(tree=self.tree_configuration)
+        bot = Bot(id=-1, **data)
+        bot.name = f"{bot.name}_clone"
+        encrypted_bot = CustomBotsEncryptHandler(PATH_CUSTOM_BOTS)
+        encrypted_bot.save(bot=bot)
+        self.bots.append(bot)
+        GlobalVars.clear_bots()
+        GlobalVars.set_bots(bots=self.bots)
+        self.__fill_cmb_fields()
 
     def on_btn_save_clicked(self):
         self.lst_errors.clear()
