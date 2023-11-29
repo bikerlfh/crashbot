@@ -19,7 +19,7 @@ from apps.custom_bots.handlers import CustomBotsEncryptHandler
 from apps.custom_bots.validations import CustomBotValidationHandler
 from apps.game.bots.constants import ConditionAction, ConditionON
 from apps.globals import GlobalVars
-from apps.gui.constants import ICON_NAME
+from apps.gui.constants import DEFAULT_FONT_SIZE, ICON_NAME, MAC_FONT_SIZE
 from apps.gui.windows.config_bot import services as config_bot_services
 from apps.gui.windows.config_bot.config_bot_designer import ConfigBotDesigner
 from apps.gui.windows.config_bot.constants import (
@@ -27,12 +27,17 @@ from apps.gui.windows.config_bot.constants import (
     ConfigKeyCheckBox,
     ConfigKeyComboBox,
 )
+from apps.utils import os as os_utils
 from crashbot import _get_base_path
 
 PATH_CUSTOM_BOTS = _get_base_path("custom_bots")
 
 
 class ConfigBotDialog(QDialog, ConfigBotDesigner):
+    _FONT_SIZE = (
+        DEFAULT_FONT_SIZE if not os_utils.is_macos() else MAC_FONT_SIZE
+    )
+
     def __init__(
         self,
         main_window: any,
@@ -56,6 +61,22 @@ class ConfigBotDialog(QDialog, ConfigBotDesigner):
         self.tree_configuration.currentItemChanged.connect(
             self.on_tree_item_changed
         )
+        self._resize_font()
+
+    @staticmethod
+    def _set_font(widget: any, font_size: int = _FONT_SIZE):
+        font = widget.font()
+        font.setPointSize(font_size)
+        widget.setFont(font)
+
+    def _resize_font(self):
+        self._set_font(self.lbl_bots)
+        self._set_font(self.cmb_bots)
+        self._set_font(self.btn_add_bot)
+        self._set_font(self.btn_clone)
+        self._set_font(self.btn_save)
+        self._set_font(self.tree_configuration)
+        self._set_font(self.lst_errors)
 
     def initialize(self):
         self.bots = deepcopy(GlobalVars.get_bots())
@@ -221,6 +242,7 @@ class ConfigBotDialog(QDialog, ConfigBotDesigner):
         cmb.addItems(items)
         if value:
             cmb.setCurrentText(value)
+        self._set_font(cmb)
         self.tree_configuration.setItemWidget(parent, 1, cmb)
 
     def __add_button(self, parent: QTreeWidgetItem, action: str) -> None:
