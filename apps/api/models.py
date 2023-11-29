@@ -157,6 +157,8 @@ class Bot:
             only_bullish_games, str
         ):
             self.only_bullish_games = bool(int(only_bullish_games))
+        else:
+            self.only_bullish_games = only_bullish_games
 
     def dict(self) -> dict:
         data = deepcopy(self).__dict__
