@@ -51,7 +51,7 @@ class FieldValidation:
             return isinstance(value, value_type.value)
 
     def validate_data(self, field_name: str, value: any) -> Optional[str]:
-        if not value and self.required:
+        if value is None and self.required:
             return f"{field_name} {_('is required')}"  # noqa
         if value and not self.valid_types(self.type, value):
             return self._type_error_message(field_name)
