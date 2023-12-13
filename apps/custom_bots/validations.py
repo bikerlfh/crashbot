@@ -288,3 +288,5 @@ class CustomBotValidationHandler:
                 return ActionValidationData(value_type=ValueTypeData.BOOLEAN)
             case ConditionAction.FORGET_LOSSES:
                 return ActionValidationData(value_type=ValueTypeData.BOOLEAN)
+            case ConditionAction.MAKE_SECOND_BET:
+                return ActionValidationData(value_type=ValueTypeData.BOOLEAN)

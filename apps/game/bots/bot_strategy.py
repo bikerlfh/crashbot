@@ -55,12 +55,15 @@ class BotStrategy(BotBase):
                 f"second multiplier: {min_multiplier} - "
                 f"{max_multiplier} = {second_multiplier}"
             )
-        self.bets.append(
-            Bet(self._max_amount_to_bet, self.MIN_MULTIPLIER_TO_BET)
-        )
-        if second_multiplier == self.MIN_MULTIPLIER_TO_BET:
-            second_multiplier += 0.2
-        self.bets.append(Bet(self._min_amount_to_bet, second_multiplier))
+        if self.MAKE_SECOND_BET:
+            self.bets.append(
+                Bet(self._max_amount_to_bet, self.MIN_MULTIPLIER_TO_BET)
+            )
+            if second_multiplier == self.MIN_MULTIPLIER_TO_BET:
+                second_multiplier += 0.2
+            self.bets.append(Bet(self._min_amount_to_bet, second_multiplier))
+        else:
+            self.bets.append(Bet(self._bet_amount, self.MIN_MULTIPLIER_TO_BET))
         self.bets = list(filter(lambda b: b.amount > 0, self.bets))
         return self.bets
 

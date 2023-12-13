@@ -68,16 +68,14 @@ class TestBotConditionsIgnoreModel:
         helper.current_bet_amount = 5000
         helper.current_multiplier = 2.5
         helper.last_games = []
-        (
-            bet_amount,
-            multiplier,
-            ignore_model,
-            forget_losses,
-        ) = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=False,
             profit=0.01,
             multiplier_result=2.5,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 2000
         assert multiplier == 2.5
         assert ignore_model is True
@@ -93,16 +91,15 @@ class TestBotConditionsIgnoreModel:
         helper.current_bet_amount = 5000
         helper.current_multiplier = 2.5
         helper.last_games = [False, False, False]
-        (
-            bet_amount,
-            multiplier,
-            ignore_model,
-            forget_losses,
-        ) = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=True,
             profit=0.01,
             multiplier_result=2.5,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
+
         assert bet_amount == 5000
         assert multiplier == 2
         assert ignore_model is False

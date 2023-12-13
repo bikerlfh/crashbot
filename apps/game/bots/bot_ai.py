@@ -118,11 +118,13 @@ class BotAI(BotBase):
                     second_multiplier,
                 )
             )
-        else:
+        elif self.MAKE_SECOND_BET:
             self.bets.append(
                 Bet(self._max_amount_to_bet, self.MIN_MULTIPLIER_TO_BET)
             )
             self.bets.append(Bet(self._min_amount_to_bet, second_multiplier))
+        else:
+            self.bets.append(Bet(self._bet_amount, self.MIN_MULTIPLIER_TO_BET))
         self.bets = list(filter(lambda b: b.amount > 0, self.bets))
         return self.bets
 
