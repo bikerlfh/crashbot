@@ -5,7 +5,7 @@ from typing import Optional, Tuple
 from PyQt6.QtWidgets import QListWidgetItem
 
 # Internal
-from apps.game.bookmakers.home_bet import HomeBet
+from apps.api.models import HomeBetGameModel
 from apps.globals import GlobalVars
 from apps.gui.constants import LOG_CODES
 from apps.utils.local_storage import LocalStorage
@@ -68,19 +68,19 @@ def get_range_amount_to_bet(
 
 def validate_max_amount_to_bet(
     *,
-    home_bet: HomeBet,
+    home_bet_game: HomeBetGameModel,
     max_amount_to_bet: float,
     balance: Optional[float] = None,
 ) -> Tuple[bool, float, float]:
     """
-    Validate max bet amount
-    :param home_bet: home bet
+    Validate home_bet_game bet amount
+    :param home_bet_game: home bet
     :param max_amount_to_bet: amount to bet
     :param balance: balance
     :return: bool, min_bet, max_bet
     """
-    min_bet = home_bet.min_bet
-    max_bet = home_bet.max_bet
+    min_bet = home_bet_game.min_bet
+    max_bet = home_bet_game.max_bet
     min_bet, max_bet = get_range_amount_to_bet(
         min_bet=min_bet,
         max_bet=max_bet,

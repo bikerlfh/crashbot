@@ -20,45 +20,6 @@ class HomeBetModel:
     id: int
     name: str
     url: str
-    limits: Optional[dict[str, LimitModel]] = None
-
-    def __post_init__(self):
-        limits_ = {}
-        if not self.limits:
-            return
-        for key in self.limits.keys():
-            value = self.limits[key]
-            if isinstance(self.limits[key], dict):
-                value = LimitModel(**value)  # noqa
-            limits_.update({key: value})
-        self.limits = limits_
-
-    def _get_limits(self) -> LimitModel:
-        # Internal
-        from apps.globals import GlobalVars
-
-        currency = GlobalVars.get_currency()
-        if not currency:
-            currency = list(self.limits.keys())[0]
-        if currency not in self.limits:
-            error_msg = (
-                f"error: {_('Currency not found in limits')}: {currency} "  # noqa
-                f"{_('please contact support')}"  # noqa
-            )
-            raise ValueError(error_msg)
-        return self.limits[currency]
-
-    @property
-    def min_bet(self) -> float:
-        return self._get_limits().min_bet
-
-    @property
-    def max_bet(self) -> float:
-        return self._get_limits().max_bet
-
-    @property
-    def amount_multiple(self) -> float:
-        return self._get_limits().amount_multiple
 
 
 @dataclass
@@ -200,6 +161,18 @@ class HomeBetGameModel:
             )
             raise ValueError(error_msg)
         return self.limits[currency]
+
+    @property
+    def min_bet(self) -> float:
+        return self._get_limits().min_bet
+
+    @property
+    def max_bet(self) -> float:
+        return self._get_limits().max_bet
+
+    @property
+    def amount_multiple(self) -> float:
+        return self._get_limits().amount_multiple
 
 
 @dataclass

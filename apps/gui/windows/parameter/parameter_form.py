@@ -103,12 +103,13 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         # get home_bet_game_id
         game = self.cmb_game.currentText()
         home_bet_id = data.get("home_bet_id")
-        home_bet_game_id = [
-            g.id
+        home_bet_game = [
+            g
             for g in self.home_bet_games
             if g.crash_game == game and g.home_bet_id == home_bet_id
         ][0]
-        GlobalVars.set_home_bet_game_id(home_bet_game_id)
+        GlobalVars.set_home_bet_game_selected(home_bet_game)
+        GlobalVars.set_home_bet_game_id(home_bet_game.id)
         use_game_ai = self.chk_use_ai.isChecked()
         if self.chk_use_credentials.isChecked():
             home_bet_index = self.cmb_home_bet.currentIndex()

@@ -5,6 +5,7 @@ from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtWidgets import QListWidgetItem, QMessageBox, QWidget
 
 # Internal
+from apps.api.models import HomeBetGameModel
 from apps.globals import GlobalVars
 from apps.gui import services
 from apps.gui.constants import DEFAULT_FONT_SIZE, MAC_FONT_SIZE
@@ -35,6 +36,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         super().__init__()
         self.logs_to_save = []
         self.home_bet = None
+        self.home_bet_game: HomeBetGameModel = None  # noqa
         self.bot = None
         self.initial_balance = None
         self.balance = None
@@ -109,6 +111,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         **_kwargs,
     ):
         home_bets = GlobalVars.get_allowed_home_bets()
+        self.home_bet_game = GlobalVars.get_home_bet_game_selected()  # noqa
         self.home_bet = next(
             filter(lambda x: x.id == home_bet_id, home_bets), None
         )
@@ -188,7 +191,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             return
         amount = float(amount)
         amount_is_valid, min_, max_ = services.validate_max_amount_to_bet(
-            home_bet=self.home_bet,
+            home_bet_game=self.home_bet_game,
             max_amount_to_bet=amount,
             balance=self.balance,
         )
