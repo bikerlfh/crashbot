@@ -14,7 +14,6 @@ class EvaluateResult:
     multiplier: float
     ignore_model: bool
     forget_losses: bool
-    make_second_bet: bool
 
 
 class BotConditionHelper:
@@ -256,7 +255,6 @@ class BotConditionHelper:
             multiplier,
             ignore_model,
             forget_losses,
-            make_second_bet
          )
         """
         self.multipliers.append(multiplier_result)
@@ -266,7 +264,6 @@ class BotConditionHelper:
         valid_conditions = self._check_conditions()
         ignore_model = False
         forget_losses = False
-        make_second_bet = True
         _current_bet_amount = copy.copy(self.current_bet_amount)
         for condition in valid_conditions:
             for action in condition.actions:
@@ -300,8 +297,6 @@ class BotConditionHelper:
                         self.current_bet_amount = self.initial_bet_amount
                         self.current_multiplier = self.MIN_MULTIPLIER_TO_BET
                         forget_losses = True
-                    case ConditionAction.MAKE_SECOND_BET:
-                        make_second_bet = bool(action_value)
                     case ConditionAction.MAKE_BET:
                         _make_bet = bool(action_value)
                         if not _make_bet:
@@ -311,7 +306,6 @@ class BotConditionHelper:
                                 multiplier=0.0,
                                 ignore_model=ignore_model,
                                 forget_losses=forget_losses,
-                                make_second_bet=make_second_bet,
                             )
                             return result
         result = EvaluateResult(
@@ -319,6 +313,5 @@ class BotConditionHelper:
             multiplier=self.current_multiplier,
             ignore_model=ignore_model,
             forget_losses=forget_losses,
-            make_second_bet=make_second_bet,
         )
         return result

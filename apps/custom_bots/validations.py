@@ -75,6 +75,10 @@ class CustomBotValidationHandler:
             required=True,
             type=ValueTypeData.BOOLEAN,
         ),
+        "make_second_bet": FieldValidation(
+            required=True,
+            type=ValueTypeData.BOOLEAN,
+        ),
         "risk_factor": FieldValidation(
             required=False,
             type=ValueTypeData.FLOAT,
@@ -287,6 +291,4 @@ class CustomBotValidationHandler:
             case ConditionAction.MAKE_BET:
                 return ActionValidationData(value_type=ValueTypeData.BOOLEAN)
             case ConditionAction.FORGET_LOSSES:
-                return ActionValidationData(value_type=ValueTypeData.BOOLEAN)
-            case ConditionAction.MAKE_SECOND_BET:
                 return ActionValidationData(value_type=ValueTypeData.BOOLEAN)

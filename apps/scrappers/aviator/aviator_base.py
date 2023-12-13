@@ -1,5 +1,6 @@
 # Standard Library
 import asyncio
+import random
 from typing import Optional, Union
 
 # Libraries
@@ -233,7 +234,11 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
             raise Exception("AviatorPage :: no _controls")
         manual_cash_out_tasks = []
         for i, bet in enumerate(bets):
-            control = Control.Control1 if i == 0 else Control.Control2
+            if len(bets) > 1:
+                control = Control.Control1 if i == 0 else Control.Control2
+            else:
+                index_ = random.randint(1, 2)
+                control = Control.Control1 if index_ == 1 else Control.Control2
             SendEventToGUI.log.info(
                 f"{_('Sending bet to aviator')} ${format_amount_to_display(bet.amount)} * "  # noqa
                 f"{bet.multiplier} control: {control.value}"

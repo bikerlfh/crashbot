@@ -92,6 +92,7 @@ class Bot:
         take_profit_percentage: float,
         conditions: list[dict[str, any]],
         only_bullish_games: Optional[bool] = False,
+        make_second_bet: Optional[bool] = True,
         **__kwargs,
     ):
         self.id = id
@@ -100,6 +101,16 @@ class Bot:
         self.number_of_min_bets_allowed_in_bank = (
             number_of_min_bets_allowed_in_bank
         )
+        if only_bullish_games is not None and isinstance(
+            only_bullish_games, str
+        ):
+            self.only_bullish_games = bool(int(only_bullish_games))
+        else:
+            self.only_bullish_games = only_bullish_games
+        if make_second_bet is not None and isinstance(make_second_bet, str):
+            self.make_second_bet = bool(int(make_second_bet))
+        else:
+            self.make_second_bet = make_second_bet
         self.risk_factor = risk_factor
         self.min_multiplier_to_bet = min_multiplier_to_bet
         self.min_multiplier_to_recover_losses = (
@@ -116,12 +127,6 @@ class Bot:
         self.conditions = [
             BotCondition(**condition) for condition in conditions
         ]
-        if only_bullish_games is not None and isinstance(
-            only_bullish_games, str
-        ):
-            self.only_bullish_games = bool(int(only_bullish_games))
-        else:
-            self.only_bullish_games = only_bullish_games
 
     def dict(self) -> dict:
         data = deepcopy(self).__dict__

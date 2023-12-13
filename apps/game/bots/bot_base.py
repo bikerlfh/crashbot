@@ -114,6 +114,7 @@ class BotBase(abc.ABC):
             self.bot.min_average_model_prediction
         )
         self.ONLY_BULLISH_GAMES = self.bot.only_bullish_games
+        self.MAKE_SECOND_BET = self.bot.make_second_bet
         self.RISK_FACTOR = self.bot.risk_factor
         self.MIN_MULTIPLIER_TO_BET = self.bot.min_multiplier_to_bet
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = (
@@ -296,7 +297,6 @@ class BotBase(abc.ABC):
         bet_amount = result_.bet_amount
         multiplier = result_.multiplier
         forget_losses = result_.forget_losses
-        self.MAKE_SECOND_BET = result_.make_second_bet
         self.IGNORE_MODEL = result_.ignore_model
         self.set_max_amount_to_bet(amount=bet_amount)
         self.MIN_MULTIPLIER_TO_BET = multiplier

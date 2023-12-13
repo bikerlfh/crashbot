@@ -32,7 +32,6 @@ class ConditionAction(str, Enum):
     IGNORE_MODEL = "ignore_model"
     MAKE_BET = "make_bet"
     FORGET_LOSSES = "forget_losses"
-    MAKE_SECOND_BET = "make_second_bet"
 
     @classmethod
     def to_list(cls):
