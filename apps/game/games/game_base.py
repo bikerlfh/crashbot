@@ -94,7 +94,6 @@ class GameBase(abc.ABC, ConfigurationFactory):
         #         f"Update the initial balance from"
         #         f" local storage {self.initial_balance}"
         #     )
-        SendEventToGUI.balance(self.balance)
         SendEventToGUI.log.debug("loading the player")
         multipliers_ = self.game_page.multipliers
         SendEventToGUI.send_multipliers(multipliers_)

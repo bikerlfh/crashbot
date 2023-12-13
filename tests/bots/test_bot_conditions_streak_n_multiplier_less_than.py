@@ -47,7 +47,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, False, False, False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        (
+            bet_amount,
+            multiplier,
+            ignore_model,
+            forget_losses,
+        ) = helper.evaluate_conditions(
             result_last_game=True,
             multiplier_result=2.6,
             profit=0.0,
@@ -98,7 +103,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, False, False, False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        (
+            bet_amount,
+            multiplier,
+            ignore_model,
+            forget_losses,
+        ) = helper.evaluate_conditions(
             result_last_game=True,
             multiplier_result=12.6,
             profit=0.0,
@@ -167,7 +177,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, False, False, False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        (
+            bet_amount,
+            multiplier,
+            ignore_model,
+            forget_losses,
+        ) = helper.evaluate_conditions(
             result_last_game=True,
             multiplier_result=1.6,
             profit=0.0,
@@ -236,7 +251,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, False, False, False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        (
+            bet_amount,
+            multiplier,
+            ignore_model,
+            forget_losses,
+        ) = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=1.6,
             profit=0.0,
@@ -314,7 +334,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, False, False, False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        (
+            bet_amount,
+            multiplier,
+            ignore_model,
+            forget_losses,
+        ) = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=1.6,
             profit=0.0,
@@ -392,7 +417,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, False, False, False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        (
+            bet_amount,
+            multiplier,
+            ignore_model,
+            forget_losses,
+        ) = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=1.6,
             profit=0.0,
@@ -470,7 +500,12 @@ class TestBotConditionsStreakNMultiplierLessThan:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, False, False, False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        (
+            bet_amount,
+            multiplier,
+            ignore_model,
+            forget_losses,
+        ) = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=1.6,
             profit=0.0,

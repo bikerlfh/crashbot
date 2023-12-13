@@ -68,7 +68,12 @@ class TestBotConditionsIgnoreModel:
         helper.current_bet_amount = 5000
         helper.current_multiplier = 2.5
         helper.last_games = []
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        (
+            bet_amount,
+            multiplier,
+            ignore_model,
+            forget_losses,
+        ) = helper.evaluate_conditions(
             result_last_game=False,
             profit=0.01,
             multiplier_result=2.5,
@@ -88,7 +93,12 @@ class TestBotConditionsIgnoreModel:
         helper.current_bet_amount = 5000
         helper.current_multiplier = 2.5
         helper.last_games = [False, False, False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        (
+            bet_amount,
+            multiplier,
+            ignore_model,
+            forget_losses,
+        ) = helper.evaluate_conditions(
             result_last_game=True,
             profit=0.01,
             multiplier_result=2.5,

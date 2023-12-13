@@ -268,8 +268,9 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     def _on_receive_balance(self, data: dict):
         try:
             self.balance = float(data.get("balance"))
-            if self.initial_balance is None:
-                self.initial_balance = self.balance
+            self.initial_balance = float(data.get("initial_balance"))
+            # if self.initial_balance is None:
+            #     self.initial_balance = self.balance
             balance_ = format_amount_to_display(self.balance)
             self.lbl_balance.setText(str(balance_))
             profit = round(self.balance - self.initial_balance, 2)

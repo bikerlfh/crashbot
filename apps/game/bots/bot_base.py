@@ -85,6 +85,10 @@ class BotBase(abc.ABC):
         self.last_balance = balance
         self.balance = balance
         self.multipliers = multipliers
+        SendEventToGUI.send_balance(
+            balance=self.balance,
+            initial_balance=self.initial_balance,
+        )
         self.bot = next(
             filter(lambda x: x.name == self.BOT_NAME, GlobalVars.get_bots()),
             None,
@@ -284,6 +288,7 @@ class BotBase(abc.ABC):
             bet_amount,
             multiplier,
             self.IGNORE_MODEL,
+            forget_losses,
         ) = self.bot_condition_helper.evaluate_conditions(
             result_last_game=result_last_game,
             multiplier_result=multiplier_result,
@@ -292,6 +297,10 @@ class BotBase(abc.ABC):
         self.set_max_amount_to_bet(amount=bet_amount)
         self.MIN_MULTIPLIER_TO_BET = multiplier
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = multiplier
+        if forget_losses:
+            self.initial_balance = self.balance
+            self.last_balance = self.balance
+            SendEventToGUI.log.debug("forget losses")
         SendEventToGUI.log.debug(
             f"evaluate_conditions :: bet_amount "
             f"{bet_amount} multiplier {multiplier}"
@@ -364,7 +373,10 @@ class BotBase(abc.ABC):
         if balance > self.last_balance:
             self.last_balance = balance
         self.balance = balance
-        SendEventToGUI.balance(self.balance)
+        SendEventToGUI.send_balance(
+            balance=self.balance,
+            initial_balance=self.initial_balance,
+        )
 
     def get_prediction_data(
         self, prediction: PredictionCore

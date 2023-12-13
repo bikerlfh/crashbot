@@ -234,14 +234,14 @@ class BotConditionHelper:
         multiplier_result: float,
         profit: float,
         result_last_game: Optional[bool] = None,
-    ) -> tuple[float, float, bool]:
+    ) -> tuple[float, float, bool, bool]:
         """
         Evaluate the conditions and return the new bet amount and multiplier
         :param result_last_game: True if the last game was a win,
             False if it was a loss
         :param multiplier_result: multiplier of the last game
         :param profit: profit of the last game
-        :return: tuple(bet_amount, multiplier, ignore_model)
+        :return: tuple(bet_amount, multiplier, ignore_model, forget_losses)
         """
         self.multipliers.append(multiplier_result)
         if result_last_game is not None:
@@ -249,6 +249,7 @@ class BotConditionHelper:
         self.profit = profit
         valid_conditions = self._check_conditions()
         ignore_model = False
+        forget_losses = False
         _current_bet_amount = copy.copy(self.current_bet_amount)
         for condition in valid_conditions:
             for action in condition.actions:
@@ -272,19 +273,24 @@ class BotConditionHelper:
                             self.current_multiplier = (
                                 self.MIN_MULTIPLIER_TO_BET
                             )
-                        else:
-                            self.current_multiplier = (
-                                self.MIN_MULTIPLIER_TO_RECOVER_LOSSES
-                            )
+                            continue
+                        self.current_multiplier = (
+                            self.MIN_MULTIPLIER_TO_RECOVER_LOSSES
+                        )
                     case ConditionAction.IGNORE_MODEL:
                         ignore_model = bool(action_value)
+                    case ConditionAction.FORGET_LOSSES:
+                        self.current_bet_amount = self.initial_bet_amount
+                        self.current_multiplier = self.MIN_MULTIPLIER_TO_BET
+                        forget_losses = True
                     case ConditionAction.MAKE_BET:
                         _make_bet = bool(action_value)
                         if not _make_bet:
                             self.current_bet_amount = _current_bet_amount
-                            return 0.0, 0.0, ignore_model
+                            return 0.0, 0.0, ignore_model, forget_losses
         return (
             self.current_bet_amount,
             self.current_multiplier,
             ignore_model,
+            forget_losses,
         )
