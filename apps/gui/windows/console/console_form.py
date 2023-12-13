@@ -102,14 +102,16 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     def initialize(
         self,
         *,
-        home_bet_index: int,
+        home_bet_id: int,
         bot_name: str,
         max_amount_to_bet: str,
         auto_play: bool,
         **_kwargs,
     ):
         home_bets = GlobalVars.get_allowed_home_bets()
-        self.home_bet = home_bets[home_bet_index]
+        self.home_bet = next(
+            filter(lambda x: x.id == home_bet_id, home_bets), None
+        )
         self.bot = next(
             filter(lambda x: x.name == bot_name, GlobalVars.get_bots()),
             None,

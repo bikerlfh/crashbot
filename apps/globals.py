@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class GlobalVars:
     APP_NAME: str = "CrashBot"
-    APP_VERSION: str = "1.4.2"
+    APP_VERSION: str = "1.5.0"
     APP_HASH: str = None
     SIO: AsyncServer = None
     GAME: any = None
@@ -35,6 +35,7 @@ class GlobalVars:
 
     class VARS(str, Enum):
         BASE_PATH = "BASE_PATH"
+        HOME_BET_GAMES = "HOME_BET_GAMES"
         HOME_BET_GAME_ID = "HOME_BET_GAME_ID"
         CURRENCY = "CURRENCY"
         AUTO_PLAY = "AUTO_PLAY"
@@ -56,6 +57,7 @@ class GlobalVars:
         )
         # GlobalVars.session_time = SessionTime()
         globals().setdefault(GlobalVars.VARS.BASE_PATH, base_path)
+        globals().setdefault(GlobalVars.VARS.HOME_BET_GAMES, [])
         globals().setdefault(GlobalVars.VARS.HOME_BET_GAME_ID, None)
         globals().setdefault(GlobalVars.VARS.CURRENCY, None)
         globals().setdefault(GlobalVars.VARS.AUTO_PLAY, False)
@@ -96,6 +98,14 @@ class GlobalVars:
     @staticmethod
     def get_base_path() -> str:
         return globals().get(GlobalVars.VARS.BASE_PATH)
+
+    @staticmethod
+    def get_home_bet_games() -> list[object]:
+        return globals().get(GlobalVars.VARS.HOME_BET_GAMES)
+
+    @staticmethod
+    def set_home_bet_games(home_bet_games: list[object]) -> None:
+        globals()[GlobalVars.VARS.HOME_BET_GAMES] = home_bet_games
 
     @staticmethod
     def get_home_bet_game_id() -> int:

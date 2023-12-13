@@ -438,3 +438,6 @@ msgstr "Alto"
 
 msgid "Clone"
 msgstr "Clonar"
+
+msgid "Game"
+msgstr "Juego"

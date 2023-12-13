@@ -152,7 +152,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.__change_screen(
             screen=self.login_screen,
             width=300,
-            height=230,
+            height=245,
             title=f"{GlobalVars.APP_NAME} - Login",
         )
 
@@ -163,7 +163,7 @@ class MainForm(QMainWindow, MainDesigner):
         self.__change_screen(
             screen=self.parameters_screen,
             width=412,
-            height=291,
+            height=373,
             title=f"{GlobalVars.APP_NAME}",
         )
         self._set_enabled_configuration_actions(True)

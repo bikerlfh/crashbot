@@ -20,10 +20,12 @@ class HomeBetModel:
     id: int
     name: str
     url: str
-    limits: dict[str, LimitModel]
+    limits: Optional[dict[str, LimitModel]] = None
 
     def __post_init__(self):
         limits_ = {}
+        if not self.limits:
+            return
         for key in self.limits.keys():
             value = self.limits[key]
             if isinstance(self.limits[key], dict):
@@ -169,14 +171,50 @@ class Bot:
 
 
 @dataclass
+class HomeBetGameModel:
+    id: int
+    home_bet_id: int
+    crash_game: str
+    limits: dict[str, LimitModel]
+
+    def __post_init__(self):
+        limits_ = {}
+        for key in self.limits.keys():
+            value = self.limits[key]
+            if isinstance(self.limits[key], dict):
+                value = LimitModel(**value)  # noqa
+            limits_.update({key: value})
+        self.limits = limits_
+
+    def _get_limits(self) -> LimitModel:
+        # Internal
+        from apps.globals import GlobalVars
+
+        currency = GlobalVars.get_currency()
+        if not currency:
+            currency = list(self.limits.keys())[0]
+        if currency not in self.limits:
+            error_msg = (
+                f"error: {_('Currency not found in limits')}: {currency} "  # noqa
+                f"{_('please contact support')}"  # noqa
+            )
+            raise ValueError(error_msg)
+        return self.limits[currency]
+
+
+@dataclass
 class CrashApp:
     version: str
-    home_bet_game_id: int
+    home_bet_games: list[HomeBetGameModel]
     home_bets: list[HomeBetModel]
 
     def __post_init__(self):
         self.home_bets = [
             HomeBetModel(**home_bet) for home_bet in self.home_bets  # noqa
+        ]
+        self.home_bet_games = [
+            HomeBetGameModel(**home_bet_game)  # noqa
+            for home_bet_game in self.home_bet_games  # noqa
         ]
 
 
