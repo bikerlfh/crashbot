@@ -274,8 +274,8 @@ msgid "Aviator loaded"
 msgstr "Aviador cargado"
 
 #: apps/scrappers/aviator/aviator.py:187
-msgid "Sending bet to aviator"
-msgstr "Enviando apuesta a aviator"
+msgid "Sending bet to game"
+msgstr "Enviando apuesta al juego"
 
 #: apps/scrappers/aviator/aviator.py:235
 msgid "Last Multiplier"
@@ -441,3 +441,7 @@ msgstr "Clonar"
 
 msgid "Game"
 msgstr "Juego"
+
+
+msgid "this function is not available for this game"
+msgstr "esta función no está disponible para este juego"
