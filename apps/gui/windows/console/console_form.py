@@ -119,7 +119,9 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             filter(lambda x: x.name == bot_name, GlobalVars.get_bots()),
             None,
         )
-        self.lbl_home_bet.setText(self.home_bet.name)  # noqa
+        self.lbl_home_bet.setText(
+            f"{self.home_bet.name}({self.home_bet_game.crash_game})"  # noqa
+        )
         bots = GlobalVars.get_bots()
         bot_index = 0
         for i in range(len(bots)):
