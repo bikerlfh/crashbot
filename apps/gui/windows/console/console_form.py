@@ -120,7 +120,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             None,
         )
         self.lbl_home_bet.setText(
-            f"{self.home_bet.name}({self.home_bet_game.crash_game})"  # noqa
+            f"{self.home_bet.name} - {self.home_bet_game.crash_game}"  # noqa
         )
         bots = GlobalVars.get_bots()
         bot_index = 0
