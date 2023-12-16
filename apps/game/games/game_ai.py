@@ -42,7 +42,7 @@ class GameAI(GameBase, configuration=GameType.AI.value):
             bot_name=bot_name,
             minimum_bet=self.minimum_bet,
             maximum_bet=self.maximum_bet,
-            amount_multiple=self.home_bet.amount_multiple,
+            amount_multiple=self.home_bet_game.amount_multiple,
         )
         self.bot.initialize(
             balance=self.initial_balance,

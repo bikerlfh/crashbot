@@ -44,6 +44,7 @@ class ConfigKeyComboBox(str, Enum):
 
 class ConfigKeyCheckBox(str, Enum):
     ONLY_BULLISH_GAMES = "only_bullish_games"
+    MAKE_SECOND_BET = "make_second_bet"
 
     @classmethod
     def to_list(cls):

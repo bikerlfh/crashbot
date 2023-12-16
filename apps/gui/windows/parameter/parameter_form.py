@@ -2,6 +2,7 @@
 from PyQt6 import QtCore, QtWidgets
 
 # Internal
+from apps.api.models import HomeBetGameModel, HomeBetModel
 from apps.globals import GlobalVars
 from apps.gui import services
 from apps.gui.windows.parameter.parameter_designer import ParameterDesigner
@@ -22,7 +23,10 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         self.main_window = main_window
         self.btn_start.clicked.connect(self.button_start_clicked_event)
         self.receive_start_bot_signal.connect(self._on_receive_start_bot)
-        self.home_bets: list[object] = []
+        self.cmb_game.currentTextChanged.connect(self.__load_home_bets)
+        self.home_bet_games: list[HomeBetGameModel] = []
+        self.home_bets: list[HomeBetModel] = []
+        self.games: list[str]
 
     def update_bots(self):
         count_cmb_bot = self.cmb_bot_type.count()
@@ -37,6 +41,7 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         invoke after get info of customer
         :return:
         """
+        self.home_bet_games = GlobalVars.get_home_bet_games()
         self.home_bets = GlobalVars.get_allowed_home_bets()
         if GlobalVars.get_plan_with_ai():
             self.chk_use_ai.setVisible(True)
@@ -44,12 +49,31 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         self.__fill_cmb_fields()
 
     def __fill_cmb_fields(self):
+        count_cmb_games = self.cmb_game.count()
+        self.games = set([game.crash_game for game in self.home_bet_games])
+        _key = 0
+        for game in list(self.games):
+            if _key >= count_cmb_games:
+                self.cmb_game.addItem("")
+            self.cmb_game.setItemText(_key, game)
+            _key += 1
+        self.update_bots()
+
+    def __load_home_bets(self, game: str):
+        home_bet_ids = [
+            g.home_bet_id for g in self.home_bet_games if g.crash_game == game
+        ]  # noqa
+        self.cmb_home_bet.clear()
         count_cmb_home_bet = self.cmb_home_bet.count()
-        for key, val in enumerate(self.home_bets):
+        home_bets = [
+            home_bet
+            for home_bet in self.home_bets
+            if home_bet.id in home_bet_ids
+        ]  # noqa
+        for key, val in enumerate(home_bets):
             if key >= count_cmb_home_bet:
                 self.cmb_home_bet.addItem("")
             self.cmb_home_bet.setItemText(key, val.name)
-        self.update_bots()
 
     def get_values(self) -> dict[str, any] | None:
         bot_name = self.cmb_bot_type.currentText()
@@ -60,12 +84,13 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         if home_bet_index < 0:
             QtWidgets.QMessageBox.warning(self, "Error", "Select a home bet")
             return
-
-        home_bet = self.home_bets[home_bet_index]
+        home_bet_name = self.cmb_home_bet.currentText()
+        home_bet = next(
+            filter(lambda x: x.name == home_bet_name, self.home_bets), None
+        )
         home_bet_id = home_bet.id  # noqa
         return dict(
             bot_name=bot_name,
-            home_bet_index=home_bet_index,
             home_bet_id=home_bet_id,
             max_amount_to_bet=0,
             auto_play=False,
@@ -75,6 +100,16 @@ class ParameterForm(QtWidgets.QWidget, ParameterDesigner):
         data = self.get_values()
         if not data:
             return
+        # get home_bet_game_id
+        game = self.cmb_game.currentText()
+        home_bet_id = data.get("home_bet_id")
+        home_bet_game = [
+            g
+            for g in self.home_bet_games
+            if g.crash_game == game and g.home_bet_id == home_bet_id
+        ][0]
+        GlobalVars.set_home_bet_game_selected(home_bet_game)
+        GlobalVars.set_home_bet_game_id(home_bet_game.id)
         use_game_ai = self.chk_use_ai.isChecked()
         if self.chk_use_credentials.isChecked():
             home_bet_index = self.cmb_home_bet.currentIndex()

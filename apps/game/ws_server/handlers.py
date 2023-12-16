@@ -17,8 +17,9 @@ def _get_customer_data() -> None:
     bots = api_services.get_bots()
     GlobalVars.set_bots(bots=bots)
     crash_app = customer_data.plan.crash_app
-    home_bet_game_id = crash_app.home_bet_game_id
-    GlobalVars.set_home_bet_game_id(home_bet_game_id)
+    GlobalVars.set_home_bet_games(crash_app.home_bet_games)
+    # home_bet_game_id = crash_app.home_bet_game_id
+    # GlobalVars.set_home_bet_game_id(home_bet_game_id)
     GlobalVars.set_allowed_home_bets(crash_app.home_bets)
     local_storage.set_customer_id(customer_id=customer_data.customer_id)
 

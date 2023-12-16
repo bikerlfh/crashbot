@@ -5,7 +5,7 @@ from typing import Optional
 
 # Internal
 from apps.api import services as api_services
-from apps.api.models import BetData
+from apps.api.models import BetData, HomeBetGameModel
 from apps.api.models import Multiplier as APIMultiplierData
 from apps.api.models import MultiplierPositions
 from apps.game.bookmakers.home_bet import HomeBet
@@ -13,6 +13,7 @@ from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, Multiplier
 from apps.globals import GlobalVars
 from apps.gui.gui_events import SendEventToGUI
+from apps.scrappers.constants import CrashGame
 from apps.scrappers.game_base import AbstractCrashGameBase
 from apps.utils.local_storage import LocalStorage
 from apps.utils.patterns.factory import ConfigurationFactory
@@ -38,6 +39,7 @@ class GameBase(abc.ABC, ConfigurationFactory):
     # automatic betting
     customer_id: int = 0
     bot: BotBase
+    home_bet_game: HomeBetGameModel
     home_bet: HomeBet
     initial_balance: float = 0
     balance: float = 0
@@ -58,12 +60,15 @@ class GameBase(abc.ABC, ConfigurationFactory):
         self.BOT_NAME = bot_name
         self.customer_id = local_storage.get_customer_id()
         self.home_bet = home_bet
-        self.game_page = self.home_bet.get_crash_game()
+        self.home_bet_game = GlobalVars.get_home_bet_game_selected()  # noqa
+        self.game_page = self.home_bet.get_crash_game(
+            crash_game=CrashGame(self.home_bet_game.crash_game)
+        )
 
     def _set_max_min_bet(self):
         # use after GlobalVars.set_currency(self.currency)
-        self.minimum_bet = self.home_bet.min_bet
-        self.maximum_bet = self.home_bet.max_bet
+        self.minimum_bet = self.home_bet_game.min_bet
+        self.maximum_bet = self.home_bet_game.max_bet
         self.maximum_win_for_one_bet = self.maximum_bet * 100
 
     @abc.abstractmethod
@@ -94,7 +99,6 @@ class GameBase(abc.ABC, ConfigurationFactory):
         #         f"Update the initial balance from"
         #         f" local storage {self.initial_balance}"
         #     )
-        SendEventToGUI.balance(self.balance)
         SendEventToGUI.log.debug("loading the player")
         multipliers_ = self.game_page.multipliers
         SendEventToGUI.send_multipliers(multipliers_)

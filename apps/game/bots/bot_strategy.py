@@ -3,7 +3,6 @@ from typing import Optional
 
 # Internal
 from apps.api.models import MultiplierPositions
-from apps.game import utils as game_utils
 from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, PredictionData
 from apps.game.prediction_core import PredictionCore
@@ -39,7 +38,11 @@ class BotStrategy(BotBase):
         min_multiplier, max_multiplier = self.predict_next_multiplier()
         if self.amounts_lost:
             SendEventToGUI.log.debug(f"Amount Lost: {self.amounts_lost}")
-        if profit < 0 and abs(profit) >= self.minimum_bet:
+        if (
+            profit < 0
+            and abs(profit) >= self.minimum_bet
+            and self.RECOVERY_LOSSES
+        ):
             self.bets = self.generate_recovery_bets(
                 self.MIN_MULTIPLIER_TO_RECOVER_LOSSES
             )
@@ -47,20 +50,28 @@ class BotStrategy(BotBase):
         if self.MIN_MULTIPLIER_TO_BET == 0:
             return []
         # get the possible next second multiplier
-        if min_multiplier > second_multiplier:
-            second_multiplier = game_utils.generate_random_multiplier(
-                min_multiplier, max_multiplier
+        # if min_multiplier > second_multiplier:
+        #     second_multiplier = game_utils.generate_random_multiplier(
+        #         min_multiplier, max_multiplier
+        #     )
+        #     SendEventToGUI.log.debug(
+        #         f"second multiplier: {min_multiplier} - "
+        #         f"{max_multiplier} = {second_multiplier}"
+        #     )
+        second_multiplier = max(min_multiplier, second_multiplier)
+        if self.MAX_SECOND_MULTIPLIER and self.MAX_SECOND_MULTIPLIER > 0:
+            second_multiplier = min(
+                second_multiplier, self.MAX_SECOND_MULTIPLIER
             )
-            SendEventToGUI.log.debug(
-                f"second multiplier: {min_multiplier} - "
-                f"{max_multiplier} = {second_multiplier}"
+        if self.MAKE_SECOND_BET:
+            self.bets.append(
+                Bet(self._max_amount_to_bet, self.MIN_MULTIPLIER_TO_BET)
             )
-        self.bets.append(
-            Bet(self._max_amount_to_bet, self.MIN_MULTIPLIER_TO_BET)
-        )
-        if second_multiplier == self.MIN_MULTIPLIER_TO_BET:
-            second_multiplier += 0.2
-        self.bets.append(Bet(self._min_amount_to_bet, second_multiplier))
+            if second_multiplier == self.MIN_MULTIPLIER_TO_BET:
+                second_multiplier += 0.2
+            self.bets.append(Bet(self._min_amount_to_bet, second_multiplier))
+        else:
+            self.bets.append(Bet(self._bet_amount, self.MIN_MULTIPLIER_TO_BET))
         self.bets = list(filter(lambda b: b.amount > 0, self.bets))
         return self.bets
 

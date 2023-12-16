@@ -20,43 +20,6 @@ class HomeBetModel:
     id: int
     name: str
     url: str
-    limits: dict[str, LimitModel]
-
-    def __post_init__(self):
-        limits_ = {}
-        for key in self.limits.keys():
-            value = self.limits[key]
-            if isinstance(self.limits[key], dict):
-                value = LimitModel(**value)  # noqa
-            limits_.update({key: value})
-        self.limits = limits_
-
-    def _get_limits(self) -> LimitModel:
-        # Internal
-        from apps.globals import GlobalVars
-
-        currency = GlobalVars.get_currency()
-        if not currency:
-            currency = list(self.limits.keys())[0]
-        if currency not in self.limits:
-            error_msg = (
-                f"error: {_('Currency not found in limits')}: {currency} "  # noqa
-                f"{_('please contact support')}"  # noqa
-            )
-            raise ValueError(error_msg)
-        return self.limits[currency]
-
-    @property
-    def min_bet(self) -> float:
-        return self._get_limits().min_bet
-
-    @property
-    def max_bet(self) -> float:
-        return self._get_limits().max_bet
-
-    @property
-    def amount_multiple(self) -> float:
-        return self._get_limits().amount_multiple
 
 
 @dataclass
@@ -129,6 +92,8 @@ class Bot:
         take_profit_percentage: float,
         conditions: list[dict[str, any]],
         only_bullish_games: Optional[bool] = False,
+        make_second_bet: Optional[bool] = True,
+        max_second_multiplier: Optional[float] = 0.0,
         **__kwargs,
     ):
         self.id = id
@@ -137,11 +102,22 @@ class Bot:
         self.number_of_min_bets_allowed_in_bank = (
             number_of_min_bets_allowed_in_bank
         )
+        if only_bullish_games is not None and isinstance(
+            only_bullish_games, str
+        ):
+            self.only_bullish_games = bool(int(only_bullish_games))
+        else:
+            self.only_bullish_games = only_bullish_games
+        if make_second_bet is not None and isinstance(make_second_bet, str):
+            self.make_second_bet = bool(int(make_second_bet))
+        else:
+            self.make_second_bet = make_second_bet
         self.risk_factor = risk_factor
         self.min_multiplier_to_bet = min_multiplier_to_bet
         self.min_multiplier_to_recover_losses = (
             min_multiplier_to_recover_losses
         )
+        self.max_second_multiplier = max_second_multiplier
         self.min_probability_to_bet = min_probability_to_bet
         self.min_category_percentage_to_bet = min_category_percentage_to_bet
         self.max_recovery_percentage_on_max_bet = (
@@ -153,12 +129,6 @@ class Bot:
         self.conditions = [
             BotCondition(**condition) for condition in conditions
         ]
-        if only_bullish_games is not None and isinstance(
-            only_bullish_games, str
-        ):
-            self.only_bullish_games = bool(int(only_bullish_games))
-        else:
-            self.only_bullish_games = only_bullish_games
 
     def dict(self) -> dict:
         data = deepcopy(self).__dict__
@@ -169,14 +139,62 @@ class Bot:
 
 
 @dataclass
+class HomeBetGameModel:
+    id: int
+    home_bet_id: int
+    crash_game: str
+    limits: dict[str, LimitModel]
+
+    def __post_init__(self):
+        limits_ = {}
+        for key in self.limits.keys():
+            value = self.limits[key]
+            if isinstance(self.limits[key], dict):
+                value = LimitModel(**value)  # noqa
+            limits_.update({key: value})
+        self.limits = limits_
+
+    def _get_limits(self) -> LimitModel:
+        # Internal
+        from apps.globals import GlobalVars
+
+        currency = GlobalVars.get_currency()
+        if not currency:
+            currency = list(self.limits.keys())[0]
+        if currency not in self.limits:
+            error_msg = (
+                f"error: {_('Currency not found in limits')}: {currency} "  # noqa
+                f"{_('please contact support')}"  # noqa
+            )
+            raise ValueError(error_msg)
+        return self.limits[currency]
+
+    @property
+    def min_bet(self) -> float:
+        return self._get_limits().min_bet
+
+    @property
+    def max_bet(self) -> float:
+        return self._get_limits().max_bet
+
+    @property
+    def amount_multiple(self) -> float:
+        return self._get_limits().amount_multiple
+
+
+@dataclass
 class CrashApp:
     version: str
-    home_bet_game_id: int
+    home_bet_games: list[HomeBetGameModel]
     home_bets: list[HomeBetModel]
 
     def __post_init__(self):
         self.home_bets = [
             HomeBetModel(**home_bet) for home_bet in self.home_bets  # noqa
+        ]
+        self.home_bet_games = [
+            HomeBetGameModel(**home_bet_game)  # noqa
+            for home_bet_game in self.home_bet_games  # noqa
         ]
 
 
