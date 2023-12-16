@@ -81,8 +81,9 @@ async def close_game_event(**_kwargs) -> dict[str, any]:
     if not game:
         return dict(closed=True)
     await game.close()
-    GlobalVars.set_game(None)
     local_storage.remove_last_initial_balance(home_bet_id=game.home_bet.id)
+    del game
+    GlobalVars.set_game(None)
     return dict(closed=True)
 
 
