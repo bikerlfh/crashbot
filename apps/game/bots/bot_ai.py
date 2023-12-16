@@ -70,7 +70,11 @@ class BotAI(BotBase):
         )
         category_percentage = prediction_data.category_percentage
         SendEventToGUI.log.debug(f"Amount Lost: {self.amounts_lost}")
-        if profit < 0 and abs(profit) >= self.minimum_bet:
+        if (
+            profit < 0
+            and abs(profit) >= self.minimum_bet
+            and self.RECOVERY_LOSSES
+        ):
             # always the multiplier to recover losses is 1.95
             self.bets = self.generate_recovery_bets(
                 self.MIN_MULTIPLIER_TO_RECOVER_LOSSES,

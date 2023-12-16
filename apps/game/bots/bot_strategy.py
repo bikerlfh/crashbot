@@ -39,7 +39,11 @@ class BotStrategy(BotBase):
         min_multiplier, max_multiplier = self.predict_next_multiplier()
         if self.amounts_lost:
             SendEventToGUI.log.debug(f"Amount Lost: {self.amounts_lost}")
-        if profit < 0 and abs(profit) >= self.minimum_bet:
+        if (
+            profit < 0
+            and abs(profit) >= self.minimum_bet
+            and self.RECOVERY_LOSSES
+        ):
             self.bets = self.generate_recovery_bets(
                 self.MIN_MULTIPLIER_TO_RECOVER_LOSSES
             )

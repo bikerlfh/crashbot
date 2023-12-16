@@ -35,6 +35,7 @@ class BotBase(abc.ABC):
     # PROBABILITY_TO_BET and MIN_AVERAGE_MODEL_PREDICTION
     IGNORE_MODEL = False
     MAKE_SECOND_BET = False
+    RECOVERY_LOSSES = True
     is_bullish_game: bool = False
 
     auto_play: bool = False
@@ -297,6 +298,7 @@ class BotBase(abc.ABC):
         bet_amount = result_.bet_amount
         multiplier = result_.multiplier
         forget_losses = result_.forget_losses
+        self.RECOVERY_LOSSES = result_.recovery_losses
         self.IGNORE_MODEL = result_.ignore_model
         self.set_max_amount_to_bet(amount=bet_amount)
         self.MIN_MULTIPLIER_TO_BET = multiplier
