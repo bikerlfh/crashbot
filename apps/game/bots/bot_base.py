@@ -24,6 +24,7 @@ class BotBase(abc.ABC):
     RISK_FACTOR: float = 0.1  # 0.1 = 10%
     MIN_MULTIPLIER_TO_BET: float = 1.5
     MIN_MULTIPLIER_TO_RECOVER_LOSSES: float = 2.0
+    MAX_SECOND_MULTIPLIER: float = 0.0
     MIN_PROBABILITY_TO_BET: float = 0.5
     # use to calculate the recovery amount to bet
     MAX_RECOVERY_PERCENTAGE_ON_MAX_BET: float = 0.5  # 0.5 = 50%
@@ -121,6 +122,7 @@ class BotBase(abc.ABC):
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = (
             self.bot.min_multiplier_to_recover_losses
         )
+        self.MAX_SECOND_MULTIPLIER = self.bot.max_second_multiplier
         self.MIN_PROBABILITY_TO_BET = self.bot.min_probability_to_bet
         self.MAX_RECOVERY_PERCENTAGE_ON_MAX_BET = (
             self.bot.max_recovery_percentage_on_max_bet

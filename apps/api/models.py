@@ -93,6 +93,7 @@ class Bot:
         conditions: list[dict[str, any]],
         only_bullish_games: Optional[bool] = False,
         make_second_bet: Optional[bool] = True,
+        max_second_multiplier: Optional[float] = 0.0,
         **__kwargs,
     ):
         self.id = id
@@ -116,6 +117,7 @@ class Bot:
         self.min_multiplier_to_recover_losses = (
             min_multiplier_to_recover_losses
         )
+        self.max_second_multiplier = max_second_multiplier
         self.min_probability_to_bet = min_probability_to_bet
         self.min_category_percentage_to_bet = min_category_percentage_to_bet
         self.max_recovery_percentage_on_max_bet = (

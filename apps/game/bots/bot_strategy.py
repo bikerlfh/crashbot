@@ -3,7 +3,6 @@ from typing import Optional
 
 # Internal
 from apps.api.models import MultiplierPositions
-from apps.game import utils as game_utils
 from apps.game.bots.bot_base import BotBase
 from apps.game.models import Bet, PredictionData
 from apps.game.prediction_core import PredictionCore
@@ -51,13 +50,18 @@ class BotStrategy(BotBase):
         if self.MIN_MULTIPLIER_TO_BET == 0:
             return []
         # get the possible next second multiplier
-        if min_multiplier > second_multiplier:
-            second_multiplier = game_utils.generate_random_multiplier(
-                min_multiplier, max_multiplier
-            )
-            SendEventToGUI.log.debug(
-                f"second multiplier: {min_multiplier} - "
-                f"{max_multiplier} = {second_multiplier}"
+        # if min_multiplier > second_multiplier:
+        #     second_multiplier = game_utils.generate_random_multiplier(
+        #         min_multiplier, max_multiplier
+        #     )
+        #     SendEventToGUI.log.debug(
+        #         f"second multiplier: {min_multiplier} - "
+        #         f"{max_multiplier} = {second_multiplier}"
+        #     )
+        second_multiplier = max(min_multiplier, second_multiplier)
+        if self.MAX_SECOND_MULTIPLIER and self.MAX_SECOND_MULTIPLIER > 0:
+            second_multiplier = min(
+                second_multiplier, self.MAX_SECOND_MULTIPLIER
             )
         if self.MAKE_SECOND_BET:
             self.bets.append(
