@@ -5,6 +5,7 @@ from enum import Enum
 from typing import Optional, Union
 
 # Libraries
+from playwright.async_api import FrameLocator
 from playwright.sync_api import (
     Browser,
     BrowserContext,
@@ -69,6 +70,7 @@ class AbstractCrashGameBase(abc.ABC):
         self._browser: Union[Browser, None] = None
         self._context: Union[BrowserContext, None] = None
         self._page: Union[Page, None] = None
+        self._frame: Optional[FrameLocator] = None
         self._app_game: Union[Locator, None] = None
         self._history_game: Union[Locator, None] = None
         self._balance_element: Union[Locator, None] = None

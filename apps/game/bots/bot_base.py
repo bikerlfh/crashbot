@@ -24,6 +24,7 @@ class BotBase(abc.ABC):
     RISK_FACTOR: float = 0.1  # 0.1 = 10%
     MIN_MULTIPLIER_TO_BET: float = 1.5
     MIN_MULTIPLIER_TO_RECOVER_LOSSES: float = 2.0
+    MAX_SECOND_MULTIPLIER: float = 0.0
     MIN_PROBABILITY_TO_BET: float = 0.5
     # use to calculate the recovery amount to bet
     MAX_RECOVERY_PERCENTAGE_ON_MAX_BET: float = 0.5  # 0.5 = 50%
@@ -34,6 +35,8 @@ class BotBase(abc.ABC):
     # if True, the bot will ignore the model
     # PROBABILITY_TO_BET and MIN_AVERAGE_MODEL_PREDICTION
     IGNORE_MODEL = False
+    MAKE_SECOND_BET = False
+    RECOVERY_LOSSES = True
     is_bullish_game: bool = False
 
     auto_play: bool = False
@@ -57,6 +60,8 @@ class BotBase(abc.ABC):
     amounts_lost: List[float] = []
     multipliers: List[float] = []
 
+    # amount to bet
+    _bet_amount: float = 0
     # max amount to bet
     _max_amount_to_bet: float = 0
     # min amount to bet
@@ -85,6 +90,10 @@ class BotBase(abc.ABC):
         self.last_balance = balance
         self.balance = balance
         self.multipliers = multipliers
+        SendEventToGUI.send_balance(
+            balance=self.balance,
+            initial_balance=self.initial_balance,
+        )
         self.bot = next(
             filter(lambda x: x.name == self.BOT_NAME, GlobalVars.get_bots()),
             None,
@@ -107,11 +116,13 @@ class BotBase(abc.ABC):
             self.bot.min_average_model_prediction
         )
         self.ONLY_BULLISH_GAMES = self.bot.only_bullish_games
+        self.MAKE_SECOND_BET = self.bot.make_second_bet
         self.RISK_FACTOR = self.bot.risk_factor
         self.MIN_MULTIPLIER_TO_BET = self.bot.min_multiplier_to_bet
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = (
             self.bot.min_multiplier_to_recover_losses
         )
+        self.MAX_SECOND_MULTIPLIER = self.bot.max_second_multiplier
         self.MIN_PROBABILITY_TO_BET = self.bot.min_probability_to_bet
         self.MAX_RECOVERY_PERCENTAGE_ON_MAX_BET = (
             self.bot.max_recovery_percentage_on_max_bet
@@ -231,6 +242,7 @@ class BotBase(abc.ABC):
         """
         if amount == 0:
             return
+        self._bet_amount = amount
         self.bot_condition_helper.set_bet_amount(
             bet_amount=amount, user_change=user_change
         )
@@ -280,18 +292,22 @@ class BotBase(abc.ABC):
             f"multiplier_result: {multiplier_result}"
         )
         profit = self.profit_last_balance
-        (
-            bet_amount,
-            multiplier,
-            self.IGNORE_MODEL,
-        ) = self.bot_condition_helper.evaluate_conditions(
+        result_ = self.bot_condition_helper.evaluate_conditions(
             result_last_game=result_last_game,
             multiplier_result=multiplier_result,
             profit=profit,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        forget_losses = result_.forget_losses
+        self.RECOVERY_LOSSES = result_.recovery_losses
+        self.IGNORE_MODEL = result_.ignore_model
         self.set_max_amount_to_bet(amount=bet_amount)
         self.MIN_MULTIPLIER_TO_BET = multiplier
         self.MIN_MULTIPLIER_TO_RECOVER_LOSSES = multiplier
+        if forget_losses:
+            self.initial_balance = self.balance
+            self.last_balance = self.balance
         SendEventToGUI.log.debug(
             f"evaluate_conditions :: bet_amount "
             f"{bet_amount} multiplier {multiplier}"
@@ -364,7 +380,10 @@ class BotBase(abc.ABC):
         if balance > self.last_balance:
             self.last_balance = balance
         self.balance = balance
-        SendEventToGUI.balance(self.balance)
+        SendEventToGUI.send_balance(
+            balance=self.balance,
+            initial_balance=self.initial_balance,
+        )
 
     def get_prediction_data(
         self, prediction: PredictionCore

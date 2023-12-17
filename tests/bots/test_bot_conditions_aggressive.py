@@ -92,12 +92,14 @@ class TestBotConditionsAggressive:
         helper.current_bet_amount = 2000
         helper.current_multiplier = 2.5
         helper.last_games = []
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=True,
             multiplier_result=2.5,
             profit=0.01,
         )
-
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 2000
         assert multiplier == 2
         assert ignore_model is False
@@ -112,12 +114,14 @@ class TestBotConditionsAggressive:
         helper.current_bet_amount = 2000
         helper.current_multiplier = 2.5
         helper.last_games = []
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=True,
             multiplier_result=2.5,
             profit=0.01,
         )
-
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 2000
         assert multiplier == 2
         assert ignore_model is False
@@ -132,12 +136,14 @@ class TestBotConditionsAggressive:
         helper.current_bet_amount = 2000
         helper.current_multiplier = 2.5
         helper.last_games = [True, True, True, True]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=True,
             multiplier_result=2.5,
             profit=0.1,
         )
-
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 2000 * (1 + 0.33)
         assert multiplier == 2
         assert ignore_model is False
@@ -152,11 +158,14 @@ class TestBotConditionsAggressive:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=False,
             profit=0.0,
             multiplier_result=2.5,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 1000
         assert multiplier == 2.5
         assert ignore_model is False
@@ -171,11 +180,14 @@ class TestBotConditionsAggressive:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, False, False, False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=2.5,
             profit=0.0,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 1000
         assert multiplier == 2.7
         assert ignore_model is False
@@ -190,11 +202,14 @@ class TestBotConditionsAggressive:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, False, False, False, False, False, False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=2.5,
             profit=0.0,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 1000
         assert multiplier == 3.2
         assert ignore_model is False
@@ -225,11 +240,14 @@ class TestBotConditionsAggressive:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, True]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=1.5,
             profit=0.0,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 0
         assert multiplier == 0
         assert ignore_model is False
@@ -273,11 +291,14 @@ class TestBotConditionsAggressive:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = []
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=1.84,
             profit=0.0,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         _bet_amount = helper.initial_bet_amount * (1 + 0.5)
         assert bet_amount == _bet_amount
         assert multiplier == 2.5
@@ -309,11 +330,14 @@ class TestBotConditionsAggressive:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, True]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=True,
             multiplier_result=6.5,
             profit=0.0,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 0
         assert multiplier == 0
         assert ignore_model is False
@@ -412,11 +436,14 @@ class TestBotConditionsAggressive:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, False, False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=1.6,
             profit=0.0,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 1000
         assert multiplier == 2.3
         assert ignore_model is False
@@ -528,11 +555,14 @@ class TestBotConditionsAggressive:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, False, False, False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=True,
             multiplier_result=2.6,
             profit=0.0,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 1000
         assert multiplier == 2
         assert ignore_model is False
@@ -596,11 +626,14 @@ class TestBotConditionsAggressive:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = [False, False, False, False]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=1,
             profit=0.0,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 1000
         assert multiplier == 2.3
         assert ignore_model is False
@@ -673,11 +706,14 @@ class TestBotConditionsAggressive:
             False,
             True,
         ]
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=1,
             profit=0.0,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 1000
         assert multiplier == 1.5
         assert ignore_model is False
@@ -741,38 +777,50 @@ class TestBotConditionsAggressive:
         helper.initial_bet_amount = 1000
         helper.current_bet_amount = 2000
         helper.last_games = []
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=1,
             profit=0.0,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 1000
         assert multiplier == 1.5
         assert ignore_model is False
 
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=1,
             profit=0.0,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 1000
         assert multiplier == 2.3
         assert ignore_model is False
 
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=True,
             multiplier_result=1,
             profit=0.0,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 1000
         assert multiplier == 2
         assert ignore_model is False
 
-        bet_amount, multiplier, ignore_model = helper.evaluate_conditions(
+        result_ = helper.evaluate_conditions(
             result_last_game=False,
             multiplier_result=1.9,
             profit=0.0,
         )
+        bet_amount = result_.bet_amount
+        multiplier = result_.multiplier
+        ignore_model = result_.ignore_model
         assert bet_amount == 1000
         assert multiplier == 1.5
         assert ignore_model is False

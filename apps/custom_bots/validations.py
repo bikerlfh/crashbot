@@ -63,6 +63,10 @@ class CustomBotValidationHandler:
             required=True,
             type=ValueTypeData.STRING,
         ),
+        "description": FieldValidation(
+            required=False,
+            type=ValueTypeData.STRING,
+        ),
         "bot_type": FieldValidation(
             required=True,
             type=ValueTypeData.STRING,
@@ -72,6 +76,10 @@ class CustomBotValidationHandler:
             type=ValueTypeData.INTEGER,
         ),
         "only_bullish_games": FieldValidation(
+            required=True,
+            type=ValueTypeData.BOOLEAN,
+        ),
+        "make_second_bet": FieldValidation(
             required=True,
             type=ValueTypeData.BOOLEAN,
         ),
@@ -285,4 +293,8 @@ class CustomBotValidationHandler:
             case ConditionAction.IGNORE_MODEL:
                 return ActionValidationData(value_type=ValueTypeData.BOOLEAN)
             case ConditionAction.MAKE_BET:
+                return ActionValidationData(value_type=ValueTypeData.BOOLEAN)
+            case ConditionAction.FORGET_LOSSES:
+                return ActionValidationData(value_type=ValueTypeData.BOOLEAN)
+            case ConditionAction.RECOVERY_LOSSES:
                 return ActionValidationData(value_type=ValueTypeData.BOOLEAN)

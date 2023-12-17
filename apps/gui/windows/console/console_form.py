@@ -5,6 +5,7 @@ from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtWidgets import QListWidgetItem, QMessageBox, QWidget
 
 # Internal
+from apps.api.models import HomeBetGameModel
 from apps.globals import GlobalVars
 from apps.gui import services
 from apps.gui.constants import DEFAULT_FONT_SIZE, MAC_FONT_SIZE
@@ -35,6 +36,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
         super().__init__()
         self.logs_to_save = []
         self.home_bet = None
+        self.home_bet_game: HomeBetGameModel = None  # noqa
         self.bot = None
         self.initial_balance = None
         self.balance = None
@@ -102,19 +104,24 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     def initialize(
         self,
         *,
-        home_bet_index: int,
+        home_bet_id: int,
         bot_name: str,
         max_amount_to_bet: str,
         auto_play: bool,
         **_kwargs,
     ):
         home_bets = GlobalVars.get_allowed_home_bets()
-        self.home_bet = home_bets[home_bet_index]
+        self.home_bet_game = GlobalVars.get_home_bet_game_selected()  # noqa
+        self.home_bet = next(
+            filter(lambda x: x.id == home_bet_id, home_bets), None
+        )
         self.bot = next(
             filter(lambda x: x.name == bot_name, GlobalVars.get_bots()),
             None,
         )
-        self.lbl_home_bet.setText(self.home_bet.name)  # noqa
+        self.lbl_home_bet.setText(
+            f"{self.home_bet.name} - {self.home_bet_game.crash_game}"  # noqa
+        )
         bots = GlobalVars.get_bots()
         bot_index = 0
         for i in range(len(bots)):
@@ -186,7 +193,7 @@ class ConsoleForm(QWidget, ConsoleDesigner):
             return
         amount = float(amount)
         amount_is_valid, min_, max_ = services.validate_max_amount_to_bet(
-            home_bet=self.home_bet,
+            home_bet_game=self.home_bet_game,
             max_amount_to_bet=amount,
             balance=self.balance,
         )
@@ -268,8 +275,9 @@ class ConsoleForm(QWidget, ConsoleDesigner):
     def _on_receive_balance(self, data: dict):
         try:
             self.balance = float(data.get("balance"))
-            if self.initial_balance is None:
-                self.initial_balance = self.balance
+            self.initial_balance = float(data.get("initial_balance"))
+            # if self.initial_balance is None:
+            #     self.initial_balance = self.balance
             balance_ = format_amount_to_display(self.balance)
             self.lbl_balance.setText(str(balance_))
             profit = round(self.balance - self.initial_balance, 2)

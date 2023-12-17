@@ -67,8 +67,11 @@ class SendEventToGUI:
     log = _LogEvent
 
     @staticmethod
-    def balance(balance: float):
-        GlobalVars.emit_to_gui(GUIEvent.UPDATE_BALANCE, dict(balance=balance))
+    def send_balance(*, balance: float, initial_balance: float):
+        GlobalVars.emit_to_gui(
+            GUIEvent.UPDATE_BALANCE,
+            dict(balance=balance, initial_balance=initial_balance),
+        )
 
     @staticmethod
     def send_multipliers(multipliers: list[float]):

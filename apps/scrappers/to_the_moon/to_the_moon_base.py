@@ -11,16 +11,16 @@ from playwright.async_api import async_playwright
 # Internal
 from apps.game.models import Bet
 from apps.gui.gui_events import SendEventToGUI
-from apps.scrappers.aviator.bet_control import BetControl
 from apps.scrappers.game_base import AbstractCrashGameBase, Control
+from apps.scrappers.to_the_moon.bet_control import BetControl
 from apps.utils.datetime import sleep_now
 from apps.utils.display import format_amount_to_display
 from apps.utils.patterns.factory import ConfigurationFactory
 
 
-class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
+class ToTheMoonBase(AbstractCrashGameBase, ConfigurationFactory):
     """
-    Aviator base scrapper
+    ToTheMoonBase base scrapper
     Use Factory to implement a new bookmaker (home_bet)
     import all the classes in apps/game/bookmakers/__init__.py
     """
@@ -47,7 +47,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         if not self._page:
             SendEventToGUI.exception(
                 {
-                    "location": "AviatorPage",
+                    "location": "ToTheMoonPage",
                     "message": "_getAppGame :: page is null",
                 }
             )
@@ -70,7 +70,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
                     continue
                 SendEventToGUI.exception(
                     {
-                        "location": "AviatorPage",
+                        "location": "ToTheMoonPage",
                         "message": f"_getAppGame :: {e}",
                     }
                 )
@@ -85,7 +85,9 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         await self._page.goto(self.url, timeout=100000)
         await self._login()
         self._app_game = await self._get_app_game()
-        self._history_game = self._app_game.locator(".result-history")
+        self._history_game = self._app_game.locator(
+            ".content-top__history>#rate_history"
+        ).first
         SendEventToGUI.log.debug("Result history found")
         await self.read_balance()
         await self.read_multipliers()
@@ -93,7 +95,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         # await self.read_game_limits()
         self._controls = BetControl(self._app_game)
         await self._controls.init()
-        SendEventToGUI.log.success(_("Aviator loaded"))  # noqa
+        SendEventToGUI.log.success(_("ToTheMoon loaded"))  # noqa
 
     async def close(self):
         if not self._page:
@@ -106,7 +108,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         if self._app_game is None or self._page is None:
             SendEventToGUI.exception(
                 {
-                    "location": "AviatorPage",
+                    "location": "ToTheMoonPage",
                     "message": "readGameLimits :: _appGame or _page is null",
                 }
             )
@@ -115,7 +117,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         if menu is None:
             SendEventToGUI.exception(
                 {
-                    "location": "AviatorPage",
+                    "location": "ToTheMoonPage",
                     "message": "readGameLimits :: menu is null",
                 }
             )
@@ -126,7 +128,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         if app_user_menu is None:
             SendEventToGUI.exception(
                 {
-                    "location": "AviatorPage",
+                    "location": "ToTheMoonPage",
                     "message": "readGameLimits :: appusermenu is null",
                 }
             )
@@ -157,53 +159,36 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         if self._app_game is None:
             SendEventToGUI.exception(
                 {
-                    "location": "AviatorPage",
+                    "location": "ToTheMoonPage",
                     "message": "readBalance :: _appGame is null",
                 }
             )
             raise Exception("readBalance :: _appGame is null")
-        self._balance_element = self._app_game.locator(".balance>div>.amount")
+        self._balance_element = self._frame.locator(
+            ".header__balance-win>#balance"
+        ).first
         if self._balance_element is None:
             SendEventToGUI.exception(
                 {
-                    "location": "AviatorPage",
+                    "location": "ToTheMoonPage",
                     "message": "readBalance :: balance element is null",
                 }
             )
             raise Exception("balance element is null")
-        self.balance = float(await self._balance_element.text_content() or "0")
+        _balance = await self._balance_element.text_content(timeout=5000)
+        _balance = _balance.split(" ")
+        self.balance = float(_balance[0] or "0")
+        self.currency = _balance[1] or self.currency
         return self.balance
 
     async def read_currency(self) -> str:
-        if self._app_game is None:
-            SendEventToGUI.exception(
-                {
-                    "location": "AviatorPage",
-                    "message": "read_currency :: _appGame is null",
-                }
-            )
-            raise Exception("read_currency :: _appGame is null")
-        self._currency_element = self._app_game.locator(
-            ".balance>div>.currency"
-        )
-        if self._currency_element is None:
-            SendEventToGUI.exception(
-                {
-                    "location": "AviatorPage",
-                    "message": "read_currency :: balance element is null",
-                }
-            )
-            raise Exception("currency element is null")
-        self.currency = (
-            await self._currency_element.text_content() or self.currency
-        )
-        return self.currency
+        pass
 
     async def read_multipliers(self):
         if not self._page or not self._history_game:
             SendEventToGUI.exception(
                 {
-                    "location": "AviatorPage",
+                    "location": "ToTheMoonPage",
                     "message": "readMultipliers :: the page or "
                     "the history game not exists",
                 }
@@ -211,9 +196,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
             raise Exception(
                 "readMultipliers :: the page or the history game not exists"
             )
-        items = await self._history_game.locator(
-            "app-bubble-multiplier.payout.ng-star-inserted"
-        ).all()
+        items = await self._history_game.locator(".history-item").all()
         items.reverse()
         for item in items:
             multiplier = await item.text_content()
@@ -227,11 +210,11 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         if self._controls is None:
             SendEventToGUI.exception(
                 {
-                    "location": "AviatorPage",
-                    "message": "AviatorPage :: no _controls",
+                    "location": "ToTheMoonPage",
+                    "message": "ToTheMoonPage :: no _controls",
                 }
             )
-            raise Exception("AviatorPage :: no _controls")
+            raise Exception("ToTheMoonPage :: no _controls")
         manual_cash_out_tasks = []
         for i, bet in enumerate(bets):
             if len(bets) > 1:
@@ -266,7 +249,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         if self._history_game is None:
             SendEventToGUI.exception(
                 {
-                    "location": "AviatorPage",
+                    "location": "ToTheMoonPage",
                     "message": "waitNextGame :: no historyGame",
                 }
             )
@@ -275,10 +258,10 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         while True:
             try:
                 await self._history_game.locator(
-                    "app-bubble-multiplier"
+                    ".history-item"
                 ).first.wait_for(timeout=5000)
                 locator = self._history_game.locator(
-                    "app-bubble-multiplier",
+                    ".history-item",
                 ).first
                 last_multiplier_content = await locator.text_content(
                     timeout=1000
@@ -302,7 +285,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
                     continue
                 SendEventToGUI.exception(
                     {
-                        "location": "AviatorPage",
+                        "location": "ToTheMoonPage",
                         "message": f"wait_next_game :: {e}",
                     }
                 )

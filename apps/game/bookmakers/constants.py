@@ -9,6 +9,7 @@ class BookmakerIDS(int, Enum):
     ONE_WIN = 3
     RIVALO = 4  # noqa
     ONE_X_BET = 5
+    DEMO_TO_THE_MOON = 6
     ECUABET = 7  # noqa
 
     @classmethod
