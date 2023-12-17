@@ -94,10 +94,12 @@ class Bot:
         only_bullish_games: Optional[bool] = False,
         make_second_bet: Optional[bool] = True,
         max_second_multiplier: Optional[float] = 0.0,
+        description: Optional[str] = "",
         **__kwargs,
     ):
         self.id = id
         self.name = name
+        self.description = description
         self.bot_type = bot_type
         self.number_of_min_bets_allowed_in_bank = (
             number_of_min_bets_allowed_in_bank

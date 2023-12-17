@@ -63,6 +63,10 @@ class CustomBotValidationHandler:
             required=True,
             type=ValueTypeData.STRING,
         ),
+        "description": FieldValidation(
+            required=False,
+            type=ValueTypeData.STRING,
+        ),
         "bot_type": FieldValidation(
             required=True,
             type=ValueTypeData.STRING,

@@ -308,7 +308,6 @@ class BotBase(abc.ABC):
         if forget_losses:
             self.initial_balance = self.balance
             self.last_balance = self.balance
-            SendEventToGUI.log.debug("forget losses")
         SendEventToGUI.log.debug(
             f"evaluate_conditions :: bet_amount "
             f"{bet_amount} multiplier {multiplier}"
