@@ -52,8 +52,8 @@ class ToTheMoonOneWin(ToTheMoonBase, configuration=BookmakerIDS.ONE_WIN.value):
                 await self._page.wait_for_selector(
                     "#infingames-iframe", timeout=50000
                 )
-                await self._page.wait_for_timeout(2000)
-                sleep_now(10)
+                SendEventToGUI.log.info("loading game. please wait...")
+                sleep_now(60)
                 SendEventToGUI.log.debug("searching for the frame of the game")
                 frame_1 = self._page.frame_locator(
                     "[src*='https://modelplat.com/gm/"
