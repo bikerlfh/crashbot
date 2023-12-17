@@ -43,6 +43,7 @@ class BotStrategy(BotBase):
             and abs(profit) >= self.minimum_bet
             and self.RECOVERY_LOSSES
         ):
+            SendEventToGUI.log.debug(f"profit: {profit}")
             self.bets = self.generate_recovery_bets(
                 self.MIN_MULTIPLIER_TO_RECOVER_LOSSES
             )
@@ -54,12 +55,8 @@ class BotStrategy(BotBase):
         #     second_multiplier = game_utils.generate_random_multiplier(
         #         min_multiplier, max_multiplier
         #     )
-        #     SendEventToGUI.log.debug(
-        #         f"second multiplier: {min_multiplier} - "
-        #         f"{max_multiplier} = {second_multiplier}"
-        #     )
         second_multiplier = max(min_multiplier, second_multiplier)
-        if self.MAX_SECOND_MULTIPLIER and self.MAX_SECOND_MULTIPLIER > 0:
+        if self.MAX_SECOND_MULTIPLIER > 0:
             second_multiplier = min(
                 second_multiplier, self.MAX_SECOND_MULTIPLIER
             )
@@ -70,6 +67,10 @@ class BotStrategy(BotBase):
             if second_multiplier == self.MIN_MULTIPLIER_TO_BET:
                 second_multiplier += 0.2
             self.bets.append(Bet(self._min_amount_to_bet, second_multiplier))
+            SendEventToGUI.log.debug(
+                f"second multiplier: {min_multiplier} - "
+                f"{max_multiplier} = {second_multiplier}"
+            )
         else:
             self.bets.append(Bet(self._bet_amount, self.MIN_MULTIPLIER_TO_BET))
         self.bets = list(filter(lambda b: b.amount > 0, self.bets))
