@@ -540,5 +540,4 @@ class BotBase(abc.ABC):
         prediction: Optional[PredictionCore] = None,
         multiplier_positions: Optional[MultiplierPositions] = None,
         auto_play: Optional[bool] = False,
-    ) -> list[Bet]:
-        ...
+    ) -> list[Bet]: ...

@@ -34,13 +34,13 @@ class PredictionCore:
         self.probability_values.append(probability)
         self.average_predictions_of_model = average_predictions
         if self.category_percentages[prediction_round] is None:
-            self.category_percentages[
-                prediction_round
-            ] = category_percentage  # NOQA
+            self.category_percentages[prediction_round] = (
+                category_percentage  # NOQA
+            )
         if self.category_percentages_values_in_live[prediction_round] is None:
-            self.category_percentages_values_in_live[
-                prediction_round
-            ] = category_percentage  # NOQA
+            self.category_percentages_values_in_live[prediction_round] = (
+                category_percentage  # NOQA
+            )
 
     def add_multiplier_result(self, multiplier: float):
         self.multiplier_results.append(multiplier)

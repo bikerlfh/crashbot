@@ -62,9 +62,11 @@ class BotCondition:
 
     def __post_init__(self):
         self.actions = [
-            BotConditionAction(**action)
-            if isinstance(action, dict)
-            else action
+            (
+                BotConditionAction(**action)
+                if isinstance(action, dict)
+                else action
+            )
             for action in self.actions  # noqa
         ]
 

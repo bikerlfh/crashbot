@@ -13,15 +13,13 @@ class LogsDBHandler(SQLiteEngine, metaclass=Singleton):
         self.create_table()
 
     def create_table(self):
-        self.execute(
-            """CREATE TABLE IF NOT EXISTS Logs(
+        self.execute("""CREATE TABLE IF NOT EXISTS Logs(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 message TEXT,
                 level TEXT,
                 app TEXT,
                 path TEXT NULL,
-                timestamp TEXT)"""
-        )
+                timestamp TEXT)""")
         self.commit()
 
     def insert_log(

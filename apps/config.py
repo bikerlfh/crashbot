@@ -32,14 +32,17 @@ class Config(metaclass=Singleton):
         self.config_file = CONFIG_FILE_PATH
         if base_path:
             self.config_file = os.path.join(base_path, CONFIG_FILE_PATH)
-        self.API_URL = "https://probetsai.com"
-        self.WS_URL = "ws://probetsai.com:5000/ws/bot/"
+        # self.API_URL = "https://probetsai.com"
+        # self.WS_URL = "ws://probetsai.com:5000/ws/bot/"
+        self.API_URL = "http://localhost:8000"
+        self.WS_URL = "ws://localhost:8000/ws/bot/"
         self.ALLOWED_LOG_CODES_TO_SHOW = [
             "info",
             "success",
             "warning",
             "error",
-            # "debug",
+            "debug",
+            "exception",
         ]
         self.MIN_VALUE_TO_BULLISH_GAME = 0.26
         self.LEN_WINDOW_TO_BULLISH_GAME = 6

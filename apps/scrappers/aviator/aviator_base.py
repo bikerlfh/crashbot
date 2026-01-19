@@ -28,6 +28,9 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
     def __init__(self, *, url: str, **kwargs):
         super().__init__(url=url)
 
+    def __format_balance(self, balance: str) -> float:
+        return float(balance.replace(",", ""))
+
     async def _click(self, element: Locator):
         box = await element.bounding_box()
         if not box or not self._page:
@@ -77,6 +80,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
                 raise e
 
     async def open(self):
+        SendEventToGUI.log.debug("Opening Aviator")
         self.playwright = await async_playwright().start()
         # to lunch the browser maximized add args=["--start-maximized"]
         self._browser = await self.playwright.chromium.launch(headless=False)
@@ -154,6 +158,7 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         )
 
     async def read_balance(self) -> Union[float, None]:
+        SendEventToGUI.log.debug("Reading balance")
         if self._app_game is None:
             SendEventToGUI.exception(
                 {
@@ -162,7 +167,13 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
                 }
             )
             raise Exception("readBalance :: _appGame is null")
-        self._balance_element = self._app_game.locator(".balance>div>.amount")
+
+        await self._app_game.locator(
+            "div.balance>.balance-amount"
+        ).first.wait_for(timeout=5000)
+        self._balance_element = self._app_game.locator(
+            "div.balance>.balance-amount"
+        ).first
         if self._balance_element is None:
             SendEventToGUI.exception(
                 {
@@ -171,10 +182,14 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
                 }
             )
             raise Exception("balance element is null")
-        self.balance = float(await self._balance_element.text_content() or "0")
+        self.balance = self.__format_balance(
+            await self._balance_element.text_content()
+        )
+        SendEventToGUI.log.debug(f"Balance: {self.balance}")
         return self.balance
 
     async def read_currency(self) -> str:
+        SendEventToGUI.log.debug("Reading currency")
         if self._app_game is None:
             SendEventToGUI.exception(
                 {
@@ -183,9 +198,12 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
                 }
             )
             raise Exception("read_currency :: _appGame is null")
+        await self._app_game.locator(
+            "div.balance>.balance-currency"
+        ).first.wait_for(timeout=5000)
         self._currency_element = self._app_game.locator(
-            ".balance>div>.currency"
-        )
+            "div.balance>.balance-currency"
+        ).first
         if self._currency_element is None:
             SendEventToGUI.exception(
                 {
@@ -197,9 +215,11 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         self.currency = (
             await self._currency_element.text_content() or self.currency
         )
+        SendEventToGUI.log.debug(f"Currency: {self.currency}")
         return self.currency
 
     async def read_multipliers(self):
+        SendEventToGUI.log.debug("Reading multipliers")
         if not self._page or not self._history_game:
             SendEventToGUI.exception(
                 {
@@ -211,15 +231,17 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
             raise Exception(
                 "readMultipliers :: the page or the history game not exists"
             )
-        items = await self._history_game.locator(
-            "app-bubble-multiplier.payout.ng-star-inserted"
-        ).all()
+        await self._history_game.locator(".payout").first.wait_for(
+            timeout=5000
+        )
+        items = await self._history_game.locator(".payout").all()
         items.reverse()
         for item in items:
             multiplier = await item.text_content()
             if multiplier is not None:
                 self.multipliers.append(self._format_multiplier(multiplier))
         await self._page.wait_for_timeout(2000)
+        SendEventToGUI.log.debug("Multipliers read")
 
     async def bet(
         self, *, bets: list[Bet], use_auto_cash_out: Optional[bool] = True
@@ -274,11 +296,11 @@ class AviatorBase(AbstractCrashGameBase, ConfigurationFactory):
         last_multiplier_saved = self.multipliers[-1]
         while True:
             try:
-                await self._history_game.locator(
-                    "app-bubble-multiplier"
-                ).first.wait_for(timeout=5000)
+                await self._history_game.locator(".payout").first.wait_for(
+                    timeout=5000
+                )
                 locator = self._history_game.locator(
-                    "app-bubble-multiplier",
+                    ".payout",
                 ).first
                 last_multiplier_content = await locator.text_content(
                     timeout=1000

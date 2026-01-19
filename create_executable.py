@@ -77,13 +77,11 @@ def main():
     else:
         file_name = f"crashbot/{file_name}"
         print("**************generating executable**************")
-        os.system(
-            f'pyinstaller --icon={ICON_NAME} \
+        os.system(f'pyinstaller --icon={ICON_NAME} \
             --add-data "custom_bots{os.pathsep}custom_bots" \
             --add-data "locales{os.pathsep}locales" \
             --add-data "license.txt{os.pathsep}." \
-            --add-data "{ICON_NAME}{os.pathsep}." crashbot.py'
-        )
+            --add-data "{ICON_NAME}{os.pathsep}." crashbot.py')
         shutil.copy("conf._ini", "dist/crashbot/conf.ini")
         remove_po_files("dist/crashbot/locales")
     os.system(

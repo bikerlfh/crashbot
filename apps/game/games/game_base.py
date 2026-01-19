@@ -282,5 +282,4 @@ class GameBase(abc.ABC, ConfigurationFactory):
         SendEventToGUI.log.error(_("The game is not initialized"))  # noqa
 
     @abc.abstractmethod
-    def get_next_bet(self) -> list[Bet]:
-        ...
+    def get_next_bet(self) -> list[Bet]: ...

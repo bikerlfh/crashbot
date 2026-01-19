@@ -1,6 +1,7 @@
 """
 contain functions to help with graphs
 """
+
 # Standard Library
 from typing import Optional
 
