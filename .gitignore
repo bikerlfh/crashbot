@@ -60,3 +60,6 @@ Thumbs.db
 *.wmv
 
 test_bot.py
+
+CLAUDE.md
+.claude/
